@@ -35,6 +35,18 @@ interface LeagueBlueprint {
   clubs: ClubBlueprint[];
 }
 
+
+function makeAdditionalMajorClubs(
+  leagueId: string,
+  country: string,
+  entries: Array<[string, string, string, string, string, number]>
+): ClubBlueprint[] {
+  return entries.map(([id, name, shortName, primaryColor, secondaryColor, reputation]) => ({
+    id: leagueId + '_' + id, name, shortName, country, primaryColor, secondaryColor, reputation,
+    stadiumName: name + ' Stadium', stadiumCapacity: 25000, formation: '4-3-3',
+  }));
+}
+
 export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
   {
     id: 'eng_prem',
@@ -42,16 +54,16 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
     country: 'England',
     region: 'EUROPE',
     tier: 1,
-    clubs: [
-      { id: 'man_sky', name: 'Manchester Sky', shortName: 'MCY', country: 'England', primaryColor: '#38BDF8', secondaryColor: '#FFFFFF', reputation: 91, stadiumName: 'Eastlands Arena', stadiumCapacity: 53400, formation: '4-3-3' },
-      { id: 'north_gunners', name: 'North London Gunners', shortName: 'NLG', country: 'England', primaryColor: '#EF4444', secondaryColor: '#FFFFFF', reputation: 88, stadiumName: 'Highbury Dome', stadiumCapacity: 60700, formation: '4-3-3' },
-      { id: 'mersey_reds', name: 'Merseyside Reds', shortName: 'MSR', country: 'England', primaryColor: '#DC2626', secondaryColor: '#FACC15', reputation: 89, stadiumName: 'Anfield Park', stadiumCapacity: 61200, formation: '4-2-3-1' },
-      { id: 'west_blues', name: 'West London Blues', shortName: 'WLB', country: 'England', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', reputation: 85, stadiumName: 'Stamford Bridge Ground', stadiumCapacity: 40300, formation: '4-2-3-1' },
-      { id: 'man_red', name: 'Manchester United FC', shortName: 'MNU', country: 'England', primaryColor: '#B91C1C', secondaryColor: '#111827', reputation: 86, stadiumName: 'Trafford Theatre', stadiumCapacity: 74300, formation: '4-2-3-1' },
-      { id: 'tyne_magpies', name: 'Tyneside United', shortName: 'TYN', country: 'England', primaryColor: '#1F2937', secondaryColor: '#F8FAFC', reputation: 81, stadiumName: 'St. James Bowl', stadiumCapacity: 52300, formation: '4-3-3' },
-      { id: 'birm_villa', name: 'Midlands Villa', shortName: 'MVL', country: 'England', primaryColor: '#7C2D12', secondaryColor: '#38BDF8', reputation: 79, stadiumName: 'Aston Ground', stadiumCapacity: 42600, formation: '4-4-2' },
-      { id: 'spurs_lily', name: 'Tottenham Lilywhites', shortName: 'TOT', country: 'England', primaryColor: '#F8FAFC', secondaryColor: '#1E293B', reputation: 82, stadiumName: 'White Hart Bowl', stadiumCapacity: 62800, formation: '4-3-3' },
-    ],
+    clubs: [...[
+      { id: 'man_sky', name: 'Manchester City', shortName: 'MCY', country: 'England', primaryColor: '#38BDF8', secondaryColor: '#FFFFFF', reputation: 91, stadiumName: 'Eastlands Arena', stadiumCapacity: 53400, formation: '4-3-3' },
+      { id: 'north_gunners', name: 'Arsenal', shortName: 'NLG', country: 'England', primaryColor: '#EF4444', secondaryColor: '#FFFFFF', reputation: 88, stadiumName: 'Highbury Dome', stadiumCapacity: 60700, formation: '4-3-3' },
+      { id: 'mersey_reds', name: 'Liverpool', shortName: 'MSR', country: 'England', primaryColor: '#DC2626', secondaryColor: '#FACC15', reputation: 89, stadiumName: 'Anfield Park', stadiumCapacity: 61200, formation: '4-2-3-1' },
+      { id: 'west_blues', name: 'Chelsea', shortName: 'WLB', country: 'England', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', reputation: 85, stadiumName: 'Stamford Bridge Ground', stadiumCapacity: 40300, formation: '4-2-3-1' },
+      { id: 'man_red', name: 'Manchester United', shortName: 'MNU', country: 'England', primaryColor: '#B91C1C', secondaryColor: '#111827', reputation: 86, stadiumName: 'Trafford Theatre', stadiumCapacity: 74300, formation: '4-2-3-1' },
+      { id: 'tyne_magpies', name: 'Newcastle United', shortName: 'TYN', country: 'England', primaryColor: '#1F2937', secondaryColor: '#F8FAFC', reputation: 81, stadiumName: 'St. James Bowl', stadiumCapacity: 52300, formation: '4-3-3' },
+      { id: 'birm_villa', name: 'Aston Villa', shortName: 'MVL', country: 'England', primaryColor: '#7C2D12', secondaryColor: '#38BDF8', reputation: 79, stadiumName: 'Aston Ground', stadiumCapacity: 42600, formation: '4-4-2' },
+      { id: 'spurs_lily', name: 'Tottenham Hotspur', shortName: 'TOT', country: 'England', primaryColor: '#F8FAFC', secondaryColor: '#1E293B', reputation: 82, stadiumName: 'White Hart Bowl', stadiumCapacity: 62800, formation: '4-3-3' },
+    ], ...makeAdditionalMajorClubs('eng_prem', 'England', [["bou","AFC Bournemouth","BOU","#DC2626","#111827",76],["bre","Brentford","BRE","#DC2626","#FFFFFF",77],["bha","Brighton & Hove Albion","BHA","#1D4ED8","#FFFFFF",79],["cov","Coventry City","COV","#1D4ED8","#FFFFFF",73],["crp","Crystal Palace","CRY","#1D4ED8","#DC2626",77],["eve","Everton","EVE","#1D4ED8","#FFFFFF",78],["ful","Fulham","FUL","#F8FAFC","#111827",76],["hul","Hull City","HUL","#F97316","#111827",71],["ips","Ipswich Town","IPS","#2563EB","#FFFFFF",72],["lee","Leeds United","LEE","#F8FAFC","#FACC15",77],["nfo","Nottingham Forest","NFO","#DC2626","#FFFFFF",78],["sun","Sunderland","SUN","#DC2626","#FFFFFF",74]])]],
   },
   {
     id: 'esp_liga',
@@ -59,16 +71,16 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
     country: 'Spain',
     region: 'EUROPE',
     tier: 1,
-    clubs: [
-      { id: 'real_castilla', name: 'Real Castilla', shortName: 'RCS', country: 'Spain', primaryColor: '#F8FAFC', secondaryColor: '#F59E0B', reputation: 93, stadiumName: 'Chamartin Coliseum', stadiumCapacity: 81000, formation: '4-3-3' },
-      { id: 'catalunya_blau', name: 'FC Catalunya', shortName: 'CAT', country: 'Spain', primaryColor: '#1D4ED8', secondaryColor: '#B91C1C', reputation: 90, stadiumName: 'Nou Estadi', stadiumCapacity: 89000, formation: '4-3-3' },
-      { id: 'atleti_madrid', name: 'Atletico Capital', shortName: 'ATC', country: 'Spain', primaryColor: '#DC2626', secondaryColor: '#F8FAFC', reputation: 86, stadiumName: 'Metropolitano Norte', stadiumCapacity: 70400, formation: '5-3-2' },
-      { id: 'basque_lions', name: 'Bilbao Lions', shortName: 'BIL', country: 'Spain', primaryColor: '#E11D48', secondaryColor: '#111827', reputation: 80, stadiumName: 'San Mames Cathedral', stadiumCapacity: 53300, formation: '4-2-3-1' },
-      { id: 'sevilla_nervion', name: 'Sevilla Nervion', shortName: 'SEV', country: 'Spain', primaryColor: '#F1F5F9', secondaryColor: '#DC2626', reputation: 79, stadiumName: 'Pizjuan Ground', stadiumCapacity: 43800, formation: '4-3-3' },
-      { id: 'valencia_bats', name: 'Valencia Mestalla', shortName: 'VAL', country: 'Spain', primaryColor: '#F8FAFC', secondaryColor: '#F97316', reputation: 77, stadiumName: 'Mestalla Arena', stadiumCapacity: 49400, formation: '4-4-2' },
-      { id: 'sociedad_blue', name: 'San Sebastian Blue', shortName: 'SSB', country: 'Spain', primaryColor: '#0284C7', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'Anoeta Park', stadiumCapacity: 39500, formation: '4-3-3' },
-      { id: 'villarreal_sub', name: 'Villarreal Yellows', shortName: 'VIL', country: 'Spain', primaryColor: '#EAB308', secondaryColor: '#1E3A8A', reputation: 78, stadiumName: 'El Madrigal', stadiumCapacity: 23500, formation: '4-4-2' },
-    ],
+    clubs: [...[
+      { id: 'real_castilla', name: 'Real Madrid', shortName: 'RCS', country: 'Spain', primaryColor: '#F8FAFC', secondaryColor: '#F59E0B', reputation: 93, stadiumName: 'Chamartin Coliseum', stadiumCapacity: 81000, formation: '4-3-3' },
+      { id: 'catalunya_blau', name: 'FC Barcelona', shortName: 'CAT', country: 'Spain', primaryColor: '#1D4ED8', secondaryColor: '#B91C1C', reputation: 90, stadiumName: 'Nou Estadi', stadiumCapacity: 89000, formation: '4-3-3' },
+      { id: 'atleti_madrid', name: 'Atlético de Madrid', shortName: 'ATC', country: 'Spain', primaryColor: '#DC2626', secondaryColor: '#F8FAFC', reputation: 86, stadiumName: 'Metropolitano Norte', stadiumCapacity: 70400, formation: '5-3-2' },
+      { id: 'basque_lions', name: 'Athletic Club', shortName: 'BIL', country: 'Spain', primaryColor: '#E11D48', secondaryColor: '#111827', reputation: 80, stadiumName: 'San Mames Cathedral', stadiumCapacity: 53300, formation: '4-2-3-1' },
+      { id: 'sevilla_nervion', name: 'Sevilla FC', shortName: 'SEV', country: 'Spain', primaryColor: '#F1F5F9', secondaryColor: '#DC2626', reputation: 79, stadiumName: 'Pizjuan Ground', stadiumCapacity: 43800, formation: '4-3-3' },
+      { id: 'valencia_bats', name: 'Valencia CF', shortName: 'VAL', country: 'Spain', primaryColor: '#F8FAFC', secondaryColor: '#F97316', reputation: 77, stadiumName: 'Mestalla Arena', stadiumCapacity: 49400, formation: '4-4-2' },
+      { id: 'sociedad_blue', name: 'Real Sociedad', shortName: 'SSB', country: 'Spain', primaryColor: '#0284C7', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'Anoeta Park', stadiumCapacity: 39500, formation: '4-3-3' },
+      { id: 'villarreal_sub', name: 'Villarreal CF', shortName: 'VIL', country: 'Spain', primaryColor: '#EAB308', secondaryColor: '#1E3A8A', reputation: 78, stadiumName: 'El Madrigal', stadiumCapacity: 23500, formation: '4-4-2' },
+    ], ...makeAdditionalMajorClubs('esp_liga', 'Spain', [["osa","CA Osasuna","OSA","#DC2626","#1E293B",76],["cel","Celta de Vigo","CEL","#38BDF8","#FFFFFF",77],["ala","Deportivo Alavés","ALA","#1D4ED8","#FFFFFF",75],["elc","Elche CF","ELC","#16A34A","#FFFFFF",73],["get","Getafe CF","GET","#1D4ED8","#FFFFFF",75],["lev","Levante UD","LEV","#DC2626","#1D4ED8",74],["mal","Málaga CF","MAL","#1D4ED8","#FFFFFF",72],["rac","Racing Santander","RAC","#16A34A","#FFFFFF",72],["ray","Rayo Vallecano","RAY","#F8FAFC","#DC2626",75],["dep","RC Deportivo","DEP","#1D4ED8","#FFFFFF",74],["esp","RCD Espanyol","ESP","#1D4ED8","#FFFFFF",75],["bet","Real Betis","BET","#16A34A","#FFFFFF",81]])]],
   },
   {
     id: 'caf_prem',
@@ -93,16 +105,16 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
     country: 'Italy',
     region: 'EUROPE',
     tier: 1,
-    clubs: [
-      { id: 'milano_nerazzurri', name: 'Milano Inter', shortName: 'INT', country: 'Italy', primaryColor: '#1D4ED8', secondaryColor: '#0F172A', reputation: 89, stadiumName: 'Giuseppe Meazza', stadiumCapacity: 75800, formation: '3-5-2' },
-      { id: 'milano_rossoneri', name: 'AC Milano', shortName: 'ACM', country: 'Italy', primaryColor: '#DC2626', secondaryColor: '#0F172A', reputation: 86, stadiumName: 'San Siro', stadiumCapacity: 75800, formation: '4-2-3-1' },
-      { id: 'torino_zebre', name: 'Torino Bianconeri', shortName: 'TOR', country: 'Italy', primaryColor: '#F8FAFC', secondaryColor: '#111827', reputation: 86, stadiumName: 'Piedmont Stadium', stadiumCapacity: 41500, formation: '3-5-2' },
-      { id: 'napoli_azzurri', name: 'Napoli Partenopei', shortName: 'NAP', country: 'Italy', primaryColor: '#0EA5E9', secondaryColor: '#FFFFFF', reputation: 84, stadiumName: 'Stadio Vesuvio', stadiumCapacity: 54700, formation: '4-3-3' },
-      { id: 'roma_gladiators', name: 'AS Roma Wolves', shortName: 'ROM', country: 'Italy', primaryColor: '#991B1B', secondaryColor: '#F59E0B', reputation: 82, stadiumName: 'Olimpico Roma', stadiumCapacity: 70600, formation: '3-5-2' },
-      { id: 'bergamo_dea', name: 'Bergamo Atalanta', shortName: 'ATA', country: 'Italy', primaryColor: '#1E40AF', secondaryColor: '#111827', reputation: 81, stadiumName: 'Gewiss Ground', stadiumCapacity: 24900, formation: '3-5-2' },
-      { id: 'lazio_eagles', name: 'Lazio Eagles', shortName: 'LAZ', country: 'Italy', primaryColor: '#7DD3FC', secondaryColor: '#FFFFFF', reputation: 79, stadiumName: 'Olimpico Nord', stadiumCapacity: 70600, formation: '4-3-3' },
-      { id: 'firenze_viola', name: 'Firenze Viola', shortName: 'FIO', country: 'Italy', primaryColor: '#7C3AED', secondaryColor: '#FFFFFF', reputation: 78, stadiumName: 'Artemio Franchi', stadiumCapacity: 43100, formation: '4-2-3-1' },
-    ],
+    clubs: [...[
+      { id: 'milano_nerazzurri', name: 'Inter Milan', shortName: 'INT', country: 'Italy', primaryColor: '#1D4ED8', secondaryColor: '#0F172A', reputation: 89, stadiumName: 'Giuseppe Meazza', stadiumCapacity: 75800, formation: '3-5-2' },
+      { id: 'milano_rossoneri', name: 'AC Milan', shortName: 'ACM', country: 'Italy', primaryColor: '#DC2626', secondaryColor: '#0F172A', reputation: 86, stadiumName: 'San Siro', stadiumCapacity: 75800, formation: '4-2-3-1' },
+      { id: 'torino_zebre', name: 'Juventus', shortName: 'TOR', country: 'Italy', primaryColor: '#F8FAFC', secondaryColor: '#111827', reputation: 86, stadiumName: 'Piedmont Stadium', stadiumCapacity: 41500, formation: '3-5-2' },
+      { id: 'napoli_azzurri', name: 'Napoli', shortName: 'NAP', country: 'Italy', primaryColor: '#0EA5E9', secondaryColor: '#FFFFFF', reputation: 84, stadiumName: 'Stadio Vesuvio', stadiumCapacity: 54700, formation: '4-3-3' },
+      { id: 'roma_gladiators', name: 'AS Roma', shortName: 'ROM', country: 'Italy', primaryColor: '#991B1B', secondaryColor: '#F59E0B', reputation: 82, stadiumName: 'Olimpico Roma', stadiumCapacity: 70600, formation: '3-5-2' },
+      { id: 'bergamo_dea', name: 'Atalanta', shortName: 'ATA', country: 'Italy', primaryColor: '#1E40AF', secondaryColor: '#111827', reputation: 81, stadiumName: 'Gewiss Ground', stadiumCapacity: 24900, formation: '3-5-2' },
+      { id: 'lazio_eagles', name: 'Lazio', shortName: 'LAZ', country: 'Italy', primaryColor: '#7DD3FC', secondaryColor: '#FFFFFF', reputation: 79, stadiumName: 'Olimpico Nord', stadiumCapacity: 70600, formation: '4-3-3' },
+      { id: 'firenze_viola', name: 'Fiorentina', shortName: 'FIO', country: 'Italy', primaryColor: '#7C3AED', secondaryColor: '#FFFFFF', reputation: 78, stadiumName: 'Artemio Franchi', stadiumCapacity: 43100, formation: '4-2-3-1' },
+    ], ...makeAdditionalMajorClubs('ita_serie', 'Italy', [["mon","AC Monza","MON","#DC2626","#FFFFFF",73],["bol","Bologna FC","BOL","#DC2626","#1E293B",80],["cag","Cagliari","CAG","#DC2626","#1D4ED8",74],["com","Como 1907","COM","#38BDF8","#FFFFFF",78],["fro","Frosinone Calcio","FRO","#FACC15","#1D4ED8",72],["gen","Genoa CFC","GEN","#DC2626","#1D4E8A",76],["par","Parma","PAR","#F8FAFC","#FACC15",75],["sas","Sassuolo","SAS","#16A34A","#111827",75],["tor","Torino FC","TOR","#DC2626","#FFFFFF",77],["udi","Udinese","UDI","#111827","#F8FAFC",76],["lec","US Lecce","LEC","#FACC15","#DC2626",73],["ven","Venezia FC","VEN","#F97316","#111827",72]])]],
   },
   {
     id: 'sa_brasileiro',
@@ -140,7 +152,7 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
   },
   {
     id: 'fra_ligue1', name: 'French Ligue 1', country: 'France', region: 'EUROPE', tier: 1,
-    clubs: [
+    clubs: [...[
       { id: 'fra_ligue1_1', name: 'Paris Saint-Germain', shortName: 'PSG', country: 'France', primaryColor: '#1D4ED8', secondaryColor: '#E11D48', reputation: 92, stadiumName: 'Parc des Princes', stadiumCapacity: 47900, formation: '4-3-3' },
       { id: 'fra_ligue1_2', name: 'Olympique Marseille', shortName: 'OM', country: 'France', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 85, stadiumName: 'Stade Velodrome', stadiumCapacity: 67300, formation: '4-2-3-1' },
       { id: 'fra_ligue1_3', name: 'AS Monaco', shortName: 'ASM', country: 'France', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 83, stadiumName: 'Stade Louis II', stadiumCapacity: 18500, formation: '4-4-2' },
@@ -149,11 +161,11 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
       { id: 'fra_ligue1_6', name: 'OGC Nice', shortName: 'NIC', country: 'France', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Allianz Riviera', stadiumCapacity: 36178, formation: '4-2-3-1' },
       { id: 'fra_ligue1_7', name: 'Stade Rennais', shortName: 'REN', country: 'France', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Roazhon Park', stadiumCapacity: 29778, formation: '4-4-2' },
       { id: 'fra_ligue1_8', name: 'RC Lens', shortName: 'LEN', country: 'France', primaryColor: '#FACC15', secondaryColor: '#DC2626', reputation: 77, stadiumName: 'Stade Bollaert-Delelis', stadiumCapacity: 38223, formation: '3-5-2' }
-    ],
+    ], ...makeAdditionalMajorClubs('fra_ligue1', 'France', [["angers","Angers SCO","ANG","#111827","#FFFFFF",73],["auxerre","AJ Auxerre","AUX","#1D4ED8","#FFFFFF",73],["troyes","ESTAC Troyes","TRO","#1D4ED8","#FFFFFF",71],["lehavre","Le Havre AC","HAC","#1D4E8A","#FFFFFF",73],["lemans","Le Mans FC","LEM","#DC2626","#F8FAFC",70],["lorient","FC Lorient","LOR","#F97316","#111827",73],["parisfc","Paris FC","PFC","#1D4ED8","#DC2626",74],["brest","Stade Brestois 29","BRE","#DC2626","#FFFFFF",75],["strasbourg","RC Strasbourg Alsace","STR","#1D4ED8","#FFFFFF",77],["toulouse","Toulouse FC","TFC","#7C3AED","#FFFFFF",75]])]],
   },
   {
     id: 'ger_bundesliga', name: 'German Bundesliga', country: 'Germany', region: 'EUROPE', tier: 1,
-    clubs: [
+    clubs: [...[
       { id: 'ger_bundesliga_1', name: 'Bayern Munich', shortName: 'BAY', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 93, stadiumName: 'Allianz Arena', stadiumCapacity: 75000, formation: '4-2-3-1' },
       { id: 'ger_bundesliga_2', name: 'Borussia Dortmund', shortName: 'BVB', country: 'Germany', primaryColor: '#FDE047', secondaryColor: '#111827', reputation: 88, stadiumName: 'Signal Iduna Park', stadiumCapacity: 81365, formation: '4-4-2' },
       { id: 'ger_bundesliga_3', name: 'Bayer Leverkusen', shortName: 'B04', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 86, stadiumName: 'BayArena', stadiumCapacity: 30210, formation: '3-5-2' },
@@ -162,7 +174,7 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
       { id: 'ger_bundesliga_6', name: 'VfB Stuttgart', shortName: 'VFB', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'MHPArena', stadiumCapacity: 60449, formation: '4-4-2' },
       { id: 'ger_bundesliga_7', name: 'SC Freiburg', shortName: 'SCF', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Europa-Park Stadion', stadiumCapacity: 34700, formation: '3-5-2' },
       { id: 'ger_bundesliga_8', name: 'Borussia Monchengladbach', shortName: 'BMG', country: 'Germany', primaryColor: '#16A34A', secondaryColor: '#111827', reputation: 78, stadiumName: 'Borussia-Park', stadiumCapacity: 54057, formation: '4-3-3' }
-    ],
+    ], ...makeAdditionalMajorClubs('ger_bundesliga', 'Germany', [["augs","FC Augsburg","FCA","#16A34A","#FFFFFF",75],["mainz","1. FSV Mainz 05","M05","#DC2626","#FFFFFF",76],["union","1. FC Union Berlin","FCU","#DC2626","#F8FAFC",77],["hsv","Hamburger SV","HSV","#1D4ED8","#FFFFFF",77],["koln","1. FC Köln","KOE","#DC2626","#FFFFFF",75],["werder","SV Werder Bremen","SVW","#16A34A","#FFFFFF",77],["schalke","FC Schalke 04","S04","#1D4ED8","#FFFFFF",78],["elversberg","SV Elversberg","SVE","#111827","#FFFFFF",70],["paderborn","SC Paderborn 07","SCP","#1D4ED8","#111827",71],["hoffenheim","TSG Hoffenheim","TSG","#1D4ED8","#FFFFFF",77]])]],
   },
   {
     id: 'por_primeira', name: 'Portuguese Primeira Liga', country: 'Portugal', region: 'EUROPE', tier: 1,
