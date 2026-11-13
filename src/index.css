@@ -47,3 +47,166 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334358;
 }
+
+
+/* Live match broadcast: keep the pitch, scoreboard, stats and latest events
+   visible together without making the whole screen scroll. */
+.match-live-screen {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  padding: 6px;
+}
+.match-live-content {
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 7px;
+}
+.match-live-scoreboard {
+  min-height: 56px;
+  padding: 5px 10px;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.match-live-scoreboard > div:first-child,
+.match-live-scoreboard > div:last-child {
+  min-width: 0;
+  gap: 7px;
+}
+.match-live-scoreboard > div:first-child > div,
+.match-live-scoreboard > div:last-child > div {
+  min-width: 0;
+}
+.match-live-scoreboard > div:nth-child(2) {
+  flex: 0 0 auto;
+}
+.match-live-scoreboard .text-3xl,
+.match-live-scoreboard .sm\\:text-4xl {
+  font-size: 1.65rem;
+  line-height: 1;
+}
+.match-live-scoreboard .text-\\[11px\\] {
+  font-size: 9px;
+}
+.match-live-controls {
+  min-height: 38px;
+  padding: 3px 7px;
+  gap: 6px;
+}
+.match-live-controls button {
+  min-height: 31px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.match-live-grid {
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 8px;
+}
+.match-live-pitch-column {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.match-live-pitch-column > .relative {
+  width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+}
+.match-live-pitch-column canvas {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+.match-live-info-column {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 7px;
+}
+.match-live-stats,
+.match-live-timeline {
+  min-height: 0 !important;
+  overflow: hidden;
+  padding: 8px !important;
+  gap: 3px !important;
+}
+.match-live-stats > div:not(:first-child) {
+  min-height: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  font-size: 10px;
+}
+.match-live-stats > div:first-child,
+.match-live-timeline > div:first-child {
+  padding-bottom: 4px;
+}
+.match-live-events {
+  max-height: none !important;
+  min-height: 0;
+  overflow: hidden !important;
+  gap: 3px !important;
+  padding-right: 0 !important;
+}
+.match-live-events > div {
+  padding: 4px 6px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+@media (max-width: 700px) and (orientation: portrait) {
+  .match-live-content {
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+  .match-live-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+  .match-live-info-column {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .match-live-scoreboard .text-sm,
+  .match-live-scoreboard .sm\\:text-base {
+    font-size: 11px;
+    line-height: 1.15;
+  }
+  .match-live-scoreboard .text-3xl,
+  .match-live-scoreboard .sm\\:text-4xl {
+    font-size: 1.45rem;
+  }
+  .match-live-stats > div:not(:first-child) {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) minmax(0, 0.8fr);
+    font-size: 9px;
+  }
+  .match-live-stats > div:not(:first-child) span:nth-child(2) {
+    font-size: 8px;
+  }
+  .match-live-events > div {
+    font-size: 9px;
+  }
+}
+@media (max-height: 740px) {
+  .match-live-screen { padding: 4px; }
+  .match-live-content { gap: 5px; }
+  .match-live-scoreboard { min-height: 49px; padding: 3px 7px; }
+  .match-live-controls { min-height: 34px; }
+  .match-live-grid { gap: 5px; }
+  .match-live-info-column { gap: 5px; }
+}
