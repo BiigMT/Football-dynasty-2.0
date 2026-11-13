@@ -372,9 +372,8 @@ export function createLegendCareer(params: {
   };
 
   world.players[userPlayerId] = userPlayer;
-  // Place user player on bench or starting XI depending on overall
-  const nextBench = [userPlayerId, ...club.tactics.bench.slice(0, 6)];
-  club.tactics.bench = nextBench;
+  // Academy prospects stay outside the senior matchday squad until promoted.
+
 
   const { cupFixtures, continentalFixtures } = buildSeasonCupAndContinental(
     world.clubs,
