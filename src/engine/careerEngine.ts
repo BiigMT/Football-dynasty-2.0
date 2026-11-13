@@ -489,38 +489,6 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     winnerId = Math.random() < 0.52 ? session.homeClubId : session.awayClubId;
   }
 
-  // Publish a proper match report for the user's fixture so the career world
-  // reacts to results instead of showing only generic dashboard headlines.
-  if (session.userClubSide) {
-    const homeName = save.clubs[session.homeClubId]?.name ?? save.nationalTeams[session.homeClubId]?.name ?? session.homeClubId;
-    const awayName = save.clubs[session.awayClubId]?.name ?? save.nationalTeams[session.awayClubId]?.name ?? session.awayClubId;
-    const userWon = winnerId === save.userClubId || winnerId === (save.manager?.nationalTeamId ?? save.legend?.nationalTeamId);
-    const userDrew = homeGoals === awayGoals;
-    const verdict = userDrew ? 'share the points' : userWon ? 'claim a huge victory' : 'suffer a disappointing defeat';
-    const standout = Object.values(session.playerStates)
-      .filter((st) => st.onPitch || st.subbedOff)
-      .sort((a, b) => b.rating - a.rating)[0];
-    const standoutPlayer = standout ? save.players[standout.playerId] : undefined;
-    const keyEvents = session.events
-      .filter((event) => event.type === 'GOAL' || event.type === 'RED_CARD' || event.type === 'INJURY')
-      .slice(-3)
-      .map((event) => `${event.minute}' ${event.text}`);
-    const reportBody = [
-      `${homeName} ${homeGoals}-${awayGoals} ${awayName} in the ${session.competitionName}.`,
-      `Your side ${verdict}.`,
-      standout && standoutPlayer ? `Player of the Match: ${standoutPlayer.name} (${standout.rating.toFixed(1)}/10).` : '',
-      keyEvents.length ? `Talking points: ${keyEvents.join(' · ')}.` : '',
-    ].filter(Boolean).join(' ');
-    nextNews.unshift({
-      id: `news_match_report_${session.id}`,
-      week: save.currentWeek,
-      season: save.season,
-      category: 'MATCH',
-      headline: `FULL-TIME: ${homeName} ${homeGoals}-${awayGoals} ${awayName}`,
-      body: reportBody,
-    });
-  }
-
   // Update player season stats & fitness
   Object.values(session.playerStates).forEach((st) => {
     const p = nextPlayers[st.playerId];
