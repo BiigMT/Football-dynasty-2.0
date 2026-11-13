@@ -1032,6 +1032,28 @@ export function advanceWeek(save: CareerSave): CareerSave {
     }
   }
 
+  // Academy pathway: trust grows gradually; promotion requires both trust and ability.
+  if (nextSave.legend?.squadRole === 'ACADEMY_PROSPECT') {
+    const prospect = nextSave.players[nextSave.legend.playerId];
+    if (prospect) {
+      const nextTrust = Math.min(100, nextSave.legend.managerTrust + 1);
+      if (nextTrust >= 70 && prospect.overall >= 55) {
+        nextSave.legend = { ...nextSave.legend, managerTrust: nextTrust, squadRole: 'RESERVE' };
+        nextSave.players[prospect.id] = { ...prospect, isYouth: false, morale: Math.min(100, prospect.morale + 4) };
+        nextSave.news.unshift({
+          id: `news_academy_promotion_${Date.now()}`,
+          week: nextWeek,
+          season: save.season,
+          category: 'ACADEMY',
+          headline: `${prospect.name} promoted to the reserve squad`,
+          body: `${prospect.name}'s training progress and growing manager trust have earned a step up from the academy.`,
+        });
+      } else {
+        nextSave.legend = { ...nextSave.legend, managerTrust: nextTrust };
+      }
+    }
+  }
+
   return {
     ...nextSave,
     currentWeek: nextWeek,
