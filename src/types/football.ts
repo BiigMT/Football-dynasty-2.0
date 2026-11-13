@@ -414,6 +414,7 @@ export interface ManagerProfile {
   losses: number;
   trophies: string[];
   jobOffers: { clubId: string; clubName: string; leagueName: string; wage: number; message: string }[];
+  pressConferenceDone?: boolean;
 }
 
 export interface LegendProfile {
