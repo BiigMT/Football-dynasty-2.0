@@ -339,6 +339,7 @@ export interface MatchSession {
   isInternational: boolean;
   weather: WeatherCondition;
   phase: 'PRE_MATCH' | 'FIRST_HALF' | 'HALF_TIME' | 'SECOND_HALF' | 'FULL_TIME';
+  difficulty?: GameDifficulty;
   minute: number;
   addedTimeFirstHalf: number;
   addedTimeSecondHalf: number;
