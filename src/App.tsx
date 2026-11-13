@@ -34,7 +34,9 @@ export default function App() {
   const [activeSave, setActiveSave] = useState<CareerSave | null>(null);
   const [muted, setMuted] = useState<boolean>(false);
 
-  const refreshSlots = async () => setSlots(await listSaveSlots());\n\n  useEffect(() => { void refreshSlots(); }, []);
+  const refreshSlots = async () => setSlots(await listSaveSlots());
+
+  useEffect(() => { void refreshSlots(); }, []);
 
   const chooseOrientation = async (next: GameOrientation) => {
     setOrientation(next);
@@ -59,8 +61,10 @@ export default function App() {
 
   const updateAndPersistSave = (next: CareerSave) => {
     setActiveSave(next);
-    saveCareer(next);
-    refreshSlots();
+    void saveCareer(next).then(refreshSlots).catch((error: unknown) => {
+      console.error('Career save failed:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not save your career. Please try again.');
+    });
   };
 
   const handleStartNewCareer = (mode: CareerMode, slotId: string) => {
@@ -83,8 +87,8 @@ export default function App() {
 
   const handleDeleteSlot = async (slotId: string) => {
     soundEngine.playClick();
-    deleteCareer(slotId);
-    refreshSlots();
+    await deleteCareer(slotId);
+    await refreshSlots();
   };
 
   const handleConfirmManager = (data: {
