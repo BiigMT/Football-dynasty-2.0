@@ -68,6 +68,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const userTactics = userSide === 'HOME' ? session.homeTactics : session.awayTactics;
   const userSubsUsed = userSide === 'HOME' ? session.homeSubsUsed : session.awaySubsUsed;
   const isManagerMode = !session.userPlayerId;
+  const isLiveMatch = session.phase === 'FIRST_HALF' || session.phase === 'SECOND_HALF';
 
   useEffect(() => {
     if (!running) return;
@@ -205,10 +206,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const userPlayer = session.userPlayerId ? players[session.userPlayerId] : undefined;
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-slate-100 px-4 py-4 sm:px-6">
-      <div className="max-w-6xl mx-auto flex flex-col gap-4">
+    <div className={`bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`}>
+      <div className={isLiveMatch ? 'match-live-content' : 'max-w-6xl mx-auto flex flex-col gap-4'}>
         {/* Top Broadcast Scoreboard */}
-        <header className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-wrap items-center justify-between gap-4">
+        <header className={`rounded-xl bg-[#131A22] border border-white/10 flex flex-wrap items-center justify-between ${isLiveMatch ? 'match-live-scoreboard' : 'p-4 gap-4'}`}>
           <div className="flex items-center gap-3 min-w-0">
             <ClubBadge
               shortName={homeClub.shortName}
@@ -263,7 +264,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         </header>
 
         {/* Playback Controls Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#131A22] border border-white/10 px-4 py-2.5">
+        <div className={`flex flex-wrap items-center justify-between rounded-xl bg-[#131A22] border border-white/10 ${isLiveMatch ? 'match-live-controls' : 'gap-3 px-4 py-2.5'}`}>
           <div className="flex items-center gap-2">
             {session.phase === 'PRE_MATCH' && (
               <button
@@ -380,9 +381,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         )}
 
         {/* Main Grid: Pitch Canvas + Live Telemetry / Half-Time Controls */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className={isLiveMatch ? 'match-live-grid' : 'grid grid-cols-1 lg:grid-cols-12 gap-4'}>
           {/* Left: 2D Tactical Pitch + Key Moment / Half-Time Console */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
+          <div className={isLiveMatch ? 'match-live-pitch-column' : 'lg:col-span-7 flex flex-col gap-4'}>
             <MatchPitchCanvas
               session={session}
               homeClub={homeClub}
@@ -635,7 +636,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
 
           {/* Right: Stats, Player Objectives (Legend) & Live Commentary */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
+          <div className={isLiveMatch ? 'match-live-info-column' : 'lg:col-span-5 flex flex-col gap-4'}>
             {/* Become a Legend Match Objectives */}
             {userPlayer && userPlayerState && (
               <div className="rounded-xl bg-[#131A22] border border-amber-400/30 p-4 flex flex-col gap-3">
@@ -674,7 +675,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             )}
 
             {/* Match Statistics */}
-            <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-2.5">
+            <div className={`rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-2.5 ${isLiveMatch ? 'match-live-stats' : ''}`}>
               <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <span className="text-sm font-bold text-white">Match Statistics</span>
                 <span className="text-xs text-slate-400 font-mono-num">
@@ -700,18 +701,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </div>
 
             {/* Live Match Event Timeline */}
-            <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-2 flex-1 min-h-[200px]">
+            <div className={`rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-2 flex-1 min-h-[200px] ${isLiveMatch ? 'match-live-timeline' : ''}`}>
               <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <span className="text-sm font-bold text-white">Match Timeline</span>
                 <RefreshCw className={`w-3.5 h-3.5 text-slate-500 ${running ? 'animate-spin' : ''}`} />
               </div>
-              <div className="flex flex-col-reverse gap-2 max-h-[260px] overflow-y-auto pr-1">
+              <div className={`flex flex-col-reverse gap-2 max-h-[260px] overflow-y-auto pr-1 ${isLiveMatch ? 'match-live-events' : ''}`}>
                 {session.events.length === 0 ? (
                   <div className="text-xs text-slate-500 py-4 text-center">
                     Teams are in the tunnel. Click Kickoff to start the match.
                   </div>
                 ) : (
-                  session.events.map((ev) => (
+                  (isLiveMatch ? session.events.slice(-5).reverse() : session.events).map((ev) => (
                     <div
                       key={ev.id}
                       className={`text-xs px-3 py-2 rounded-lg border ${
