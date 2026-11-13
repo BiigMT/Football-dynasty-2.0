@@ -369,6 +369,7 @@ const FIRST_NAMES_BY_REGION: Record<Region, string[]> = {
   AFRICA: ['Chinedu', 'Youssef', 'Kofi', 'Tariq', 'Samuel', 'Ibrahim', 'Moussa', 'Tendai', 'Patson', 'Sadio', 'Hakim', 'Victor', 'Idrissa', 'Emmanuel', 'Tarek', 'Bongani', 'Ayoub', 'Fiston'],
   SOUTH_AMERICA: ['Thiago', 'Matias', 'enzo', 'Rodrigo', 'Joaquin', 'Vinicius', 'Rafael', 'Nicolas', 'Santiago', 'Lautaro', 'Franco', 'Caua', 'Murilo', 'Facundo', 'Diego', 'Danilo'],
   ASIA: ['Kenji', 'Min-Jae', 'Haruto', 'Salem', 'Daichi', 'Heung-Su', 'Yuto', 'Firas', 'Takumi', 'Jae-Sung', 'Riku', 'Akram', 'Sora', 'Abdullah', 'Koji', 'Woo-Yeong'],
+  NORTH_AMERICA: ['James', 'Landon', 'Diego', 'Carlos', 'Miguel', 'Jordan', 'Mateo', 'Tyler', 'Luis', 'Santiago', 'Noah', 'Alejandro'],
 };
 
 const LAST_NAMES_BY_REGION: Record<Region, string[]> = {
@@ -376,6 +377,7 @@ const LAST_NAMES_BY_REGION: Record<Region, string[]> = {
   AFRICA: ['Okafor', 'Benali', 'Mensah', 'Diallo', 'Banda', 'Kouyate', 'El-Shenawy', 'Mokoena', 'Chukwu', 'Ndiaye', 'Toure', 'Kante', 'Ziyech', 'Tau', 'Mayele', 'Phiri', 'Abubakar', 'Hakimi'],
   SOUTH_AMERICA: ['Almeida', 'Fernandez', 'Souza', 'Pereira', 'Martinez', 'Gomes', 'Rojas', 'Costa', 'Cardozo', 'Molina', 'Oliveira', 'Santana', 'Vega', 'Barbosa', 'Bustos', 'Gimenez'],
   ASIA: ['Tanaka', 'Kim', 'Sato', 'Al-Dawsari', 'Watanabe', 'Park', 'Nakamura', 'Al-Brikan', 'Kobayashi', 'Lee', 'Ito', 'Afif', 'Yamamoto', 'Cho', 'Suzuki', 'Al-Faraj'],
+  NORTH_AMERICA: ['Johnson', 'Smith', 'Garcia', 'Rodriguez', 'Martinez', 'Williams', 'Hernandez', 'Lopez', 'Brown', 'Davis', 'Torres', 'Wilson'],
 };
 
 const NATIONALITIES_BY_COUNTRY: Record<string, string[]> = {
