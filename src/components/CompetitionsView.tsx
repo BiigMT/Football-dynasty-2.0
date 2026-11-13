@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CareerSave } from '../types/football';
 import { sortStandings } from '../engine/careerEngine';
-import { ClubBadge } from './ClubBadge';
+import { ClubBadge, CountryFlag } from './ClubBadge';
 
 interface CompetitionsViewProps {
   save: CareerSave;
@@ -96,6 +96,7 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
                               shortName={club.shortName}
                               primaryColor={club.primaryColor}
                               secondaryColor={club.secondaryColor}
+                              country={club.country}
                               size={24}
                             />
                             <span className={`font-medium ${isUser ? 'text-cyan-300 font-semibold' : 'text-white'}`}>
