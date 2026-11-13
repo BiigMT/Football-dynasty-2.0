@@ -885,6 +885,34 @@ export function simulateNextMinute(
   if (session.userClubSide === 'HOME') awayRatings = scaleRatings(awayRatings, challenge);
   else if (session.userClubSide === 'AWAY') homeRatings = scaleRatings(homeRatings, challenge);
 
+  // Opposition coaching reacts to the scoreline instead of keeping one static plan.
+  // The non-user side raises its attacking output when chasing late in the match,
+  // while protecting a narrow lead with a small defensive boost.
+  const applyGameStateAdjustment = (ratings: SectorRatings, attacking: number, midfield: number, defending: number): SectorRatings => ({
+    attack: ratings.attack * attacking,
+    midfield: ratings.midfield * midfield,
+    defense: ratings.defense * defending,
+    gk: ratings.gk,
+  });
+  const homeIsUser = session.userClubSide === 'HOME';
+  const awayIsUser = session.userClubSide === 'AWAY';
+  const homeTrailing = session.homeStats.goals < session.awayStats.goals;
+  const awayTrailing = session.awayStats.goals < session.homeStats.goals;
+  const homeLeading = session.homeStats.goals > session.awayStats.goals;
+  const awayLeading = session.awayStats.goals > session.homeStats.goals;
+  if (nextMin >= 62 && !homeIsUser && homeTrailing) {
+    const urgency = nextMin >= 78 ? 1.09 : 1.05;
+    homeRatings = applyGameStateAdjustment(homeRatings, urgency, 1.035, 0.985);
+  } else if (nextMin >= 62 && !awayIsUser && awayTrailing) {
+    const urgency = nextMin >= 78 ? 1.09 : 1.05;
+    awayRatings = applyGameStateAdjustment(awayRatings, urgency, 1.035, 0.985);
+  }
+  if (nextMin >= 76 && !homeIsUser && homeLeading && session.homeStats.goals - session.awayStats.goals === 1) {
+    homeRatings = applyGameStateAdjustment(homeRatings, 0.985, 1, 1.045);
+  } else if (nextMin >= 76 && !awayIsUser && awayLeading && session.awayStats.goals - session.homeStats.goals === 1) {
+    awayRatings = applyGameStateAdjustment(awayRatings, 0.985, 1, 1.045);
+  }
+
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
   const nextStates = { ...session.playerStates };
