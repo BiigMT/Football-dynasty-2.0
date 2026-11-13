@@ -191,6 +191,7 @@ export default function App() {
       players: activeSave.players,
       userClubSide,
       userPlayerId: activeSave.legend?.playerId,
+      difficulty: activeSave.difficulty ?? 'NORMAL',
     });
 
     const updated: CareerSave = { ...activeSave, activeMatch: session };
