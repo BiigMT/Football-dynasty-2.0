@@ -86,6 +86,10 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const teammates = Object.values(save.players).filter((p) => p.clubId === club.id && p.id !== player.id).sort((a, b) => b.overall - a.overall).slice(0, 4);
   const phoneMessages = legend.phoneMessages ?? [];
   const socialPosts = legend.socialPosts ?? [];
+  const rivalClubId = nextFixture ? (nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId) : '';
+  const rivalSquadIds = save.clubs[rivalClubId]?.tactics.startingXI ?? save.nationalTeams[rivalClubId]?.squadPlayerIds ?? [];
+  const rivalPlayer = rivalSquadIds.map((id) => save.players[id]).filter(Boolean).sort((a, b) => b.overall - a.overall)[0];
+
 
   const handleForwardTime = () => {
     soundEngine.playClick();
@@ -507,6 +511,10 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             </div>
             {phoneMode === 'SOCIAL' ? (
               <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-3">
+              <div className="rounded-xl border border-rose-400/25 bg-[#0b1118] p-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2"><div className="h-9 w-9 rounded-full bg-rose-500/15 flex items-center justify-center text-lg">⚔️</div><div><div className="text-xs font-bold text-rose-300">Rival watch</div><div className="text-[11px] text-slate-300">{rivalPlayer && nextFixture ? `${rivalPlayer.name} · ${save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'} · ${rivalPlayer.overall} OVR` : 'Your next opponent will appear here before matchday'}</div><div className="text-[10px] text-slate-500">Rivalry record: {legend.rivalryWins ?? 0} wins · {legend.rivalryLosses ?? 0} losses</div></div></div>
+                {rivalPlayer && nextFixture && <button type="button" disabled={Boolean(legend.rivalryPending)} onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: { ...legend, rivalryPlayerId: rivalPlayer.id, rivalryPending: true }, news: [{ id: 'rival_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' accepts a personal rivalry challenge', body: player.name + ' has challenged ' + rivalPlayer.name + ' to settle who performs best in the upcoming match.' }, ...save.news].slice(0, 35) }); }} className="min-h-[38px] rounded-lg bg-rose-500/15 border border-rose-400/40 px-3 text-[11px] font-bold text-rose-200 disabled:opacity-60">{legend.rivalryPending && legend.rivalryPlayerId === rivalPlayer.id ? 'Challenge accepted' : 'Challenge rival'}</button>}
+              </div>
                 <div className="rounded-xl border border-white/10 bg-[#0b1118] p-3 flex flex-col gap-3">
                   <div><div className="text-sm font-bold text-white">Share an update</div><div className="text-[11px] text-slate-400">Your posts can lift your profile and attract attention</div></div>
                   {[
