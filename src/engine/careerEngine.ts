@@ -288,7 +288,7 @@ export function createLegendCareer(params: {
     .filter((candidate) => candidate.leagueId === requestedClub.leagueId)
     .sort((a, b) => a.reputation - b.reputation);
   const trialRating = params.trialRating ?? 78;
-  const offerIndex = Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0);
+  const offerIndex = Math.min(academyCandidates.length - 1, trialRating >= 90 ? 2 : trialRating >= 82 ? 1 : 0);
   const club = academyCandidates[offerIndex] ?? requestedClub;
   const baseAttr = Math.max(42, Math.min(54, 46 + Math.floor((params.difficulty === 'HARD' ? 0 : params.difficulty === 'EASY' ? 4 : 2))));
   const isGK = params.position === 'GK';
