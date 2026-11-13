@@ -61,6 +61,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const [subOutId, setSubOutId] = useState<string>('');
   const [subInId, setSubInId] = useState<string>('');
   const [interviewDone, setInterviewDone] = useState<boolean>(false);
+  const [quickToolsOpen, setQuickToolsOpen] = useState<boolean>(false);
 
   const homeClub = clubs[session.homeClubId];
   const awayClub = clubs[session.awayClubId];
@@ -265,7 +266,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         </header>
 
         {/* Playback Controls Bar */}
-        <div className={`flex flex-wrap items-center justify-between rounded-xl bg-[#131A22] border border-white/10 ${isLiveMatch ? 'match-live-controls' : isHalfTime ? 'match-halftime-controls' : 'gap-3 px-4 py-2.5'}`}>
+        <div className={`relative flex flex-wrap items-center justify-between rounded-xl bg-[#131A22] border border-white/10 ${isLiveMatch ? 'match-live-controls' : isHalfTime ? 'match-halftime-controls' : 'gap-3 px-4 py-2.5'}`}>
           <div className="flex items-center gap-2">
             {session.phase === 'PRE_MATCH' && (
               <button
@@ -322,6 +323,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            {isManagerMode && session.phase !== 'FULL_TIME' && (
+              <button type="button" onClick={() => setQuickToolsOpen((open) => !open)} className={`min-h-[40px] px-3 rounded-lg border text-xs font-semibold whitespace-nowrap ${quickToolsOpen ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-[#0B0F14] text-cyan-300 border-cyan-500/40'}`}>
+                {quickToolsOpen ? 'Close Controls' : 'Quick Controls'}
+              </button>
+            )}
             {session.phase === 'HALF_TIME' && (
               <button
                 type="button"
@@ -345,6 +351,29 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </button>
           </div>
         </div>
+
+        {quickToolsOpen && isManagerMode && session.phase !== 'FULL_TIME' && (
+          <section className="match-quick-tools absolute z-50 right-2 top-[calc(100%+6px)] w-[min(620px,calc(100vw-16px))] rounded-xl border border-cyan-400/40 bg-[#101923] p-3 shadow-2xl">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div><div className="text-xs font-bold uppercase tracking-wider text-cyan-300">Touchline controls</div><div className="text-[10px] text-slate-400">Changes apply immediately · {userSubsUsed}/5 substitutions used</div></div>
+              <span className="text-[10px] text-slate-500">{session.minute}'</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+              <label className="text-[10px] text-slate-400">Formation<select value={userTactics.formation} onChange={(e) => updateUserTactics({ formation: e.target.value as Formation })} className="mt-1 w-full min-h-[38px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white">{(['4-3-3','4-2-3-1','4-4-2','3-5-2','5-3-2'] as Formation[]).map((v) => <option key={v} value={v}>{v}</option>)}</select></label>
+              <label className="text-[10px] text-slate-400">Mentality<select value={userTactics.mentality} onChange={(e) => updateUserTactics({ mentality: e.target.value as Mentality })} className="mt-1 w-full min-h-[38px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white"><option value="DEFENSIVE">Defensive</option><option value="BALANCED">Balanced</option><option value="ATTACKING">Attacking</option><option value="ALL_OUT">All-Out Attack</option></select></label>
+              <label className="text-[10px] text-slate-400">Pressing<select value={userTactics.pressing} onChange={(e) => updateUserTactics({ pressing: e.target.value as PressingStyle })} className="mt-1 w-full min-h-[38px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white"><option value="LOW_BLOCK">Low block</option><option value="MID_PRESS">Mid press</option><option value="GEGENPRESS">Gegenpress</option></select></label>
+              <label className="text-[10px] text-slate-400">Passing<select value={userTactics.passing} onChange={(e) => updateUserTactics({ passing: e.target.value as PassingStyle })} className="mt-1 w-full min-h-[38px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white"><option value="SHORT_TIKI_TAKA">Short passing</option><option value="MIXED">Mixed</option><option value="DIRECT_LONG">Direct long</option></select></label>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
+              <select value={subOutId} onChange={(e) => setSubOutId(e.target.value)} className="min-w-0 min-h-[40px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white"><option value="">Take off…</option>{userTactics.startingXI.map((pid) => { const p=players[pid]; return p ? <option key={pid} value={pid}>{p.name} · {p.position} · {Math.round(session.playerStates[pid]?.stamina ?? 100)}%</option> : null; })}</select>
+              <select value={subInId} onChange={(e) => setSubInId(e.target.value)} className="min-w-0 min-h-[40px] px-2 rounded bg-[#080d13] border border-white/15 text-xs text-white"><option value="">Bring on…</option>{userTactics.bench.map((pid) => { const p=players[pid]; return p ? <option key={pid} value={pid}>{p.name} · {p.position}</option> : null; })}</select>
+              <button type="button" disabled={!subOutId || !subInId || userSubsUsed >= 5 || session.phase === 'PRE_MATCH'} onClick={handleMakeSub} className="min-h-[40px] px-3 rounded bg-cyan-500 disabled:bg-slate-700 text-slate-950 disabled:text-slate-400 text-xs font-bold">Sub</button>
+            </div>
+            <div className="grid grid-cols-4 gap-1.5 mt-3">
+              {[{label:'Possession',a:session.homeStats.possession,b:session.awayStats.possession,suffix:'%'},{label:'Shots',a:session.homeStats.shots,b:session.awayStats.shots,suffix:''},{label:'On target',a:session.homeStats.shotsOnTarget,b:session.awayStats.shotsOnTarget,suffix:''},{label:'Expected goals',a:session.homeStats.xG,b:session.awayStats.xG,suffix:''}].map((stat) => <div key={stat.label} className="rounded-md bg-[#080d13] p-2 text-center"><div className="text-[9px] text-slate-500">{stat.label}</div><div className="text-xs font-mono-num text-white">{stat.a}{stat.suffix} <span className="text-slate-600">:</span> {stat.b}{stat.suffix}</div></div>)}
+            </div>
+          </section>
+        )}
 
         {session.phase === 'PRE_MATCH' && isManagerMode && (
           <section className="rounded-xl bg-[#131A22] border border-cyan-500/30 p-3 sm:p-4">
