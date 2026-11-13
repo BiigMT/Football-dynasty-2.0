@@ -555,11 +555,13 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               )}
               <button
                 type="button"
+                disabled={player.contractYears >= 3}
                 onClick={() => {
                   const renewedWage = Math.round((player.weeklyWage * 1.18) / 500) * 500;
                   onUpdateSave({
                     ...save,
                     players: { ...save.players, [player.id]: { ...player, contractYears: 4, weeklyWage: renewedWage, releaseClause: Math.max(player.releaseClause, player.marketValue * 1.8), morale: Math.min(100, player.morale + 5) } },
+                    clubs: { ...save.clubs, [club.id]: { ...club, finances: { ...club.finances, weeklyWageBill: Math.max(0, club.finances.weeklyWageBill + renewedWage - player.weeklyWage) } } },
                     legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 2) },
                     news: [{ id: 'news_renew_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER' as const, headline: player.name + ' signs a new four-year contract', body: 'The new deal raises weekly wages to €' + renewedWage.toLocaleString() + ' and secures the player’s future.' }, ...save.news].slice(0, 35),
                   });
@@ -567,7 +569,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 }}
                 className="min-h-[42px] w-full rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-400/35 text-xs font-bold transition-colors cursor-pointer"
               >
-                Negotiate New 4-Year Contract (+18% wage)
+                {player.contractYears >= 3 ? 'Contract Secure · ' + player.contractYears + ' Years Left' : 'Negotiate New 4-Year Contract (+18% wage)'}
               </button>
               {contractNotice && <p className="text-xs text-emerald-300">{contractNotice}</p>}
               <button
