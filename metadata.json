@@ -1,0 +1,6 @@
+{
+  "name": "Football Dynasty",
+  "description": "A complete football management and player career simulator inspired by PES 2017 Master League and Become a Legend.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
