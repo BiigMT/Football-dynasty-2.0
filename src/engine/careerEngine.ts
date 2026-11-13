@@ -282,7 +282,13 @@ export function createLegendCareer(params: {
   difficulty?: GameDifficulty;
 }): CareerSave {
   const world = buildWorldDatabase();
-  const club = world.clubs[params.clubId];
+  const requestedClub = world.clubs[params.clubId];
+  const academyCandidates = Object.values(world.clubs)
+    .filter((candidate) => candidate.leagueId === requestedClub.leagueId)
+    .sort((a, b) => a.reputation - b.reputation);
+  const trialRating = params.trialRating ?? 78;
+  const offerIndex = Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0);
+  const club = academyCandidates[offerIndex] ?? requestedClub;
   const baseAttr = Math.max(42, Math.min(54, 46 + Math.floor((params.difficulty === 'HARD' ? 0 : params.difficulty === 'EASY' ? 4 : 2))));
   const isGK = params.position === 'GK';
   const isDef = ['CB', 'LB', 'RB', 'CDM'].includes(params.position);
@@ -342,6 +348,7 @@ export function createLegendCareer(params: {
     releaseClause: marketValue * 2,
     clubId: params.clubId,
     isUserPlayer: true,
+    isYouth: true,
     injuredWeeks: 0,
     suspendedMatches: 0,
     scouted: true,
@@ -389,8 +396,8 @@ export function createLegendCareer(params: {
     userClubId: params.clubId,
     legend: {
       playerId: userPlayerId,
-      managerTrust: 58,
-      squadRole: 'ROTATION',
+      managerTrust: Math.max(48, Math.min(68, Math.round(trialRating * 0.65))),
+      squadRole: 'ACADEMY_PROSPECT',
       internationalCallUp: false,
       nationalTeamId: natTeam?.id,
       individualAwards: [],
@@ -412,8 +419,8 @@ export function createLegendCareer(params: {
         week: 1,
         season: 1,
         category: 'ACADEMY',
-        headline: `${params.playerName} signs first senior deal with ${club.name}`,
-        body: `Wearing #${params.shirtNumber}, the ${params.age}-year-old ${params.position} enters training determined to break into the Starting XI.`,
+        headline: `${params.playerName} earns an academy place at ${club.name}`,
+        body: `Trial assessment: ${trialRating}/100. The ${params.age}-year-old ${params.position} joins as an academy prospect and must earn promotion through training and performances.`,
       },
     ],
     trainingFocus: 'BALANCED',
