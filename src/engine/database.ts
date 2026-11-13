@@ -365,16 +365,16 @@ export const NATIONAL_TEAM_BLUEPRINTS: Array<{
 ];
 
 const FIRST_NAMES_BY_REGION: Record<Region, string[]> = {
-  EUROPE: ['Liam', 'Marco', 'Mateo', 'Lucas', 'Julian', 'Oliver', 'Hugo', 'Matteo', 'Daniel', 'Noah', 'Alessandro', 'Carlos', 'Adrian', 'Theo', 'Leo', 'Ethan', 'Bruno', 'Gabriel'],
-  AFRICA: ['Chinedu', 'Youssef', 'Kofi', 'Tariq', 'Samuel', 'Ibrahim', 'Moussa', 'Tendai', 'Patson', 'Sadio', 'Hakim', 'Victor', 'Idrissa', 'Emmanuel', 'Tarek', 'Bongani', 'Ayoub', 'Fiston'],
+  EUROPE: ['Liam', 'Marco', 'Mateo', 'Lucas', 'Julian', 'Oliver', 'Hugo', 'Matteo', 'Daniel', 'Noah', 'Alessandro', 'Carlos', 'Adrian', 'Theo', 'Leo', 'Ethan', 'Bruno', 'Gabriel', 'Christiano', 'Lionel', 'Kylian', 'Neymaro', 'Erling', 'Mohammed', 'Luka', 'Jude', 'Vincent', 'Antoine', 'Pedri', 'Rodri'],
+  AFRICA: ['Chinedu', 'Youssef', 'Kofi', 'Tariq', 'Samuel', 'Ibrahim', 'Moussa', 'Tendai', 'Patson', 'Sadio', 'Hakim', 'Victor', 'Idrissa', 'Emmanuel', 'Tarek', 'Bongani', 'Ayoub', 'Fiston', 'Kalidou', 'Achraf', 'Mohamed', 'Pierre', 'Wilfried', 'Thomas', 'Amadou'],
   SOUTH_AMERICA: ['Thiago', 'Matias', 'enzo', 'Rodrigo', 'Joaquin', 'Vinicius', 'Rafael', 'Nicolas', 'Santiago', 'Lautaro', 'Franco', 'Caua', 'Murilo', 'Facundo', 'Diego', 'Danilo'],
   ASIA: ['Kenji', 'Min-Jae', 'Haruto', 'Salem', 'Daichi', 'Heung-Su', 'Yuto', 'Firas', 'Takumi', 'Jae-Sung', 'Riku', 'Akram', 'Sora', 'Abdullah', 'Koji', 'Woo-Yeong'],
   NORTH_AMERICA: ['James', 'Landon', 'Diego', 'Carlos', 'Miguel', 'Jordan', 'Mateo', 'Tyler', 'Luis', 'Santiago', 'Noah', 'Alejandro'],
 };
 
 const LAST_NAMES_BY_REGION: Record<Region, string[]> = {
-  EUROPE: ['Sterling', 'Conti', 'Navarro', 'Moreau', 'Belling', 'Rossi', 'Silva', 'Vargas', 'Walker', 'Esposito', 'Serrano', 'Dubois', 'Romano', 'Gomez', 'Taylor', 'Bellini', 'Alvarez', 'Bennett'],
-  AFRICA: ['Okafor', 'Benali', 'Mensah', 'Diallo', 'Banda', 'Kouyate', 'El-Shenawy', 'Mokoena', 'Chukwu', 'Ndiaye', 'Toure', 'Kante', 'Ziyech', 'Tau', 'Mayele', 'Phiri', 'Abubakar', 'Hakimi'],
+  EUROPE: ['Sterling', 'Conti', 'Navarro', 'Moreau', 'Belling', 'Rossi', 'Silva', 'Vargas', 'Walker', 'Esposito', 'Serrano', 'Dubois', 'Romano', 'Gomez', 'Taylor', 'Bellini', 'Alvarez', 'Bennett', 'Ronalda', 'Messio', 'Mbappee', 'Junioro', 'Haalund', 'Salahh', 'Modricc', 'Bellingham', 'De Bruyne', 'Griezmann', 'Yamall', 'Lewandowsky'],
+  AFRICA: ['Okafor', 'Benali', 'Mensah', 'Diallo', 'Banda', 'Kouyate', 'El-Shenawy', 'Mokoena', 'Chukwu', 'Ndiaye', 'Toure', 'Kante', 'Ziyech', 'Tau', 'Mayele', 'Phiri', 'Abubakar', 'Hakimi', 'Mané', 'Salahh', 'Osimhen', 'Boniface', 'Lookman', 'Daka', 'Mwepu', 'Kudus'],
   SOUTH_AMERICA: ['Almeida', 'Fernandez', 'Souza', 'Pereira', 'Martinez', 'Gomes', 'Rojas', 'Costa', 'Cardozo', 'Molina', 'Oliveira', 'Santana', 'Vega', 'Barbosa', 'Bustos', 'Gimenez'],
   ASIA: ['Tanaka', 'Kim', 'Sato', 'Al-Dawsari', 'Watanabe', 'Park', 'Nakamura', 'Al-Brikan', 'Kobayashi', 'Lee', 'Ito', 'Afif', 'Yamamoto', 'Cho', 'Suzuki', 'Al-Faraj'],
   NORTH_AMERICA: ['Johnson', 'Smith', 'Garcia', 'Rodriguez', 'Martinez', 'Williams', 'Hernandez', 'Lopez', 'Brown', 'Davis', 'Torres', 'Wilson'],
