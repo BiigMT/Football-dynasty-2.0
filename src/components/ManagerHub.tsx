@@ -39,7 +39,7 @@ import {
 import { getFormationSlots } from '../engine/database';
 import { getFormationCoordinates } from '../engine/matchEngine';
 import { soundEngine } from '../engine/audio';
-import { ClubBadge } from './ClubBadge';
+import { ClubBadge, CountryFlag, KitPreview } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
 import { CareerHomeNewsItem, DayItem, ManagerHome, TableRow } from './CareerHome';
@@ -362,10 +362,11 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               shortName={club.shortName}
               primaryColor={club.primaryColor}
               secondaryColor={club.secondaryColor}
+              country={club.country}
               size={36}
             />
             <div>
-              <div className="text-sm sm:text-base font-bold text-white leading-tight">{club.name}</div>
+              <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-white leading-tight"><KitPreview primaryColor={club.primaryColor} secondaryColor={club.secondaryColor} size={30} /><span>{club.name}</span><CountryFlag country={club.country} size={15} /></div>
               <div className="text-xs text-slate-400 font-mono-num">
                 {manager.name} · S{save.season} W{save.currentWeek} · Pos #{leaguePos}
               </div>
