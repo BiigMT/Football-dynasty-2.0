@@ -417,6 +417,24 @@ export interface ManagerProfile {
   pressConferenceDone?: boolean;
 }
 
+export interface PlayerPhoneMessage {
+  id: string;
+  teammateId: string;
+  teammateName: string;
+  from: 'TEAMMATE' | 'PLAYER';
+  text: string;
+  week: number;
+  season: number;
+}
+
+export interface PlayerSocialPost {
+  id: string;
+  caption: string;
+  likes: number;
+  week: number;
+  season: number;
+}
+
 export interface LegendProfile {
   playerId: string;
   managerTrust: number; // 0-100
@@ -428,6 +446,9 @@ export interface LegendProfile {
   retired: boolean;
   retirementSummary?: string;
   agentOffers: TransferOffer[];
+  phoneMessages?: PlayerPhoneMessage[];
+  socialPosts?: PlayerSocialPost[];
+  phoneFollowers?: number;
 }
 
 export interface NewsItem {
