@@ -10,6 +10,11 @@ import {
   Volume2,
   VolumeX,
   Flag,
+  Smartphone,
+  MessageCircle,
+  Heart,
+  Send,
+  Users,
 } from 'lucide-react';
 import { CareerSave, Fixture, IndividualDrill, PlayerAttributes } from '../types/football';
 import {
@@ -34,7 +39,7 @@ interface LegendHubProps {
   onExitToTitle: () => void;
 }
 
-type LegendSection = 'DASHBOARD' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
+type LegendSection = 'DASHBOARD' | 'PHONE' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
 
 const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = [
   { key: 'speed', label: 'Speed' },
@@ -67,6 +72,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 }) => {
   const [tab, setTab] = useState<LegendSection>('DASHBOARD');
   const [contractNotice, setContractNotice] = useState('');
+  const [phoneMode, setPhoneMode] = useState<'SOCIAL' | 'MESSAGES'>('SOCIAL');
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
@@ -77,6 +83,9 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const isStarter = club.tactics.startingXI.includes(player.id);
   const isBench = club.tactics.bench.includes(player.id);
   const natTeam = legend.nationalTeamId ? save.nationalTeams[legend.nationalTeamId] : undefined;
+  const teammates = Object.values(save.players).filter((p) => p.clubId === club.id && p.id !== player.id).sort((a, b) => b.overall - a.overall).slice(0, 4);
+  const phoneMessages = legend.phoneMessages ?? [];
+  const socialPosts = legend.socialPosts ?? [];
 
   const handleForwardTime = () => {
     soundEngine.playClick();
@@ -395,6 +404,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
       <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
+            { id: 'PHONE', label: 'My Phone', icon: Smartphone },
             { id: 'ATTRIBUTES', label: 'Player Profile', icon: BarChart3 },
             { id: 'TRAINING', label: 'Training Drills', icon: Dumbbell },
             { id: 'AGENT', label: 'Agent & Transfers', icon: ArrowLeftRight },
@@ -424,7 +434,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+      <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
         {tab === 'ATTRIBUTES' && (
           <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
@@ -480,6 +490,59 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               })}
             </div>
           </div>
+        )}
+
+        {tab === 'PHONE' && (
+          <section className="rounded-2xl border border-amber-400/25 bg-[#111923] p-3 sm:p-4 flex flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-9 rounded-lg border-2 border-slate-500 bg-gradient-to-b from-slate-700 to-[#05080c] p-1 shadow-lg"><div className="h-full rounded bg-[#152a36] flex items-center justify-center"><Smartphone className="h-5 w-5 text-amber-300" /></div></div>
+                <div><div className="text-xs uppercase tracking-[.2em] text-amber-400 font-bold">Player phone</div><h2 className="text-lg font-black text-white">Your life off the pitch</h2><p className="text-[11px] text-slate-400">Messages, teammates and your public profile</p></div>
+              </div>
+              <div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 rounded-lg bg-[#080d13] p-1">
+              <button type="button" onClick={() => setPhoneMode('SOCIAL')} className={`min-h-[40px] rounded-md text-xs font-bold flex items-center justify-center gap-2 ${phoneMode === 'SOCIAL' ? 'bg-amber-400 text-slate-950' : 'text-slate-400'}`}><Heart className="h-4 w-4" /> Social Feed</button>
+              <button type="button" onClick={() => setPhoneMode('MESSAGES')} className={`min-h-[40px] rounded-md text-xs font-bold flex items-center justify-center gap-2 ${phoneMode === 'MESSAGES' ? 'bg-amber-400 text-slate-950' : 'text-slate-400'}`}><MessageCircle className="h-4 w-4" /> Teammates</button>
+            </div>
+            {phoneMode === 'SOCIAL' ? (
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-3">
+                <div className="rounded-xl border border-white/10 bg-[#0b1118] p-3 flex flex-col gap-3">
+                  <div><div className="text-sm font-bold text-white">Share an update</div><div className="text-[11px] text-slate-400">Your posts can lift your profile and attract attention</div></div>
+                  {[
+                    {caption:'Back on the training ground. Every session counts. 💪',label:'Post training update'},
+                    {caption:'Proud to wear these colours. Time to give everything for the badge. 🏟️',label:'Show love for the club'},
+                    {caption:'Big ambitions, one match at a time. The work never stops. ⚽',label:'Share your ambition'},
+                  ].map((post) => <button key={post.label} type="button" onClick={() => { soundEngine.playClick(); const likes = Math.max(12, Math.round(player.reputation * 2 + player.overall * 1.4)); onUpdateSave({ ...save, legend: { ...legend, socialPosts: [{ id: 'post_' + Date.now(), caption: post.caption, likes, week: save.currentWeek, season: save.season }, ...socialPosts].slice(0, 20), phoneFollowers: (legend.phoneFollowers ?? 1250) + Math.max(3, Math.round(likes * 0.08)) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 1), reputation: Math.min(100, player.reputation + 1) } } }); }} className="min-h-[48px] rounded-lg border border-white/10 bg-[#141f2b] hover:border-amber-400/60 px-3 py-2 text-left"><span className="block text-xs font-semibold text-amber-200">{post.label}</span><span className="block text-[10px] text-slate-400 mt-0.5">{post.caption}</span></button>)}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Your timeline</div>
+                  {socialPosts.length === 0 ? <div className="rounded-xl border border-dashed border-white/15 p-5 text-center text-xs text-slate-500">No posts yet. Share your first update to start building your profile.</div> : socialPosts.map((post) => <article key={post.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3"><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-white">{player.name}</span><span className="text-[10px] text-slate-500">S{post.season} · W{post.week}</span></div><p className="text-xs text-slate-200 mt-2">{post.caption}</p><div className="flex items-center gap-1.5 mt-3 text-[11px] text-rose-300"><Heart className="h-3.5 w-3.5 fill-current" /> {post.likes.toLocaleString()} likes</div></article>)}
+                  {save.news.slice(0, 2).map((item) => <article key={item.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3"><div className="text-[10px] uppercase text-cyan-300 font-bold">Football news</div><div className="text-xs text-white font-semibold mt-1">{item.headline}</div><div className="text-[11px] text-slate-400 mt-1">{item.body}</div></article>)}
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {teammates.length === 0 ? <div className="rounded-xl bg-[#0b1118] p-4 text-xs text-slate-400">Your teammate inbox will appear when you join a squad.</div> : teammates.map((mate, index) => {
+                  const starter = [
+                    `Good session today. We should link up more in training.`,
+                    `How are you feeling about the next match? We need everyone switched on.`,
+                    `Keep working like that and you'll be a big player for this club.`,
+                    `Fancy staying after training for a few extra drills?`,
+                  ][index];
+                  const thread = phoneMessages.filter((message) => message.teammateId === mate.id);
+                  const lastMessage = thread[thread.length - 1];
+                  return <article key={mate.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3 flex flex-col gap-2">
+                    <div className="flex items-center gap-2"><div className="h-9 w-9 rounded-full bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-xs font-black text-amber-300">{mate.name.split(' ').map((part) => part[0]).slice(0,2).join('')}</div><div className="min-w-0"><div className="text-xs font-bold text-white truncate">{mate.name}</div><div className="text-[10px] text-slate-500">{mate.position} · {mate.overall} OVR</div></div><span className="ml-auto text-[9px] text-emerald-400">TEAMMATE</span></div>
+                    <div className="rounded-lg bg-[#151f2a] p-2 text-[11px] text-slate-300">{lastMessage ? lastMessage.text : starter}</div>
+                    <div className="grid grid-cols-1 gap-1.5">
+                      {['Let’s keep pushing together.','I’m focused. Let’s win the next one.','Thanks, that means a lot.'].map((reply) => <button key={reply} type="button" onClick={() => { soundEngine.playClick(); const inbox = phoneMessages.length ? phoneMessages : teammates.map((teammate, idx) => ({ id: 'starter_' + teammate.id, teammateId: teammate.id, teammateName: teammate.name, from: 'TEAMMATE' as const, text: [`Good session today. We should link up more in training.`,`How are you feeling about the next match? We need everyone switched on.`,`Keep working like that and you'll be a big player for this club.`,`Fancy staying after training for a few extra drills?`][idx], week: save.currentWeek, season: save.season })); const nextInbox = [...inbox, { id: 'reply_' + Date.now(), teammateId: mate.id, teammateName: mate.name, from: 'PLAYER' as const, text: reply, week: save.currentWeek, season: save.season }, { id: 'answer_' + (Date.now()+1), teammateId: mate.id, teammateName: mate.name, from: 'TEAMMATE' as const, text: index === 1 ? 'That’s the spirit. Let’s make it happen on matchday.' : 'Respect. We’re stronger when we push each other.', week: save.currentWeek, season: save.season }]; onUpdateSave({ ...save, legend: { ...legend, phoneMessages: nextInbox.slice(-60) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 1) } }, clubs: { ...save.clubs, [club.id]: { ...club, chemistry: Math.min(100, club.chemistry + 1) } } }); }} className="min-h-[34px] rounded-md border border-white/10 px-2 py-1.5 text-left text-[10px] text-amber-200 hover:bg-amber-400/10">{reply}</button>)}
+                    </div>
+                  </article>;
+                })}
+              </div>
+            )}
+          </section>
         )}
 
         {tab === 'TRAINING' && (
