@@ -66,6 +66,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   onExitToTitle,
 }) => {
   const [tab, setTab] = useState<LegendSection>('DASHBOARD');
+  const [contractNotice, setContractNotice] = useState('');
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
@@ -549,12 +550,33 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 </div>
               </div>
 
+              {player.contractYears <= 1 && (
+                <div className="rounded-lg border border-rose-400/30 bg-rose-500/10 p-3 text-xs text-rose-200">Contract entering its final season. Renew now to protect your future.</div>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  const renewedWage = Math.round((player.weeklyWage * 1.18) / 500) * 500;
+                  onUpdateSave({
+                    ...save,
+                    players: { ...save.players, [player.id]: { ...player, contractYears: 4, weeklyWage: renewedWage, releaseClause: Math.max(player.releaseClause, player.marketValue * 1.8), morale: Math.min(100, player.morale + 5) } },
+                    legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 2) },
+                    news: [{ id: 'news_renew_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER', headline: player.name + ' signs a new four-year contract', body: 'The new deal raises weekly wages to €' + renewedWage.toLocaleString() + ' and secures the player’s future.' }, ...save.news].slice(0, 35),
+                  });
+                  setContractNotice('New four-year deal agreed. Your wage has increased by 18%.');
+                }}
+                className="min-h-[42px] w-full rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-400/35 text-xs font-bold transition-colors cursor-pointer"
+              >
+                Negotiate New 4-Year Contract (+18% wage)
+              </button>
+              {contractNotice && <p className="text-xs text-emerald-300">{contractNotice}</p>}
               <button
                 type="button"
                 onClick={handleRequestTransfer}
-                className="min-h-[42px] w-full rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-400/40 text-xs font-bold transition-colors cursor-pointer"
+                disabled={legend.squadRole === 'ACADEMY_PROSPECT'}
+                className="min-h-[42px] w-full rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-400/40 text-xs font-bold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Ask Agent to Explore Transfer Offers
+                {legend.squadRole === 'ACADEMY_PROSPECT' ? 'Earn Promotion Before Transfer Talks' : 'Ask Agent to Explore Transfer Offers'}
               </button>
             </div>
 
