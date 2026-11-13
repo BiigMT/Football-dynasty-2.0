@@ -13,6 +13,8 @@ interface TitleScreenProps {
   onStartNewCareer: (mode: CareerMode, slotId: string) => void;
   onLoadCareer: (slotId: string) => void;
   onDeleteSlot: (slotId: string) => void;
+  orientation: 'portrait' | 'landscape';
+  onChangeOrientation: () => void;
 }
 
 export const TitleScreen: React.FC<TitleScreenProps> = ({
@@ -22,6 +24,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   onStartNewCareer,
   onLoadCareer,
   onDeleteSlot,
+  orientation,
+  onChangeOrientation,
 }) => {
   const firstEmptySlot = slots.find((s) => s.empty)?.slotId ?? 'slot_1';
   const latestSaved = [...slots]
@@ -47,6 +51,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             Master League · Become a Legend · Global Football Engine
           </span>
         </div>
+        <div className="flex items-center gap-2">
+        <button type="button" onClick={onChangeOrientation} className="min-h-[44px] rounded-lg border border-white/10 bg-[#131A22]/85 px-3 py-2 text-xs font-medium text-slate-200 hover:border-cyan-400/50">{orientation === 'portrait' ? 'Portrait' : 'Landscape'} · Change</button>
         <button
           type="button"
           onClick={onToggleMute}
@@ -56,6 +62,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           {muted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
           <span>{muted ? 'Audio Off' : 'Audio On'}</span>
         </button>
+        </div>
       </div>
 
       {/* Main Hero & Mode Selection */}
