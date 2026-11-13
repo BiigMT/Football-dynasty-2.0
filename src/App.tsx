@@ -26,7 +26,7 @@ export default function App() {
     const saved = localStorage.getItem('fd-game-orientation');
     return saved === 'portrait' || saved === 'landscape' ? saved : null;
   });
-  const [slots, setSlots] = useState<SaveSlotSummary[]>(() => listSaveSlots());
+  const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [setupTarget, setSetupTarget] = useState<{ mode: CareerMode; slotId: string }>({
     mode: 'MANAGER',
     slotId: 'slot_1',
@@ -34,7 +34,7 @@ export default function App() {
   const [activeSave, setActiveSave] = useState<CareerSave | null>(null);
   const [muted, setMuted] = useState<boolean>(false);
 
-  const refreshSlots = () => setSlots(listSaveSlots());
+  const refreshSlots = async () => setSlots(await listSaveSlots());\n\n  useEffect(() => { void refreshSlots(); }, []);
 
   const chooseOrientation = async (next: GameOrientation) => {
     setOrientation(next);
@@ -69,9 +69,9 @@ export default function App() {
     setScreen('SETUP');
   };
 
-  const handleLoadCareer = (slotId: string) => {
+  const handleLoadCareer = async (slotId: string) => {
     soundEngine.playClick();
-    const loaded = loadCareer(slotId);
+    const loaded = await loadCareer(slotId);
     if (!loaded) return;
     setActiveSave(loaded);
     if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
@@ -81,7 +81,7 @@ export default function App() {
     }
   };
 
-  const handleDeleteSlot = (slotId: string) => {
+  const handleDeleteSlot = async (slotId: string) => {
     soundEngine.playClick();
     deleteCareer(slotId);
     refreshSlots();
