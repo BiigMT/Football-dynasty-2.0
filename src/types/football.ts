@@ -1,4 +1,5 @@
 export type CareerMode = 'MANAGER' | 'PLAYER';
+export type GameDifficulty = 'EASY' | 'NORMAL' | 'HARD';
 
 export type Position =
   | 'GK'
@@ -439,6 +440,7 @@ export interface NewsItem {
 export interface CareerSave {
   slotId: string;
   mode: CareerMode;
+  difficulty?: GameDifficulty;
   createdAt: number;
   updatedAt: number;
   season: number;
