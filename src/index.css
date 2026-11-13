@@ -211,3 +211,15 @@
   .match-live-grid { gap: 5px; }
   .match-live-info-column { gap: 5px; }
 }
+
+
+/* Compact inner career pages only. Dashboard/home screens keep their existing layout. */
+.career-subpage-content {
+  min-height: 0;
+}
+.career-subpage-content .p-5 { padding: 1rem; }
+.career-subpage-content .p-6 { padding: 1.125rem; }
+.career-subpage-content .gap-6 { gap: 1rem; }
+.career-subpage-content .gap-5 { gap: 0.875rem; }
+.career-subpage-content .py-6 { padding-top: 1rem; padding-bottom: 1rem; }
+.career-subpage-content .min-h-\[72px\] { min-height: 60px; }
