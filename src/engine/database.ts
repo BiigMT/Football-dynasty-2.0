@@ -137,7 +137,7 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
       { id: 'doha_sadd', name: 'Doha Al-Wolves', shortName: 'DOH', country: 'Qatar', primaryColor: '#F8FAFC', secondaryColor: '#111827', reputation: 77, stadiumName: 'Jassim Bin Hamad', stadiumCapacity: 15000, formation: '4-2-3-1' },
       { id: 'ulsan_horangi', name: 'Ulsan Tigers', shortName: 'ULS', country: 'South Korea', primaryColor: '#0284C7', secondaryColor: '#F59E0B', reputation: 77, stadiumName: 'Munsu Football Stadium', stadiumCapacity: 44100, formation: '4-3-3' },
     ],
-  },,
+  },
   {
     id: 'fra_ligue1', name: 'French Ligue 1', country: 'France', region: 'EUROPE', tier: 1,
     clubs: [
@@ -348,7 +348,7 @@ export const NATIONAL_TEAM_BLUEPRINTS: Array<{
   { id: 'nat_ita', name: 'Italy', code: 'ITA', region: 'EUROPE', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', worldRank: 9, reputation: 86, formation: '3-5-2' },
   { id: 'nat_rsa', name: 'South Africa', code: 'RSA', region: 'AFRICA', primaryColor: '#EAB308', secondaryColor: '#15803D', worldRank: 34, reputation: 76, formation: '4-3-3' },
   { id: 'nat_zmb', name: 'Zambia', code: 'ZAM', region: 'AFRICA', primaryColor: '#16A34A', secondaryColor: '#F97316', worldRank: 42, reputation: 74, formation: '4-4-2' },
-  { id: 'nat_ksa', name: 'Saudi Arabia', code: 'KSA', region: 'ASIA', primaryColor: '#15803D', secondaryColor: '#FFFFFF', worldRank: 38, reputation: 75, formation: '4-3-3' },,
+  { id: 'nat_ksa', name: 'Saudi Arabia', code: 'KSA', region: 'ASIA', primaryColor: '#15803D', secondaryColor: '#FFFFFF', worldRank: 38, reputation: 75, formation: '4-3-3' },
   { id: 'nat_ger', name: 'Germany', code: 'GER', region: 'EUROPE', primaryColor: '#F8FAFC', secondaryColor: '#DC2626', worldRank: 6, reputation: 88, formation: '4-3-3' },
   { id: 'nat_por', name: 'Portugal', code: 'POR', region: 'EUROPE', primaryColor: '#16A34A', secondaryColor: '#DC2626', worldRank: 7, reputation: 87, formation: '4-3-3' },
   { id: 'nat_ned', name: 'Netherlands', code: 'NED', region: 'EUROPE', primaryColor: '#F97316', secondaryColor: '#FFFFFF', worldRank: 8, reputation: 86, formation: '4-3-3' },
