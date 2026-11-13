@@ -43,6 +43,7 @@ import { ClubBadge, CountryFlag, KitPreview } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
 import { CareerHomeNewsItem, DayItem, ManagerHome, TableRow } from './CareerHome';
+import { ManagerPressConference } from './ManagerPressConference';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -310,6 +311,19 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       ],
     });
   };
+
+  if (manager.pressConferenceDone === false) {
+    return (
+      <ManagerPressConference
+        managerName={manager.name}
+        clubName={club.name}
+        onContinue={() => onUpdateSave({
+          ...save,
+          manager: { ...manager, pressConferenceDone: true },
+        })}
+      />
+    );
+  }
 
   if (tab === 'DASHBOARD') {
     return (
