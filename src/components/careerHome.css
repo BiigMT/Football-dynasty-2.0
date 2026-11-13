@@ -712,3 +712,180 @@
     display: none;
   }
 }
+
+
+/* ---------- landscape phones: keep every career option visible ---------- */
+@media (min-aspect-ratio: 1/1) and (max-height: 600px) {
+  .fd-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: 68px auto minmax(0, 1fr) 42px;
+    grid-template-areas:
+      "top"
+      "menu"
+      "main"
+      "tick";
+  }
+
+  .fd-top {
+    gap: 10px;
+    padding: 0 12px;
+    min-width: 0;
+  }
+
+  .fd-club {
+    min-width: 150px;
+    gap: 8px;
+  }
+
+  .fd-club h1 {
+    font-size: 17px;
+  }
+
+  .fd-club small {
+    font-size: 10px;
+  }
+
+  .fd-days {
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .fd-day {
+    gap: 5px;
+    padding: 6px 8px;
+  }
+
+  .fd-day b {
+    font-size: 11px;
+  }
+
+  .fd-day small {
+    font-size: 9px;
+  }
+
+  .fd-day span {
+    font-size: 16px;
+  }
+
+  .fd-money {
+    gap: 5px;
+  }
+
+  .fd-money span {
+    font-size: 19px;
+  }
+
+  .fd-money b {
+    font-size: 13px;
+  }
+
+  .fd-money small {
+    font-size: 9px;
+  }
+
+  .fd-gear {
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .fd-menu {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(38px, auto));
+    align-content: center;
+    gap: 5px;
+    padding: 6px 10px;
+    overflow: visible;
+  }
+
+  .fd-forward,
+  .fd-item {
+    min-width: 0;
+    min-height: 38px;
+    width: 100%;
+    padding: 6px 9px;
+    gap: 7px;
+    border-radius: 6px;
+  }
+
+  .fd-forward {
+    box-shadow: none;
+  }
+
+  .fd-play {
+    font-size: 17px;
+  }
+
+  .fd-ico {
+    width: 22px;
+    font-size: 17px;
+  }
+
+  .fd-menu b {
+    font-size: 11px;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .fd-menu small,
+  .fd-menu i {
+    display: none;
+  }
+
+  .fd-main {
+    min-height: 0;
+    overflow-y: auto;
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-rows: minmax(150px, auto) minmax(125px, auto);
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .fd-panel {
+    padding: 10px;
+  }
+
+  .fd-hero {
+    padding: 12px 14px 0;
+  }
+
+  .fd-heroText {
+    padding-bottom: 12px;
+  }
+
+  .fd-heroText h2 {
+    font-size: 25px;
+  }
+
+  .fd-heroText p {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .fd-portrait {
+    max-height: 150px;
+  }
+
+  .fd-offline {
+    gap: 6px;
+  }
+
+  .fd-offlineLead {
+    font-size: 14px;
+  }
+
+  .fd-offlineCopy {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .fd-ticker {
+    min-height: 42px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .fd-marquee {
+    font-size: 11px;
+  }
+}
