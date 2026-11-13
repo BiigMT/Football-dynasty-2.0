@@ -508,7 +508,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     const reportBody = [
       `${homeName} ${homeGoals}-${awayGoals} ${awayName} in the ${session.competitionName}.`,
       `Your side ${verdict}.`,
-      standoutPlayer ? `Player of the Match: ${standoutPlayer.name} (${standout.rating.toFixed(1)}/10).` : '',
+      standout && standoutPlayer ? `Player of the Match: ${standoutPlayer.name} (${standout.rating.toFixed(1)}/10).` : '',
       keyEvents.length ? `Talking points: ${keyEvents.join(' · ')}.` : '',
     ].filter(Boolean).join(' ');
     nextNews.unshift({
