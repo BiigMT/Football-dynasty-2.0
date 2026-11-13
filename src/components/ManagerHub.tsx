@@ -317,6 +317,26 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       <ManagerPressConference
         managerName={manager.name}
         clubName={club.name}
+        onAnswer={(boardDelta, chemistryDelta, reputationDelta, response) => onUpdateSave({
+          ...save,
+          manager: {
+            ...manager,
+            boardConfidence: Math.max(15, Math.min(100, manager.boardConfidence + boardDelta)),
+            reputation: Math.max(1, Math.min(100, manager.reputation + reputationDelta)),
+          },
+          clubs: {
+            ...save.clubs,
+            [club.id]: { ...club, chemistry: Math.max(1, Math.min(100, club.chemistry + chemistryDelta)) },
+          },
+          news: [{
+            id: 'news_media_' + Date.now(),
+            week: save.currentWeek,
+            season: save.season,
+            category: 'BOARD',
+            headline: manager.name + ' makes first impression at ' + club.name,
+            body: response,
+          }, ...save.news].slice(0, 35),
+        })}
         onContinue={() => onUpdateSave({
           ...save,
           manager: { ...manager, pressConferenceDone: true },
