@@ -153,6 +153,30 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     });
   };
 
+  const handlePreMatchSwap = () => {
+    if (!subOutId || !subInId || session.phase !== 'PRE_MATCH') return;
+    const current = userSide === 'HOME' ? session.homeTactics : session.awayTactics;
+    const xiIndex = current.startingXI.indexOf(subOutId);
+    const benchIndex = current.bench.indexOf(subInId);
+    if (xiIndex < 0 || benchIndex < 0) return;
+    const nextXI = [...current.startingXI];
+    const nextBench = [...current.bench];
+    nextXI[xiIndex] = subInId;
+    nextBench[benchIndex] = subOutId;
+    const nextTactics = { ...current, startingXI: nextXI, bench: nextBench };
+    const nextStates = { ...session.playerStates };
+    if (nextStates[subOutId]) nextStates[subOutId] = { ...nextStates[subOutId], onPitch: false, subbedOff: false, slotIndex: -1 };
+    if (nextStates[subInId]) nextStates[subInId] = { ...nextStates[subInId], onPitch: true, subbedOff: false, slotIndex: xiIndex };
+    const nextSession = userSide === 'HOME'
+      ? { ...session, homeTactics: nextTactics, playerStates: nextStates }
+      : { ...session, awayTactics: nextTactics, playerStates: nextStates };
+    setSession(nextSession);
+    onPersistMatchState(nextSession);
+    setSubOutId('');
+    setSubInId('');
+    soundEngine.playClick();
+  };
+
   const handleMakeSub = () => {
     if (!subOutId || !subInId) return;
     soundEngine.playClick();
@@ -319,6 +343,41 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </button>
           </div>
         </div>
+
+        {session.phase === 'PRE_MATCH' && isManagerMode && (
+          <section className="rounded-xl bg-[#131A22] border border-cyan-500/30 p-3 sm:p-4">
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-cyan-300">Team sheet</div>
+                <div className="text-[11px] text-slate-400">Make your final changes before kick-off</div>
+              </div>
+              <span className="text-[11px] text-slate-500">{userTactics.startingXI.length} starters · {userTactics.bench.length} subs</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2">
+              <select value={subOutId} onChange={(e) => setSubOutId(e.target.value)} className="min-h-[42px] min-w-0 px-2.5 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white">
+                <option value="">Player to replace…</option>
+                {userTactics.startingXI.map((pid) => {
+                  const p = players[pid];
+                  return p ? <option key={pid} value={pid}>{p.name} · {p.position} · {p.overall}</option> : null;
+                })}
+              </select>
+              <select value={subInId} onChange={(e) => setSubInId(e.target.value)} className="min-h-[42px] min-w-0 px-2.5 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white">
+                <option value="">Substitute to bring on…</option>
+                {userTactics.bench.map((pid) => {
+                  const p = players[pid];
+                  return p ? <option key={pid} value={pid}>{p.name} · {p.position} · {p.overall}</option> : null;
+                })}
+              </select>
+              <button type="button" disabled={!subOutId || !subInId} onClick={handlePreMatchSwap} className="min-h-[42px] px-4 rounded-lg bg-cyan-500 disabled:bg-slate-700 text-slate-950 disabled:text-slate-400 font-bold text-xs whitespace-nowrap">Swap players</button>
+            </div>
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {userTactics.bench.map((pid) => {
+                const p = players[pid];
+                return p ? <span key={pid} className="px-2 py-1 rounded-md bg-[#0B0F14] border border-white/10 text-[10px] text-slate-300">{p.name} <span className="text-cyan-300">{p.position}</span></span> : null;
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Main Grid: Pitch Canvas + Live Telemetry / Half-Time Controls */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -509,7 +568,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                             type="button"
                             disabled={!subOutId || !subInId || userSubsUsed >= 5}
                             onClick={handleMakeSub}
-                            className="min-h-[40px] px-3 rounded bg-cyan-500 disabled:bg-slate-700 text-slate-950 font-semibold text-xs flex items-center gap-1 cursor-pointer"
+                            className="min-h-[40px] px-3 rounded bg-cyan-500 disabled:bg-slate-700 text-slate-950 font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <ArrowRightLeft className="w-3.5 h-3.5" />
                             <span>Sub</span>
