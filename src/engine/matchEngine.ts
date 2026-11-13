@@ -624,11 +624,6 @@ export function resolveKeyMomentChoice(
   const side = session.userClubSide;
   const userState = { ...session.playerStates[userPlayer.id] };
   const nextStates = { ...session.playerStates };
-  const challenge = session.difficulty === 'HARD' ? 1.08 : session.difficulty === 'EASY' ? 0.92 : 1;
-  const scaleRatings = (ratings: SectorRatings, factor: number): SectorRatings => ({ attack: ratings.attack * factor, midfield: ratings.midfield * factor, defense: ratings.defense * factor, gk: ratings.gk * factor });
-  if (session.userClubSide === 'HOME') awayRatings = scaleRatings(awayRatings, challenge);
-  else if (session.userClubSide === 'AWAY') homeRatings = scaleRatings(homeRatings, challenge);
-
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
   const sideStats = side === 'HOME' ? homeStats : awayStats;
@@ -878,6 +873,17 @@ export function simulateNextMinute(
     false,
     session.weather
   );
+
+  // Difficulty strengthens the opponent relative to the user's team.
+  const challenge = session.difficulty === 'HARD' ? 1.08 : session.difficulty === 'EASY' ? 0.92 : 1;
+  const scaleRatings = (ratings: SectorRatings, factor: number): SectorRatings => ({
+    attack: ratings.attack * factor,
+    midfield: ratings.midfield * factor,
+    defense: ratings.defense * factor,
+    gk: ratings.gk * factor,
+  });
+  if (session.userClubSide === 'HOME') awayRatings = scaleRatings(awayRatings, challenge);
+  else if (session.userClubSide === 'AWAY') homeRatings = scaleRatings(homeRatings, challenge);
 
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
