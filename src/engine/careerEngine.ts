@@ -1,6 +1,7 @@
 import {
   CareerHistoryEntry,
   CareerSave,
+  GameDifficulty,
   Club,
   Fixture,
   IndividualDrill,
@@ -203,6 +204,7 @@ export function createManagerCareer(params: {
   nationality: string;
   philosophy: 'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced';
   clubId: string;
+  difficulty?: GameDifficulty;
 }): CareerSave {
   const world = buildWorldDatabase();
   const userClub = world.clubs[params.clubId];
@@ -218,6 +220,7 @@ export function createManagerCareer(params: {
   return {
     slotId: params.slotId,
     mode: 'MANAGER',
+    difficulty: params.difficulty ?? 'NORMAL',
     createdAt: Date.now(),
     updatedAt: Date.now(),
     season: 1,
@@ -275,10 +278,11 @@ export function createLegendCareer(params: {
   playingStyle: PlayingStyle;
   appearance: PlayerAppearance;
   clubId: string;
+  difficulty?: GameDifficulty;
 }): CareerSave {
   const world = buildWorldDatabase();
   const club = world.clubs[params.clubId];
-  const baseAttr = Math.max(66, Math.min(76, club.reputation - 8));
+  const baseAttr = Math.max(42, Math.min(54, 46 + Math.floor((params.difficulty === 'HARD' ? 0 : params.difficulty === 'EASY' ? 4 : 2))));
   const isGK = params.position === 'GK';
   const isDef = ['CB', 'LB', 'RB', 'CDM'].includes(params.position);
   const isAtt = ['ST', 'LW', 'RW', 'CAM'].includes(params.position);
@@ -375,6 +379,7 @@ export function createLegendCareer(params: {
   return {
     slotId: params.slotId,
     mode: 'PLAYER',
+    difficulty: params.difficulty ?? 'NORMAL',
     createdAt: Date.now(),
     updatedAt: Date.now(),
     season: 1,
