@@ -1,6 +1,7 @@
 import {
   Club,
   ClubTactics,
+  GameDifficulty,
   Fixture,
   Formation,
   KeyMomentChoice,
@@ -152,6 +153,7 @@ export function createMatchSession(params: {
   players: Record<string, Player>;
   userClubSide?: 'HOME' | 'AWAY';
   userPlayerId?: string;
+  difficulty?: GameDifficulty;
 }): MatchSession {
   const { fixture, homeClub, awayClub, players, userClubSide, userPlayerId } = params;
   const weathers: WeatherCondition[] = ['Clear Night', 'Light Rain', 'Warm Humid', 'Breezy'];
@@ -228,6 +230,7 @@ export function createMatchSession(params: {
     isInternational: fixture.competitionType === 'INTERNATIONAL',
     weather,
     phase: 'PRE_MATCH',
+    difficulty: params.difficulty ?? 'NORMAL',
     minute: 0,
     addedTimeFirstHalf: 1 + Math.floor(Math.random() * 3),
     addedTimeSecondHalf: 2 + Math.floor(Math.random() * 4),
@@ -621,6 +624,11 @@ export function resolveKeyMomentChoice(
   const side = session.userClubSide;
   const userState = { ...session.playerStates[userPlayer.id] };
   const nextStates = { ...session.playerStates };
+  const challenge = session.difficulty === 'HARD' ? 1.08 : session.difficulty === 'EASY' ? 0.92 : 1;
+  const scaleRatings = (ratings: SectorRatings, factor: number): SectorRatings => ({ attack: ratings.attack * factor, midfield: ratings.midfield * factor, defense: ratings.defense * factor, gk: ratings.gk * factor });
+  if (session.userClubSide === 'HOME') awayRatings = scaleRatings(awayRatings, challenge);
+  else if (session.userClubSide === 'AWAY') homeRatings = scaleRatings(homeRatings, challenge);
+
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
   const sideStats = side === 'HOME' ? homeStats : awayStats;
@@ -854,7 +862,7 @@ export function simulateNextMinute(
 
   const homeClub = clubs[session.homeClubId];
   const awayClub = clubs[session.awayClubId];
-  const homeRatings = computeSectorRatings(
+  let homeRatings = computeSectorRatings(
     session.homeTactics,
     session.playerStates,
     players,
@@ -862,7 +870,7 @@ export function simulateNextMinute(
     true,
     session.weather
   );
-  const awayRatings = computeSectorRatings(
+  let awayRatings = computeSectorRatings(
     session.awayTactics,
     session.playerStates,
     players,
