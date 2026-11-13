@@ -88,7 +88,10 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [nationality, setNationality] = useState('Nigeria');
   const [philosophy, setPhilosophy] = useState<'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced'>('Gegenpress');
   const [difficulty, setDifficulty] = useState<GameDifficulty>('NORMAL');
-  const [trialRating, setTrialRating] = useState(78);
+  const [trialRating, setTrialRating] = useState(65);
+  const [trialStep, setTrialStep] = useState(0);
+  const [trialScore, setTrialScore] = useState(0);
+  const [trialComplete, setTrialComplete] = useState(false);
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
@@ -488,17 +491,28 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                 <div className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4">
                   <div className="text-xs font-bold uppercase tracking-wider text-amber-300">Academy trial day</div>
                   <p className="mt-1 text-sm text-slate-300">Your performance decides which club offers you a place. No instant first-team superstar contract.</p>
-                  <div className="mt-3 grid gap-2">
-                    {[
-                      { score: 65, title: 'Play it safe', detail: 'Show discipline and avoid mistakes' },
-                      { score: 78, title: 'Balanced showcase', detail: 'Mix skill, teamwork and effort' },
-                      { score: 91, title: 'Take your chance', detail: 'Attempt the difficult plays and impress scouts' },
-                    ].map((option) => (
-                      <button key={option.score} type="button" onClick={() => setTrialRating(option.score)} className={`rounded-lg border p-3 text-left ${trialRating === option.score ? 'border-amber-400 bg-amber-500/15' : 'border-white/10 bg-[#0B0F14]'}`}>
-                        <div className="flex items-center justify-between"><span className="text-sm font-bold text-white">{option.title}</span><span className="text-xs font-mono-num text-amber-300">{option.score}/100</span></div>
-                        <p className="mt-1 text-xs text-slate-400">{option.detail}</p>
-                      </button>
-                    ))}
+                  <div className="mt-3 rounded-lg border border-white/10 bg-[#0B0F14] p-3">
+                    <div className="flex items-center justify-between text-xs"><span className="font-bold text-white">{trialComplete ? 'Scout assessment complete' : ['Round 1 · First touch','Round 2 · Passing drill','Round 3 · Finishing chance'][trialStep]}</span><span className="text-amber-300">{trialComplete ? trialRating + '/100' : 'Challenge ' + (trialStep + 1) + '/3'}</span></div>
+                    <p className="mt-2 text-xs text-slate-400">{trialComplete ? 'Your three actions have been assessed. Your score determines the level of academy offer.' : ['A difficult ball arrives under pressure. Choose your first touch.','A teammate makes a run. Decide how to release the ball.','You get one chance in front of goal. Choose your finish.'][trialStep]}</p>
+                    {!trialComplete ? (
+                      <div className="mt-3 grid gap-2">
+                        {(trialStep === 0 ? [{label:'Control into space',points:30},{label:'Shield and keep possession',points:24},{label:'Attempt an ambitious flick',points:18}] : trialStep === 1 ? [{label:'Thread a through ball',points:30},{label:'Play a safe short pass',points:25},{label:'Switch play quickly',points:27}] : [{label:'Place the shot',points:30},{label:'Strike with power',points:26},{label:'Try a first-time finish',points:28}]).map((action) => (
+                          <button key={action.label} type="button" onClick={() => {
+                            const total = trialScore + action.points;
+                            setTrialScore(total);
+                            if (trialStep === 2) {
+                              const score = Math.max(55, Math.min(96, Math.round((total / 90) * 100)));
+                              setTrialRating(score);
+                              setTrialComplete(true);
+                            } else {
+                              setTrialStep((step) => step + 1);
+                            }
+                          }} className="min-h-[40px] rounded-md border border-white/10 px-3 py-2 text-left text-xs font-semibold text-white hover:border-amber-400 hover:bg-amber-500/10">{action.label}</button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-3 flex items-center justify-between"><span className="text-xs text-emerald-300">Trial score locked in</span><button type="button" onClick={() => { setTrialStep(0); setTrialScore(0); setTrialRating(65); setTrialComplete(false); }} className="text-xs text-amber-300 underline">Replay trial</button></div>
+                    )}
                   </div>
                 </div>
                 <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4">
@@ -518,13 +532,14 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
               </div>
               <button
                 type="submit"
+                disabled={mode !== 'MANAGER' && !trialComplete}
                 className={`min-h-[46px] px-6 py-2.5 rounded-lg font-bold text-sm transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   mode === 'MANAGER'
                     ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-950'
                     : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
                 }`}
               >
-                {mode === 'MANAGER' ? 'Sign Contract & Start' : 'Begin Career'}
+                {mode === 'MANAGER' ? 'Sign Contract & Start' : trialComplete ? 'Accept Academy Offer' : 'Complete Trial First'}
               </button>
             </div>
           </div>
