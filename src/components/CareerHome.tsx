@@ -141,7 +141,6 @@ export type ManagerHomeProps = {
   transferBudget: string;
   wageBudget: string;
   news: CareerHomeNewsItem[];
-  fans?: FanPost[]; // Legacy compatibility only; no simulated social feed is displayed.
   leagueName: string;
   table: TableRow[];
   ticker: string[];
