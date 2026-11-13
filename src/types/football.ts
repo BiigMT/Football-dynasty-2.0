@@ -31,7 +31,7 @@ export type Mentality = 'DEFENSIVE' | 'BALANCED' | 'ATTACKING' | 'ALL_OUT';
 export type PressingStyle = 'LOW_BLOCK' | 'MID_PRESS' | 'GEGENPRESS';
 export type PassingStyle = 'SHORT_TIKI_TAKA' | 'MIXED' | 'DIRECT_LONG';
 
-export type Region = 'EUROPE' | 'AFRICA' | 'SOUTH_AMERICA' | 'ASIA';
+export type Region = 'EUROPE' | 'AFRICA' | 'SOUTH_AMERICA' | 'ASIA' | 'NORTH_AMERICA';
 
 export type WeatherCondition = 'Clear Night' | 'Light Rain' | 'Warm Humid' | 'Breezy';
 
