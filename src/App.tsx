@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
-import { CareerMode, CareerSave, Club, Fixture, MatchSession } from './types/football';
+import { CareerMode, CareerSave, Club, Fixture, GameDifficulty, MatchSession } from './types/football';
 import {
   advanceWeek,
   applyMatchSessionToWorld,
@@ -97,6 +97,7 @@ export default function App() {
     nationality: string;
     philosophy: 'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced';
     clubId: string;
+    difficulty: GameDifficulty;
   }) => {
     soundEngine.playWhistle('SHORT');
     const created = createManagerCareer(data);
