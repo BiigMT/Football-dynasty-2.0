@@ -242,7 +242,7 @@
   grid-area: main;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  grid-template-rows: 1.1fr 1fr;
+  grid-template-rows: minmax(230px, 1.1fr) minmax(220px, 1fr);
   gap: 12px;
   padding: 12px;
   min-height: 0;
@@ -388,7 +388,62 @@
   font-size: 13px;
 }
 
-/* fans */
+/* Offline career status panel */
+.fd-offline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.fd-localStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #86efac;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.fd-localStatus i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 10px #4ade8080;
+}
+
+.fd-offlineLead {
+  margin: 4px 0 0;
+  color: var(--txt);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.fd-offlineCopy {
+  margin: 0;
+  max-width: 560px;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.fd-offlineFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.fd-offlineFeatures span {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: #cbd5e1;
+  font-size: 10px;
+}
+
+/* legacy player-home styling */
 .fd-post {
   display: flex;
   gap: 10px;
