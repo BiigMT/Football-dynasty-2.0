@@ -69,6 +69,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const userSubsUsed = userSide === 'HOME' ? session.homeSubsUsed : session.awaySubsUsed;
   const isManagerMode = !session.userPlayerId;
   const isLiveMatch = session.phase === 'FIRST_HALF' || session.phase === 'SECOND_HALF';
+  const isHalfTime = session.phase === 'HALF_TIME';
 
   useEffect(() => {
     if (!running) return;
@@ -206,10 +207,10 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const userPlayer = session.userPlayerId ? players[session.userPlayerId] : undefined;
 
   return (
-    <div className={`bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`}>
-      <div className={isLiveMatch ? 'match-live-content' : 'max-w-6xl mx-auto flex flex-col gap-4'}>
+    <div className={`bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`}>
+      <div className={isLiveMatch ? 'match-live-content' : isHalfTime ? 'match-halftime-content' : 'max-w-6xl mx-auto flex flex-col gap-4'}>
         {/* Top Broadcast Scoreboard */}
-        <header className={`rounded-xl bg-[#131A22] border border-white/10 flex flex-wrap items-center justify-between ${isLiveMatch ? 'match-live-scoreboard' : 'p-4 gap-4'}`}>
+        <header className={`rounded-xl bg-[#131A22] border border-white/10 flex flex-wrap items-center justify-between ${isLiveMatch ? 'match-live-scoreboard' : isHalfTime ? 'match-halftime-scoreboard' : 'p-4 gap-4'}`}>
           <div className="flex items-center gap-3 min-w-0">
             <ClubBadge
               shortName={homeClub.shortName}
@@ -264,7 +265,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         </header>
 
         {/* Playback Controls Bar */}
-        <div className={`flex flex-wrap items-center justify-between rounded-xl bg-[#131A22] border border-white/10 ${isLiveMatch ? 'match-live-controls' : 'gap-3 px-4 py-2.5'}`}>
+        <div className={`flex flex-wrap items-center justify-between rounded-xl bg-[#131A22] border border-white/10 ${isLiveMatch ? 'match-live-controls' : isHalfTime ? 'match-halftime-controls' : 'gap-3 px-4 py-2.5'}`}>
           <div className="flex items-center gap-2">
             {session.phase === 'PRE_MATCH' && (
               <button
@@ -381,9 +382,9 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         )}
 
         {/* Main Grid: Pitch Canvas + Live Telemetry / Half-Time Controls */}
-        <div className={isLiveMatch ? 'match-live-grid' : 'grid grid-cols-1 lg:grid-cols-12 gap-4'}>
+        <div className={isLiveMatch ? 'match-live-grid' : isHalfTime ? 'match-halftime-grid' : 'grid grid-cols-1 lg:grid-cols-12 gap-4'}>
           {/* Left: 2D Tactical Pitch + Key Moment / Half-Time Console */}
-          <div className={isLiveMatch ? 'match-live-pitch-column' : 'lg:col-span-7 flex flex-col gap-4'}>
+          <div className={isLiveMatch ? 'match-live-pitch-column' : isHalfTime ? 'match-halftime-pitch-column' : 'lg:col-span-7 flex flex-col gap-4'}>
             <MatchPitchCanvas
               session={session}
               homeClub={homeClub}
@@ -428,8 +429,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
             {/* GENUINE HALF-TIME CONSOLE */}
             {session.phase === 'HALF_TIME' && (
-              <div className="rounded-xl bg-[#131A22] border border-cyan-500/40 p-5 flex flex-col gap-4">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="match-halftime-console rounded-xl bg-[#131A22] border border-cyan-500/40 p-3 sm:p-4 flex flex-col gap-3">
+                <div className="match-halftime-heading flex items-center justify-between border-b border-white/10 pb-2">
                   <div>
                     <div className="text-xs font-semibold text-cyan-400">Half-Time Interval (45&apos;)</div>
                     <h3 className="text-xl font-bold text-white">Tactical Adjustments & Team Talk</h3>
@@ -440,13 +441,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                 </div>
 
                 {session.halfTimeFeedback && (
-                  <div className="rounded-lg bg-[#0B0F14] border border-amber-400/30 p-3 text-xs text-amber-200">
+                  <div className="match-halftime-feedback rounded-lg bg-[#0B0F14] border border-amber-400/30 p-2 text-xs text-amber-200">
                     {session.halfTimeFeedback}
                   </div>
                 )}
 
                 {/* Team Talk */}
-                <div>
+                <div className="match-halftime-talk">
                   <div className="text-xs text-slate-400 mb-2 flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
                     <span>{isManagerMode ? 'Deliver Half-Time Team Talk' : 'Second-Half Mentality Focus'}</span>
@@ -481,7 +482,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
                 {/* Manager Tactics & Substitutions */}
                 {isManagerMode && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+                  <div className="match-halftime-tools grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/10">
                     <div className="flex flex-col gap-2">
                       <span className="text-xs text-slate-400">Live Tactics</span>
                       <div className="grid grid-cols-2 gap-2">
@@ -636,7 +637,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
 
           {/* Right: Stats, Player Objectives (Legend) & Live Commentary */}
-          <div className={isLiveMatch ? 'match-live-info-column' : 'lg:col-span-5 flex flex-col gap-4'}>
+          <div className={isLiveMatch ? 'match-live-info-column' : isHalfTime ? 'match-halftime-info-column' : 'lg:col-span-5 flex flex-col gap-4'}>
             {/* Become a Legend Match Objectives */}
             {userPlayer && userPlayerState && !isLiveMatch && (
               <div className="rounded-xl bg-[#131A22] border border-amber-400/30 p-4 flex flex-col gap-3">
