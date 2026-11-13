@@ -252,7 +252,7 @@ export default function App() {
             id: 'rival_result_' + Date.now(),
             week: withResult.currentWeek,
             season: withResult.season,
-            category: 'MATCH',
+            category: 'MATCH' as const,
             headline: wonRivalry ? 'Rivalry won on the pitch' : lostRivalry ? 'Rival gets the bragging rights' : 'Rivals share the honours',
             body: resultText,
           }, ...withResult.news].slice(0, 35),
