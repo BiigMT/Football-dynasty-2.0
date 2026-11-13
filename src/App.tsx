@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { CareerMode, CareerSave, Club, Fixture, MatchSession } from './types/football';
 import {
   advanceWeek,
@@ -17,9 +18,14 @@ import { LegendHub } from './components/LegendHub';
 import { MatchCenter } from './components/MatchCenter';
 
 type AppScreen = 'TITLE' | 'SETUP' | 'CAREER' | 'MATCH';
+type GameOrientation = 'portrait' | 'landscape';
 
 export default function App() {
   const [screen, setScreen] = useState<AppScreen>('TITLE');
+  const [orientation, setOrientation] = useState<GameOrientation | null>(() => {
+    const saved = localStorage.getItem('fd-game-orientation');
+    return saved === 'portrait' || saved === 'landscape' ? saved : null;
+  });
   const [slots, setSlots] = useState<SaveSlotSummary[]>(() => listSaveSlots());
   const [setupTarget, setSetupTarget] = useState<{ mode: CareerMode; slotId: string }>({
     mode: 'MANAGER',
@@ -29,6 +35,22 @@ export default function App() {
   const [muted, setMuted] = useState<boolean>(false);
 
   const refreshSlots = () => setSlots(listSaveSlots());
+
+  const chooseOrientation = async (next: GameOrientation) => {
+    setOrientation(next);
+    localStorage.setItem('fd-game-orientation', next);
+    try {
+      await ScreenOrientation.lock({ orientation: next });
+    } catch (error) {
+      // Browsers that do not support orientation locking still keep the saved preference.
+      console.info('Orientation lock is unavailable on this device.', error);
+    }
+  };
+
+  useEffect(() => {
+    if (!orientation) return;
+    ScreenOrientation.lock({ orientation }).catch(() => undefined);
+  }, [orientation]);
 
   const handleToggleMute = () => {
     const nextMuted = soundEngine.toggleMute();
@@ -209,6 +231,33 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [screen, slots]);
 
+  if (!orientation) {
+    return (
+      <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#080d13] px-5 py-10 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(8,145,178,0.22),_transparent_55%)]" />
+        <div className="relative z-10 mx-auto w-full max-w-3xl text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-3xl">⚽</div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.35em] text-cyan-300">Welcome to</p>
+          <h1 className="text-4xl font-black tracking-tight sm:text-6xl">FOOTBALL <span className="text-cyan-400">DYNASTY</span></h1>
+          <p className="mx-auto mt-4 max-w-lg text-sm leading-6 text-slate-400">Choose how you want to experience your football journey. You can change this later.</p>
+          <div className="mt-9 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <button type="button" onClick={() => void chooseOrientation('portrait')} className="group rounded-2xl border border-white/10 bg-[#111a24] p-6 text-left transition hover:-translate-y-1 hover:border-cyan-400/70 hover:bg-[#142332]">
+              <div className="mx-auto flex h-36 w-24 items-center justify-center rounded-[1.4rem] border-[3px] border-slate-500 bg-gradient-to-b from-cyan-950 to-slate-950 shadow-xl transition group-hover:border-cyan-300"><div className="flex h-20 w-16 items-center justify-center rounded-lg border border-cyan-300/30 bg-cyan-400/10 text-3xl">⚽</div></div>
+              <h2 className="mt-6 text-xl font-bold">Portrait</h2><p className="mt-1 text-sm text-slate-400">Vertical gameplay · Best for one-hand play</p>
+              <span className="mt-5 inline-flex rounded-lg bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950">Choose Portrait</span>
+            </button>
+            <button type="button" onClick={() => void chooseOrientation('landscape')} className="group rounded-2xl border border-white/10 bg-[#111a24] p-6 text-left transition hover:-translate-y-1 hover:border-amber-400/70 hover:bg-[#241f18]">
+              <div className="mx-auto flex h-24 w-40 items-center justify-center rounded-[1.4rem] border-[3px] border-slate-500 bg-gradient-to-r from-amber-950 to-slate-950 shadow-xl transition group-hover:border-amber-300"><div className="flex h-16 w-24 items-center justify-center rounded-lg border border-amber-300/30 bg-amber-400/10 text-3xl">⚽</div></div>
+              <h2 className="mt-6 text-xl font-bold">Landscape</h2><p className="mt-1 text-sm text-slate-400">Horizontal gameplay · More pitch width</p>
+              <span className="mt-5 inline-flex rounded-lg bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950">Choose Landscape</span>
+            </button>
+          </div>
+          <p className="mt-8 text-xs text-slate-600">Your choice is saved on this device.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (screen === 'TITLE') {
     return (
       <TitleScreen
@@ -218,6 +267,8 @@ export default function App() {
         onStartNewCareer={handleStartNewCareer}
         onLoadCareer={handleLoadCareer}
         onDeleteSlot={handleDeleteSlot}
+        orientation={orientation}
+        onChangeOrientation={() => setOrientation(null)}
       />
     );
   }
