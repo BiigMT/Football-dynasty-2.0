@@ -1,0 +1,9 @@
+{
+  "appId": "com.footballdynasty.app",
+  "appName": "Football Dynasty",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "backgroundColor": "#0b0f14"
+}

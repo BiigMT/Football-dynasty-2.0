@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Play,
-  FastForward,
+  ArrowLeft,
   Search,
   Users,
   Briefcase,
@@ -35,6 +34,7 @@ import {
   getClubStandingsPosition,
   getNextUserFixture,
   promoteYouthProspect,
+  sortStandings,
 } from '../engine/careerEngine';
 import { getFormationSlots } from '../engine/database';
 import { getFormationCoordinates } from '../engine/matchEngine';
@@ -42,6 +42,7 @@ import { soundEngine } from '../engine/audio';
 import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
+import { CareerHomeNewsItem, DayItem, FanPost, ManagerHome, TableRow } from './CareerHome';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -52,6 +53,8 @@ interface ManagerHubProps {
   onExitToTitle: () => void;
 }
 
+type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'SETTINGS';
+
 export const ManagerHub: React.FC<ManagerHubProps> = ({
   save,
   muted,
@@ -60,7 +63,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   onLaunchMatch,
   onExitToTitle,
 }) => {
-  const [tab, setTab] = useState<'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB'>('DASHBOARD');
+  const [tab, setTab] = useState<ManagerSection>('DASHBOARD');
   const [selectedSlotIdx, setSelectedSlotIdx] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [posFilter, setPosFilter] = useState<Position | 'ALL'>('ALL');
@@ -95,6 +98,106 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       .sort((a, b) => b.overall - a.overall)
       .slice(0, 36);
   }, [save.players, club.id, posFilter, searchTerm]);
+
+  const handleForwardTime = () => {
+    soundEngine.playClick();
+    if (nextFixture) {
+      onLaunchMatch(nextFixture);
+    } else if (leagueFinished) {
+      soundEngine.playWhistle('FULL_TIME');
+      onUpdateSave(advanceToNextSeason(save));
+    } else {
+      onUpdateSave(advanceWeek(save));
+    }
+  };
+
+  const handleHomeNavigate = (key: string) => {
+    soundEngine.playClick();
+    if (key === 'team') setTab('SQUAD');
+    else if (key === 'transfers') setTab('TRANSFERS');
+    else if (key === 'office' || key === 'news') setTab('CLUB');
+    else if (key === 'competitions' || key === 'national') setTab('COMPETITIONS');
+    else if (key === 'stats') setTab('TRAINING');
+    else if (key === 'settings') setTab('SETTINGS');
+  };
+
+  // Build live ManagerHome props from CareerSave
+  const oppClub = nextFixture
+    ? save.clubs[nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId] ??
+      save.nationalTeams[nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId]
+    : undefined;
+
+  const days: DayItem[] = [
+    { label: `Week ${save.currentWeek}`, sub: '(Briefing)', icon: '📋', active: false },
+    { label: 'Training', sub: save.weekTrained ? '(Done)' : '(Ready)', icon: '🏋', active: !save.weekTrained && !nextFixture },
+    {
+      label: nextFixture ? `vs ${'shortName' in (oppClub ?? {}) ? (oppClub as { shortName: string }).shortName : (oppClub as { code?: string })?.code ?? 'OPP'}` : 'Rest Day',
+      sub: nextFixture ? '(Matchday)' : '(No Fixture)',
+      icon: '⚽',
+      active: Boolean(nextFixture),
+    },
+    { label: `Season ${save.season}`, sub: save.transferWindowOpen ? '(Window Open)' : '(Closed)', icon: '📅', active: false },
+  ];
+
+  const sortedStandings = sortStandings(league.standings);
+  const tableRows: TableRow[] = sortedStandings.map((r, idx) => {
+    const c = save.clubs[r.clubId];
+    return {
+      pos: idx + 1,
+      club: c?.name ?? r.clubId,
+      p: r.played,
+      gd: r.goalsFor - r.goalsAgainst,
+      pts: r.points,
+      color: c?.primaryColor,
+      me: r.clubId === club.id,
+    };
+  });
+
+  const homeNews: CareerHomeNewsItem[] = save.news.slice(0, 4).map((n) => ({
+    tag: n.category,
+    headline: n.headline,
+    body: n.body,
+  }));
+  if (nextFixture && oppClub) {
+    homeNews.unshift({
+      tag: 'MATCHDAY PREVIEW',
+      headline: `${club.name} prepare for clash with ${oppClub.name}`,
+      body: `${nextFixture.competitionName} · Currently #${leaguePos} in ${league.name} · Board trust at ${manager.boardConfidence}%.`,
+    });
+  }
+
+  const topScorer = [...squad].sort((a, b) => b.seasonStats.goals - a.seasonStats.goals)[0];
+  const fans: FanPost[] = [
+    {
+      name: `${club.shortName} Faithful`,
+      handle: `@${club.shortName.toLowerCase()}ultras`,
+      time: `W${save.currentWeek}`,
+      text:
+        leaguePos <= club.targetPosition
+          ? `${manager.name} has us sitting #${leaguePos}! Keep pressing and bring home the trophy.`
+          : `Big test coming up — time to climb back toward the top ${club.targetPosition}.`,
+      replies: 142 + manager.wins * 18,
+      shares: 380 + manager.wins * 24,
+      likes: 2400 + manager.boardConfidence * 15,
+    },
+    {
+      name: 'Matchday Tactician',
+      handle: '@dynastytactics',
+      time: '1h',
+      text:
+        topScorer && topScorer.seasonStats.goals > 0
+          ? `${topScorer.name} (${topScorer.seasonStats.goals}G) is thriving in this ${club.tactics.formation} setup.`
+          : `Watching how ${club.name} line up in the ${club.tactics.formation} ${club.tactics.mentality.toLowerCase()} shape.`,
+      replies: 86,
+      shares: 215,
+      likes: 1390,
+    },
+  ];
+
+  const ticker = [
+    ...save.news.slice(0, 5).map((n) => n.headline),
+    `${league.name} Leader: ${save.clubs[sortedStandings[0]?.clubId]?.name ?? 'TBD'} (${sortedStandings[0]?.points ?? 0} pts)`,
+  ];
 
   const updateTactics = (patch: Partial<typeof club.tactics>) => {
     soundEngine.playClick();
@@ -234,36 +337,69 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   };
 
+  if (tab === 'DASHBOARD') {
+    return (
+      <ManagerHome
+        club={club.name}
+        clubColor={club.primaryColor}
+        manager={manager.name}
+        days={days}
+        transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
+        wageBudget={`€${Math.round(club.finances.wageBudgetWeekly / 1000)}K/wk`}
+        news={homeNews}
+        fans={fans}
+        leagueName={league.name}
+        table={tableRows}
+        ticker={ticker}
+        forwardTitle={nextFixture ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'FORWARD TIME'}
+        forwardSub={
+          nextFixture
+            ? `${nextFixture.competitionName}`
+            : leagueFinished
+            ? 'Finalize awards & start next season'
+            : 'Advance to next matchweek'
+        }
+        onForward={handleForwardTime}
+        onNavigate={handleHomeNavigate}
+      />
+    );
+  }
+
   const formationCoords = getFormationCoordinates(club.tactics.formation);
   const formationSlots = getFormationSlots(club.tactics.formation);
 
   return (
     <div className="min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
-      {/* Top Club Header */}
-      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-white/10 px-4 sm:px-6 py-3">
+      {/* Sub-page Header */}
+      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-4 sm:px-6 py-3">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                soundEngine.playClick();
+                setTab('DASHBOARD');
+              }}
+              className="min-h-[42px] px-3.5 py-2 rounded-lg bg-[#131A22] border border-white/15 hover:border-cyan-400 text-xs font-semibold text-white flex items-center gap-2 cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-cyan-400" />
+              <span>Career Home</span>
+            </button>
             <ClubBadge
               shortName={club.shortName}
               primaryColor={club.primaryColor}
               secondaryColor={club.secondaryColor}
-              size={38}
+              size={36}
             />
             <div>
-              <div className="text-base sm:text-lg font-bold text-white leading-tight">{club.name}</div>
+              <div className="text-sm sm:text-base font-bold text-white leading-tight">{club.name}</div>
               <div className="text-xs text-slate-400 font-mono-num">
-                {manager.name} · Season {save.season} · Week {save.currentWeek} · Pos #{leaguePos}
+                {manager.name} · S{save.season} W{save.currentWeek} · Pos #{leaguePos}
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="hidden md:block text-right font-mono-num">
-              <div className="text-xs text-slate-400">Transfer Budget</div>
-              <div className="text-sm font-bold text-cyan-400">
-                €{(club.finances.transferBudget / 1000000).toFixed(2)}M
-              </div>
-            </div>
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onToggleMute}
@@ -278,22 +414,21 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               className="min-h-[40px] px-3 rounded-lg bg-[#131A22] border border-white/10 text-xs text-slate-300 hover:text-white flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span>Menu</span>
+              <span>Title Menu</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
+      {/* Sub-page Navigation */}
       <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
-            { id: 'DASHBOARD', label: 'Matchday Hub', icon: Play },
             { id: 'SQUAD', label: 'Squad & Tactics', icon: Users },
-            { id: 'TRANSFERS', label: 'Transfers', icon: ArrowLeftRight },
+            { id: 'TRANSFERS', label: 'Transfer Market', icon: ArrowLeftRight },
             { id: 'TRAINING', label: 'Training & Academy', icon: Dumbbell },
             { id: 'COMPETITIONS', label: 'Competitions', icon: Trophy },
-            { id: 'CLUB', label: 'Board & Legacy', icon: Building2 },
+            { id: 'CLUB', label: 'Manager Office', icon: Building2 },
           ].map((item) => {
             const Icon = item.icon;
             const active = tab === item.id;
@@ -303,12 +438,10 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 type="button"
                 onClick={() => {
                   soundEngine.playClick();
-                  setTab(item.id as typeof tab);
+                  setTab(item.id as ManagerSection);
                 }}
                 className={`min-h-[46px] px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
-                  active
-                    ? 'border-cyan-400 text-cyan-300'
-                    : 'border-transparent text-slate-400 hover:text-white'
+                  active ? 'border-cyan-400 text-cyan-300' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -321,182 +454,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
-        {tab === 'DASHBOARD' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Next Match Focal Card */}
-            <div className="lg:col-span-7 flex flex-col gap-5">
-              <div className="rounded-xl bg-[#131A22] border border-cyan-500/30 p-5 flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-cyan-400">
-                    {nextFixture ? nextFixture.competitionName : leagueFinished ? 'Season Complete' : 'Rest Week'}
-                  </span>
-                  <span className="text-xs text-slate-400 font-mono-num">
-                    {save.transferWindowOpen ? 'Transfer Window Open' : 'Window Closed'}
-                  </span>
-                </div>
-
-                {nextFixture ? (
-                  <>
-                    <div className="flex items-center justify-between gap-4 py-2">
-                      <div className="flex items-center gap-3">
-                        <ClubBadge
-                          shortName={save.clubs[nextFixture.homeClubId]?.shortName ?? save.nationalTeams[nextFixture.homeClubId]?.code ?? 'HOM'}
-                          primaryColor={save.clubs[nextFixture.homeClubId]?.primaryColor ?? '#06B6D4'}
-                          secondaryColor={save.clubs[nextFixture.homeClubId]?.secondaryColor ?? '#FFFFFF'}
-                          size={48}
-                        />
-                        <div>
-                          <div className="text-base sm:text-lg font-bold text-white">
-                            {save.clubs[nextFixture.homeClubId]?.name ?? save.nationalTeams[nextFixture.homeClubId]?.name}
-                          </div>
-                          <div className="text-xs text-slate-400">Home</div>
-                        </div>
-                      </div>
-                      <span className="text-xl font-display font-bold text-slate-500">VS</span>
-                      <div className="flex items-center gap-3 text-right">
-                        <div>
-                          <div className="text-base sm:text-lg font-bold text-white">
-                            {save.clubs[nextFixture.awayClubId]?.name ?? save.nationalTeams[nextFixture.awayClubId]?.name}
-                          </div>
-                          <div className="text-xs text-slate-400">Away</div>
-                        </div>
-                        <ClubBadge
-                          shortName={save.clubs[nextFixture.awayClubId]?.shortName ?? save.nationalTeams[nextFixture.awayClubId]?.code ?? 'AWY'}
-                          primaryColor={save.clubs[nextFixture.awayClubId]?.primaryColor ?? '#EF4444'}
-                          secondaryColor={save.clubs[nextFixture.awayClubId]?.secondaryColor ?? '#FFFFFF'}
-                          size={48}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          soundEngine.playClick();
-                          onLaunchMatch(nextFixture);
-                        }}
-                        className="min-h-[46px] px-6 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm flex items-center gap-2 whitespace-nowrap cursor-pointer"
-                      >
-                        <Play className="w-4 h-4 fill-current" />
-                        <span>Play Matchday</span>
-                      </button>
-                      <span className="text-xs text-slate-400">
-                        Formation {club.tactics.formation} · {club.tactics.mentality}
-                      </span>
-                    </div>
-                  </>
-                ) : leagueFinished ? (
-                  <div className="flex flex-col gap-3">
-                    <h2 className="text-2xl font-bold text-white">End of Season {save.season}</h2>
-                    <p className="text-sm text-slate-300">
-                      All league fixtures are complete. Finalize Season {save.season} awards, age progression, and roll into Season {save.season + 1}.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playWhistle('FULL_TIME');
-                        onUpdateSave(advanceToNextSeason(save));
-                      }}
-                      className="min-h-[46px] self-start px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm cursor-pointer"
-                    >
-                      Start Season {save.season + 1}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-sm text-slate-300">
-                      No club fixture scheduled this week. Advance the calendar to simulate world fixtures and continue.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playClick();
-                        onUpdateSave(advanceWeek(save));
-                      }}
-                      className="min-h-[44px] self-start px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm flex items-center gap-2 cursor-pointer"
-                    >
-                      <FastForward className="w-4 h-4" />
-                      <span>Advance Week</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* KPI Strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { label: 'League Rank', val: `#${leaguePos}`, sub: league.name },
-                  { label: 'Board Trust', val: `${manager.boardConfidence}%`, sub: `Target #${club.targetPosition}` },
-                  { label: 'Squad Avg', val: Math.round(squad.reduce((s, p) => s + p.overall, 0) / Math.max(1, squad.length)), sub: `${squad.length} Players` },
-                  { label: 'Record', val: `${manager.wins}-${manager.draws}-${manager.losses}`, sub: `${manager.trophies.length} Trophies` },
-                ].map((kpi) => (
-                  <div key={kpi.label} className="rounded-xl bg-[#131A22] border border-white/10 p-3.5">
-                    <div className="text-xs text-slate-400">{kpi.label}</div>
-                    <div className="text-xl font-bold font-mono-num text-white mt-0.5">{kpi.val}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: News & Incoming Bids */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              {save.transferOffers.length > 0 && (
-                <div className="rounded-xl bg-[#131A22] border border-amber-400/40 p-4 flex flex-col gap-3">
-                  <div className="text-sm font-bold text-amber-300">Incoming Transfer Bids</div>
-                  {save.transferOffers.map((off) => {
-                    const p = save.players[off.playerId];
-                    const buyer = save.clubs[off.fromClubId];
-                    if (!p || !buyer) return null;
-                    return (
-                      <div key={off.id} className="p-3 rounded-lg bg-[#0E141B] flex flex-col gap-2">
-                        <div className="text-xs text-white font-semibold">
-                          {buyer.name} bid €{(off.fee / 1000000).toFixed(2)}M for {p.name} ({p.overall} OVR)
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleAcceptIncomingBid(off.id)}
-                            className="min-h-[38px] flex-1 rounded bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
-                          >
-                            Accept
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleRejectIncomingBid(off.id)}
-                            className="min-h-[38px] flex-1 rounded bg-white/10 text-slate-300 text-xs font-semibold cursor-pointer"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-3 flex-1">
-                <h3 className="text-base font-bold text-white border-b border-white/10 pb-2">Club & World Feed</h3>
-                <div className="flex flex-col gap-2.5 max-h-[320px] overflow-y-auto pr-1">
-                  {save.news.map((n) => (
-                    <div key={n.id} className="p-3 rounded-lg bg-[#0E141B] border border-white/5">
-                      <div className="text-[11px] text-cyan-400 font-mono-num">
-                        S{n.season} · Week {n.week} · {n.category}
-                      </div>
-                      <div className="text-xs font-semibold text-white mt-0.5">{n.headline}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">{n.body}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {tab === 'SQUAD' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Tactical Pitch Board */}
             <div className="lg:col-span-5 rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-white">Tactical Pitch</h3>
@@ -513,7 +472,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 </select>
               </div>
 
-              {/* Visual Formation Pitch */}
               <div className="relative w-full aspect-[4/3] rounded-xl bg-[#0E3622] border border-white/15 overflow-hidden">
                 <div className="absolute inset-x-0 top-1/2 border-t border-white/25" />
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border border-white/25" />
@@ -550,11 +508,10 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
               {selectedSlotIdx !== null && (
                 <div className="text-xs text-cyan-300 bg-cyan-500/10 border border-cyan-400/30 px-3 py-2 rounded-lg">
-                  Slot {selectedSlotIdx + 1} ({formationSlots[selectedSlotIdx]}) selected — click any player on the right to swap into this position.
+                  Slot {selectedSlotIdx + 1} ({formationSlots[selectedSlotIdx]}) selected — click any player on the right to swap.
                 </div>
               )}
 
-              {/* Tactical Instructions */}
               <div className="grid grid-cols-3 gap-2">
                 <select
                   value={club.tactics.mentality}
@@ -587,7 +544,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               </div>
             </div>
 
-            {/* Squad List */}
             <div className="lg:col-span-7 rounded-xl bg-[#131A22] border border-white/10 overflow-hidden">
               <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-white">Senior Squad ({squad.length})</h3>
@@ -626,7 +582,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                       <div className="flex items-center gap-4 font-mono-num shrink-0">
                         <div className="text-right hidden sm:block">
                           <div className="text-xs text-slate-400">€{(p.weeklyWage / 1000).toFixed(1)}k/wk</div>
-                          <div className="text-[11px] text-slate-500">{p.seasonStats.goals}G {p.seasonStats.assists}A</div>
+                          <div className="text-[11px] text-slate-500">
+                            {p.seasonStats.goals}G {p.seasonStats.assists}A
+                          </div>
                         </div>
                         <span className="px-2.5 py-1 rounded bg-[#0B0F14] border border-white/10 text-sm font-bold text-cyan-400">
                           {p.overall}
@@ -642,6 +600,42 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
         {tab === 'TRANSFERS' && (
           <div className="flex flex-col gap-5">
+            {save.transferOffers.length > 0 && (
+              <div className="rounded-xl bg-[#131A22] border border-amber-400/40 p-4 flex flex-col gap-3">
+                <div className="text-sm font-bold text-amber-300">Incoming Transfer Bids</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {save.transferOffers.map((off) => {
+                    const p = save.players[off.playerId];
+                    const buyer = save.clubs[off.fromClubId];
+                    if (!p || !buyer) return null;
+                    return (
+                      <div key={off.id} className="p-3 rounded-lg bg-[#0E141B] flex flex-col gap-2">
+                        <div className="text-xs text-white font-semibold">
+                          {buyer.name} bid €{(off.fee / 1000000).toFixed(2)}M for {p.name} ({p.overall} OVR)
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleAcceptIncomingBid(off.id)}
+                            className="min-h-[38px] flex-1 rounded bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRejectIncomingBid(off.id)}
+                            className="min-h-[38px] flex-1 rounded bg-white/10 text-slate-300 text-xs font-semibold cursor-pointer"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2 flex-1">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
@@ -668,7 +662,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 </select>
               </div>
               <div className="text-xs font-mono-num text-slate-300">
-                Budget: <span className="text-cyan-400 font-bold">€{(club.finances.transferBudget / 1000000).toFixed(2)}M</span> · {save.transferWindowOpen ? 'Window Open' : 'Window Closed'}
+                Budget: <span className="text-cyan-400 font-bold">€{(club.finances.transferBudget / 1000000).toFixed(2)}M</span> ·{' '}
+                {save.transferWindowOpen ? 'Window Open' : 'Window Closed'}
               </div>
             </div>
 
@@ -717,7 +712,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               })}
             </div>
 
-            {/* Transfer Negotiation Modal */}
             {negTarget && (
               <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
                 <div className="max-w-lg w-full rounded-xl bg-[#131A22] border border-cyan-400/50 p-5 flex flex-col gap-4">
@@ -943,8 +937,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 Managerial Legacy & Job Offers
               </h3>
               <div className="text-xs text-slate-300">
-                Reputation: <span className="font-mono-num font-bold text-cyan-400">{manager.reputation}</span> ·
-                Philosophy: {manager.philosophy}
+                Reputation: <span className="font-mono-num font-bold text-cyan-400">{manager.reputation}</span> · Philosophy:{' '}
+                {manager.philosophy} · Record: {manager.wins}W-{manager.draws}D-{manager.losses}L
                 {manager.nationalTeamId && (
                   <span className="block text-amber-300 mt-1">
                     National Team Coach: {save.nationalTeams[manager.nationalTeamId]?.name}
@@ -973,7 +967,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                     <div key={jo.clubId} className="p-3 rounded-lg bg-[#0E141B] flex items-center justify-between gap-3">
                       <div className="text-xs">
                         <div className="font-bold text-white">{jo.clubName}</div>
-                        <div className="text-slate-400">{jo.leagueName} · €{jo.wage.toLocaleString()}/wk</div>
+                        <div className="text-slate-400">
+                          {jo.leagueName} · €{jo.wage.toLocaleString()}/wk
+                        </div>
                       </div>
                       <button
                         type="button"
@@ -987,6 +983,29 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {tab === 'SETTINGS' && (
+          <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
+            <h3 className="text-xl font-bold text-white">Career Settings</h3>
+            <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B]">
+              <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
+              <button
+                type="button"
+                onClick={onToggleMute}
+                className="min-h-[40px] px-4 rounded-lg bg-cyan-500/20 text-cyan-300 text-xs font-semibold cursor-pointer"
+              >
+                {muted ? 'Muted (Enable)' : 'Enabled (Mute)'}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={onExitToTitle}
+              className="min-h-[44px] w-full rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm font-semibold cursor-pointer"
+            >
+              Save & Return to Title Screen
+            </button>
           </div>
         )}
       </main>

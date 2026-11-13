@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Play,
-  FastForward,
+  ArrowLeft,
   Dumbbell,
   ArrowLeftRight,
   Trophy,
@@ -18,13 +17,13 @@ import {
   advanceWeek,
   applyLegendDrill,
   executeTransfer,
-  getClubStandingsPosition,
   getNextUserFixture,
+  sortStandings,
 } from '../engine/careerEngine';
 import { soundEngine } from '../engine/audio';
-import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
+import { DayItem, PlayerHome, TableRow } from './CareerHome';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -34,6 +33,8 @@ interface LegendHubProps {
   onLaunchMatch: (fixture: Fixture) => void;
   onExitToTitle: () => void;
 }
+
+type LegendSection = 'DASHBOARD' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
 
 const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = [
   { key: 'speed', label: 'Speed' },
@@ -64,18 +65,42 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   onLaunchMatch,
   onExitToTitle,
 }) => {
-  const [tab, setTab] = useState<'DASHBOARD' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY'>('DASHBOARD');
+  const [tab, setTab] = useState<LegendSection>('DASHBOARD');
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
   const league = save.leagues[club.leagueId];
-  const leaguePos = getClubStandingsPosition(save, club.id);
   const nextFixture = getNextUserFixture(save);
   const leagueFinished = league.fixtures.every((f) => f.played);
 
   const isStarter = club.tactics.startingXI.includes(player.id);
   const isBench = club.tactics.bench.includes(player.id);
   const natTeam = legend.nationalTeamId ? save.nationalTeams[legend.nationalTeamId] : undefined;
+
+  const handleForwardTime = () => {
+    soundEngine.playClick();
+    if (nextFixture) {
+      onLaunchMatch(nextFixture);
+    } else if (leagueFinished) {
+      soundEngine.playWhistle('FULL_TIME');
+      onUpdateSave(advanceToNextSeason(save));
+    } else {
+      onUpdateSave(advanceWeek(save));
+    }
+  };
+
+  const handleHomeNavigate = (key: string) => {
+    soundEngine.playClick();
+    if (key === 'matchday') {
+      if (nextFixture) onLaunchMatch(nextFixture);
+      else setTab('COMPETITIONS');
+    } else if (key === 'training') setTab('TRAINING');
+    else if (key === 'agent') setTab('AGENT');
+    else if (key === 'national') setTab('COMPETITIONS');
+    else if (key === 'history') setTab('LEGACY');
+    else if (key === 'profile') setTab('ATTRIBUTES');
+    else if (key === 'settings') setTab('SETTINGS');
+  };
 
   const handleAcceptAgentOffer = (offerId: string) => {
     const offer = legend.agentOffers.find((o) => o.id === offerId);
@@ -188,28 +213,152 @@ export const LegendHub: React.FC<LegendHubProps> = ({
     );
   }
 
+  if (tab === 'DASHBOARD') {
+    const opp = nextFixture
+      ? save.clubs[nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId] ??
+        save.nationalTeams[nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId]
+      : undefined;
+
+    const days: DayItem[] = [
+      { label: `Week ${save.currentWeek}`, sub: `(${legend.squadRole.replace('_', ' ')})`, icon: '📋', active: false },
+      { label: 'Training', sub: save.weekTrained ? '(Done)' : '(Drill Ready)', icon: '🏋', active: !save.weekTrained && !nextFixture },
+      {
+        label: nextFixture ? `vs ${'shortName' in (opp ?? {}) ? (opp as { shortName: string }).shortName : (opp as { code?: string })?.code ?? 'OPP'}` : 'Rest Day',
+        sub: nextFixture ? (isStarter ? '(Starter)' : isBench ? '(Bench)' : '(Reserves)') : '(Off)',
+        icon: '⚽',
+        active: Boolean(nextFixture),
+      },
+      {
+        label: legend.internationalCallUp && natTeam ? natTeam.code : `Season ${save.season}`,
+        sub: legend.internationalCallUp ? '(Called Up)' : `(${player.seasonStats.goals}G ${player.seasonStats.assists}A)`,
+        icon: '🌍',
+        active: false,
+      },
+    ];
+
+    const keyAttrs =
+      player.position === 'GK'
+        ? [
+            { label: 'Goalkeeping', value: player.attributes.goalkeeping },
+            { label: 'Reactions', value: player.attributes.reactions },
+            { label: 'Positioning', value: player.attributes.positioning },
+            { label: 'Jumping', value: player.attributes.jumping },
+            { label: 'Passing', value: player.attributes.passing },
+          ]
+        : ['CB', 'LB', 'RB', 'CDM'].includes(player.position)
+        ? [
+            { label: 'Tackling', value: player.attributes.tackling },
+            { label: 'Marking', value: player.attributes.marking },
+            { label: 'Positioning', value: player.attributes.positioning },
+            { label: 'Speed', value: player.attributes.speed },
+            { label: 'Stamina', value: player.attributes.stamina },
+          ]
+        : [
+            { label: 'Finishing', value: player.attributes.finishing },
+            { label: 'Dribbling', value: player.attributes.dribbling },
+            { label: 'Passing', value: player.attributes.passing },
+            { label: 'Speed', value: player.attributes.speed },
+            { label: 'Vision', value: player.attributes.vision },
+          ];
+
+    const objectives = [
+      `Selection: ${isStarter ? 'Starting XI' : isBench ? 'Bench Impact Sub' : 'Earn Starting Spot via Training'}`,
+      player.position === 'GK' ? 'Target: Clean sheet & 7.0+ rating' : 'Target: Contribute goal/assist & 7.2+ rating',
+      `Season Tally: ${player.seasonStats.goals}G · ${player.seasonStats.assists}A · ${player.seasonStats.averageRating ? player.seasonStats.averageRating.toFixed(1) : '--'} Avg`,
+    ];
+
+    const sortedStandings = sortStandings(league.standings);
+    const tableRows: TableRow[] = sortedStandings.map((r, idx) => {
+      const c = save.clubs[r.clubId];
+      return {
+        pos: idx + 1,
+        club: c?.name ?? r.clubId,
+        p: r.played,
+        gd: r.goalsFor - r.goalsAgainst,
+        pts: r.points,
+        color: c?.primaryColor,
+        me: r.clubId === club.id,
+      };
+    });
+
+    const ticker = [
+      ...save.news.slice(0, 5).map((n) => n.headline),
+      `${player.name}: ${player.overall} OVR (${player.potential} POT) · Value €${(player.marketValue / 1000000).toFixed(1)}M`,
+    ];
+
+    return (
+      <PlayerHome
+        name={player.name}
+        position={player.position}
+        age={player.age}
+        club={club.name}
+        clubColor={club.primaryColor}
+        number={player.shirtNumber}
+        overall={player.overall}
+        potential={player.potential}
+        skin={player.appearance.skinTone}
+        hair={player.appearance.hairColor}
+        form={player.form}
+        morale={player.morale}
+        fitness={player.fitness}
+        managerTrust={legend.managerTrust}
+        attrs={keyAttrs}
+        days={days}
+        nextMatch={
+          nextFixture && opp
+            ? `${nextFixture.homeClubId === club.id ? 'vs' : '@'} ${opp.name}`
+            : leagueFinished
+            ? `Season ${save.season} Complete`
+            : 'Midweek Recovery'
+        }
+        objectives={objectives}
+        marketValue={`€${(player.marketValue / 1000000).toFixed(1)}M`}
+        ticker={ticker}
+        table={tableRows}
+        leagueName={league.name}
+        forwardTitle={nextFixture ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'FORWARD TIME'}
+        forwardSub={
+          nextFixture ? nextFixture.competitionName : leagueFinished ? 'Roll to next season' : 'Advance to next week'
+        }
+        onForward={handleForwardTime}
+        onNavigate={handleHomeNavigate}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
-      {/* Top Player Identity Bar */}
-      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-white/10 px-4 sm:px-6 py-3">
+      {/* Sub-page Header */}
+      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-amber-400/35 px-4 sm:px-6 py-3">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                soundEngine.playClick();
+                setTab('DASHBOARD');
+              }}
+              className="min-h-[42px] px-3.5 py-2 rounded-lg bg-[#131A22] border border-white/15 hover:border-amber-400 text-xs font-semibold text-white flex items-center gap-2 cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-amber-400" />
+              <span>Career Home</span>
+            </button>
             <PlayerPortrait
               appearance={player.appearance}
               jerseyPrimary={club.primaryColor}
               jerseySecondary={club.secondaryColor}
-              size={44}
+              size={40}
               className="border border-amber-400/50"
             />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base sm:text-lg font-bold text-white">{player.name}</span>
+                <span className="text-sm sm:text-base font-bold text-white">{player.name}</span>
                 <span className="text-xs font-mono-num font-bold text-amber-400">
                   {player.overall} OVR · {player.position}
                 </span>
               </div>
               <div className="text-xs text-slate-400 font-mono-num">
-                {club.name} · Season {save.season} · Week {save.currentWeek} · {legend.squadRole.replace('_', ' ')}
+                {club.name} · S{save.season} W{save.currentWeek}
               </div>
             </div>
           </div>
@@ -235,17 +384,16 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               className="min-h-[40px] px-3 rounded-lg bg-[#131A22] border border-white/10 text-xs text-slate-300 hover:text-white flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span>Menu</span>
+              <span>Title Menu</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
+      {/* Sub-page Navigation */}
       <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
-            { id: 'DASHBOARD', label: 'Career Hub', icon: Play },
             { id: 'ATTRIBUTES', label: 'Player Profile', icon: BarChart3 },
             { id: 'TRAINING', label: 'Training Drills', icon: Dumbbell },
             { id: 'AGENT', label: 'Agent & Transfers', icon: ArrowLeftRight },
@@ -260,12 +408,10 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 type="button"
                 onClick={() => {
                   soundEngine.playClick();
-                  setTab(item.id as typeof tab);
+                  setTab(item.id as LegendSection);
                 }}
                 className={`min-h-[46px] px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
-                  active
-                    ? 'border-amber-400 text-amber-300'
-                    : 'border-transparent text-slate-400 hover:text-white'
+                  active ? 'border-amber-400 text-amber-300' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -278,177 +424,6 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
-        {tab === 'DASHBOARD' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7 flex flex-col gap-5">
-              {/* Next Matchday Selection Card */}
-              <div className="rounded-xl bg-[#131A22] border border-amber-400/35 p-5 flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-amber-400">
-                    {nextFixture ? nextFixture.competitionName : leagueFinished ? 'Season Complete' : 'Between Matchdays'}
-                  </span>
-                  <span className="text-xs font-mono-num text-slate-400">
-                    Selection: {isStarter ? 'Starting XI' : isBench ? 'Substitutes Bench' : 'Reserves'}
-                  </span>
-                </div>
-
-                {nextFixture ? (
-                  <>
-                    <div className="flex items-center justify-between gap-4 py-2">
-                      <div className="flex items-center gap-3">
-                        <ClubBadge
-                          shortName={save.clubs[nextFixture.homeClubId]?.shortName ?? save.nationalTeams[nextFixture.homeClubId]?.code ?? 'HOM'}
-                          primaryColor={save.clubs[nextFixture.homeClubId]?.primaryColor ?? '#F59E0B'}
-                          secondaryColor={save.clubs[nextFixture.homeClubId]?.secondaryColor ?? '#FFFFFF'}
-                          size={48}
-                        />
-                        <div>
-                          <div className="text-base sm:text-lg font-bold text-white">
-                            {save.clubs[nextFixture.homeClubId]?.name ?? save.nationalTeams[nextFixture.homeClubId]?.name}
-                          </div>
-                          <div className="text-xs text-slate-400">Home</div>
-                        </div>
-                      </div>
-                      <span className="text-xl font-display font-bold text-slate-500">VS</span>
-                      <div className="flex items-center gap-3 text-right">
-                        <div>
-                          <div className="text-base sm:text-lg font-bold text-white">
-                            {save.clubs[nextFixture.awayClubId]?.name ?? save.nationalTeams[nextFixture.awayClubId]?.name}
-                          </div>
-                          <div className="text-xs text-slate-400">Away</div>
-                        </div>
-                        <ClubBadge
-                          shortName={save.clubs[nextFixture.awayClubId]?.shortName ?? save.nationalTeams[nextFixture.awayClubId]?.code ?? 'AWY'}
-                          primaryColor={save.clubs[nextFixture.awayClubId]?.primaryColor ?? '#38BDF8'}
-                          secondaryColor={save.clubs[nextFixture.awayClubId]?.secondaryColor ?? '#FFFFFF'}
-                          size={48}
-                        />
-                      </div>
-                    </div>
-
-                    {!isStarter && !isBench && (
-                      <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-400/25 p-3 rounded-lg">
-                        Manager left you out of the matchday squad. Complete training drills to raise sharpness and trust.
-                      </div>
-                    )}
-
-                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          soundEngine.playClick();
-                          onLaunchMatch(nextFixture);
-                        }}
-                        className="min-h-[46px] px-6 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center gap-2 whitespace-nowrap cursor-pointer"
-                      >
-                        <Play className="w-4 h-4 fill-current" />
-                        <span>Play Matchday</span>
-                      </button>
-                      <span className="text-xs text-slate-400 font-mono-num">
-                        Manager Trust {legend.managerTrust}% · Fitness {player.fitness}%
-                      </span>
-                    </div>
-                  </>
-                ) : leagueFinished ? (
-                  <div className="flex flex-col gap-3">
-                    <h2 className="text-2xl font-bold text-white">End of Season {save.season}</h2>
-                    <p className="text-sm text-slate-300">
-                      Season {save.season} is complete! Review awards and progress into Season {save.season + 1}.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playWhistle('FULL_TIME');
-                        onUpdateSave(advanceToNextSeason(save));
-                      }}
-                      className="min-h-[46px] self-start px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm cursor-pointer"
-                    >
-                      Continue to Season {save.season + 1}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-sm text-slate-300">No fixture this week. Advance to next matchweek.</p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playClick();
-                        onUpdateSave(advanceWeek(save));
-                      }}
-                      className="min-h-[44px] self-start px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center gap-2 cursor-pointer"
-                    >
-                      <FastForward className="w-4 h-4" />
-                      <span>Advance Week</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Season KPI Strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { label: 'Apps / Goals', val: `${player.seasonStats.appearances} / ${player.seasonStats.goals}`, sub: `${player.seasonStats.assists} Assists` },
-                  { label: 'Avg Rating', val: player.seasonStats.averageRating ? player.seasonStats.averageRating.toFixed(2) : '--', sub: `${player.seasonStats.motm} MOTM` },
-                  { label: 'Market Value', val: `€${(player.marketValue / 1000000).toFixed(1)}M`, sub: `€${(player.weeklyWage / 1000).toFixed(1)}k/wk` },
-                  { label: 'League Pos', val: `#${leaguePos}`, sub: club.name },
-                ].map((k) => (
-                  <div key={k.label} className="rounded-xl bg-[#131A22] border border-white/10 p-3.5">
-                    <div className="text-xs text-slate-400">{k.label}</div>
-                    <div className="text-xl font-bold font-mono-num text-white mt-0.5">{k.val}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{k.sub}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Manager Status & News */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-3">
-                <h3 className="text-base font-bold text-white border-b border-white/10 pb-2">Player Condition & Status</h3>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-lg bg-[#0E141B]">
-                    <div className="text-slate-400">Manager Trust</div>
-                    <div className="text-lg font-mono-num font-bold text-amber-400">{legend.managerTrust}%</div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-[#0E141B]">
-                    <div className="text-slate-400">Confidence / Morale</div>
-                    <div className="text-lg font-mono-num font-bold text-white">
-                      {player.confidence}% / {player.morale}%
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-[#0E141B]">
-                    <div className="text-slate-400">Form / Sharpness</div>
-                    <div className="text-lg font-mono-num font-bold text-emerald-400">
-                      {player.form} / {player.sharpness}
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-[#0E141B]">
-                    <div className="text-slate-400">International</div>
-                    <div className="text-sm font-semibold text-white mt-1">
-                      {legend.internationalCallUp ? `${natTeam?.name} (${player.internationalCaps} caps)` : 'Not Yet Called'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-2.5 flex-1">
-                <h3 className="text-base font-bold text-white border-b border-white/10 pb-2">Career Feed</h3>
-                <div className="flex flex-col gap-2 max-h-[260px] overflow-y-auto pr-1">
-                  {save.news.map((n) => (
-                    <div key={n.id} className="p-3 rounded-lg bg-[#0E141B]">
-                      <div className="text-[11px] text-amber-400 font-mono-num">
-                        S{n.season} W{n.week} · {n.category}
-                      </div>
-                      <div className="text-xs font-semibold text-white mt-0.5">{n.headline}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">{n.body}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {tab === 'ATTRIBUTES' && (
           <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
@@ -483,13 +458,19 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                   <div key={item.key} className="p-3 rounded-lg bg-[#0E141B] flex flex-col gap-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-300">{item.label}</span>
-                      <span className={`font-mono-num font-bold ${val >= 80 ? 'text-amber-400' : val >= 70 ? 'text-emerald-400' : 'text-white'}`}>
+                      <span
+                        className={`font-mono-num font-bold ${
+                          val >= 80 ? 'text-amber-400' : val >= 70 ? 'text-emerald-400' : 'text-white'
+                        }`}
+                      >
                         {val}
                       </span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${val >= 80 ? 'bg-amber-400' : val >= 70 ? 'bg-emerald-400' : 'bg-cyan-400'}`}
+                        className={`h-full rounded-full ${
+                          val >= 80 ? 'bg-amber-400' : val >= 70 ? 'bg-emerald-400' : 'bg-cyan-400'
+                        }`}
                         style={{ width: `${val}%` }}
                       />
                     </div>
@@ -589,20 +570,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                   if (!suitor) return null;
                   return (
                     <div key={off.id} className="p-4 rounded-lg bg-[#0E141B] border border-white/10 flex flex-wrap items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <ClubBadge
-                          shortName={suitor.shortName}
-                          primaryColor={suitor.primaryColor}
-                          secondaryColor={suitor.secondaryColor}
-                          size={40}
-                        />
-                        <div>
-                          <div className="text-sm font-bold text-white">{suitor.name}</div>
-                          <div className="text-xs text-slate-400 font-mono-num">
-                            €{off.proposedWage.toLocaleString()}/wk · {off.contractYears} yrs · Bonus €{off.signingBonus.toLocaleString()}
-                          </div>
-                          <div className="text-xs text-slate-400 mt-1">{off.message}</div>
+                      <div>
+                        <div className="text-sm font-bold text-white">{suitor.name}</div>
+                        <div className="text-xs text-slate-400 font-mono-num">
+                          €{off.proposedWage.toLocaleString()}/wk · {off.contractYears} yrs · Bonus €{off.signingBonus.toLocaleString()}
                         </div>
+                        <div className="text-xs text-slate-400 mt-1">{off.message}</div>
                       </div>
                       <button
                         type="button"
@@ -694,6 +667,29 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {tab === 'SETTINGS' && (
+          <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
+            <h3 className="text-xl font-bold text-white">Career Settings</h3>
+            <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B]">
+              <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
+              <button
+                type="button"
+                onClick={onToggleMute}
+                className="min-h-[40px] px-4 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-semibold cursor-pointer"
+              >
+                {muted ? 'Muted (Enable)' : 'Enabled (Mute)'}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={onExitToTitle}
+              className="min-h-[44px] w-full rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm font-semibold cursor-pointer"
+            >
+              Save & Return to Title Screen
+            </button>
           </div>
         )}
       </main>
