@@ -889,3 +889,154 @@
     font-size: 11px;
   }
 }
+
+
+/* ---------- compact FootLord-inspired landscape dashboard ---------- */
+@media (orientation: landscape) and (max-height: 700px) {
+  .fd-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px 48px minmax(0, 1fr) 30px;
+    grid-template-areas:
+      "top"
+      "menu"
+      "main"
+      "tick";
+  }
+
+  .fd-top {
+    min-width: 0;
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .fd-club {
+    min-width: 132px;
+    gap: 7px;
+  }
+
+  .fd-club .fd-badge {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 13px !important;
+  }
+
+  .fd-club h1 { font-size: 15px; }
+  .fd-club small { font-size: 9px; }
+  .fd-days { min-width: 0; gap: 0; }
+  .fd-day { padding: 4px 6px; gap: 4px; }
+  .fd-day b { font-size: 10px; }
+  .fd-day small { font-size: 8px; }
+  .fd-day span { font-size: 14px; }
+  .fd-money { gap: 4px; }
+  .fd-money span { font-size: 16px; }
+  .fd-money b { font-size: 11px; }
+  .fd-money small { font-size: 8px; }
+  .fd-gear { min-width: 32px; min-height: 32px; font-size: 19px; }
+
+  .fd-menu {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    gap: 5px;
+    padding: 4px 8px;
+    overflow: hidden;
+  }
+
+  .fd-forward,
+  .fd-item {
+    min-width: 0;
+    min-height: 38px;
+    height: 100%;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px 5px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .fd-forward { box-shadow: none; }
+  .fd-play { font-size: 15px; }
+  .fd-ico { width: auto; font-size: 15px; }
+  .fd-menu b {
+    overflow: hidden;
+    display: block;
+    font-size: clamp(8px, 1.35vw, 10px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-overflow: ellipsis;
+  }
+  .fd-menu small,
+  .fd-menu i { display: none; }
+
+  .fd-main {
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 7px;
+    padding: 7px 8px;
+  }
+
+  .fd-panel {
+    min-width: 0;
+    padding: 9px;
+    border-radius: 7px;
+  }
+
+  .fd-hero {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1.4fr) minmax(70px, .7fr);
+    padding: 10px 12px 0;
+  }
+
+  .fd-heroText { padding-bottom: 9px; }
+  .fd-heroText h2 { font-size: clamp(18px, 3vw, 25px); margin: 5px 0; }
+  .fd-heroText p { font-size: 10px; line-height: 1.25; margin-bottom: 6px; }
+  .fd-tag { font-size: 9px; padding: 3px 7px; }
+  .fd-ghost { padding: 5px 9px; font-size: 10px; }
+  .fd-portrait { max-height: 112px; }
+  .fd-dots { top: 7px; right: 8px; }
+
+  /* Keep the dashboard focused: headline + standings, not a long info panel. */
+  .fd-offline { display: none; }
+  .fd-table { overflow: auto; }
+  .fd-panelHead { margin-bottom: 4px; }
+  .fd-panelHead h3 { font-size: 14px; }
+  .fd-table table { font-size: 10px; }
+  .fd-table th,
+  .fd-table td { padding: 3px; }
+  .fd-table td .fd-badge {
+    width: 17px !important;
+    height: 17px !important;
+    font-size: 8px !important;
+  }
+
+  /* Player career keeps the profile and quick stats visible together. */
+  .fd-main:has(.fd-fans) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.05fr) minmax(0, .95fr);
+  }
+  .fd-main:has(.fd-fans) .fd-card { grid-column: 1 / -1; }
+  .fd-fans { overflow: auto; }
+  .fd-meter { grid-template-columns: 78px 1fr 24px; gap: 5px; margin: 3px 0; font-size: 10px; }
+  .fd-meter div { height: 5px; }
+  .fd-ovr b { font-size: 42px; }
+
+  .fd-ticker { min-height: 30px; padding: 0 8px; gap: 6px; }
+  .fd-logo { display: none; }
+  .fd-newsTag { font-size: 9px; padding: 2px 6px; }
+  .fd-marquee { font-size: 9px; }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+  .fd-root {
+    grid-template-rows: 48px 42px minmax(0, 1fr) 26px;
+  }
+  .fd-menu { gap: 3px; padding: 3px 6px; }
+  .fd-forward, .fd-item { min-height: 34px; padding: 3px; }
+  .fd-main { gap: 5px; padding: 5px 6px; }
+  .fd-panel { padding: 7px; }
+  .fd-portrait { max-height: 88px; }
+  .fd-heroText h2 { font-size: 18px; }
+}
