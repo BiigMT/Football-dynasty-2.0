@@ -246,6 +246,7 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
                       shortName={nt.code}
                       primaryColor={nt.primaryColor}
                       secondaryColor={nt.secondaryColor}
+                      country={nt.name}
                       size={24}
                     />
                     <span className="font-medium text-white">{nt.name}</span>
