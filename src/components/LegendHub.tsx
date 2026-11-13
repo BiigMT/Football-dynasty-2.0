@@ -561,7 +561,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                     ...save,
                     players: { ...save.players, [player.id]: { ...player, contractYears: 4, weeklyWage: renewedWage, releaseClause: Math.max(player.releaseClause, player.marketValue * 1.8), morale: Math.min(100, player.morale + 5) } },
                     legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 2) },
-                    news: [{ id: 'news_renew_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER', headline: player.name + ' signs a new four-year contract', body: 'The new deal raises weekly wages to €' + renewedWage.toLocaleString() + ' and secures the player’s future.' }, ...save.news].slice(0, 35),
+                    news: [{ id: 'news_renew_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER' as const, headline: player.name + ' signs a new four-year contract', body: 'The new deal raises weekly wages to €' + renewedWage.toLocaleString() + ' and secures the player’s future.' }, ...save.news].slice(0, 35),
                   });
                   setContractNotice('New four-year deal agreed. Your wage has increased by 18%.');
                 }}
