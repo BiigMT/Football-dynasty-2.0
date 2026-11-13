@@ -606,12 +606,15 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
   if (nextManager && session.userClubSide) {
     const userWon = winnerId === save.userClubId;
     const drew = homeGoals === awayGoals && session.competitionType === 'LEAGUE';
+    const difficulty = save.difficulty ?? 'NORMAL';
+    const winBoost = difficulty === 'HARD' ? 5 : difficulty === 'EASY' ? 3 : 4;
+    const lossPenalty = difficulty === 'HARD' ? -7 : difficulty === 'EASY' ? -3 : -5;
     nextManager.wins += userWon ? 1 : 0;
     nextManager.draws += drew ? 1 : 0;
     nextManager.losses += !userWon && !drew ? 1 : 0;
     nextManager.boardConfidence = Math.max(
       15,
-      Math.min(100, nextManager.boardConfidence + (userWon ? 4 : drew ? 0 : -5))
+      Math.min(100, nextManager.boardConfidence + (userWon ? winBoost : drew ? (difficulty === 'HARD' ? -1 : 0) : lossPenalty))
     );
     nextManager.reputation = Math.max(
       40,
