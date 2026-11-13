@@ -157,7 +157,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         shirtNumber,
         playingStyle: STYLES_BY_POS[position],
         appearance,
-        clubId: selectedClub.id,
+        clubId: academyOffer.id,
         difficulty,
         trialRating,
       });
