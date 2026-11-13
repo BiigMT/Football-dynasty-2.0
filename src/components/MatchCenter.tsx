@@ -712,7 +712,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                     Teams are in the tunnel. Click Kickoff to start the match.
                   </div>
                 ) : (
-                  (isLiveMatch ? session.events.slice(-5).reverse() : session.events).map((ev) => (
+                  (isLiveMatch ? session.events.slice(-5) : session.events).map((ev) => (
                     <div
                       key={ev.id}
                       className={`text-xs px-3 py-2 rounded-lg border ${
