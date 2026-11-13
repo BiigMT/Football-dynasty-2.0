@@ -2,6 +2,9 @@ import React from 'react';
 import { Volume2, VolumeX, Play, Trash2, Shield, Trophy } from 'lucide-react';
 import { CareerMode } from '../types/football';
 import { SaveSlotSummary } from '../engine/storage';
+import stadiumHero from '../assets/images/stadium_hero_backdrop_1794559201770.jpg';
+import managerEmblem from '../assets/images/manager_mode_emblem_1794559202903.jpg';
+import legendEmblem from '../assets/images/legend_mode_emblem_1794559202286.jpg';
 
 interface TitleScreenProps {
   slots: SaveSlotSummary[];
@@ -30,9 +33,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
       {/* Floodlit Stadium Key-Art Backdrop */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/stadium_hero_backdrop_1794559201770.jpg"
+          src={stadiumHero}
           alt="Floodlit stadium pitch at night"
-          referrerPolicy="no-referrer"
           className="h-full w-full object-cover object-center opacity-55"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] via-[#0B0F14]/75 to-[#0B0F14]/55" />
@@ -116,7 +118,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <div className="group rounded-xl bg-[#131A22]/90 border border-white/10 hover:border-cyan-400/50 transition-colors overflow-hidden flex flex-col sm:flex-row">
             <div className="sm:w-40 h-40 sm:h-auto shrink-0 bg-[#0D131A] relative overflow-hidden">
               <img
-                src="/src/assets/images/manager_mode_emblem_1794559202903.jpg"
+                src={managerEmblem}
                 alt="Manager Career tactical board"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -147,7 +149,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <div className="group rounded-xl bg-[#131A22]/90 border border-white/10 hover:border-amber-400/50 transition-colors overflow-hidden flex flex-col sm:flex-row">
             <div className="sm:w-40 h-40 sm:h-auto shrink-0 bg-[#0D131A] relative overflow-hidden">
               <img
-                src="/src/assets/images/legend_mode_emblem_1794559202286.jpg"
+                src={legendEmblem}
                 alt="Player Career golden boots and match ball"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
