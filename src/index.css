@@ -87,11 +87,11 @@
   flex: 0 0 auto;
 }
 .match-live-scoreboard .text-3xl,
-.match-live-scoreboard .sm\\:text-4xl {
+.match-live-scoreboard > div:nth-child(2) > div > span {
   font-size: 1.65rem;
   line-height: 1;
 }
-.match-live-scoreboard .text-\\[11px\\] {
+.match-live-scoreboard > div:nth-child(2) > span {
   font-size: 9px;
 }
 .match-live-controls {
@@ -183,12 +183,13 @@
     gap: 6px;
   }
   .match-live-scoreboard .text-sm,
-  .match-live-scoreboard .sm\\:text-base {
+  .match-live-scoreboard > div:first-child > div > div,
+  .match-live-scoreboard > div:last-child > div > div {
     font-size: 11px;
     line-height: 1.15;
   }
   .match-live-scoreboard .text-3xl,
-  .match-live-scoreboard .sm\\:text-4xl {
+  .match-live-scoreboard > div:nth-child(2) > div > span {
     font-size: 1.45rem;
   }
   .match-live-stats > div:not(:first-child) {
