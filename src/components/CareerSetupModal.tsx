@@ -39,6 +39,7 @@ interface CareerSetupModalProps {
     appearance: PlayerAppearance;
     clubId: string;
     difficulty: GameDifficulty;
+    trialRating: number;
   }) => void;
 }
 
@@ -87,6 +88,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [nationality, setNationality] = useState('Nigeria');
   const [philosophy, setPhilosophy] = useState<'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced'>('Gegenpress');
   const [difficulty, setDifficulty] = useState<GameDifficulty>('NORMAL');
+  const [trialRating, setTrialRating] = useState(78);
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
@@ -119,6 +121,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
+  const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
+  const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,6 +159,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         appearance,
         clubId: selectedClub.id,
         difficulty,
+        trialRating,
       });
     }
   };
@@ -465,48 +470,51 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
               </div>
             )}
 
-            {/* Club List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
-              {activeLeague.clubs.map((c) => {
-                const active = c.id === selectedClub.id;
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => setSelectedClubId(c.id)}
-                    className={`min-h-[64px] p-3 rounded-lg border text-left transition-colors flex items-center gap-3 cursor-pointer ${
-                      active
-                        ? mode === 'MANAGER'
-                          ? 'bg-cyan-500/15 border-cyan-400'
-                          : 'bg-amber-500/15 border-amber-400'
-                        : 'bg-[#0B0F14] border-white/10 hover:border-white/25'
-                    }`}
-                  >
-                    <ClubBadge
-                      shortName={c.shortName}
-                      primaryColor={c.primaryColor}
-                      secondaryColor={c.secondaryColor}
-                      size={38}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold text-white truncate">{c.name}</div>
-                      <div className="text-xs text-slate-400 font-mono-num">
-                        {c.country} · Rep {c.reputation} · {c.formation}
-                      </div>
-                    </div>
-                    {active && (
-                      <Check
-                        className={`w-4 h-4 shrink-0 ${mode === 'MANAGER' ? 'text-cyan-400' : 'text-amber-400'}`}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            {mode === 'MANAGER' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
+                {activeLeague.clubs.map((c) => {
+                  const active = c.id === selectedClub.id;
+                  return (
+                    <button key={c.id} type="button" onClick={() => setSelectedClubId(c.id)} className={`min-h-[64px] p-3 rounded-lg border text-left transition-colors flex items-center gap-3 cursor-pointer ${active ? 'bg-cyan-500/15 border-cyan-400' : 'bg-[#0B0F14] border-white/10 hover:border-white/25'}`}>
+                      <ClubBadge shortName={c.shortName} primaryColor={c.primaryColor} secondaryColor={c.secondaryColor} size={38} />
+                      <div className="min-w-0 flex-1"><div className="text-sm font-semibold text-white truncate">{c.name}</div><div className="text-xs text-slate-400 font-mono-num">{c.country} · Rep {c.reputation} · {c.formation}</div></div>
+                      {active && <Check className="w-4 h-4 shrink-0 text-cyan-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4">
+                  <div className="text-xs font-bold uppercase tracking-wider text-amber-300">Academy trial day</div>
+                  <p className="mt-1 text-sm text-slate-300">Your performance decides which club offers you a place. No instant first-team superstar contract.</p>
+                  <div className="mt-3 grid gap-2">
+                    {[
+                      { score: 65, title: 'Play it safe', detail: 'Show discipline and avoid mistakes' },
+                      { score: 78, title: 'Balanced showcase', detail: 'Mix skill, teamwork and effort' },
+                      { score: 91, title: 'Take your chance', detail: 'Attempt the difficult plays and impress scouts' },
+                    ].map((option) => (
+                      <button key={option.score} type="button" onClick={() => setTrialRating(option.score)} className={`rounded-lg border p-3 text-left ${trialRating === option.score ? 'border-amber-400 bg-amber-500/15' : 'border-white/10 bg-[#0B0F14]'}`}>
+                        <div className="flex items-center justify-between"><span className="text-sm font-bold text-white">{option.title}</span><span className="text-xs font-mono-num text-amber-300">{option.score}/100</span></div>
+                        <p className="mt-1 text-xs text-slate-400">{option.detail}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Your academy offer</div>
+                  <div className="mt-2 flex items-center gap-3">
+                    <ClubBadge shortName={academyOffer.shortName} primaryColor={academyOffer.primaryColor} secondaryColor={academyOffer.secondaryColor} size={48} />
+                    <div><div className="font-bold text-white">{academyOffer.name}</div><div className="text-xs text-slate-400">{activeLeague.name} · Academy intake · Rep {academyOffer.reputation}</div></div>
+                  </div>
+                  <p className="mt-2 text-xs text-slate-400">You will begin as an academy prospect and earn your way into the senior squad.</p>
+                </div>
+              </div>
+            )}
 
             <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between gap-4">
               <div className="text-xs text-slate-400">
-                Selected: <span className="text-white font-semibold">{selectedClub.name}</span> ({selectedClub.stadiumName})
+                Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : academyOffer.name}</span>
               </div>
               <button
                 type="submit"
