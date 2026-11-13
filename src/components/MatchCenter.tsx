@@ -638,7 +638,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           {/* Right: Stats, Player Objectives (Legend) & Live Commentary */}
           <div className={isLiveMatch ? 'match-live-info-column' : 'lg:col-span-5 flex flex-col gap-4'}>
             {/* Become a Legend Match Objectives */}
-            {userPlayer && userPlayerState && (
+            {userPlayer && userPlayerState && !isLiveMatch && (
               <div className="rounded-xl bg-[#131A22] border border-amber-400/30 p-4 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <div>
