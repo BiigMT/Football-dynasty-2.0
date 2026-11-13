@@ -1124,8 +1124,11 @@ export function applyLegendDrill(save: CareerSave, drill: IndividualDrill): Care
   if (!uPlayer) return save;
 
   const attrs = { ...uPlayer.attributes };
+  const potentialGap = Math.max(0, uPlayer.potential - uPlayer.overall);
+  const ageFactor = uPlayer.age <= 20 ? 1.35 : uPlayer.age <= 24 ? 1 : uPlayer.age <= 29 ? 0.7 : 0.35;
+  const developmentGain = potentialGap > 0 ? Math.max(1, Math.min(3, Math.round(ageFactor * (potentialGap >= 15 ? 2 : 1)))) : 0;
   const bump = (k: keyof PlayerAttributes) => {
-    attrs[k] = Math.min(98, attrs[k] + (uPlayer.overall < uPlayer.potential ? 1 : 0));
+    attrs[k] = Math.min(98, attrs[k] + developmentGain);
   };
 
   if (drill === 'FINISHING') {
@@ -1158,8 +1161,10 @@ export function applyLegendDrill(save: CareerSave, drill: IndividualDrill): Care
       ...uPlayer,
       attributes: attrs,
       overall: nextOvr,
-      sharpness: Math.min(100, uPlayer.sharpness + 7),
-      fitness: Math.max(65, uPlayer.fitness - 3),
+      sharpness: Math.min(100, uPlayer.sharpness + 5 + developmentGain),
+      fitness: Math.max(58, uPlayer.fitness - (drill === 'STAMINA_STRENGTH' ? 5 : 3)),
+      morale: Math.min(100, uPlayer.morale + (developmentGain > 0 ? 2 : 0)),
+      confidence: Math.min(100, uPlayer.confidence + 1),
       marketValue: calculateMarketValue(nextOvr, uPlayer.age, uPlayer.potential),
     },
   };
