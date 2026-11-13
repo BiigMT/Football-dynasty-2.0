@@ -51,8 +51,9 @@ jobs:
           test -s "$APK"
           file "$APK"
           unzip -t "$APK"
-          apksigner verify --verbose --print-certs "$APK"
-          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)/aapt" dump badging "$APK" | head -n 5
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          "$BUILD_TOOLS/aapt" dump badging "$APK" | head -n 5
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
