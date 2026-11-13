@@ -1035,24 +1035,43 @@ export function advanceWeek(save: CareerSave): CareerSave {
     }
   }
 
-  // Academy pathway: trust grows gradually; promotion requires both trust and ability.
-  if (nextSave.legend?.squadRole === 'ACADEMY_PROSPECT') {
+  // Player pathway: progress through academy, reserves and first-team rotation.
+  if (nextSave.legend && !nextSave.legend.retired) {
     const prospect = nextSave.players[nextSave.legend.playerId];
     if (prospect) {
       const nextTrust = Math.min(100, nextSave.legend.managerTrust + 1);
-      if (nextTrust >= 70 && prospect.overall >= 55) {
-        nextSave.legend = { ...nextSave.legend, managerTrust: nextTrust, squadRole: 'RESERVE' };
-        nextSave.players[prospect.id] = { ...prospect, isYouth: false, morale: Math.min(100, prospect.morale + 4) };
+      const role = nextSave.legend.squadRole;
+      const promotion = role === 'ACADEMY_PROSPECT' && nextTrust >= 70 && prospect.overall >= 55
+        ? 'RESERVE'
+        : role === 'RESERVE' && nextTrust >= 78 && prospect.overall >= 60
+        ? 'ROTATION'
+        : role === 'ROTATION' && nextTrust >= 86 && prospect.overall >= 66
+        ? 'FIRST_TEAM'
+        : role;
+      nextSave.legend = { ...nextSave.legend, managerTrust: nextTrust, squadRole: promotion };
+      if (promotion !== role) {
+        nextSave.players[prospect.id] = {
+          ...prospect,
+          isYouth: false,
+          morale: Math.min(100, prospect.morale + 5),
+          reputation: Math.min(100, prospect.reputation + 3),
+        };
+        const playerClub = nextSave.clubs[prospect.clubId];
+        if (playerClub && !playerClub.tactics.bench.includes(prospect.id) && !playerClub.tactics.startingXI.includes(prospect.id)) {
+          nextSave.clubs[prospect.clubId] = {
+            ...playerClub,
+            tactics: { ...playerClub.tactics, bench: [...playerClub.tactics.bench, prospect.id].slice(-7) },
+          };
+        }
+        const roleLabel = promotion === 'RESERVE' ? 'reserve squad' : promotion === 'ROTATION' ? 'first-team rotation' : 'first-team squad';
         nextSave.news.unshift({
-          id: `news_academy_promotion_${Date.now()}`,
+          id: `news_pathway_${Date.now()}`,
           week: nextWeek,
           season: save.season,
           category: 'ACADEMY',
-          headline: `${prospect.name} promoted to the reserve squad`,
-          body: `${prospect.name}'s training progress and growing manager trust have earned a step up from the academy.`,
+          headline: `${prospect.name} promoted to the ${roleLabel}`,
+          body: `After building manager trust to ${nextTrust} and reaching ${prospect.overall} OVR, ${prospect.name} has earned the next step in the career pathway.`,
         });
-      } else {
-        nextSave.legend = { ...nextSave.legend, managerTrust: nextTrust };
       }
     }
   }
