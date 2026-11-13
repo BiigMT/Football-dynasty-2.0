@@ -22,7 +22,8 @@
     "vite": "^8.3.0",
     "express": "^4.21.2",
     "dotenv": "^17.2.3",
-    "motion": "^12.23.24"
+    "motion": "^12.23.24",
+    "@capacitor/screen-orientation": "^6.0.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.2.1",
