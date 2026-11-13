@@ -449,6 +449,10 @@ export interface LegendProfile {
   phoneMessages?: PlayerPhoneMessage[];
   socialPosts?: PlayerSocialPost[];
   phoneFollowers?: number;
+  rivalryPlayerId?: string;
+  rivalryPending?: boolean;
+  rivalryWins?: number;
+  rivalryLosses?: number;
 }
 
 export interface NewsItem {
