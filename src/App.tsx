@@ -216,7 +216,52 @@ export default function App() {
     }
 
     const withResult = applyMatchSessionToWorld(activeSave, finalSession);
-    const nextWorld = advanceWeek(withResult);
+    let resultSave = withResult;
+    const careerLegend = withResult.legend;
+    if (careerLegend?.rivalryPending && careerLegend.rivalryPlayerId && careerLegend.playerId) {
+      const userRivalryState = finalSession.playerStates[careerLegend.playerId];
+      const opponentRivalryState = finalSession.playerStates[careerLegend.rivalryPlayerId];
+      if (userRivalryState && opponentRivalryState) {
+        const wonRivalry = userRivalryState.rating > opponentRivalryState.rating;
+        const lostRivalry = userRivalryState.rating < opponentRivalryState.rating;
+        const currentPlayer = withResult.players[careerLegend.playerId];
+        const rival = withResult.players[careerLegend.rivalryPlayerId];
+        const resultText = wonRivalry
+          ? `${currentPlayer?.name ?? 'You'} won the personal battle with ${rival?.name ?? 'the rival'} (${userRivalryState.rating.toFixed(1)} to ${opponentRivalryState.rating.toFixed(1)}).`
+          : lostRivalry
+          ? `${rival?.name ?? 'The rival'} edged the personal battle (${opponentRivalryState.rating.toFixed(1)} to ${userRivalryState.rating.toFixed(1)}).`
+          : `The rivalry finished level at ${userRivalryState.rating.toFixed(1)}.`;
+        resultSave = {
+          ...withResult,
+          legend: {
+            ...careerLegend,
+            rivalryPending: false,
+            rivalryWins: (careerLegend.rivalryWins ?? 0) + (wonRivalry ? 1 : 0),
+            rivalryLosses: (careerLegend.rivalryLosses ?? 0) + (lostRivalry ? 1 : 0),
+          },
+          players: currentPlayer ? {
+            ...withResult.players,
+            [careerLegend.playerId]: {
+              ...currentPlayer,
+              morale: Math.max(1, Math.min(100, currentPlayer.morale + (wonRivalry ? 3 : lostRivalry ? -2 : 1))),
+              confidence: Math.max(1, Math.min(100, currentPlayer.confidence + (wonRivalry ? 2 : lostRivalry ? -2 : 0))),
+              reputation: Math.max(1, Math.min(100, currentPlayer.reputation + (wonRivalry ? 2 : 0))),
+            },
+          } : withResult.players,
+          news: [{
+            id: 'rival_result_' + Date.now(),
+            week: withResult.currentWeek,
+            season: withResult.season,
+            category: 'MATCH',
+            headline: wonRivalry ? 'Rivalry won on the pitch' : lostRivalry ? 'Rival gets the bragging rights' : 'Rivals share the honours',
+            body: resultText,
+          }, ...withResult.news].slice(0, 35),
+        };
+      } else {
+        resultSave = { ...withResult, legend: { ...careerLegend, rivalryPending: false } };
+      }
+    }
+    const nextWorld = advanceWeek(resultSave);
     updateAndPersistSave(nextWorld);
     setScreen('CAREER');
   };
