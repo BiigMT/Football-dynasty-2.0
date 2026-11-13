@@ -378,7 +378,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   return (
     <div className="min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
       {/* Sub-page Header */}
-      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-4 sm:px-6 py-3">
+      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2.5">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
@@ -448,7 +448,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                   soundEngine.playClick();
                   setTab(item.id as ManagerSection);
                 }}
-                className={`min-h-[46px] px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
+                className={`min-h-[42px] px-3 py-2 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
                   active ? 'border-cyan-400 text-cyan-300' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
@@ -461,7 +461,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+      <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
         {tab === 'SQUAD' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-5 rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-4">
