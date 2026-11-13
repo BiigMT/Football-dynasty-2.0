@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -43,11 +43,29 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew --no-daemon clean assembleDebug
 
-      - name: Upload APK
+      - name: Verify APK package and signature
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          file "$APK"
+          unzip -t "$APK"
+          apksigner verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)/aapt" dump badging "$APK" | head -n 5
+
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: football-dynasty-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish direct APK download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: football-dynasty-build-${{ github.run_number }}
+          name: Football Dynasty Android build ${{ github.run_number }}
+          body: "Install the APK asset directly. Do not download or install the source ZIP."
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+          make_latest: true
