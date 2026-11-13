@@ -137,7 +137,189 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
       { id: 'doha_sadd', name: 'Doha Al-Wolves', shortName: 'DOH', country: 'Qatar', primaryColor: '#F8FAFC', secondaryColor: '#111827', reputation: 77, stadiumName: 'Jassim Bin Hamad', stadiumCapacity: 15000, formation: '4-2-3-1' },
       { id: 'ulsan_horangi', name: 'Ulsan Tigers', shortName: 'ULS', country: 'South Korea', primaryColor: '#0284C7', secondaryColor: '#F59E0B', reputation: 77, stadiumName: 'Munsu Football Stadium', stadiumCapacity: 44100, formation: '4-3-3' },
     ],
+  },,
+  {
+    id: 'fra_ligue1', name: 'French Ligue 1', country: 'France', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'fra_ligue1_1', name: 'Paris Saint-Germain', shortName: 'PSG', country: 'France', primaryColor: '#1D4ED8', secondaryColor: '#E11D48', reputation: 92, stadiumName: 'Parc des Princes', stadiumCapacity: 47900, formation: '4-3-3' },
+      { id: 'fra_ligue1_2', name: 'Olympique Marseille', shortName: 'OM', country: 'France', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 85, stadiumName: 'Stade Velodrome', stadiumCapacity: 67300, formation: '4-2-3-1' },
+      { id: 'fra_ligue1_3', name: 'AS Monaco', shortName: 'ASM', country: 'France', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 83, stadiumName: 'Stade Louis II', stadiumCapacity: 18500, formation: '4-4-2' },
+      { id: 'fra_ligue1_4', name: 'Olympique Lyonnais', shortName: 'OL', country: 'France', primaryColor: '#1D4ED8', secondaryColor: '#DC2626', reputation: 82, stadiumName: 'Groupama Stadium', stadiumCapacity: 59186, formation: '3-5-2' },
+      { id: 'fra_ligue1_5', name: 'Lille OSC', shortName: 'LIL', country: 'France', primaryColor: '#DC2626', secondaryColor: '#1E3A8A', reputation: 80, stadiumName: 'Stade Pierre-Mauroy', stadiumCapacity: 50186, formation: '4-3-3' },
+      { id: 'fra_ligue1_6', name: 'OGC Nice', shortName: 'NIC', country: 'France', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Allianz Riviera', stadiumCapacity: 36178, formation: '4-2-3-1' },
+      { id: 'fra_ligue1_7', name: 'Stade Rennais', shortName: 'REN', country: 'France', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Roazhon Park', stadiumCapacity: 29778, formation: '4-4-2' },
+      { id: 'fra_ligue1_8', name: 'RC Lens', shortName: 'LEN', country: 'France', primaryColor: '#FACC15', secondaryColor: '#DC2626', reputation: 77, stadiumName: 'Stade Bollaert-Delelis', stadiumCapacity: 38223, formation: '3-5-2' }
+    ],
   },
+  {
+    id: 'ger_bundesliga', name: 'German Bundesliga', country: 'Germany', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'ger_bundesliga_1', name: 'Bayern Munich', shortName: 'BAY', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 93, stadiumName: 'Allianz Arena', stadiumCapacity: 75000, formation: '4-2-3-1' },
+      { id: 'ger_bundesliga_2', name: 'Borussia Dortmund', shortName: 'BVB', country: 'Germany', primaryColor: '#FDE047', secondaryColor: '#111827', reputation: 88, stadiumName: 'Signal Iduna Park', stadiumCapacity: 81365, formation: '4-4-2' },
+      { id: 'ger_bundesliga_3', name: 'Bayer Leverkusen', shortName: 'B04', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 86, stadiumName: 'BayArena', stadiumCapacity: 30210, formation: '3-5-2' },
+      { id: 'ger_bundesliga_4', name: 'RB Leipzig', shortName: 'RBL', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 84, stadiumName: 'Red Bull Arena', stadiumCapacity: 47069, formation: '4-3-3' },
+      { id: 'ger_bundesliga_5', name: 'Eintracht Frankfurt', shortName: 'SGE', country: 'Germany', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 81, stadiumName: 'Deutsche Bank Park', stadiumCapacity: 58000, formation: '4-2-3-1' },
+      { id: 'ger_bundesliga_6', name: 'VfB Stuttgart', shortName: 'VFB', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'MHPArena', stadiumCapacity: 60449, formation: '4-4-2' },
+      { id: 'ger_bundesliga_7', name: 'SC Freiburg', shortName: 'SCF', country: 'Germany', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Europa-Park Stadion', stadiumCapacity: 34700, formation: '3-5-2' },
+      { id: 'ger_bundesliga_8', name: 'Borussia Monchengladbach', shortName: 'BMG', country: 'Germany', primaryColor: '#16A34A', secondaryColor: '#111827', reputation: 78, stadiumName: 'Borussia-Park', stadiumCapacity: 54057, formation: '4-3-3' }
+    ],
+  },
+  {
+    id: 'por_primeira', name: 'Portuguese Primeira Liga', country: 'Portugal', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'por_primeira_1', name: 'Benfica', shortName: 'SLB', country: 'Portugal', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 87, stadiumName: 'Estadio da Luz', stadiumCapacity: 64642, formation: '4-4-2' },
+      { id: 'por_primeira_2', name: 'FC Porto', shortName: 'FCP', country: 'Portugal', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 87, stadiumName: 'Estadio do Dragao', stadiumCapacity: 50033, formation: '3-5-2' },
+      { id: 'por_primeira_3', name: 'Sporting CP', shortName: 'SCP', country: 'Portugal', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 86, stadiumName: 'Estadio Jose Alvalade', stadiumCapacity: 50095, formation: '4-3-3' },
+      { id: 'por_primeira_4', name: 'SC Braga', shortName: 'BRA', country: 'Portugal', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'Estadio Municipal de Braga', stadiumCapacity: 30286, formation: '4-2-3-1' },
+      { id: 'por_primeira_5', name: 'Vitoria SC', shortName: 'VSC', country: 'Portugal', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'Estadio D Afonso Henriques', stadiumCapacity: 30000, formation: '4-4-2' },
+      { id: 'por_primeira_6', name: 'Boavista FC', shortName: 'BOA', country: 'Portugal', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 73, stadiumName: 'Estadio do Bessa', stadiumCapacity: 28263, formation: '3-5-2' },
+      { id: 'por_primeira_7', name: 'Famalicao', shortName: 'FAM', country: 'Portugal', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'Estadio Municipal de Famalicao', stadiumCapacity: 5307, formation: '4-3-3' },
+      { id: 'por_primeira_8', name: 'Moreirense FC', shortName: 'MFC', country: 'Portugal', primaryColor: '#16A34A', secondaryColor: '#111827', reputation: 70, stadiumName: 'Parque de Jogos Comendador Joaquim', stadiumCapacity: 6150, formation: '4-2-3-1' }
+    ],
+  },
+  {
+    id: 'ned_eredivisie', name: 'Dutch Eredivisie', country: 'Netherlands', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'ned_eredivisie_1', name: 'Ajax', shortName: 'AJA', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 86, stadiumName: 'Johan Cruyff Arena', stadiumCapacity: 55600, formation: '3-5-2' },
+      { id: 'ned_eredivisie_2', name: 'PSV Eindhoven', shortName: 'PSV', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 85, stadiumName: 'Philips Stadion', stadiumCapacity: 35000, formation: '4-3-3' },
+      { id: 'ned_eredivisie_3', name: 'Feyenoord', shortName: 'FEY', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 84, stadiumName: 'De Kuip', stadiumCapacity: 47500, formation: '4-2-3-1' },
+      { id: 'ned_eredivisie_4', name: 'AZ Alkmaar', shortName: 'AZ', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 78, stadiumName: 'AFAS Stadion', stadiumCapacity: 19478, formation: '4-4-2' },
+      { id: 'ned_eredivisie_5', name: 'FC Twente', shortName: 'TWE', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 77, stadiumName: 'De Grolsch Veste', stadiumCapacity: 30205, formation: '3-5-2' },
+      { id: 'ned_eredivisie_6', name: 'FC Utrecht', shortName: 'UTR', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 75, stadiumName: 'Stadion Galgenwaard', stadiumCapacity: 23750, formation: '4-3-3' },
+      { id: 'ned_eredivisie_7', name: 'Go Ahead Eagles', shortName: 'GAE', country: 'Netherlands', primaryColor: '#DC2626', secondaryColor: '#FACC15', reputation: 72, stadiumName: 'De Adelaarshorst', stadiumCapacity: 10000, formation: '4-2-3-1' },
+      { id: 'ned_eredivisie_8', name: 'SC Heerenveen', shortName: 'HEE', country: 'Netherlands', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'Abe Lenstra Stadion', stadiumCapacity: 26100, formation: '4-4-2' }
+    ],
+  },
+  {
+    id: 'sco_prem', name: 'Scottish Premiership', country: 'Scotland', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'sco_prem_1', name: 'Celtic', shortName: 'CEL', country: 'Scotland', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 83, stadiumName: 'Celtic Park', stadiumCapacity: 60411, formation: '4-3-3' },
+      { id: 'sco_prem_2', name: 'Rangers', shortName: 'RAN', country: 'Scotland', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 83, stadiumName: 'Ibrox Stadium', stadiumCapacity: 50817, formation: '4-2-3-1' },
+      { id: 'sco_prem_3', name: 'Heart of Midlothian', shortName: 'HEA', country: 'Scotland', primaryColor: '#7C2D12', secondaryColor: '#FFFFFF', reputation: 74, stadiumName: 'Tynecastle Park', stadiumCapacity: 20099, formation: '4-4-2' },
+      { id: 'sco_prem_4', name: 'Aberdeen', shortName: 'ABE', country: 'Scotland', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 73, stadiumName: 'Pittodrie Stadium', stadiumCapacity: 20866, formation: '3-5-2' },
+      { id: 'sco_prem_5', name: 'Hibernian', shortName: 'HIB', country: 'Scotland', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'Easter Road', stadiumCapacity: 20421, formation: '4-3-3' },
+      { id: 'sco_prem_6', name: 'Dundee United', shortName: 'DUU', country: 'Scotland', primaryColor: '#F97316', secondaryColor: '#111827', reputation: 70, stadiumName: 'Tannadice Park', stadiumCapacity: 14223, formation: '4-2-3-1' },
+      { id: 'sco_prem_7', name: 'Motherwell', shortName: 'MOT', country: 'Scotland', primaryColor: '#FACC15', secondaryColor: '#DC2626', reputation: 69, stadiumName: 'Fir Park', stadiumCapacity: 13742, formation: '4-4-2' },
+      { id: 'sco_prem_8', name: 'Kilmarnock', shortName: 'KIL', country: 'Scotland', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 68, stadiumName: 'Rugby Park', stadiumCapacity: 18128, formation: '3-5-2' }
+    ],
+  },
+  {
+    id: 'tur_superlig', name: 'Turkish Super Lig', country: 'Turkey', region: 'EUROPE', tier: 1,
+    clubs: [
+      { id: 'tur_superlig_1', name: 'Galatasaray', shortName: 'GAL', country: 'Turkey', primaryColor: '#F97316', secondaryColor: '#DC2626', reputation: 84, stadiumName: 'Rams Park', stadiumCapacity: 53500, formation: '4-2-3-1' },
+      { id: 'tur_superlig_2', name: 'Fenerbahce', shortName: 'FEN', country: 'Turkey', primaryColor: '#1D4ED8', secondaryColor: '#FACC15', reputation: 84, stadiumName: 'Sukru Saracoglu Stadium', stadiumCapacity: 47834, formation: '4-4-2' },
+      { id: 'tur_superlig_3', name: 'Besiktas', shortName: 'BES', country: 'Turkey', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 82, stadiumName: 'Tupras Stadium', stadiumCapacity: 42590, formation: '3-5-2' },
+      { id: 'tur_superlig_4', name: 'Trabzonspor', shortName: 'TRA', country: 'Turkey', primaryColor: '#7C2D12', secondaryColor: '#1D4ED8', reputation: 79, stadiumName: 'Papara Park', stadiumCapacity: 40461, formation: '4-3-3' },
+      { id: 'tur_superlig_5', name: 'Istanbul Basaksehir', shortName: 'IBFK', country: 'Turkey', primaryColor: '#F97316', secondaryColor: '#111827', reputation: 76, stadiumName: 'Basaksehir Fatih Terim Stadium', stadiumCapacity: 17156, formation: '4-2-3-1' },
+      { id: 'tur_superlig_6', name: 'Adana Demirspor', shortName: 'ADS', country: 'Turkey', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 73, stadiumName: 'Yeni Adana Stadium', stadiumCapacity: 33000, formation: '4-4-2' },
+      { id: 'tur_superlig_7', name: 'Sivasspor', shortName: 'SIV', country: 'Turkey', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'BG Group 4 Eylul Stadium', stadiumCapacity: 27532, formation: '3-5-2' },
+      { id: 'tur_superlig_8', name: 'Kasimpasa', shortName: 'KAS', country: 'Turkey', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 70, stadiumName: 'Recep Tayyip Erdogan Stadium', stadiumCapacity: 14234, formation: '4-3-3' }
+    ],
+  },
+  {
+    id: 'gha_prem', name: 'Ghana Premier League', country: 'Ghana', region: 'AFRICA', tier: 1,
+    clubs: [
+      { id: 'gha_prem_1', name: 'Asante Kotoko', shortName: 'KOT', country: 'Ghana', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 77, stadiumName: 'Baba Yara Stadium', stadiumCapacity: 40000, formation: '4-4-2' },
+      { id: 'gha_prem_2', name: 'Hearts of Oak', shortName: 'HEA', country: 'Ghana', primaryColor: '#7C2D12', secondaryColor: '#FACC15', reputation: 76, stadiumName: 'Accra Sports Stadium', stadiumCapacity: 40000, formation: '3-5-2' },
+      { id: 'gha_prem_3', name: 'Medeama SC', shortName: 'MED', country: 'Ghana', primaryColor: '#FACC15', secondaryColor: '#111827', reputation: 73, stadiumName: 'TNA Park', stadiumCapacity: 10000, formation: '4-3-3' },
+      { id: 'gha_prem_4', name: 'Aduana Stars', shortName: 'ADU', country: 'Ghana', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'A Dormaa Park', stadiumCapacity: 10000, formation: '4-2-3-1' },
+      { id: 'gha_prem_5', name: 'Dreams FC', shortName: 'DRM', country: 'Ghana', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 71, stadiumName: 'Dawu Park', stadiumCapacity: 5000, formation: '4-4-2' },
+      { id: 'gha_prem_6', name: 'Bechem United', shortName: 'BEC', country: 'Ghana', primaryColor: '#F97316', secondaryColor: '#111827', reputation: 70, stadiumName: 'Bechem Park', stadiumCapacity: 5000, formation: '3-5-2' },
+      { id: 'gha_prem_7', name: 'Legon Cities', shortName: 'LEG', country: 'Ghana', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 69, stadiumName: 'El Wak Stadium', stadiumCapacity: 4000, formation: '4-3-3' },
+      { id: 'gha_prem_8', name: 'Karela United', shortName: 'KAR', country: 'Ghana', primaryColor: '#16A34A', secondaryColor: '#FACC15', reputation: 68, stadiumName: 'Aliu Mahama Stadium', stadiumCapacity: 10000, formation: '4-2-3-1' }
+    ],
+  },
+  {
+    id: 'ken_prem', name: 'Kenyan Premier League', country: 'Kenya', region: 'AFRICA', tier: 1,
+    clubs: [
+      { id: 'ken_prem_1', name: 'Gor Mahia', shortName: 'GOR', country: 'Kenya', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'Moi International Sports Centre', stadiumCapacity: 60000, formation: '3-5-2' },
+      { id: 'ken_prem_2', name: 'AFC Leopards', shortName: 'AFC', country: 'Kenya', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 75, stadiumName: 'Nyayo National Stadium', stadiumCapacity: 30000, formation: '4-3-3' },
+      { id: 'ken_prem_3', name: 'Tusker FC', shortName: 'TUS', country: 'Kenya', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 73, stadiumName: 'Ruaraka Stadium', stadiumCapacity: 5000, formation: '4-2-3-1' },
+      { id: 'ken_prem_4', name: 'Nairobi United', shortName: 'NAU', country: 'Kenya', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 68, stadiumName: 'Kasarani Annex', stadiumCapacity: 5000, formation: '4-4-2' },
+      { id: 'ken_prem_5', name: 'Kakamega Homeboyz', shortName: 'KAK', country: 'Kenya', primaryColor: '#16A34A', secondaryColor: '#FACC15', reputation: 70, stadiumName: 'Bukhungu Stadium', stadiumCapacity: 30000, formation: '3-5-2' },
+      { id: 'ken_prem_6', name: 'Bandari FC', shortName: 'BAN', country: 'Kenya', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 70, stadiumName: 'Mbaraki Sports Club', stadiumCapacity: 5000, formation: '4-3-3' },
+      { id: 'ken_prem_7', name: 'Ulinzi Stars', shortName: 'ULI', country: 'Kenya', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 69, stadiumName: 'Ulinzi Sports Complex', stadiumCapacity: 3000, formation: '4-2-3-1' },
+      { id: 'ken_prem_8', name: 'Shabana FC', shortName: 'SHA', country: 'Kenya', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 68, stadiumName: 'Gusii Stadium', stadiumCapacity: 5000, formation: '4-4-2' }
+    ],
+  },
+  {
+    id: 'zim_prem', name: 'Zimbabwe Premier Soccer League', country: 'Zimbabwe', region: 'AFRICA', tier: 1,
+    clubs: [
+      { id: 'zim_prem_1', name: 'Dynamos FC', shortName: 'DYN', country: 'Zimbabwe', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'National Sports Stadium', stadiumCapacity: 60000, formation: '4-3-3' },
+      { id: 'zim_prem_2', name: 'Highlanders FC', shortName: 'HIG', country: 'Zimbabwe', primaryColor: '#111827', secondaryColor: '#FACC15', reputation: 75, stadiumName: 'Barbourfields Stadium', stadiumCapacity: 40000, formation: '4-2-3-1' },
+      { id: 'zim_prem_3', name: 'FC Platinum', shortName: 'FCP', country: 'Zimbabwe', primaryColor: '#F8FAFC', secondaryColor: '#111827', reputation: 74, stadiumName: 'Mandava Stadium', stadiumCapacity: 15000, formation: '4-4-2' },
+      { id: 'zim_prem_4', name: 'Ngezi Platinum Stars', shortName: 'NGE', country: 'Zimbabwe', primaryColor: '#111827', secondaryColor: '#F8FAFC', reputation: 73, stadiumName: 'Baobab Stadium', stadiumCapacity: 10000, formation: '3-5-2' },
+      { id: 'zim_prem_5', name: 'Caps United', shortName: 'CAP', country: 'Zimbabwe', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'National Sports Stadium', stadiumCapacity: 60000, formation: '4-3-3' },
+      { id: 'zim_prem_6', name: 'Manica Diamonds', shortName: 'MAN', country: 'Zimbabwe', primaryColor: '#F97316', secondaryColor: '#111827', reputation: 70, stadiumName: 'Gibbo Stadium', stadiumCapacity: 5000, formation: '4-2-3-1' },
+      { id: 'zim_prem_7', name: 'Chicken Inn FC', shortName: 'CHI', country: 'Zimbabwe', primaryColor: '#DC2626', secondaryColor: '#FACC15', reputation: 70, stadiumName: 'Luveve Stadium', stadiumCapacity: 5000, formation: '4-4-2' },
+      { id: 'zim_prem_8', name: 'Simba Bhora', shortName: 'SIM', country: 'Zimbabwe', primaryColor: '#FACC15', secondaryColor: '#111827', reputation: 68, stadiumName: 'Wadzanai Stadium', stadiumCapacity: 5000, formation: '3-5-2' }
+    ],
+  },
+  {
+    id: 'alg_ligue', name: 'Algerian Ligue 1', country: 'Algeria', region: 'AFRICA', tier: 1,
+    clubs: [
+      { id: 'alg_ligue_1', name: 'MC Alger', shortName: 'MCA', country: 'Algeria', primaryColor: '#16A34A', secondaryColor: '#DC2626', reputation: 78, stadiumName: 'Stade du 5 Juillet', stadiumCapacity: 64000, formation: '4-2-3-1' },
+      { id: 'alg_ligue_2', name: 'USM Alger', shortName: 'USMA', country: 'Algeria', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 77, stadiumName: 'Stade Omar Hamadi', stadiumCapacity: 17000, formation: '4-4-2' },
+      { id: 'alg_ligue_3', name: 'JS Kabylie', shortName: 'JSK', country: 'Algeria', primaryColor: '#FACC15', secondaryColor: '#16A34A', reputation: 76, stadiumName: 'Stade du 1er Novembre', stadiumCapacity: 25000, formation: '3-5-2' },
+      { id: 'alg_ligue_4', name: 'CR Belouizdad', shortName: 'CRB', country: 'Algeria', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'Stade du 20 Aout', stadiumCapacity: 20000, formation: '4-3-3' },
+      { id: 'alg_ligue_5', name: 'ES Setif', shortName: 'ESS', country: 'Algeria', primaryColor: '#111827', secondaryColor: '#FFFFFF', reputation: 75, stadiumName: 'Stade du 8 Mai 1945', stadiumCapacity: 25000, formation: '4-2-3-1' },
+      { id: 'alg_ligue_6', name: 'CS Constantine', shortName: 'CSC', country: 'Algeria', primaryColor: '#16A34A', secondaryColor: '#111827', reputation: 74, stadiumName: 'Stade Mohamed Hamlaoui', stadiumCapacity: 22000, formation: '4-4-2' },
+      { id: 'alg_ligue_7', name: 'USM Khenchela', shortName: 'USMK', country: 'Algeria', primaryColor: '#FACC15', secondaryColor: '#111827', reputation: 69, stadiumName: 'Stade Hamam Ammar', stadiumCapacity: 8000, formation: '3-5-2' },
+      { id: 'alg_ligue_8', name: 'Paradou AC', shortName: 'PAC', country: 'Algeria', primaryColor: '#FACC15', secondaryColor: '#1D4ED8', reputation: 70, stadiumName: 'Stade Omar Benrabah', stadiumCapacity: 10000, formation: '4-3-3' }
+    ],
+  },
+  {
+    id: 'cm_ligue', name: 'Cameroon Elite One', country: 'Cameroon', region: 'AFRICA', tier: 1,
+    clubs: [
+      { id: 'cm_ligue_1', name: 'Cotonsport Garoua', shortName: 'COT', country: 'Cameroon', primaryColor: '#F8FAFC', secondaryColor: '#1D4ED8', reputation: 77, stadiumName: 'Stade Roumde Adjia', stadiumCapacity: 30000, formation: '4-4-2' },
+      { id: 'cm_ligue_2', name: 'Canon Yaounde', shortName: 'CAN', country: 'Cameroon', primaryColor: '#DC2626', secondaryColor: '#16A34A', reputation: 74, stadiumName: 'Stade Ahmadou Ahidjo', stadiumCapacity: 40000, formation: '3-5-2' },
+      { id: 'cm_ligue_3', name: 'Dynamo Douala', shortName: 'DYN', country: 'Cameroon', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 70, stadiumName: 'Stade de la Reunification', stadiumCapacity: 30000, formation: '4-3-3' },
+      { id: 'cm_ligue_4', name: 'PWD Bamenda', shortName: 'PWD', country: 'Cameroon', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 70, stadiumName: 'Bamenda Municipal Stadium', stadiumCapacity: 5000, formation: '4-2-3-1' },
+      { id: 'cm_ligue_5', name: 'Gazelle FA', shortName: 'GAZ', country: 'Cameroon', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 69, stadiumName: 'Stade Roumde Adjia', stadiumCapacity: 30000, formation: '4-4-2' },
+      { id: 'cm_ligue_6', name: 'Union Douala', shortName: 'UDO', country: 'Cameroon', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', reputation: 69, stadiumName: 'Stade de la Reunification', stadiumCapacity: 30000, formation: '3-5-2' },
+      { id: 'cm_ligue_7', name: 'Aigle Royal Menoua', shortName: 'AIG', country: 'Cameroon', primaryColor: '#FACC15', secondaryColor: '#111827', reputation: 68, stadiumName: 'Stade Municipal de Dschang', stadiumCapacity: 5000, formation: '4-3-3' },
+      { id: 'cm_ligue_8', name: 'Victoria United', shortName: 'VIC', country: 'Cameroon', primaryColor: '#1D4ED8', secondaryColor: '#F8FAFC', reputation: 68, stadiumName: 'Limbe Omnisport Stadium', stadiumCapacity: 20000, formation: '4-2-3-1' }
+    ],
+  },
+  {
+    id: 'usa_mls', name: 'Major League Soccer', country: 'United States', region: 'NORTH_AMERICA', tier: 1,
+    clubs: [
+      { id: 'usa_mls_1', name: 'Inter Miami', shortName: 'MIA', country: 'United States', primaryColor: '#F9A8D4', secondaryColor: '#111827', reputation: 83, stadiumName: 'Chase Stadium', stadiumCapacity: 21550, formation: '3-5-2' },
+      { id: 'usa_mls_2', name: 'LAFC', shortName: 'LAFC', country: 'United States', primaryColor: '#111827', secondaryColor: '#FACC15', reputation: 82, stadiumName: 'BMO Stadium', stadiumCapacity: 22000, formation: '4-3-3' },
+      { id: 'usa_mls_3', name: 'LA Galaxy', shortName: 'LAG', country: 'United States', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 81, stadiumName: 'Dignity Health Sports Park', stadiumCapacity: 27000, formation: '4-2-3-1' },
+      { id: 'usa_mls_4', name: 'Seattle Sounders', shortName: 'SEA', country: 'United States', primaryColor: '#16A34A', secondaryColor: '#1D4ED8', reputation: 79, stadiumName: 'Lumen Field', stadiumCapacity: 68740, formation: '4-4-2' },
+      { id: 'usa_mls_5', name: 'Atlanta United', shortName: 'ATL', country: 'United States', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 78, stadiumName: 'Mercedes-Benz Stadium', stadiumCapacity: 71000, formation: '3-5-2' },
+      { id: 'usa_mls_6', name: 'New York City FC', shortName: 'NYC', country: 'United States', primaryColor: '#38BDF8', secondaryColor: '#1D4ED8', reputation: 77, stadiumName: 'Yankee Stadium', stadiumCapacity: 47309, formation: '4-3-3' },
+      { id: 'usa_mls_7', name: 'Columbus Crew', shortName: 'CLB', country: 'United States', primaryColor: '#FACC15', secondaryColor: '#111827', reputation: 79, stadiumName: 'Lower.com Field', stadiumCapacity: 20011, formation: '4-2-3-1' },
+      { id: 'usa_mls_8', name: 'Portland Timbers', shortName: 'POR', country: 'United States', primaryColor: '#16A34A', secondaryColor: '#F8FAFC', reputation: 77, stadiumName: 'Providence Park', stadiumCapacity: 25518, formation: '4-4-2' }
+    ],
+  },
+  {
+    id: 'mex_liga', name: 'Liga MX', country: 'Mexico', region: 'NORTH_AMERICA', tier: 1,
+    clubs: [
+      { id: 'mex_liga_1', name: 'Club America', shortName: 'AME', country: 'Mexico', primaryColor: '#FACC15', secondaryColor: '#1D4ED8', reputation: 84, stadiumName: 'Estadio Azteca', stadiumCapacity: 87523, formation: '4-3-3' },
+      { id: 'mex_liga_2', name: 'Chivas Guadalajara', shortName: 'CHI', country: 'Mexico', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 82, stadiumName: 'Estadio Akron', stadiumCapacity: 46232, formation: '4-2-3-1' },
+      { id: 'mex_liga_3', name: 'Tigres UANL', shortName: 'TIG', country: 'Mexico', primaryColor: '#FACC15', secondaryColor: '#1D4ED8', reputation: 83, stadiumName: 'Estadio Universitario', stadiumCapacity: 42000, formation: '4-4-2' },
+      { id: 'mex_liga_4', name: 'Monterrey', shortName: 'MTY', country: 'Mexico', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 83, stadiumName: 'Estadio BBVA', stadiumCapacity: 53500, formation: '3-5-2' },
+      { id: 'mex_liga_5', name: 'Cruz Azul', shortName: 'CRU', country: 'Mexico', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'Estadio Ciudad de los Deportes', stadiumCapacity: 33000, formation: '4-3-3' },
+      { id: 'mex_liga_6', name: 'Pumas UNAM', shortName: 'PUM', country: 'Mexico', primaryColor: '#1D4ED8', secondaryColor: '#FACC15', reputation: 78, stadiumName: 'Estadio Olimpico Universitario', stadiumCapacity: 72000, formation: '4-2-3-1' },
+      { id: 'mex_liga_7', name: 'Toluca', shortName: 'TOL', country: 'Mexico', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 78, stadiumName: 'Estadio Nemesio Diez', stadiumCapacity: 30000, formation: '4-4-2' },
+      { id: 'mex_liga_8', name: 'Pachuca', shortName: 'PAC', country: 'Mexico', primaryColor: '#1D4ED8', secondaryColor: '#F8FAFC', reputation: 77, stadiumName: 'Estadio Hidalgo', stadiumCapacity: 30000, formation: '3-5-2' }
+    ],
+  },
+  {
+    id: 'aus_league', name: 'A-League Men', country: 'Australia', region: 'ASIA', tier: 1,
+    clubs: [
+      { id: 'aus_league_1', name: 'Melbourne Victory', shortName: 'MVC', country: 'Australia', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', reputation: 77, stadiumName: 'AAMI Park', stadiumCapacity: 30050, formation: '4-2-3-1' },
+      { id: 'aus_league_2', name: 'Sydney FC', shortName: 'SYD', country: 'Australia', primaryColor: '#38BDF8', secondaryColor: '#FFFFFF', reputation: 77, stadiumName: 'Allianz Stadium', stadiumCapacity: 45500, formation: '4-4-2' },
+      { id: 'aus_league_3', name: 'Melbourne City', shortName: 'MCI', country: 'Australia', primaryColor: '#F8FAFC', secondaryColor: '#1D4ED8', reputation: 76, stadiumName: 'AAMI Park', stadiumCapacity: 30050, formation: '3-5-2' },
+      { id: 'aus_league_4', name: 'Western Sydney Wanderers', shortName: 'WSW', country: 'Australia', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 75, stadiumName: 'CommBank Stadium', stadiumCapacity: 30000, formation: '4-3-3' },
+      { id: 'aus_league_5', name: 'Adelaide United', shortName: 'ADL', country: 'Australia', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', reputation: 74, stadiumName: 'Coopers Stadium', stadiumCapacity: 16500, formation: '4-2-3-1' },
+      { id: 'aus_league_6', name: 'Brisbane Roar', shortName: 'BRI', country: 'Australia', primaryColor: '#F97316', secondaryColor: '#111827', reputation: 73, stadiumName: 'Suncorp Stadium', stadiumCapacity: 52000, formation: '4-4-2' },
+      { id: 'aus_league_7', name: 'Perth Glory', shortName: 'PER', country: 'Australia', primaryColor: '#7C3AED', secondaryColor: '#FFFFFF', reputation: 72, stadiumName: 'HBF Park', stadiumCapacity: 20500, formation: '3-5-2' },
+      { id: 'aus_league_8', name: 'Wellington Phoenix', shortName: 'WEL', country: 'Australia', primaryColor: '#111827', secondaryColor: '#F97316', reputation: 73, stadiumName: 'Sky Stadium', stadiumCapacity: 34500, formation: '4-3-3' }
+    ],
+  }
 ];
 
 export const NATIONAL_TEAM_BLUEPRINTS: Array<{
@@ -166,7 +348,20 @@ export const NATIONAL_TEAM_BLUEPRINTS: Array<{
   { id: 'nat_ita', name: 'Italy', code: 'ITA', region: 'EUROPE', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', worldRank: 9, reputation: 86, formation: '3-5-2' },
   { id: 'nat_rsa', name: 'South Africa', code: 'RSA', region: 'AFRICA', primaryColor: '#EAB308', secondaryColor: '#15803D', worldRank: 34, reputation: 76, formation: '4-3-3' },
   { id: 'nat_zmb', name: 'Zambia', code: 'ZAM', region: 'AFRICA', primaryColor: '#16A34A', secondaryColor: '#F97316', worldRank: 42, reputation: 74, formation: '4-4-2' },
-  { id: 'nat_ksa', name: 'Saudi Arabia', code: 'KSA', region: 'ASIA', primaryColor: '#15803D', secondaryColor: '#FFFFFF', worldRank: 38, reputation: 75, formation: '4-3-3' },
+  { id: 'nat_ksa', name: 'Saudi Arabia', code: 'KSA', region: 'ASIA', primaryColor: '#15803D', secondaryColor: '#FFFFFF', worldRank: 38, reputation: 75, formation: '4-3-3' },,
+  { id: 'nat_ger', name: 'Germany', code: 'GER', region: 'EUROPE', primaryColor: '#F8FAFC', secondaryColor: '#DC2626', worldRank: 6, reputation: 88, formation: '4-3-3' },
+  { id: 'nat_por', name: 'Portugal', code: 'POR', region: 'EUROPE', primaryColor: '#16A34A', secondaryColor: '#DC2626', worldRank: 7, reputation: 87, formation: '4-3-3' },
+  { id: 'nat_ned', name: 'Netherlands', code: 'NED', region: 'EUROPE', primaryColor: '#F97316', secondaryColor: '#FFFFFF', worldRank: 8, reputation: 86, formation: '4-3-3' },
+  { id: 'nat_sco', name: 'Scotland', code: 'SCO', region: 'EUROPE', primaryColor: '#1D4ED8', secondaryColor: '#FFFFFF', worldRank: 45, reputation: 73, formation: '4-3-3' },
+  { id: 'nat_tur', name: 'Turkey', code: 'TUR', region: 'EUROPE', primaryColor: '#DC2626', secondaryColor: '#FFFFFF', worldRank: 26, reputation: 80, formation: '4-3-3' },
+  { id: 'nat_gha', name: 'Ghana', code: 'GHA', region: 'AFRICA', primaryColor: '#FACC15', secondaryColor: '#16A34A', worldRank: 52, reputation: 75, formation: '4-3-3' },
+  { id: 'nat_ken', name: 'Kenya', code: 'KEN', region: 'AFRICA', primaryColor: '#DC2626', secondaryColor: '#16A34A', worldRank: 105, reputation: 66, formation: '4-3-3' },
+  { id: 'nat_zim', name: 'Zimbabwe', code: 'ZIM', region: 'AFRICA', primaryColor: '#16A34A', secondaryColor: '#FACC15', worldRank: 120, reputation: 64, formation: '4-3-3' },
+  { id: 'nat_alg', name: 'Algeria', code: 'ALG', region: 'AFRICA', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', worldRank: 37, reputation: 77, formation: '4-3-3' },
+  { id: 'nat_cmr', name: 'Cameroon', code: 'CMR', region: 'AFRICA', primaryColor: '#16A34A', secondaryColor: '#FACC15', worldRank: 49, reputation: 76, formation: '4-3-3' },
+  { id: 'nat_usa', name: 'United States', code: 'USA', region: 'NORTH_AMERICA', primaryColor: '#1D4ED8', secondaryColor: '#DC2626', worldRank: 15, reputation: 82, formation: '4-3-3' },
+  { id: 'nat_mex', name: 'Mexico', code: 'MEX', region: 'NORTH_AMERICA', primaryColor: '#16A34A', secondaryColor: '#FFFFFF', worldRank: 17, reputation: 81, formation: '4-3-3' },
+  { id: 'nat_aus', name: 'Australia', code: 'AUS', region: 'ASIA', primaryColor: '#FACC15', secondaryColor: '#1D4ED8', worldRank: 25, reputation: 79, formation: '4-3-3' }
 ];
 
 const FIRST_NAMES_BY_REGION: Record<Region, string[]> = {
