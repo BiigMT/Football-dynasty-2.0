@@ -42,7 +42,7 @@ import { soundEngine } from '../engine/audio';
 import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
-import { CareerHomeNewsItem, DayItem, FanPost, ManagerHome, TableRow } from './CareerHome';
+import { CareerHomeNewsItem, DayItem, ManagerHome, TableRow } from './CareerHome';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -167,32 +167,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   }
 
   const topScorer = [...squad].sort((a, b) => b.seasonStats.goals - a.seasonStats.goals)[0];
-  const fans: FanPost[] = [
-    {
-      name: `${club.shortName} Faithful`,
-      handle: `@${club.shortName.toLowerCase()}ultras`,
-      time: `W${save.currentWeek}`,
-      text:
-        leaguePos <= club.targetPosition
-          ? `${manager.name} has us sitting #${leaguePos}! Keep pressing and bring home the trophy.`
-          : `Big test coming up — time to climb back toward the top ${club.targetPosition}.`,
-      replies: 142 + manager.wins * 18,
-      shares: 380 + manager.wins * 24,
-      likes: 2400 + manager.boardConfidence * 15,
-    },
-    {
-      name: 'Matchday Tactician',
-      handle: '@dynastytactics',
-      time: '1h',
-      text:
-        topScorer && topScorer.seasonStats.goals > 0
-          ? `${topScorer.name} (${topScorer.seasonStats.goals}G) is thriving in this ${club.tactics.formation} setup.`
-          : `Watching how ${club.name} line up in the ${club.tactics.formation} ${club.tactics.mentality.toLowerCase()} shape.`,
-      replies: 86,
-      shares: 215,
-      likes: 1390,
-    },
-  ];
+  // Dashboard stories are generated from this offline career save; no social feed is simulated.
 
   const ticker = [
     ...save.news.slice(0, 5).map((n) => n.headline),
@@ -347,7 +322,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
         wageBudget={`€${Math.round(club.finances.wageBudgetWeekly / 1000)}K/wk`}
         news={homeNews}
-        fans={fans}
         leagueName={league.name}
         table={tableRows}
         ticker={ticker}
