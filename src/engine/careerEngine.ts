@@ -240,6 +240,7 @@ export function createManagerCareer(params: {
       losses: 0,
       trophies: [],
       jobOffers: [],
+      pressConferenceDone: false,
     },
     clubs: world.clubs,
     players: world.players,
