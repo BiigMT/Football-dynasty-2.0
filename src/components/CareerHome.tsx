@@ -6,16 +6,6 @@ export type DayItem = { label: string; sub: string; icon: string; active?: boole
 export type MenuItem = { key: string; title: string; sub: string; icon: string };
 export type TableRow = { pos: number; club: string; p: number; gd: number; pts: number; color?: string; me?: boolean };
 export type CareerHomeNewsItem = { tag: string; headline: string; body: string };
-export type FanPost = {
-  name: string;
-  handle: string;
-  text: string;
-  time: string;
-  replies: number;
-  shares: number;
-  likes: number;
-};
-
 /* ---------- Small shared pieces ---------- */
 export const Badge: React.FC<{ name: string; color?: string; size?: number }> = ({
   name,
@@ -151,7 +141,7 @@ export type ManagerHomeProps = {
   transferBudget: string;
   wageBudget: string;
   news: CareerHomeNewsItem[];
-  fans: FanPost[];
+  fans?: FanPost[]; // Legacy compatibility only; no simulated social feed is displayed.
   leagueName: string;
   table: TableRow[];
   ticker: string[];
@@ -172,7 +162,8 @@ const MANAGER_MENU: MenuItem[] = [
 
 export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
   const [slide, setSlide] = React.useState(0);
-  const n = p.news[slide % Math.max(p.news.length, 1)];
+  const news = p.news.length ? p.news : [{ tag: 'CAREER BRIEFING', headline: 'Your football world starts here', body: 'Every result, transfer and league update is generated locally and saved with this career.' }];
+  const n = news[slide % news.length];
   return (
     <Shell
       mode="manager"
@@ -234,34 +225,32 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
           </div>
           <Portrait kit={p.clubColor ?? '#f4f4f4'} />
           <div className="fd-dots">
-            {p.news.map((_, i) => (
-              <i key={i} className={i === slide % p.news.length ? 'on' : ''} onClick={() => setSlide(i)} />
+            {news.map((_, i) => (
+              <i key={i} className={i === slide % news.length ? 'on' : ''} onClick={() => setSlide(i)} />
             ))}
           </div>
         </section>
       )}
-      <section className="fd-panel fd-fans">
+      <section className="fd-panel fd-offline">
         <div className="fd-panelHead">
-          <h3>Latest from Fans</h3>
-          <button type="button" onClick={() => p.onNavigate('office')}>
-            See all →
-          </button>
+          <h3>OFFLINE CLUB WORLD</h3>
+          <span className="fd-localStatus"><i /> SAVED LOCALLY</span>
         </div>
-        {p.fans.map((f, i) => (
-          <div className="fd-post" key={i}>
-            <Portrait hair={i % 2 ? '#3a2a1a' : '#111'} skin={i % 2 ? '#e0ac69' : '#8d5524'} kit={p.clubColor ?? '#1e293b'} />
-            <div>
-              <b>{f.name}</b>{' '}
-              <small>
-                {f.handle} · {f.time}
-              </small>
-              <p>{f.text}</p>
-              <small>
-                💬 {f.replies} &nbsp; 🔁 {f.shares} &nbsp; ♥ {f.likes}
-              </small>
-            </div>
-          </div>
-        ))}
+        <p className="fd-offlineLead">Your club. Your decisions. Your football history.</p>
+        <p className="fd-offlineCopy">
+          The football world runs on this device. Match results, transfers, training,
+          player development and league standings come from your saved career — no
+          internet connection or live social feed required.
+        </p>
+        <div className="fd-offlineFeatures">
+          <span>⚽ Matchdays</span>
+          <span>🤝 Transfers</span>
+          <span>🏆 Competitions</span>
+          <span>📋 Club records</span>
+        </div>
+        <button type="button" className="fd-ghost" onClick={() => p.onNavigate('office')}>
+          Open Club Office →
+        </button>
       </section>
       <LeagueTable title={p.leagueName} rows={p.table} onSee={() => p.onNavigate('competitions')} />
     </Shell>
