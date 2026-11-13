@@ -166,7 +166,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   }
 
-  const topScorer = [...squad].sort((a, b) => b.seasonStats.goals - a.seasonStats.goals)[0];
   // Dashboard stories are generated from this offline career save; no social feed is simulated.
 
   const ticker = [
