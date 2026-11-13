@@ -280,6 +280,7 @@ export function createLegendCareer(params: {
   appearance: PlayerAppearance;
   clubId: string;
   difficulty?: GameDifficulty;
+  trialRating?: number;
 }): CareerSave {
   const world = buildWorldDatabase();
   const requestedClub = world.clubs[params.clubId];
