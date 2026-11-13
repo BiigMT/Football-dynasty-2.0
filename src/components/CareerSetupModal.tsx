@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Check } from 'lucide-react';
 import {
   CareerMode,
+  GameDifficulty,
   PlayerAppearance,
   PlayingStyle,
   Position,
@@ -21,6 +22,7 @@ interface CareerSetupModalProps {
     nationality: string;
     philosophy: 'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced';
     clubId: string;
+    difficulty: GameDifficulty;
   }) => void;
   onConfirmLegend: (data: {
     slotId: string;
@@ -36,6 +38,7 @@ interface CareerSetupModalProps {
     playingStyle: PlayingStyle;
     appearance: PlayerAppearance;
     clubId: string;
+    difficulty: GameDifficulty;
   }) => void;
 }
 
@@ -83,6 +86,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [managerName, setManagerName] = useState('Alex Mercer');
   const [nationality, setNationality] = useState('Nigeria');
   const [philosophy, setPhilosophy] = useState<'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced'>('Gegenpress');
+  const [difficulty, setDifficulty] = useState<GameDifficulty>('NORMAL');
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
@@ -125,6 +129,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         nationality,
         philosophy,
         clubId: selectedClub.id,
+        difficulty,
       });
     } else {
       const secondary: Position[] =
@@ -149,6 +154,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         playingStyle: STYLES_BY_POS[position],
         appearance,
         clubId: selectedClub.id,
+        difficulty,
       });
     }
   };
@@ -210,6 +216,16 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                   </label>
                 </div>
 
+                <div>
+                  <span className="block text-xs text-slate-400 mb-2">Career Difficulty</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {([{ id: 'EASY', label: 'Easy', detail: 'More forgiving' }, { id: 'NORMAL', label: 'Normal', detail: 'Balanced challenge' }, { id: 'HARD', label: 'Hard', detail: 'Strict & demanding' }] as const).map((level) => (
+                      <button key={level.id} type="button" onClick={() => setDifficulty(level.id)} className={`rounded-lg border px-2 py-3 text-left ${difficulty === level.id ? 'border-cyan-400 bg-cyan-500/15 text-cyan-200' : 'border-white/10 bg-[#0B0F14] text-slate-300'}`}>
+                        <strong className="block text-sm">{level.label}</strong><span className="text-[10px] text-slate-400">{level.detail}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div>
                   <span className="block text-xs text-slate-400 mb-2">Tactical Philosophy</span>
                   <div className="grid grid-cols-2 gap-2.5">
