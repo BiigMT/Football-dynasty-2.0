@@ -1181,18 +1181,21 @@ export function advanceWeek(save: CareerSave): CareerSave {
 export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): CareerSave {
   if (save.weekTrained) return save;
   const nextPlayers = { ...save.players };
+  const facilitiesLevel = save.clubs[save.userClubId]?.facilitiesLevel ?? 1;
+  const facilityBonus = Math.max(0, facilitiesLevel - 1);
 
   Object.values(nextPlayers)
     .filter((p) => p.clubId === save.userClubId)
     .forEach((p) => {
       const attrs = { ...p.attributes };
-      let fitDelta = -4;
-      let sharpDelta = 6;
-      const canGrow = p.overall < p.potential && Math.random() < (p.age <= 22 ? 0.55 : 0.25);
+      let fitDelta = -4 + facilityBonus;
+      let sharpDelta = 6 + facilityBonus;
+      const growthChance = Math.min(0.8, (p.age <= 22 ? 0.55 : 0.25) + facilityBonus * 0.035);
+      const canGrow = p.overall < p.potential && Math.random() < growthChance;
 
       if (focus === 'RECOVERY') {
-        fitDelta = 12;
-        sharpDelta = 1;
+        fitDelta = 12 + facilityBonus * 2;
+        sharpDelta = 1 + facilityBonus;
       } else if (canGrow) {
         if (focus === 'ATTACKING') {
           attrs.finishing = Math.min(98, attrs.finishing + 1);
