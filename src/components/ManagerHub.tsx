@@ -230,6 +230,17 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const submitNegotiation = () => {
     if (!negTarget) return;
     soundEngine.playClick();
+    const expectedWage = Math.ceil(negTarget.weeklyWage * 0.92 / 100) * 100;
+    if (offerWage < expectedWage) {
+      setOfferWage(expectedWage);
+      setNegFeedback(`${negTarget.name}'s agent has pushed back. They want at least €${expectedWage.toLocaleString()} per week. The agent slides a revised salary demand across the table.`);
+      return;
+    }
+    if (offerYears < 2) {
+      setOfferYears(2);
+      setNegFeedback(`${negTarget.name} wants security and has asked for a minimum two-year contract. The agent has amended the terms.`);
+      return;
+    }
     const res = evaluateTransferBid(save, {
       playerId: negTarget.id,
       dealType,
