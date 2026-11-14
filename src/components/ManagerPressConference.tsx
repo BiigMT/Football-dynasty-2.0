@@ -31,6 +31,7 @@ const QUESTIONS = [
 export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ managerName, clubName, recentNews = [], onAnswer, onContinue }) => {
   const [question, setQuestion] = useState(0);
   const [answered, setAnswered] = useState(false);
+  const [mediaReady, setMediaReady] = useState(false);
   const [lastResponse, setLastResponse] = useState('');
   const latestTransfer = recentNews.find(item => item.category === 'TRANSFER');
   const latestMatch = recentNews.find(item => item.category === 'MATCH');
@@ -87,6 +88,21 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
         </div>
         <div className="relative grid min-h-[280px] grid-cols-1 gap-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(8,145,178,.2),transparent_65%)] md:grid-cols-[1.4fr_1fr]">
           <div className="press-pan relative flex min-h-[250px] items-end justify-center overflow-hidden border-b border-white/10 px-4 pt-8 md:border-b-0 md:border-r">
+            <video
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+              style={{ opacity: mediaReady ? 0.48 : 0 }}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/media/pixabay/stadium-audience.jpg"
+              onCanPlay={() => setMediaReady(true)}
+              onError={() => setMediaReady(false)}
+              aria-hidden="true"
+            >
+              <source src="/media/pixabay/fans-stadium-game.mp4" type="video/mp4" />
+            </video>
             <div className="absolute inset-x-8 top-7 h-24 rounded-xl border border-cyan-300/15 bg-[#142332] shadow-inner"><div className="flex h-full items-center justify-center text-center"><div><div className="text-[10px] font-black tracking-[.35em] text-cyan-300">{clubName.toUpperCase()}</div><div className="mt-1 text-[9px] tracking-[.2em] text-slate-500">OFFICIAL MEDIA CONFERENCE</div></div></div></div>
             <div className="reporter-idle absolute bottom-0 left-5 h-24 w-16 rounded-t-[45%] bg-[#263747] opacity-90"><div className="absolute -top-7 left-4 h-9 w-9 rounded-full bg-[#9b684e]" /><div className="press-mic absolute -top-1 left-11 h-10 w-2 rotate-[-25deg] rounded bg-slate-500" /></div>
             <div className="reporter-idle absolute bottom-0 right-5 h-28 w-20 rounded-t-[45%] bg-[#1c2c3a] opacity-90" style={{animationDelay:'-.8s'}}><div className="absolute -top-7 left-5 h-9 w-9 rounded-full bg-[#c18b68]" /><div className="press-mic absolute -top-1 -left-5 h-10 w-2 rotate-[25deg] rounded bg-slate-400" /></div>
