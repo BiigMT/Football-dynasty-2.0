@@ -107,18 +107,32 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
   const teamTalk = (player: Player, tone: 'SUPPORT' | 'CHALLENGE' | 'MENTOR') => {
     const morale = tone === 'SUPPORT' ? 5 : tone === 'CHALLENGE' ? (player.form >= 70 ? 2 : -2) : 3;
     const chemistry = tone === 'MENTOR' ? 2 : 1;
+    const partner = tone === 'MENTOR'
+      ? (player.age <= 20
+          ? squad.filter(p => p.id !== player.id && p.age >= player.age + 3).sort((a, b) => b.overall - a.overall)[0]
+          : squad.filter(p => p.id !== player.id && p.age <= 20 && p.age < player.age).sort((a, b) => a.age - b.age)[0])
+      : undefined;
+    const pairKey = partner ? [player.id, partner.id].sort().join('__') : '';
+    const pairLinks = save.squadChemistryLinks ?? {};
     onUpdateSave({
       ...save,
-      players: { ...save.players, [player.id]: {
-        ...player, morale: clamp(player.morale + morale),
-        confidence: clamp(player.confidence + (tone === 'SUPPORT' ? 3 : 1)),
-      }},
+      players: {
+        ...save.players,
+        [player.id]: {
+          ...player, morale: clamp(player.morale + morale),
+          confidence: clamp(player.confidence + (tone === 'SUPPORT' ? 3 : 1)),
+        },
+        ...(partner ? { [partner.id]: {
+          ...partner, morale: clamp(partner.morale + 2), confidence: clamp(partner.confidence + 2),
+        }} : {}),
+      },
       clubs: { ...save.clubs, [club.id]: { ...club, chemistry: clamp(club.chemistry + chemistry) } },
       playerRelationships: { ...relationships, [player.id]: clamp((relationships[player.id] ?? 50) + 4) },
+      squadChemistryLinks: partner ? { ...pairLinks, [pairKey]: clamp((pairLinks[pairKey] ?? 50) + 5) } : pairLinks,
       news: [{
         id: 'dressing_room_' + Date.now(), week: save.currentWeek, season: save.season,
         category: 'BOARD' as const, headline: manager.name + ' holds a one-to-one with ' + player.name,
-        body: tone === 'SUPPORT' ? 'The manager offered personal support and confidence.' : tone === 'CHALLENGE' ? 'The manager challenged the player to raise their standards.' : 'A senior mentor role was discussed to strengthen squad unity.',
+        body: tone === 'SUPPORT' ? 'The manager offered personal support and confidence.' : tone === 'CHALLENGE' ? 'The manager challenged the player to raise their standards.' : partner ? player.name + ' begins a mentoring partnership with ' + partner.name + '. Both players gained morale and their squad bond improved.' : 'The manager discussed mentoring, but no suitable senior-young player pairing was available.',
       }, ...save.news].slice(0, 35),
     });
   };
