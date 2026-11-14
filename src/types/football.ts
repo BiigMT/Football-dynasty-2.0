@@ -168,6 +168,7 @@ export interface Club {
   chemistry: number; // 1-100
   boardExpectation: string;
   targetPosition: number;
+  facilitiesLevel?: number;
 }
 
 export interface LeagueStandingRow {
