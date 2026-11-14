@@ -120,6 +120,9 @@ export interface Player {
   isYouth?: boolean;
   isUserPlayer?: boolean;
   injuredWeeks: number;
+  injuryType?: string;
+  loanParentClubId?: string;
+  loanWeeksRemaining?: number;
   suspendedMatches: number;
   scouted: boolean;
   seasonStats: PlayerSeasonStats;
@@ -460,6 +463,7 @@ export interface LegendProfile {
   socialPosts?: PlayerSocialPost[];
   phoneFollowers?: number;
   phoneNotifications?: PlayerPhoneNotification[];
+  loanRequestPending?: boolean;
   rivalryPlayerId?: string;
   rivalryPending?: boolean;
   rivalryWins?: number;
