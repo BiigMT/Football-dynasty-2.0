@@ -428,7 +428,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const formationSlots = getFormationSlots(club.tactics.formation);
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
+    <div className="fd-realism-manager min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
       {/* Sub-page Header */}
       <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2.5">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
