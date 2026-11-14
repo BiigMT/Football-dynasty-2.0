@@ -960,7 +960,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
         currentClub.tactics = { ...currentClub.tactics, startingXI: currentClub.tactics.startingXI.filter((id) => id !== pid), bench: currentClub.tactics.bench.filter((id) => id !== pid) };
         parentClub.tactics = { ...parentClub.tactics, bench: [...parentClub.tactics.bench.filter((id) => id !== pid), pid].slice(-7) };
         nextSave.players[pid] = { ...loaned, clubId: parentId, loanParentClubId: undefined, loanWeeksRemaining: undefined, morale: Math.min(100, loaned.morale + 5) };
-        nextSave.news.unshift({ id: 'loan_return_' + pid + '_' + nextWeek, week: nextWeek, season: save.season, category: 'TRANSFER', headline: loaned.name + ' returns from loan', body: loaned.name + ' has completed the loan spell and returned to ' + parentClub.name + '.' });
+        nextSave.news.unshift({ id: 'loan_return_' + pid + '_' + (save.currentWeek + 1), week: (save.currentWeek + 1), season: save.season, category: 'TRANSFER', headline: loaned.name + ' returns from loan', body: loaned.name + ' has completed the loan spell and returned to ' + parentClub.name + '.' });
       }
     } else if (loaned.loanParentClubId) {
       nextSave.players[pid] = { ...loaned, loanWeeksRemaining: (loaned.loanWeeksRemaining ?? 1) - 1 };
@@ -984,7 +984,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
           xi.splice(currentIndex, 1);
           const replacement = eligible.filter((p) => p.id !== userPlayer.id && (p.position === userPlayer.position || p.secondaryPositions.includes(userPlayer.position))).sort((a,b) => score(b)-score(a))[0];
           if (replacement) xi.splice(Math.min(currentIndex, 10), 0, replacement.id);
-          nextSave.news.unshift({ id: 'selection_injury_' + userPlayer.id + '_' + nextWeek, week: nextWeek, season: save.season, category: 'MATCH', headline: userPlayer.name + ' unavailable for selection', body: userPlayer.name + (userPlayer.injuredWeeks > 0 ? ' is sidelined with ' + (userPlayer.injuryType ?? 'an injury') + ' for ' + userPlayer.injuredWeeks + ' more week(s).' : ' is suspended and cannot be selected.') });
+          nextSave.news.unshift({ id: 'selection_injury_' + userPlayer.id + '_' + (save.currentWeek + 1), week: (save.currentWeek + 1), season: save.season, category: 'MATCH', headline: userPlayer.name + ' unavailable for selection', body: userPlayer.name + (userPlayer.injuredWeeks > 0 ? ' is sidelined with ' + (userPlayer.injuryType ?? 'an injury') + ' for ' + userPlayer.injuredWeeks + ' more week(s).' : ' is suspended and cannot be selected.') });
         }
       } else if (slot >= 0) {
         const competitors = eligible.filter((p) => p.id !== userPlayer.id && (p.position === userPlayer.position || p.secondaryPositions.includes(userPlayer.position))).sort((a,b) => score(b)-score(a));
@@ -992,7 +992,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
         if (currentIndex >= 0 && challenger && score(challenger) > score(userPlayer) + 7) {
           xi[currentIndex] = challenger.id;
           bench.unshift(userPlayer.id);
-          nextSave.news.unshift({ id: 'selection_drop_' + userPlayer.id + '_' + nextWeek, week: nextWeek, season: save.season, category: 'MATCH', headline: userPlayer.name + ' dropped to the bench', body: challenger.name + ' has won the positional battle after stronger form and fitness in training.' });
+          nextSave.news.unshift({ id: 'selection_drop_' + userPlayer.id + '_' + (save.currentWeek + 1), week: (save.currentWeek + 1), season: save.season, category: 'MATCH', headline: userPlayer.name + ' dropped to the bench', body: challenger.name + ' has won the positional battle after stronger form and fitness in training.' });
           nextSave.legend = { ...nextSave.legend, managerTrust: Math.max(15, nextSave.legend.managerTrust - 3), squadRole: 'ROTATION' };
         } else if (currentIndex < 0 && nextSave.legend.managerTrust >= 45) {
           const weakest = xi.map((id, index) => ({ id, index, player: nextSave.players[id] })).filter((x) => x.player && (x.player.position === userPlayer.position || x.player.secondaryPositions.includes(userPlayer.position))).sort((a,b) => score(a.player)-score(b.player))[0];
@@ -1000,7 +1000,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
             xi[weakest.index] = userPlayer.id;
             bench.splice(bench.indexOf(userPlayer.id), 1);
             bench.unshift(weakest.id);
-            nextSave.news.unshift({ id: 'selection_return_' + userPlayer.id + '_' + nextWeek, week: nextWeek, season: save.season, category: 'MATCH', headline: userPlayer.name + ' wins back a starting place', body: 'Strong form, fitness and training performances have earned ' + userPlayer.name + ' a place in the starting XI.' });
+            nextSave.news.unshift({ id: 'selection_return_' + userPlayer.id + '_' + (save.currentWeek + 1), week: (save.currentWeek + 1), season: save.season, category: 'MATCH', headline: userPlayer.name + ' wins back a starting place', body: 'Strong form, fitness and training performances have earned ' + userPlayer.name + ' a place in the starting XI.' });
             nextSave.legend = { ...nextSave.legend, managerTrust: Math.min(100, nextSave.legend.managerTrust + 3), squadRole: 'FIRST_TEAM' };
           }
         }
