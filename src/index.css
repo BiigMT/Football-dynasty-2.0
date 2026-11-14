@@ -389,3 +389,64 @@
   .fd-realism-manager nav button,
   .fd-realism-player nav button { padding-left: 11px; padding-right: 11px; }
 }
+
+
+/* Offline squad/market presentation: compact scouting-report tables and broadcast match panels. */
+.fd-realism-manager .career-subpage-content table th {
+  padding: 9px 10px;
+  white-space: nowrap;
+  background: #101923;
+}
+.fd-realism-manager .career-subpage-content table td {
+  padding: 8px 10px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.fd-realism-manager .career-subpage-content tbody tr {
+  transition: background .12s ease;
+}
+.fd-realism-manager .career-subpage-content tbody tr td:first-child {
+  border-left: 2px solid transparent;
+}
+.fd-realism-manager .career-subpage-content tbody tr:hover td:first-child {
+  border-left-color: #72bdc9;
+}
+.fd-realism-manager .career-subpage-content .font-mono-num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.025em;
+}
+.fd-realism-manager .career-subpage-content [class*="TRANSFER"],
+.fd-realism-manager .career-subpage-content [class*="Transfer"] {
+  letter-spacing: .015em;
+}
+.fd-realism-match .match-live-scoreboard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% -55%, rgba(112,177,196,.18), transparent 62%),
+    linear-gradient(105deg, #111c27 0%, #192634 48%, #111c27 100%) !important;
+}
+.fd-realism-match .match-live-scoreboard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .12;
+  background: repeating-linear-gradient(115deg, transparent 0 34px, rgba(255,255,255,.12) 35px, transparent 36px 70px);
+}
+.fd-realism-match .match-live-scoreboard .text-3xl,
+.fd-realism-match .match-live-scoreboard .text-4xl {
+  text-shadow: 0 2px 16px rgba(0,0,0,.55);
+  font-weight: 900;
+  letter-spacing: -.06em;
+}
+.fd-realism-match .match-live-scoreboard > div:nth-child(2) > span:first-child {
+  color: #8fc5d0;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.fd-realism-match .match-live-events > div:first-child {
+  border-left-color: #d5b56b;
+}
