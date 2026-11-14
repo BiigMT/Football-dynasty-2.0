@@ -70,6 +70,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [posFilter, setPosFilter] = useState<Position | 'ALL'>('ALL');
   const [negTarget, setNegTarget] = useState<Player | null>(null);
+  const [negotiationStage, setNegotiationStage] = useState<'ARRIVAL' | 'CLUB' | 'CONTRACT' | 'SIGNED'>('ARRIVAL');
   const [dealType, setDealType] = useState<TransferDealType>('PERMANENT');
   const [offerFee, setOfferFee] = useState<number>(0);
   const [offerWage, setOfferWage] = useState<number>(0);
@@ -217,6 +218,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const openNegotiation = (p: Player) => {
     soundEngine.playClick();
     setNegTarget(p);
+    setNegotiationStage('ARRIVAL');
     setDealType('PERMANENT');
     setOfferFee(p.marketValue);
     setOfferWage(Math.round(p.weeklyWage * 1.05));
@@ -244,8 +246,32 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     }
     if (res.accepted) {
       onUpdateSave(res.save);
-      setTimeout(() => setNegTarget(null), 900);
+      setNegotiationStage('SIGNED');
     }
+  };
+
+  const submitClubOffer = () => {
+    if (!negTarget) return;
+    soundEngine.playClick();
+    const exchangeValue = exchangeId ? (save.players[exchangeId]?.marketValue ?? 0) * 0.85 : 0;
+    const askingPrice = dealType === 'LOAN' ? Math.round(negTarget.marketValue * 0.14) : Math.round(negTarget.marketValue * 1.08);
+    const offerValue = (dealType === 'LOAN' ? Math.round(negTarget.marketValue * 0.15) : offerFee) + exchangeValue;
+    if (!save.transferWindowOpen) {
+      setNegFeedback('The transfer window is closed. The club cannot register this move yet.');
+      return;
+    }
+    if (offerFee > club.finances.transferBudget) {
+      setNegFeedback('The club has rejected the offer: it exceeds your available transfer budget.');
+      return;
+    }
+    if (offerValue >= askingPrice * 0.96) {
+      setNegFeedback(`${save.clubs[negTarget.clubId]?.name ?? 'The club'} have accepted the transfer fee. Now meet ${negTarget.name} and their agent to agree personal terms.`);
+      setNegotiationStage('CONTRACT');
+      return;
+    }
+    const counter = Math.max(askingPrice, Math.round((askingPrice - exchangeValue) / 50000) * 50000);
+    setOfferFee(counter);
+    setNegFeedback(`The selling club has countered at €${(counter / 1000000).toFixed(2)}M. Improve your offer or walk away.`);
   };
 
   const handleScoutPlayer = (pid: string) => {
@@ -790,105 +816,127 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
             </div>
 
             {negTarget && (
-              <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-                <div className="max-w-lg w-full rounded-xl bg-[#131A22] border border-cyan-400/50 p-5 flex flex-col gap-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/90 p-3 sm:p-5">
+                <style>{`
+                  @keyframes signing-walk-in { 0% { transform: translateX(110px); opacity: 0; } 55% { opacity: 1; } 100% { transform: translateX(0); opacity: 1; } }
+                  @keyframes signing-sit { 0%,55% { transform: translateY(0); } 100% { transform: translateY(18px) scale(.98); } }
+                  @keyframes signing-breathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+                  @keyframes signing-camera { 0%,82%,100% { opacity: 0; } 84% { opacity: .8; } 86% { opacity: 0; } }
+                  @keyframes signing-lights { 0%,100% { opacity: .35; } 50% { opacity: .8; } }
+                  .signing-arrival { animation: signing-walk-in 1.15s cubic-bezier(.2,.8,.2,1) both, signing-sit .65s 1.05s ease-out both; }
+                  .signing-idle { animation: signing-breathe 3s ease-in-out infinite; }
+                  .signing-flash { animation: signing-camera 4s linear infinite; }
+                  .signing-light { animation: signing-lights 3.5s ease-in-out infinite; }
+                `}</style>
+                <div className="my-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-cyan-300/25 bg-[#0d151e] shadow-[0_30px_100px_rgba(0,0,0,.7)]">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#111e2a] px-4 py-3 sm:px-6">
                     <div>
-                      <div className="text-xs text-cyan-400 font-semibold">Transfer & Contract Negotiation</div>
-                      <h3 className="text-xl font-bold text-white">
-                        {negTarget.name} ({negTarget.position} · {negTarget.overall} OVR)
+                      <div className="text-[10px] font-black uppercase tracking-[.28em] text-cyan-300">Football Dynasty · Transfer suite</div>
+                      <h3 className="mt-1 text-lg font-black text-white sm:text-xl">
+                        {negotiationStage === 'ARRIVAL' ? 'The player has arrived' : negotiationStage === 'CLUB' ? 'Meeting with the selling club' : negotiationStage === 'CONTRACT' ? 'Personal terms & contract' : 'A new signing'}
                       </h3>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setNegTarget(null)}
-                      className="text-xs text-slate-400 hover:text-white cursor-pointer"
-                    >
-                      Close
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <label className="flex flex-col gap-1 text-slate-400">
-                      <span>Deal Type</span>
-                      <select
-                        value={dealType}
-                        onChange={(e) => setDealType(e.target.value as TransferDealType)}
-                        className="min-h-[40px] px-2.5 rounded bg-[#0B0F14] border border-white/15 text-white"
-                      >
-                        <option value="PERMANENT">Permanent Buy</option>
-                        <option value="LOAN">Season Loan</option>
-                        <option value="LOAN_TO_BUY">Loan-to-Buy</option>
-                        <option value="EXCHANGE">Cash + Player Exchange</option>
-                      </select>
-                    </label>
-                    <label className="flex flex-col gap-1 text-slate-400">
-                      <span>Transfer Fee (€)</span>
-                      <input
-                        type="number"
-                        step={100000}
-                        value={offerFee}
-                        onChange={(e) => setOfferFee(Number(e.target.value))}
-                        className="min-h-[40px] px-2.5 rounded bg-[#0B0F14] border border-white/15 text-white font-mono-num"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1 text-slate-400">
-                      <span>Weekly Wage (€)</span>
-                      <input
-                        type="number"
-                        step={500}
-                        value={offerWage}
-                        onChange={(e) => setOfferWage(Number(e.target.value))}
-                        className="min-h-[40px] px-2.5 rounded bg-[#0B0F14] border border-white/15 text-white font-mono-num"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1 text-slate-400">
-                      <span>Contract Length (Years)</span>
-                      <input
-                        type="number"
-                        min={1}
-                        max={5}
-                        value={offerYears}
-                        onChange={(e) => setOfferYears(Number(e.target.value))}
-                        className="min-h-[40px] px-2.5 rounded bg-[#0B0F14] border border-white/15 text-white font-mono-num"
-                      />
-                    </label>
-                  </div>
-
-                  {dealType === 'EXCHANGE' && (
-                    <label className="flex flex-col gap-1 text-xs text-slate-400">
-                      <span>Offer Player in Exchange</span>
-                      <select
-                        value={exchangeId}
-                        onChange={(e) => setExchangeId(e.target.value)}
-                        className="min-h-[40px] px-2.5 rounded bg-[#0B0F14] border border-white/15 text-white"
-                      >
-                        <option value="">None</option>
-                        {squad.map((sp) => (
-                          <option key={sp.id} value={sp.id}>
-                            {sp.name} ({sp.position} · €{(sp.marketValue / 1000000).toFixed(1)}M)
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  )}
-
-                  {negFeedback && (
-                    <div className="p-3 rounded-lg bg-[#0B0F14] border border-white/10 text-xs text-amber-300">
-                      {negFeedback}
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      {['ARRIVAL','CLUB','CONTRACT','SIGNED'].map((step, index) => (
+                        <span key={step} className={`rounded px-2 py-1 ${['ARRIVAL','CLUB','CONTRACT','SIGNED'].indexOf(negotiationStage) >= index ? 'bg-cyan-400/15 text-cyan-200' : 'bg-white/5'}`}>{index + 1}. {step}</span>
+                      ))}
                     </div>
-                  )}
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={submitNegotiation}
-                    className="min-h-[44px] w-full rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm cursor-pointer"
-                  >
-                    Submit Official Offer
-                  </button>
+                  <div className="grid md:grid-cols-[1.05fr_.95fr]">
+                    <div className="relative flex min-h-[300px] flex-col justify-end overflow-hidden border-b border-white/10 bg-[radial-gradient(ellipse_at_50%_8%,rgba(34,211,238,.2),transparent_52%),linear-gradient(145deg,#1b2b3b,#0a1119_72%)] p-5 md:min-h-[430px] md:border-b-0 md:border-r md:p-7">
+                      <div className="signing-light absolute left-8 top-8 h-24 w-24 rounded-full bg-cyan-300/10 blur-2xl" />
+                      <div className="absolute inset-x-7 top-8 rounded-lg border border-white/10 bg-[#0b121b]/80 p-3 text-center shadow-xl">
+                        <div className="text-[9px] font-black tracking-[.35em] text-cyan-200">{club.name.toUpperCase()}</div>
+                        <div className="mt-1 text-[8px] tracking-[.22em] text-slate-500">FIRST-TEAM CONTRACT ROOM</div>
+                      </div>
+                      <div className="signing-flash pointer-events-none absolute inset-0 bg-white" />
+                      <div className="relative z-10 mt-24 flex items-end justify-center gap-3 sm:gap-7">
+                        <div className="flex flex-col items-center">
+                          <div className="mb-2 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-300">Your manager</div>
+                          <div className="signing-idle flex h-32 w-28 items-end justify-center rounded-t-[48%] bg-gradient-to-b from-[#415a70] to-[#182c3e] pb-3 shadow-2xl">
+                            <div className="h-16 w-16 rounded-t-[45%] bg-gradient-to-b from-[#bd8969] to-[#80543f] shadow-inner"><div className="mx-auto h-4 w-14 rounded-t-full bg-[#202329]" /></div>
+                          </div>
+                          <div className="h-3 w-32 rounded-full bg-black/45 blur-sm" />
+                        </div>
+                        <div className={`flex flex-col items-center ${negotiationStage === 'ARRIVAL' ? 'signing-arrival' : 'signing-idle'}`}>
+                          <div className="mb-2 rounded-full border border-cyan-300/20 bg-cyan-950/60 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-cyan-100">{negTarget.name}</div>
+                          <div className="flex h-32 w-28 items-end justify-center rounded-t-[48%] bg-gradient-to-b from-[#b77d5e] to-[#704b3d] pb-3 shadow-2xl">
+                            <div className="h-16 w-16 rounded-t-[45%] bg-gradient-to-b from-[#c58c68] to-[#80543f] shadow-inner"><div className="mx-auto h-4 w-14 rounded-t-full bg-[#171a20]" /></div>
+                          </div>
+                          <div className="h-3 w-32 rounded-full bg-black/45 blur-sm" />
+                        </div>
+                        <div className="hidden flex-col items-center sm:flex">
+                          <div className="mb-2 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-400">Player agent</div>
+                          <div className="signing-idle flex h-28 w-24 items-end justify-center rounded-t-[48%] bg-gradient-to-b from-[#59616b] to-[#252d37] pb-3" style={{animationDelay:'-.9s'}}>
+                            <div className="h-14 w-14 rounded-t-[45%] bg-gradient-to-b from-[#9b684e] to-[#684636]"><div className="mx-auto h-4 w-12 rounded-t-full bg-[#29201d]" /></div>
+                          </div>
+                          <div className="h-3 w-28 rounded-full bg-black/45 blur-sm" />
+                        </div>
+                      </div>
+                      <div className="relative z-10 mt-5 flex items-center justify-between border-t border-white/10 pt-3 text-[9px] uppercase tracking-wider text-slate-500">
+                        <span>Private meeting · {save.clubs[negTarget.clubId]?.name ?? 'Current club'}</span><span>Season {save.season}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4 p-4 sm:p-6">
+                      <div className="flex items-center gap-3">
+                        <PlayerPortrait appearance={negTarget.appearance} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} size={58} />
+                        <div className="min-w-0">
+                          <div className="truncate text-base font-black text-white">{negTarget.name}</div>
+                          <div className="text-xs text-slate-400">{negTarget.position} · {negTarget.age} years · {negTarget.overall} OVR</div>
+                          <div className="mt-1 text-[10px] font-semibold text-cyan-300">Current wage €{negTarget.weeklyWage.toLocaleString()}/week</div>
+                        </div>
+                      </div>
+
+                      {negotiationStage === 'ARRIVAL' && (
+                        <div className="rounded-xl border border-white/10 bg-[#14212d] p-4">
+                          <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-300">The meeting begins</div>
+                          <p className="mt-2 text-sm leading-6 text-slate-200"> {negTarget.name} walks into your office and takes a seat. Their representative joins the meeting. First, agree a fee with {save.clubs[negTarget.clubId]?.name ?? 'the current club'}; then you will negotiate the player's personal terms face-to-face.</p>
+                          <button type="button" onClick={() => { setNegotiationStage('CLUB'); setNegFeedback('The selling club is ready to hear your opening offer.'); }} className="mt-4 min-h-11 w-full rounded-lg bg-cyan-400 px-4 py-3 text-sm font-black text-slate-950">Take your seat · Start negotiations</button>
+                        </div>
+                      )}
+
+                      {negotiationStage === 'CLUB' && (
+                        <>
+                          <div className="rounded-xl border border-white/10 bg-[#14212d] p-3 text-xs leading-5 text-slate-300">The selling club's representative is across the table. Agree the transfer fee before speaking to the player and agent.</div>
+                          <div className="grid grid-cols-2 gap-3 text-xs">
+                            <label className="flex flex-col gap-1 text-slate-400"><span>Deal structure</span><select value={dealType} onChange={e => setDealType(e.target.value as TransferDealType)} className="min-h-10 rounded border border-white/15 bg-[#080e15] px-2 text-white"><option value="PERMANENT">Permanent</option><option value="LOAN">Season loan</option><option value="LOAN_TO_BUY">Loan-to-buy</option><option value="EXCHANGE">Cash + player</option></select></label>
+                            <label className="flex flex-col gap-1 text-slate-400"><span>Transfer fee (€)</span><input type="number" min={0} step={100000} value={offerFee} onChange={e => setOfferFee(Number(e.target.value))} className="min-h-10 rounded border border-white/15 bg-[#080e15] px-2 text-white" /></label>
+                          </div>
+                          {dealType === 'EXCHANGE' && <label className="flex flex-col gap-1 text-xs text-slate-400"><span>Player included in deal</span><select value={exchangeId} onChange={e => setExchangeId(e.target.value)} className="min-h-10 rounded border border-white/15 bg-[#080e15] px-2 text-white"><option value="">No player</option>{squad.map(sp => <option key={sp.id} value={sp.id}>{sp.name} · €{(sp.marketValue/1000000).toFixed(1)}M</option>)}</select></label>}
+                          <button type="button" onClick={submitClubOffer} className="min-h-11 w-full rounded-lg bg-cyan-400 px-4 py-3 text-sm font-black text-slate-950">Submit transfer offer</button>
+                        </>
+                      )}
+
+                      {negotiationStage === 'CONTRACT' && (
+                        <>
+                          <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-3 text-xs leading-5 text-emerald-100">Transfer fee agreed. The player and agent are now discussing salary and contract length with you.</div>
+                          <div className="grid grid-cols-2 gap-3 text-xs">
+                            <label className="flex flex-col gap-1 text-slate-400"><span>Weekly salary (€)</span><input type="number" min={0} step={500} value={offerWage} onChange={e => setOfferWage(Number(e.target.value))} className="min-h-10 rounded border border-white/15 bg-[#080e15] px-2 text-white" /></label>
+                            <label className="flex flex-col gap-1 text-slate-400"><span>Contract length</span><select value={offerYears} onChange={e => setOfferYears(Number(e.target.value))} className="min-h-10 rounded border border-white/15 bg-[#080e15] px-2 text-white"><option value={1}>1 year</option><option value={2}>2 years</option><option value={3}>3 years</option><option value={4}>4 years</option><option value={5}>5 years</option></select></label>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400"><div className="rounded-lg bg-[#14212d] p-3">Signing bonus<strong className="mt-1 block text-sm text-white">€{Math.round(offerFee * .05).toLocaleString()}</strong></div><div className="rounded-lg bg-[#14212d] p-3">Release clause<strong className="mt-1 block text-sm text-white">€{(offerFee * 2).toLocaleString()}</strong></div></div>
+                          <button type="button" onClick={submitNegotiation} className="min-h-11 w-full rounded-lg bg-cyan-400 px-4 py-3 text-sm font-black text-slate-950">Present contract to player</button>
+                        </>
+                      )}
+
+                      {negotiationStage === 'SIGNED' && (
+                        <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4">
+                          <div className="text-[10px] font-black uppercase tracking-widest text-emerald-300">Deal completed · Official signing</div>
+                          <div className="mt-2 text-lg font-black text-white">{negTarget.name} is a {club.name} player!</div>
+                          <p className="mt-1 text-xs leading-5 text-slate-300">The contract has been accepted and the transfer has been added to your career save.</p>
+                          <button type="button" onClick={() => setNegTarget(null)} className="mt-4 min-h-11 w-full rounded-lg bg-emerald-400 px-4 py-3 text-sm font-black text-slate-950">Finish · Return to transfer market</button>
+                        </div>
+                      )}
+
+                      {negFeedback && <div className="rounded-lg border border-white/10 bg-[#080e15] p-3 text-xs leading-5 text-amber-200">{negFeedback}</div>}
+                      {negotiationStage !== 'SIGNED' && <button type="button" onClick={() => setNegTarget(null)} className="min-h-10 rounded-lg border border-white/10 px-3 text-xs font-semibold text-slate-400 hover:text-white">Walk away from negotiations</button>}
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
+            )}}
           </div>
         )}
 
