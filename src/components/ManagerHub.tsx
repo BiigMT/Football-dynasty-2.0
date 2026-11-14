@@ -287,6 +287,32 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   };
 
+  const handleUpgradeFacilities = () => {
+    const level = club.facilitiesLevel ?? 1;
+    const cost = 1_250_000 * level;
+    if (level >= 5 || club.finances.cashBalance < cost) return;
+    soundEngine.playClick();
+    onUpdateSave({
+      ...save,
+      clubs: {
+        ...save.clubs,
+        [club.id]: {
+          ...club,
+          facilitiesLevel: level + 1,
+          finances: { ...club.finances, cashBalance: club.finances.cashBalance - cost },
+        },
+      },
+      news: [{
+        id: `news_facilities_${Date.now()}`,
+        week: save.currentWeek,
+        season: save.season,
+        category: 'BOARD',
+        headline: `${club.name} upgrades its training facilities`,
+        body: `The club invested €${cost.toLocaleString()} to improve its training complex. Future weekly training will be more effective.`,
+      }, ...save.news].slice(0, 35),
+    });
+  };
+
   const handleBoardDecision = (label: string, boardDelta: number, chemistryDelta: number, reputationDelta: number) => {
     soundEngine.playClick();
     onUpdateSave({
@@ -981,6 +1007,23 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               </div>
             </div>
 
+            <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-3">
+              <div className="overflow-hidden rounded-lg border border-white/10">
+                <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1000&q=75" alt="Football stadium and pitch" className="h-28 w-full object-cover" loading="lazy" />
+              </div>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-white">Club Facilities</h3>
+                <span className="text-xs font-bold text-cyan-300">LEVEL {club.facilitiesLevel ?? 1}/5</span>
+              </div>
+              <p className="text-xs text-slate-400">Upgrade the training complex to improve player development, sharpness and recovery from weekly training.</p>
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="text-slate-400">Next upgrade</span>
+                <span className="font-mono-num font-bold text-white">€{(1_250_000 * (club.facilitiesLevel ?? 1)).toLocaleString()}</span>
+              </div>
+              <button type="button" disabled={(club.facilitiesLevel ?? 1) >= 5 || club.finances.cashBalance < 1_250_000 * (club.facilitiesLevel ?? 1)} onClick={handleUpgradeFacilities} className="min-h-[42px] rounded-lg bg-cyan-500 px-3 text-xs font-black text-slate-950 disabled:cursor-not-allowed disabled:opacity-40">
+                {(club.facilitiesLevel ?? 1) >= 5 ? 'Facilities fully upgraded' : club.finances.cashBalance < 1_250_000 * (club.facilitiesLevel ?? 1) ? 'Not enough cash reserves' : 'Upgrade training facilities'}
+              </button>
+            </div>
             <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-3">
               <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <h3 className="text-lg font-bold text-white">Board Meeting</h3>
