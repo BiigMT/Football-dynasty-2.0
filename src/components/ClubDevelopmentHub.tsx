@@ -53,10 +53,17 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
     if (club.finances.cashBalance < fee) return;
     const gap = Math.max(0, player.potential - player.overall);
     const level = gap >= 18 ? 'Exceptional upside' : gap >= 10 ? 'Strong development potential' : gap >= 5 ? 'Room to improve' : 'Near current ceiling';
+    // Reports estimate a range; the hidden database potential is not shown as certainty.
+    const scoutAccuracy = clamp(48 + Math.round(club.reputation * 0.35), 55, 88);
+    const uncertainty = Math.max(3, Math.round((100 - scoutAccuracy) / 4));
     const report = {
       id: 'scout_' + player.id + '_' + save.season + '_' + save.currentWeek,
       playerId: player.id, playerName: player.name, clubName: save.clubs[player.clubId]?.name ?? 'Unknown club',
-      position: player.position, age: player.age, overall: player.overall, potential: player.potential,
+      position: player.position, age: player.age, overall: player.overall,
+      potential: Math.round((Math.max(player.overall, player.potential - uncertainty) + Math.min(95, player.potential + uncertainty)) / 2),
+      potentialMin: Math.max(player.overall, player.potential - uncertainty),
+      potentialMax: Math.min(95, player.potential + uncertainty),
+      confidence: scoutAccuracy >= 80 ? 'High' as const : scoutAccuracy >= 68 ? 'Medium' as const : 'Low' as const,
       assessment: level, season: save.season, week: save.currentWeek,
     };
     onUpdateSave({
@@ -130,7 +137,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
       <section className="rounded-xl border border-white/10 bg-[#131A22] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-lg font-black text-white">Worldwide Scouting Network</h3><p className="text-xs text-slate-400">Scout emerging talent and save detailed reports. Each report costs €50K.</p></div><select value={scoutId} onChange={e => setScoutId(e.target.value)} className="min-h-10 max-w-full rounded-lg border border-white/15 bg-[#0B0F14] px-2 text-xs text-white"><option value="">Choose a prospect…</option>{scoutTargets.map(p => <option key={p.id} value={p.id}>{p.name} · {p.position} · {p.age}</option>)}</select></div>
         {scoutId && save.players[scoutId] && <div className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-[#0B0F14] p-3"><div className="text-xs"><div className="font-bold text-white">{save.players[scoutId].name}</div><div className="text-slate-400">{save.players[scoutId].position} · {save.players[scoutId].age} years · {save.players[scoutId].overall} OVR</div></div><button disabled={alreadyScouted(scoutId) || club.finances.cashBalance < 50000} onClick={() => scout(save.players[scoutId])} className="min-h-10 rounded-lg bg-cyan-400 px-4 text-xs font-black text-slate-950 disabled:bg-slate-700 disabled:text-slate-400">{alreadyScouted(scoutId) ? 'Report filed' : 'Scout · €50K'}</button></div>}
-        <div className="mt-3 flex flex-col gap-2">{reports.slice(0, 5).map(r => <div key={r.id} className="flex items-center justify-between rounded-lg bg-[#0B0F14] px-3 py-2 text-xs"><div><div className="font-bold text-white">{r.playerName} · {r.position}</div><div className="text-slate-400">{r.clubName} · Age {r.age} · S{r.season} W{r.week}</div></div><div className="text-right"><div className="font-black text-cyan-300">{r.overall} / {r.potential}</div><div className="text-[10px] text-amber-300">{r.assessment}</div></div></div>)}</div>
+        <div className="mt-3 flex flex-col gap-2">{reports.slice(0, 5).map(r => <div key={r.id} className="flex items-center justify-between rounded-lg bg-[#0B0F14] px-3 py-2 text-xs"><div><div className="font-bold text-white">{r.playerName} · {r.position}</div><div className="text-slate-400">{r.clubName} · Age {r.age} · S{r.season} W{r.week}</div></div><div className="text-right"><div className="font-black text-cyan-300">{r.overall} OVR · {r.potentialMin ?? r.potential}–{r.potentialMax ?? r.potential} POT</div><div className="text-[10px] text-amber-300">{r.assessment} · {r.confidence ?? 'Legacy'} confidence</div></div></div>)}</div>
       </section>
 
       <section className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cyan-400/25 bg-[#131A22] p-4">
