@@ -525,4 +525,5 @@ export interface CareerSave {
   weekTrained: boolean;
   scoutingReports?: ScoutingReport[];
   playerRelationships?: Record<string, number>;
+  squadChemistryLinks?: Record<string, number>;
 }
