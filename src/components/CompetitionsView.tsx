@@ -19,7 +19,10 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
     .sort((a, b) => b.seasonStats.goals - a.seasonStats.goals || b.seasonStats.assists - a.seasonStats.assists)
     .slice(0, 8);
 
-  const leagueAssistLeaders = [...leagueScorers].sort((a, b) => b.seasonStats.assists - a.seasonStats.assists || b.seasonStats.goals - a.seasonStats.goals).slice(0, 5);
+  const leagueAssistLeaders = Object.values(save.players)
+    .filter((p) => save.clubs[p.clubId]?.leagueId === league?.id)
+    .sort((a, b) => b.seasonStats.assists - a.seasonStats.assists || b.seasonStats.goals - a.seasonStats.goals)
+    .slice(0, 5);
 
   const rankedNations = Object.values(save.nationalTeams).sort((a, b) => a.worldRank - b.worldRank);
 
