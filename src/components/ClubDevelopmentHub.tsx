@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { CareerSave, Player } from '../types/football';
 import { promoteYouthProspect } from '../engine/careerEngine';
+import { calculateMarketValue, calculateOverall } from '../engine/database';
+import { PlayerAttributes } from '../types/football';
 import { ManagerPressConference } from './ManagerPressConference';
 
 interface Props {
@@ -28,6 +30,33 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
   const recruitmentCost = 250000;
   const canRecruit = club.finances.cashBalance >= recruitmentCost;
   const alreadyScouted = (id: string) => reports.some((r) => r.playerId === id && r.season === save.season && r.week === save.currentWeek);
+
+  const trainYouth = (player: Player) => {
+    if (!(player.isYouth || player.age <= 20) || player.academyTrainingWeek === save.currentWeek) return;
+    const focus: keyof PlayerAttributes = player.position === 'GK' ? 'goalkeeping'
+      : player.position === 'ST' ? 'finishing'
+      : ['LW', 'RW'].includes(player.position) ? 'dribbling'
+      : ['CB', 'LB', 'RB', 'CDM'].includes(player.position) ? 'tackling'
+      : 'passing';
+    const attributes = { ...player.attributes };
+    attributes[focus] = Math.min(88, attributes[focus] + 1);
+    const overall = calculateOverall(player.position, attributes);
+    const potential = Math.max(overall, player.potential);
+    onUpdateSave({
+      ...save,
+      players: { ...save.players, [player.id]: {
+        ...player, attributes, overall, potential,
+        marketValue: calculateMarketValue(overall, player.age, potential),
+        academyTrainingWeek: save.currentWeek,
+      }},
+      news: [{
+        id: 'academy_training_' + player.id + '_' + save.season + '_' + save.currentWeek,
+        week: save.currentWeek, season: save.season, category: 'ACADEMY' as const,
+        headline: player.name + ' completes an academy development session',
+        body: player.name + ' improved ' + focus + ' by one point through focused coaching.',
+      }, ...save.news].slice(0, 35),
+    });
+  };
 
   const recruit = () => {
     if (!canRecruit) return;
@@ -123,7 +152,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
           <div className="rounded-lg bg-[#0B0F14] p-3"><div className="text-xl font-black text-white">{club.chemistry}%</div><div className="text-[10px] text-slate-400">Squad chemistry</div></div>
         </div>
         <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {youth.slice(0, 8).map(p => <div key={p.id} className="flex items-center justify-between rounded-lg bg-[#0B0F14] px-3 py-2 text-xs"><div><div className="font-bold text-white">{p.name}</div><div className="text-slate-400">{p.position} · Age {p.age}</div></div><div className="text-right"><div className="font-black text-cyan-300">{p.overall} OVR</div><div className="text-slate-500">Potential {p.potential}</div></div></div>)}
+          {youth.slice(0, 8).map(p => <div key={p.id} className="flex items-center justify-between gap-2 rounded-lg bg-[#0B0F14] px-3 py-2 text-xs"><div className="min-w-0"><div className="font-bold text-white">{p.name}</div><div className="text-slate-400">{p.position} · Age {p.age}</div></div><div className="shrink-0 text-right"><div className="font-black text-cyan-300">{p.overall} OVR</div><div className="text-slate-500">Potential {p.potential}</div><button disabled={p.academyTrainingWeek === save.currentWeek} onClick={() => trainYouth(p)} className="mt-1 rounded bg-cyan-500/15 px-2 py-1 text-[10px] font-bold text-cyan-200 disabled:text-slate-500">{p.academyTrainingWeek === save.currentWeek ? 'Trained this week' : 'Train prospect'}</button></div></div>)}
           {youth.length === 0 && <p className="text-xs text-slate-500">No academy players yet. Recruit your first prospect.</p>}
         </div>
       </section>
