@@ -39,7 +39,7 @@ interface LegendHubProps {
   onExitToTitle: () => void;
 }
 
-type LegendSection = 'DASHBOARD' | 'PHONE' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
+type LegendSection = 'DASHBOARD' | 'PHONE' | 'MANAGER' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
 
 const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = [
   { key: 'speed', label: 'Speed' },
@@ -120,15 +120,18 @@ export const LegendHub: React.FC<LegendHubProps> = ({
     const offer = legend.agentOffers.find((o) => o.id === offerId);
     if (!offer) return;
     soundEngine.playClick();
-    const updated = executeTransfer(
-      save,
-      player.id,
-      offer.fromClubId,
-      offer.fee,
-      offer.proposedWage,
-      offer.contractYears,
-      offer.releaseClause
-    );
+    if (offer.dealType === 'LOAN') {
+      const parent = save.clubs[player.clubId];
+      const destination = save.clubs[offer.fromClubId];
+      if (!parent || !destination) return;
+      const parentXI = parent.tactics.startingXI.filter((id) => id !== player.id);
+      const parentBench = parent.tactics.bench.filter((id) => id !== player.id);
+      const destinationBench = [...destination.tactics.bench.filter((id) => id !== player.id), player.id].slice(-7);
+      onUpdateSave({ ...save, players: { ...save.players, [player.id]: { ...player, clubId: destination.id, loanParentClubId: parent.id, loanWeeksRemaining: 12, morale: Math.min(100, player.morale + 4) } }, clubs: { ...save.clubs, [parent.id]: { ...parent, tactics: { ...parent.tactics, startingXI: parentXI, bench: parentBench } }, [destination.id]: { ...destination, tactics: { ...destination.tactics, bench: destinationBench } } }, legend: { ...legend, agentOffers: legend.agentOffers.filter((o) => o.id !== offerId), loanRequestPending: false }, news: [{ id: 'loan_start_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER', headline: player.name + ' joins ' + destination.name + ' on loan', body: 'The move lasts 12 in-game weeks, after which the player returns to ' + parent.name + '.' }, ...save.news].slice(0, 35) });
+      setTab('DASHBOARD');
+      return;
+    }
+    const updated = executeTransfer(save, player.id, offer.fromClubId, offer.fee, offer.proposedWage, offer.contractYears, offer.releaseClause);
     onUpdateSave(updated);
     setTab('DASHBOARD');
   };
@@ -166,6 +169,16 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         agentOffers: [...newOffers, ...legend.agentOffers].slice(0, 4),
       },
     });
+  };
+
+
+  const handleRequestLoan = () => {
+    soundEngine.playClick();
+    if (player.loanParentClubId || legend.loanRequestPending || legend.squadRole === 'KEY_STAR' || legend.squadRole === 'CAPTAIN') return;
+    const destinations = Object.values(save.clubs).filter((c) => c.id !== club.id && c.reputation <= club.reputation + 12 && c.reputation >= club.reputation - 25).sort((a,b) => Math.abs(a.reputation - player.overall) - Math.abs(b.reputation - player.overall)).slice(0, 2);
+    if (!destinations.length) return;
+    const offers = destinations.map((destination, index) => ({ id: 'loan_offer_' + Date.now() + '_' + index, playerId: player.id, fromClubId: destination.id, toClubId: club.id, dealType: 'LOAN' as const, fee: 0, loanFee: 0, proposedWage: player.weeklyWage, contractYears: 1, signingBonus: 0, releaseClause: player.releaseClause, status: 'PENDING' as const, round: 1, message: destination.name + ' can offer regular first-team football on a 12-week loan.', isIncomingToUser: true }));
+    onUpdateSave({ ...save, legend: { ...legend, loanRequestPending: true, managerTrust: Math.max(15, legend.managerTrust - 4), agentOffers: [...offers, ...legend.agentOffers].slice(0, 4), phoneNotifications: [{ id: 'loan_request_' + Date.now(), title: 'Loan request submitted', body: 'Your agent has arranged temporary opportunities. Review the clubs in Agent & Transfers.', kind: 'TRANSFER' as const, week: save.currentWeek, season: save.season }, ...(legend.phoneNotifications ?? [])].slice(0, 20) }, news: [{ id: 'loan_news_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER', headline: player.name + ' asks for a loan move', body: 'The player wants regular minutes and has asked the club to consider a temporary move.' }, ...save.news].slice(0, 35) });
   };
 
   const handleRetire = () => {
@@ -409,6 +422,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
             { id: 'PHONE', label: 'My Phone', icon: Smartphone },
+            { id: 'MANAGER', label: 'Manager Talks', icon: MessageCircle },
             { id: 'ATTRIBUTES', label: 'Player Profile', icon: BarChart3 },
             { id: 'TRAINING', label: 'Training Drills', icon: Dumbbell },
             { id: 'AGENT', label: 'Agent & Transfers', icon: ArrowLeftRight },
@@ -439,6 +453,18 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
       {/* Main Content */}
       <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
+        {tab === 'MANAGER' && (
+          <section className="rounded-xl bg-[#131A22] border border-white/10 p-4 sm:p-5 flex flex-col gap-4">
+            <div><h2 className="text-lg font-bold text-white">Manager’s Office</h2><p className="text-xs text-slate-400">Discuss your role, minutes and future with the coaching staff.</p></div>
+            <div className="rounded-lg bg-[#0b1118] border border-white/10 p-3"><div className="text-[10px] uppercase tracking-wider text-amber-300 font-bold">Current squad status</div><div className="text-sm font-bold text-white mt-1">{legend.squadRole.replace(/_/g, ' ')} · Trust {legend.managerTrust}/100</div><div className="text-[11px] text-slate-400 mt-1">{player.injuredWeeks > 0 ? `${player.injuryType ?? 'Injury'} · ${player.injuredWeeks} week(s) remaining` : isStarter ? 'You are currently in the starting XI.' : isBench ? 'You are currently among the substitutes.' : 'You are outside the matchday squad.'}</div></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button type="button" onClick={() => { soundEngine.playClick(); const trust = Math.min(100, legend.managerTrust + (player.seasonStats.averageRating >= 7 ? 5 : 2)); onUpdateSave({ ...save, legend: { ...legend, managerTrust: trust }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 3) } }, news: [{ id: 'manager_minutes_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH', headline: player.name + ' asks the manager for more minutes', body: trust >= 65 ? 'The manager praised the player’s attitude and promised to consider more starts if performances continue.' : 'The manager asked the player to prove their quality in training before earning more minutes.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 text-xs font-bold text-amber-200">Ask for more playing time</button>
+              <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 4) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 4), confidence: Math.min(100, player.confidence + 2) } }, news: [{ id: 'manager_promise_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH', headline: player.name + ' commits to earning a place', body: 'The player has promised to work hard in training and fight for a starting position.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 text-xs font-bold text-emerald-200">Promise to fight for my place</button>
+            </div>
+            <p className="text-[10px] text-slate-500">Your form, fitness, sharpness and positional rivals affect selection each week. Injuries reduce training recovery and can cost you your place.</p>
+          </section>
+        )}
+
         {tab === 'ATTRIBUTES' && (
           <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
