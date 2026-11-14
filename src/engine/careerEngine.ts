@@ -960,6 +960,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
         currentClub.tactics = { ...currentClub.tactics, startingXI: currentClub.tactics.startingXI.filter((id) => id !== pid), bench: currentClub.tactics.bench.filter((id) => id !== pid) };
         parentClub.tactics = { ...parentClub.tactics, bench: [...parentClub.tactics.bench.filter((id) => id !== pid), pid].slice(-7) };
         nextSave.players[pid] = { ...loaned, clubId: parentId, loanParentClubId: undefined, loanWeeksRemaining: undefined, morale: Math.min(100, loaned.morale + 5) };
+        if (nextSave.legend?.playerId === pid) nextSave.userClubId = parentId;
         nextSave.news.unshift({ id: 'loan_return_' + pid + '_' + (save.currentWeek + 1), week: (save.currentWeek + 1), season: save.season, category: 'TRANSFER', headline: loaned.name + ' returns from loan', body: loaned.name + ' has completed the loan spell and returned to ' + parentClub.name + '.' });
       }
     } else if (loaned.loanParentClubId) {
