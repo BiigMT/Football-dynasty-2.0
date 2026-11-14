@@ -223,3 +223,169 @@
 .career-subpage-content .gap-5 { gap: 0.875rem; }
 .career-subpage-content .py-6 { padding-top: 1rem; padding-bottom: 1rem; }
 .career-subpage-content .min-h-\[72px\] { min-height: 60px; }
+
+
+/* Football Dynasty: grounded, broadcast-grade presentation for career subpages.
+   Deliberately scoped away from the existing career home/dashboard. */
+.fd-realism-manager,
+.fd-realism-player {
+  background: #0b1016 !important;
+  color: #e5eaf0;
+}
+.fd-realism-manager > header,
+.fd-realism-player > header {
+  background: #101821 !important;
+  border-bottom: 1px solid #293542 !important;
+  box-shadow: 0 5px 18px rgba(0,0,0,.22);
+}
+.fd-realism-manager > header .max-w-7xl,
+.fd-realism-player > header .max-w-7xl { min-height: 54px; }
+.fd-realism-manager nav,
+.fd-realism-player nav {
+  background: #0e151d !important;
+  border-bottom: 1px solid #263340 !important;
+  scrollbar-width: thin;
+}
+.fd-realism-manager nav button,
+.fd-realism-player nav button {
+  border-radius: 0 !important;
+  border-bottom: 2px solid transparent;
+  color: #9aa9b8 !important;
+  letter-spacing: .01em;
+  transition: color .15s ease, background .15s ease;
+}
+.fd-realism-manager nav button:hover,
+.fd-realism-player nav button:hover {
+  color: #f2f5f8 !important;
+  background: #17232e !important;
+}
+.fd-realism-manager nav button[aria-current="page"],
+.fd-realism-player nav button[aria-current="page"] {
+  color: #eaf4f8 !important;
+  background: #17232e !important;
+  border-bottom-color: #55b9c9 !important;
+}
+.fd-realism-manager .career-subpage-content,
+.fd-realism-player .career-subpage-content {
+  width: 100%;
+  max-width: 1320px;
+  padding-top: 14px;
+  padding-bottom: 22px;
+}
+.fd-realism-manager .career-subpage-content section,
+.fd-realism-player .career-subpage-content section,
+.fd-realism-manager .career-subpage-content > div > div,
+.fd-realism-player .career-subpage-content > div > div {
+  border-color: #2a3743 !important;
+  border-radius: 7px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.fd-realism-manager .career-subpage-content .bg-\[\#131A22\],
+.fd-realism-player .career-subpage-content .bg-\[\#131A22\] {
+  background: #141d26 !important;
+}
+.fd-realism-manager .career-subpage-content .bg-\[\#0E141B\],
+.fd-realism-player .career-subpage-content .bg-\[\#0E141B\],
+.fd-realism-manager .career-subpage-content .bg-\[\#0B0F14\],
+.fd-realism-player .career-subpage-content .bg-\[\#0B0F14\] {
+  background: #0d151d !important;
+}
+.fd-realism-manager .career-subpage-content .rounded-xl,
+.fd-realism-player .career-subpage-content .rounded-xl { border-radius: 7px !important; }
+.fd-realism-manager .career-subpage-content .rounded-lg,
+.fd-realism-player .career-subpage-content .rounded-lg { border-radius: 5px !important; }
+.fd-realism-manager .career-subpage-content h2,
+.fd-realism-manager .career-subpage-content h3,
+.fd-realism-player .career-subpage-content h2,
+.fd-realism-player .career-subpage-content h3 {
+  letter-spacing: -.015em;
+  font-weight: 750;
+}
+.fd-realism-manager .career-subpage-content p,
+.fd-realism-player .career-subpage-content p { line-height: 1.5; }
+.fd-realism-manager .career-subpage-content button,
+.fd-realism-player .career-subpage-content button {
+  transition: background-color .14s ease, border-color .14s ease, color .14s ease;
+}
+.fd-realism-manager .career-subpage-content input,
+.fd-realism-manager .career-subpage-content select,
+.fd-realism-player .career-subpage-content input,
+.fd-realism-player .career-subpage-content select {
+  background-color: #0a1118 !important;
+  border-color: #344351 !important;
+  border-radius: 4px !important;
+  color: #e6edf3 !important;
+}
+.fd-realism-manager .career-subpage-content table,
+.fd-realism-player .career-subpage-content table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.fd-realism-manager .career-subpage-content thead,
+.fd-realism-player .career-subpage-content thead {
+  background: #101923 !important;
+  color: #9aa9b8 !important;
+}
+.fd-realism-manager .career-subpage-content th,
+.fd-realism-player .career-subpage-content th {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.fd-realism-manager .career-subpage-content td,
+.fd-realism-player .career-subpage-content td {
+  border-color: #263340 !important;
+}
+.fd-realism-manager .career-subpage-content tbody tr:nth-child(even),
+.fd-realism-player .career-subpage-content tbody tr:nth-child(even) {
+  background: rgba(255,255,255,.018);
+}
+.fd-realism-manager .career-subpage-content tbody tr:hover,
+.fd-realism-player .career-subpage-content tbody tr:hover {
+  background: rgba(91,169,188,.075);
+}
+.fd-realism-manager .career-subpage-content .text-cyan-400,
+.fd-realism-manager .career-subpage-content .text-cyan-300,
+.fd-realism-player .career-subpage-content .text-cyan-400,
+.fd-realism-player .career-subpage-content .text-cyan-300 { color: #72bdc9 !important; }
+.fd-realism-manager .career-subpage-content .bg-cyan-500,
+.fd-realism-manager .career-subpage-content .bg-cyan-400,
+.fd-realism-player .career-subpage-content .bg-cyan-500,
+.fd-realism-player .career-subpage-content .bg-cyan-400 { background: #397f8b !important; color: #f4fbfc !important; }
+.fd-realism-manager .career-subpage-content .border-cyan-400,
+.fd-realism-player .career-subpage-content .border-cyan-400 { border-color: #397f8b !important; }
+.fd-realism-player .career-subpage-content .text-amber-300,
+.fd-realism-player .career-subpage-content .text-amber-400 { color: #d7b76a !important; }
+.fd-realism-match {
+  background: #0b1016 !important;
+}
+.fd-realism-match .match-live-scoreboard,
+.fd-realism-match .match-live-controls,
+.fd-realism-match .match-live-stats,
+.fd-realism-match .match-live-timeline {
+  background: #141e28 !important;
+  border: 1px solid #2a3946 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.fd-realism-match .match-live-scoreboard { border-top: 2px solid #4e9ca8 !important; }
+.fd-realism-match .match-live-controls button { border-radius: 4px !important; }
+.fd-realism-match .match-live-events > div {
+  border-radius: 3px !important;
+  border-left: 2px solid #496b7c;
+  background: #0e1720 !important;
+}
+.fd-realism-match .match-live-pitch-column canvas {
+  filter: saturate(.82) contrast(1.04);
+}
+@media (max-width: 700px) {
+  .fd-realism-manager .career-subpage-content,
+  .fd-realism-player .career-subpage-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .fd-realism-manager nav button,
+  .fd-realism-player nav button { padding-left: 11px; padding-right: 11px; }
+}
