@@ -98,6 +98,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
     return <ManagerPressConference
       managerName={manager.name}
       clubName={club.name}
+      recentNews={save.news.slice(0, 12)}
       onAnswer={(board, chemistry, reputation, response) => onUpdateSave({
         ...save,
         manager: { ...manager, boardConfidence: clamp(manager.boardConfidence + board), reputation: clamp(manager.reputation + reputation), pressConferenceWeek: save.currentWeek },
