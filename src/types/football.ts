@@ -419,6 +419,21 @@ export interface ManagerProfile {
   trophies: string[];
   jobOffers: { clubId: string; clubName: string; leagueName: string; wage: number; message: string }[];
   pressConferenceDone?: boolean;
+  pressConferenceWeek?: number;
+}
+
+export interface ScoutingReport {
+  id: string;
+  playerId: string;
+  playerName: string;
+  clubName: string;
+  position: Position;
+  age: number;
+  overall: number;
+  potential: number;
+  assessment: string;
+  season: number;
+  week: number;
 }
 
 export interface PlayerPhoneMessage {
@@ -504,4 +519,6 @@ export interface CareerSave {
   news: NewsItem[];
   trainingFocus: TrainingFocus;
   weekTrained: boolean;
+  scoutingReports?: ScoutingReport[];
+  playerRelationships?: Record<string, number>;
 }
