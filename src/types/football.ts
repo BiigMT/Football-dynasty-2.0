@@ -433,6 +433,16 @@ export interface PlayerSocialPost {
   likes: number;
   week: number;
   season: number;
+  comments?: string[];
+}
+
+export interface PlayerPhoneNotification {
+  id: string;
+  title: string;
+  body: string;
+  kind: 'MATCH' | 'TEAMMATE' | 'FANS' | 'CLUB' | 'TRANSFER';
+  week: number;
+  season: number;
 }
 
 export interface LegendProfile {
@@ -449,6 +459,7 @@ export interface LegendProfile {
   phoneMessages?: PlayerPhoneMessage[];
   socialPosts?: PlayerSocialPost[];
   phoneFollowers?: number;
+  phoneNotifications?: PlayerPhoneNotification[];
   rivalryPlayerId?: string;
   rivalryPending?: boolean;
   rivalryWins?: number;
