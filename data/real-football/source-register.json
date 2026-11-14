@@ -1,0 +1,106 @@
+{
+  "season": "2026/27",
+  "snapshotDate": "2026-11-15",
+  "leagues": [
+    {
+      "id": "eng_prem",
+      "name": "Premier League",
+      "country": "England",
+      "clubs": 20,
+      "rosterSources": [
+        {
+          "name": "Premier League 2026/27 squad lists",
+          "url": "https://www.premierleague.com/en/news/4706139/see-all-the-202627-premier-league-squad-lists",
+          "checked": "2026-11-15"
+        },
+        {
+          "name": "Premier League 2026/27 squad numbers",
+          "url": "https://www.premierleague.com/en/news/4725682/all-20-premier-league-clubs-squad-numbers-for-202627-season",
+          "checked": "2026-11-15"
+        }
+      ]
+    },
+    {
+      "id": "esp_liga",
+      "name": "LaLiga",
+      "country": "Spain",
+      "clubs": 20,
+      "rosterSources": [
+        {
+          "name": "LaLiga 2026/27 clubs",
+          "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+          "checked": "2026-11-15"
+        },
+        {
+          "name": "FootballSquads season index",
+          "url": "https://www.footballsquads.co.uk/",
+          "checked": "2026-11-15"
+        }
+      ]
+    },
+    {
+      "id": "ita_serie",
+      "name": "Serie A",
+      "country": "Italy",
+      "clubs": 20,
+      "rosterSources": [
+        {
+          "name": "FootballSquads season index",
+          "url": "https://www.footballsquads.co.uk/",
+          "checked": "2026-11-15"
+        }
+      ]
+    },
+    {
+      "id": "ger_bundesliga",
+      "name": "Bundesliga",
+      "country": "Germany",
+      "clubs": 18,
+      "rosterSources": [
+        {
+          "name": "FootballSquads season index",
+          "url": "https://www.footballsquads.co.uk/",
+          "checked": "2026-11-15"
+        }
+      ]
+    },
+    {
+      "id": "fra_ligue1",
+      "name": "Ligue 1",
+      "country": "France",
+      "clubs": 18,
+      "rosterSources": [
+        {
+          "name": "FootballSquads season index",
+          "url": "https://www.footballsquads.co.uk/",
+          "checked": "2026-11-15"
+        }
+      ]
+    }
+  ],
+  "photographyPolicy": {
+    "acceptedLicenses": [
+      "CC0",
+      "Public Domain",
+      "CC BY",
+      "CC BY-SA"
+    ],
+    "rejectedLicenses": [
+      "CC BY-NC",
+      "CC BY-ND",
+      "Unknown"
+    ],
+    "sourceGuidance": "https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia/licenses",
+    "requiredMetadata": [
+      "playerId",
+      "assetPath",
+      "sourcePageUrl",
+      "creator",
+      "license",
+      "licenseUrl",
+      "modified",
+      "checkedDate"
+    ]
+  },
+  "note": "This is a source register, not an imported player database. Do not infer that roster data or photographs have already been imported."
+}
