@@ -260,7 +260,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       setNegFeedback('The transfer window is closed. The club cannot register this move yet.');
       return;
     }
-    if (offerFee > club.finances.transferBudget) {
+    const cashFee = dealType === 'LOAN' ? Math.round(negTarget.marketValue * 0.15) : offerFee;
+    if (cashFee > club.finances.transferBudget) {
       setNegFeedback('The club has rejected the offer: it exceeds your available transfer budget.');
       return;
     }
