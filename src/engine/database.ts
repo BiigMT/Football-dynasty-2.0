@@ -782,11 +782,13 @@ export function buildWorldDatabase(): {
       squadPositions.forEach((pos, idx) => {
         seedCounter += 7919;
         const isStarterTier = idx < 13;
-        const targetOvr = clamp(
-          cb.reputation - (isStarterTier ? 3 : 8) + ((idx * 3) % 7) - 3,
-          64,
-          91
-        );
+        const targetOvr = idx >= 16
+          ? clamp(44 + Math.round((cb.reputation - 60) * 0.45) + ((idx * 3) % 5) - 2, 45, 59)
+          : clamp(
+              cb.reputation - (isStarterTier ? 3 : 8) + ((idx * 3) % 7) - 3,
+              64,
+              91
+            );
         const p = generatePlayer({
           id: `${cb.id}_p${idx + 1}`,
           clubId: cb.id,
