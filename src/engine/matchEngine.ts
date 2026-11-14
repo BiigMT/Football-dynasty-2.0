@@ -624,14 +624,6 @@ export function resolveKeyMomentChoice(
   const side = session.userClubSide;
   const userState = { ...session.playerStates[userPlayer.id] };
   const nextStates = { ...session.playerStates };
-  // Tactical AI also reacts when it is being starved of possession, not only to the scoreline.
-  // The non-user team increases its midfield press and forward support after the hour.
-  if (nextMin >= 58 && !homeIsUser && session.homeStats.possession < 42) {
-    homeRatings = applyGameStateAdjustment(homeRatings, 1.025, 1.045, 0.985);
-  }
-  if (nextMin >= 58 && !awayIsUser && session.awayStats.possession < 42) {
-    awayRatings = applyGameStateAdjustment(awayRatings, 1.025, 1.045, 0.985);
-  }
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
   const sideStats = side === 'HOME' ? homeStats : awayStats;
@@ -919,6 +911,15 @@ export function simulateNextMinute(
     homeRatings = applyGameStateAdjustment(homeRatings, 0.985, 1, 1.045);
   } else if (nextMin >= 76 && !awayIsUser && awayLeading && session.awayStats.goals - session.homeStats.goals === 1) {
     awayRatings = applyGameStateAdjustment(awayRatings, 0.985, 1, 1.045);
+  }
+
+  // Tactical AI also reacts when it is being starved of possession, not only to the scoreline.
+  // The non-user team increases its midfield press and forward support after the hour.
+  if (nextMin >= 58 && !homeIsUser && session.homeStats.possession < 42) {
+    homeRatings = applyGameStateAdjustment(homeRatings, 1.025, 1.045, 0.985);
+  }
+  if (nextMin >= 58 && !awayIsUser && session.awayStats.possession < 42) {
+    awayRatings = applyGameStateAdjustment(awayRatings, 1.025, 1.045, 0.985);
   }
 
   const homeStats = { ...session.homeStats };
