@@ -69,17 +69,17 @@
     {
       "category": "press",
       "searchPage": "https://pixabay.com/videos/search/football%20stadium%20crowd/",
-      "use": "Short crowd and stadium atmosphere clips for press / matchday transitions"
+      "use": "Additional short crowd and stadium atmosphere clips"
     },
     {
       "category": "matchday",
       "searchPage": "https://pixabay.com/videos/search/football%20match/",
-      "use": "Short football action and match presentation clips"
+      "use": "Additional football action and match presentation clips"
     },
     {
       "category": "stadium",
       "searchPage": "https://pixabay.com/videos/search/stadium%20match/",
-      "use": "Stadium establishing shots"
+      "use": "Additional stadium establishing shots"
     }
   ],
   "status": {
@@ -87,5 +87,37 @@
     "individualImageBinaryDownloads": false,
     "videoItemLicenceReviews": false,
     "bundledOfflineFiles": false
-  }
+  },
+  "videoAssets": [
+    {
+      "id": "fans-stadium-game-165713",
+      "category": "press-and-matchday",
+      "title": "Fans, Stadium, Game",
+      "creator": "kropkakp",
+      "itemPage": "https://pixabay.com/videos/fans-stadium-game-football-165713/",
+      "published": "2023-06-05",
+      "resolution": "3840x2160",
+      "fps": 60,
+      "format": "MP4",
+      "licenceAtSource": "Pixabay Content License",
+      "plannedPath": "public/assets/pixabay/video/fans-stadium-game.mp4",
+      "intendedUse": "Muted looping stadium crowd footage in matchday and press-room screens",
+      "review": "Individual item page confirms Pixabay Content License; inspect frames for club marks and identifiable people before commercial release."
+    },
+    {
+      "id": "stadium-arena-football-239964",
+      "category": "stadium",
+      "title": "Stadium, Arena, Football",
+      "creator": "Valentin_Aleksandrov",
+      "published": "2024-11-06",
+      "itemPage": "https://pixabay.com/videos/stadium-arena-football-sports-city-239964/",
+      "resolution": "3840x2160",
+      "fps": 50,
+      "format": "MP4",
+      "plannedPath": "public/assets/pixabay/video/stadium-aerial.mp4",
+      "intendedUse": "Short stadium establishing shot for match presentation",
+      "licenceAtSource": "Pixabay Content License",
+      "review": "Individual item page confirms Pixabay Content License; inspect footage for third-party marks and rights."
+    }
+  ]
 }
