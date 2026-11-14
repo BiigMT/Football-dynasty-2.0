@@ -95,7 +95,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
         ...save,
         manager: { ...manager, boardConfidence: clamp(manager.boardConfidence + board), reputation: clamp(manager.reputation + reputation), pressConferenceWeek: save.currentWeek },
         clubs: { ...save.clubs, [club.id]: { ...club, chemistry: clamp(club.chemistry + chemistry) } },
-        news: [{ id: 'media_' + Date.now(), week: save.currentWeek, season: save.season, category: 'BOARD', headline: manager.name + ' faces the media', body: response }, ...save.news].slice(0, 35),
+        news: [{ id: 'media_' + Date.now(), week: save.currentWeek, season: save.season, category: 'BOARD' as const, headline: manager.name + ' faces the media', body: response }, ...save.news].slice(0, 35),
       })}
       onContinue={() => setConferenceOpen(false)}
     />;
