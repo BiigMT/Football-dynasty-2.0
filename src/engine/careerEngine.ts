@@ -1306,13 +1306,15 @@ export function promoteYouthProspect(save: CareerSave): CareerSave {
     region: club.region,
     country: club.country === 'Pan-Africa' ? 'Egypt' : club.country,
     position: pos,
-    targetOverall: Math.max(64, club.reputation - 15),
+    // Academy recruits are raw prospects, not ready-made first-team stars.
+    // Club reputation influences the ceiling slightly, but keeps starting OVR modest.
+    targetOverall: Math.min(59, Math.max(45, 42 + Math.round((club.reputation - 60) * 0.42))),
     shirtNumber: 30 + Math.floor(Math.random() * 20),
     age: 17,
     isYouth: true,
     seed: Date.now() % 999999,
   });
-  prospect.potential = Math.min(94, prospect.overall + 14);
+  prospect.potential = Math.min(86, Math.max(prospect.overall + 10, 62 + Math.floor(Math.random() * 15)));
 
   return {
     ...save,
