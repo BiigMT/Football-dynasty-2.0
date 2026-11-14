@@ -41,7 +41,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
       }},
       news: [{
         id: 'academy_scout_' + Date.now(), week: save.currentWeek, season: save.season,
-        category: 'ACADEMY', headline: club.name + ' welcomes a new academy prospect',
+        category: 'ACADEMY' as const, headline: club.name + ' welcomes a new academy prospect',
         body: 'The youth recruitment network has identified and signed a promising young player.',
       }, ...recruited.news].slice(0, 35),
     });
@@ -81,7 +81,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
       playerRelationships: { ...relationships, [player.id]: clamp((relationships[player.id] ?? 50) + 4) },
       news: [{
         id: 'dressing_room_' + Date.now(), week: save.currentWeek, season: save.season,
-        category: 'BOARD', headline: manager.name + ' holds a one-to-one with ' + player.name,
+        category: 'BOARD' as const, headline: manager.name + ' holds a one-to-one with ' + player.name,
         body: tone === 'SUPPORT' ? 'The manager offered personal support and confidence.' : tone === 'CHALLENGE' ? 'The manager challenged the player to raise their standards.' : 'A senior mentor role was discussed to strengthen squad unity.',
       }, ...save.news].slice(0, 35),
     });
