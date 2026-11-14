@@ -67,10 +67,18 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
       <style>{`
         @keyframes manager-breathe { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(1deg); } }
         @keyframes manager-look { 0%,35%,100% { transform: translateX(0); } 45%,75% { transform: translateX(3px); } }
-        @keyframes reporter-move { 0%,100% { transform: rotate(-1deg); } 50% { transform: rotate(1.5deg); } }
+        @keyframes reporter-move { 0%,100% { transform: rotate(-1deg) translateY(0); } 50% { transform: rotate(1.5deg) translateY(-4px); } }
+        @keyframes press-camera-flash { 0%,78%,100% { opacity: 0; } 80% { opacity: .85; } 82% { opacity: 0; } }
+        @keyframes press-camera-pan { 0%,100% { transform: translateX(-2%); } 50% { transform: translateX(2%); } }
+        @keyframes press-screen-glow { 0%,100% { opacity: .35; } 50% { opacity: .85; } }
+        @keyframes press-mic-lift { 0%,100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-5px); } }
         .manager-idle { animation: manager-breathe 3.2s ease-in-out infinite; transform-origin: center bottom; }
         .manager-eyes { animation: manager-look 4.6s ease-in-out infinite; }
         .reporter-idle { animation: reporter-move 2.8s ease-in-out infinite; transform-origin: center bottom; }
+        .press-camera { animation: press-camera-flash 4.8s linear infinite; }
+        .press-pan { animation: press-camera-pan 12s ease-in-out infinite; }
+        .press-glow { animation: press-screen-glow 3s ease-in-out infinite; }
+        .press-mic { animation: press-mic-lift 2.4s ease-in-out infinite; transform-origin: center bottom; }
       `}</style>
       <div className="w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#101923] shadow-2xl">
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
@@ -78,10 +86,12 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
           <div className="rounded-lg bg-red-500/15 px-3 py-1.5 text-xs font-bold text-red-300">LIVE <span className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-red-400" /></div>
         </div>
         <div className="relative grid min-h-[280px] grid-cols-1 gap-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(8,145,178,.2),transparent_65%)] md:grid-cols-[1.4fr_1fr]">
-          <div className="relative flex min-h-[250px] items-end justify-center overflow-hidden border-b border-white/10 px-4 pt-8 md:border-b-0 md:border-r">
+          <div className="press-pan relative flex min-h-[250px] items-end justify-center overflow-hidden border-b border-white/10 px-4 pt-8 md:border-b-0 md:border-r">
             <div className="absolute inset-x-8 top-7 h-24 rounded-xl border border-cyan-300/15 bg-[#142332] shadow-inner"><div className="flex h-full items-center justify-center text-center"><div><div className="text-[10px] font-black tracking-[.35em] text-cyan-300">{clubName.toUpperCase()}</div><div className="mt-1 text-[9px] tracking-[.2em] text-slate-500">OFFICIAL MEDIA CONFERENCE</div></div></div></div>
-            <div className="reporter-idle absolute bottom-0 left-5 h-24 w-16 rounded-t-[45%] bg-[#263747] opacity-90"><div className="absolute -top-7 left-4 h-9 w-9 rounded-full bg-[#9b684e]" /><div className="absolute -top-1 left-11 h-10 w-2 rotate-[-25deg] rounded bg-slate-500" /></div>
-            <div className="reporter-idle absolute bottom-0 right-5 h-28 w-20 rounded-t-[45%] bg-[#1c2c3a] opacity-90" style={{animationDelay:'-.8s'}}><div className="absolute -top-7 left-5 h-9 w-9 rounded-full bg-[#c18b68]" /><div className="absolute -top-1 -left-5 h-10 w-2 rotate-[25deg] rounded bg-slate-400" /></div>
+            <div className="reporter-idle absolute bottom-0 left-5 h-24 w-16 rounded-t-[45%] bg-[#263747] opacity-90"><div className="absolute -top-7 left-4 h-9 w-9 rounded-full bg-[#9b684e]" /><div className="press-mic absolute -top-1 left-11 h-10 w-2 rotate-[-25deg] rounded bg-slate-500" /></div>
+            <div className="reporter-idle absolute bottom-0 right-5 h-28 w-20 rounded-t-[45%] bg-[#1c2c3a] opacity-90" style={{animationDelay:'-.8s'}}><div className="absolute -top-7 left-5 h-9 w-9 rounded-full bg-[#c18b68]" /><div className="press-mic absolute -top-1 -left-5 h-10 w-2 rotate-[25deg] rounded bg-slate-400" /></div>
+            <div className="press-camera pointer-events-none absolute inset-0 z-20 bg-white" />
+            <div className="pointer-events-none absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[.2em] text-white/80"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" /> Camera 01 · Media pool</div>
             <div className="manager-idle relative z-10 mb-0 flex flex-col items-center">
               <div className="relative h-28 w-24 rounded-t-[42%] bg-[#b77d5e] shadow-lg"><div className="absolute -top-2 left-2 h-9 w-20 rounded-t-full bg-[#17191d]" /><div className="manager-eyes absolute left-6 top-12 flex gap-5"><span className="h-1.5 w-2 rounded-full bg-[#1c2025]" /><span className="h-1.5 w-2 rounded-full bg-[#1c2025]" /></div><div className="absolute left-10 top-[4.2rem] h-1 w-4 rounded-full bg-[#754b3e]" /></div>
               <div className="h-28 w-44 rounded-t-[2.5rem] bg-gradient-to-b from-[#263c50] to-[#172838] shadow-xl"><div className="mx-auto mt-4 h-9 w-9 rounded-full border border-cyan-300/40 bg-cyan-400/15" /></div>
