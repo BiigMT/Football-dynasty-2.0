@@ -87,6 +87,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     [save.players, club.id]
   );
 
+  const transferDeadlineWeek = save.currentWeek <= 4 ? 4 : save.currentWeek <= 11 ? 11 : null;
+  const transferWeeksRemaining = transferDeadlineWeek === null ? null : Math.max(0, transferDeadlineWeek - save.currentWeek);
   const nextFixture = getNextUserFixture(save);
   const leagueFinished = league.fixtures.every((f) => f.played);
   const leaguePos = getClubStandingsPosition(save, club.id);
@@ -608,6 +610,22 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
         {tab === 'TRANSFERS' && (
           <div className="flex flex-col gap-5">
+          <div className={`rounded-xl border p-3 flex flex-wrap items-center justify-between gap-2 ${save.transferWindowOpen ? 'border-amber-400/40 bg-amber-500/10' : 'border-white/10 bg-[#131A22]'}`}>
+            <div>
+              <div className="text-xs font-black uppercase tracking-wider text-amber-300">Transfer Deadline Watch</div>
+              <div className="mt-1 text-xs text-slate-300">
+                {save.transferWindowOpen
+                  ? transferWeeksRemaining === 0
+                    ? 'DEADLINE DAY — finalise offers before the window closes.'
+                    : `${transferWeeksRemaining} week(s) until the transfer deadline. Negotiate early; clubs may reject late bids.`
+                  : 'The transfer window is closed. Scouting remains available; official offers reopen in the next window.'}
+              </div>
+            </div>
+            <span className="rounded-lg bg-black/20 px-3 py-2 text-[11px] font-bold text-slate-200">
+              {save.transferWindowOpen ? `WEEK ${save.currentWeek} / ${transferDeadlineWeek}` : 'WINDOW CLOSED'}
+            </span>
+          </div>
+
             {save.transferOffers.length > 0 && (
               <div className="rounded-xl bg-[#131A22] border border-amber-400/40 p-4 flex flex-col gap-3">
                 <div className="text-sm font-bold text-amber-300">Incoming Transfer Bids</div>
