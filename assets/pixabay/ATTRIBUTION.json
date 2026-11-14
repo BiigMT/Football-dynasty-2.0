@@ -1,0 +1,23 @@
+{
+  "pack": "Football Dynasty 2.0 — Pixabay starter media pack",
+  "status": "source_selected_download_pending",
+  "usage": "Use only embedded and creatively integrated in-game scenes; do not expose original stock files for standalone download.",
+  "assets": [
+    {
+      "id": "pixabay-packed-stadium-1866738",
+      "category": "matchday/stadium",
+      "title": "Packed football stadium at night",
+      "creator": "Pexels",
+      "sourcePage": "https://pixabay.com/photos/audience-soccer-stadium-1866738/",
+      "previewCdn": "https://cdn.pixabay.com/photo/2016/11/29/02/05/audience-1866738_1280.jpg",
+      "mediaType": "image/jpeg",
+      "published": "2016-11-29",
+      "publishedResolution": "8284x3818",
+      "plannedLocalPath": "/assets/pixabay/matchday/packed-stadium-night.jpg",
+      "licence": "Pixabay Content License",
+      "licenceReview": "Pixabay page labels this item free for use under the Pixabay Content License. Check for third-party rights before commercial use.",
+      "attribution": "Pexels via Pixabay",
+      "integration": "Matchday / stadium atmosphere background"
+    }
+  ]
+}
