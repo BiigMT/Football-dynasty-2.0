@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { PlayerAppearance } from '../types/football';
 
 interface PlayerPortraitProps {
@@ -20,7 +20,8 @@ export const PlayerPortrait: React.FC<PlayerPortraitProps> = ({
   className = '',
 }) => {
   const { skinTone, hairStyle, hairColor, faceStyle } = appearance;
-  const id = `portrait-${jerseyPrimary.replace(/[^a-z0-9]/gi, '')}-${hairColor.replace(/[^a-z0-9]/gi, '')}-${size}`;
+  const reactId = useId().replace(/:/g, '');
+  const id = `portrait-${reactId}`;
   const hairTop = hairStyle === 'CURLY'
     ? 'M22 30 C19 17 28 10 39 11 C51 9 61 18 58 31 L54 27 C49 22 31 22 26 29 Z'
     : hairStyle === 'SWEEP'
