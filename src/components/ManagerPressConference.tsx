@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { NewsItem } from '../types/football';
 import { Mic, Newspaper, Radio, Users } from 'lucide-react';
 
 interface ManagerPressConferenceProps {
   managerName: string;
   clubName: string;
+  recentNews?: NewsItem[];
   onAnswer: (boardDelta: number, chemistryDelta: number, reputationDelta: number, response: string) => void;
   onContinue: () => void;
 }
@@ -26,10 +28,33 @@ const QUESTIONS = [
   ]},
 ];
 
-export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ managerName, clubName, onAnswer, onContinue }) => {
+export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ managerName, clubName, recentNews = [], onAnswer, onContinue }) => {
   const [question, setQuestion] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [lastResponse, setLastResponse] = useState('');
+  const latestTransfer = recentNews.find(item => item.category === 'TRANSFER');
+  const latestMatch = recentNews.find(item => item.category === 'MATCH');
+  const latestAcademy = recentNews.find(item => item.category === 'ACADEMY');
+  const contextualQuestion = latestTransfer
+    ? { label: 'Journalist: Your latest transfer has attracted attention. Was this the right move?', options: [
+        { label: 'The signing improves the squad', response: 'We recruited for a clear football reason. The player must now earn their place.', board: 2, chemistry: 1, reputation: 2 },
+        { label: 'We are still building the squad', response: 'The window is a process. We will keep assessing what the team needs.', board: 1, chemistry: 1, reputation: 1 },
+        { label: 'I will not discuss individual deals', response: 'We respect every player and keep our transfer discussions internal.', board: 0, chemistry: 1, reputation: 0 },
+      ]}
+    : latestMatch
+    ? { label: 'Journalist: After the latest result, how do you respond to the criticism?', options: [
+        { label: 'Take responsibility and improve', response: 'I take responsibility. We will review the performance and respond on the pitch.', board: 2, chemistry: 2, reputation: 2 },
+        { label: 'Defend the players', response: 'The players gave their effort. We will learn together and move forward.', board: 1, chemistry: 3, reputation: 1 },
+        { label: 'Demand a stronger response', response: 'Our standards are high. The next performance must show that.', board: 1, chemistry: -1, reputation: 2 },
+      ]}
+    : latestAcademy
+    ? { label: 'Journalist: Will academy graduates get a genuine first-team opportunity?', options: [
+        { label: 'Reward performance, not age', response: 'If they are ready and perform in training, they will get their chance.', board: 1, chemistry: 3, reputation: 2 },
+        { label: 'Develop them patiently', response: 'We will protect their development and give them the right pathway.', board: 2, chemistry: 2, reputation: 1 },
+        { label: 'Let them compete for places', response: 'No one gets a place for free. Every player must earn it.', board: 2, chemistry: 1, reputation: 1 },
+      ]}
+    : QUESTIONS[0];
+  const questions = [contextualQuestion, ...QUESTIONS.slice(1)];
 
   const answer = (option: typeof QUESTIONS[number]['options'][number]) => {
     onAnswer(option.board, option.chemistry, option.reputation, option.response);
@@ -69,17 +94,17 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
             <p className="mt-1 text-sm text-slate-400">New manager of {clubName}</p>
             <div className="mt-5 rounded-xl border border-white/10 bg-[#0b121a] p-4">
               <div className="mb-3 flex items-center gap-2 text-xs text-slate-400"><Newspaper size={14}/> {answered ? 'Your response' : 'A journalist asks'}</div>
-              <p className="text-sm font-bold leading-6">{answered ? lastResponse : QUESTIONS[question].label}</p>
+              <p className="text-sm font-bold leading-6">{answered ? lastResponse : questions[question].label}</p>
             </div>
             <div className="mt-4 grid gap-2">
-              {!answered ? QUESTIONS[question].options.map((option) => (
+              {!answered ? questions[question].options.map((option) => (
                 <button key={option.label} onClick={() => answer(option)} className="min-h-11 rounded-lg border border-white/10 bg-[#172533] px-3 py-2 text-left text-xs font-semibold text-white hover:border-cyan-400 hover:bg-cyan-400/10">{option.label}</button>
-              )) : question < QUESTIONS.length - 1 ? (
+              )) : question < questions.length - 1 ? (
                 <button onClick={() => { setQuestion((v) => v + 1); setAnswered(false); }} className="min-h-11 rounded-lg bg-cyan-400 px-4 py-3 text-sm font-black text-slate-950 hover:bg-cyan-300">Next question</button>
               ) : (
                 <button onClick={onContinue} className="min-h-11 rounded-lg bg-cyan-400 px-4 py-3 text-sm font-black text-slate-950 hover:bg-cyan-300"><Radio size={16} className="mr-2 inline"/> Enter the club</button>
               )}
-              <p className="text-center text-[10px] text-slate-500">Question {question + 1} of {QUESTIONS.length} · Your answers shape the club's first impression</p>
+              <p className="text-center text-[10px] text-slate-500">Question {question + 1} of {questions.length} · Your answers shape the club's first impression</p>
             </div>
           </div>
         </div>
