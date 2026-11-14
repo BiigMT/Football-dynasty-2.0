@@ -287,6 +287,29 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   };
 
+  const handleBoardDecision = (label: string, boardDelta: number, chemistryDelta: number, reputationDelta: number) => {
+    soundEngine.playClick();
+    onUpdateSave({
+      ...save,
+      manager: {
+        ...manager,
+        boardConfidence: Math.max(15, Math.min(100, manager.boardConfidence + boardDelta)),
+        reputation: Math.max(1, Math.min(100, manager.reputation + reputationDelta)),
+      },
+      clubs: {
+        ...save.clubs,
+        [club.id]: { ...club, chemistry: Math.max(1, Math.min(100, club.chemistry + chemistryDelta)) },
+      },
+      news: [{
+        id: `news_board_meeting_${Date.now()}`,
+        week: save.currentWeek,
+        season: save.season,
+        category: 'BOARD',
+        headline: `${manager.name} sets the tone in the board meeting`,
+        body: label,
+      }, ...save.news].slice(0, 35),
+    });
+  };
   const handleAcceptJobOffer = (offerClubId: string) => {
     const target = save.clubs[offerClubId];
     if (!target) return;
@@ -958,6 +981,16 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               </div>
             </div>
 
+            <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <h3 className="text-lg font-bold text-white">Board Meeting</h3>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300">Choose your approach</span>
+              </div>
+              <p className="text-xs text-slate-400">Your leadership decisions affect board confidence, dressing-room chemistry and your reputation.</p>
+              <button type="button" onClick={() => handleBoardDecision('The manager publicly backs the squad and promises to compete together.', 2, 4, 1)} className="min-h-[42px] rounded-lg bg-[#0E141B] px-3 text-left text-xs font-semibold text-white hover:border hover:border-cyan-400">Back the squad · Build unity</button>
+              <button type="button" onClick={() => handleBoardDecision('The manager commits to giving academy graduates a genuine pathway into the first team.', 1, 3, 2)} className="min-h-[42px] rounded-lg bg-[#0E141B] px-3 text-left text-xs font-semibold text-white hover:border hover:border-cyan-400">Commit to youth development</button>
+              <button type="button" onClick={() => handleBoardDecision('The manager demands higher standards and makes immediate results the priority.', 3, -2, 2)} className="min-h-[42px] rounded-lg bg-[#0E141B] px-3 text-left text-xs font-semibold text-white hover:border hover:border-cyan-400">Demand immediate results</button>
+            </div>
             <div className="rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-3">
               <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2">
                 Managerial Legacy & Job Offers
