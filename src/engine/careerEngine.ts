@@ -707,11 +707,42 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
         });
       }
 
+      const teammate = Object.values(nextPlayers)
+        .filter((candidate) => candidate.clubId === uPlayer.clubId && candidate.id !== uPlayer.id)
+        .sort((a, b) => b.overall - a.overall)[0];
+      const fanReaction = userSt.rating >= 8
+        ? 'What a performance! Keep this level up and the whole league will know your name.'
+        : userSt.rating >= 7
+        ? 'Solid performance today. You are becoming an important player for this club.'
+        : userSt.rating < 6
+        ? 'Tough day, but every great player responds. We are behind you.'
+        : 'Keep going. The next match is another chance to show what you can do.';
       nextLegend = {
         ...nextLegend,
         managerTrust: nextTrust,
         squadRole,
         internationalCallUp: callUp,
+        phoneNotifications: [{
+          id: `phone_match_${session.fixtureId}_${uPlayer.id}`,
+          title: userSt.rating >= 8 ? 'Fans are talking about you' : userSt.rating < 6 ? 'Support after a difficult match' : 'Your matchday reaction',
+          body: fanReaction,
+          kind: 'FANS' as const,
+          week: save.currentWeek,
+          season: save.season,
+        }, ...(nextLegend.phoneNotifications ?? [])].slice(0, 20),
+        phoneMessages: teammate ? [{
+          id: `postmatch_${session.fixtureId}_${teammate.id}`,
+          teammateId: teammate.id,
+          teammateName: teammate.name,
+          from: 'TEAMMATE' as const,
+          text: userSt.rating >= 7.5
+            ? `Brilliant performance today, ${uPlayer.name}. You were quality out there.`
+            : userSt.rating < 6
+            ? `Keep your head up, ${uPlayer.name}. We go again together next match.`
+            : `Good effort today, ${uPlayer.name}. Let's keep pushing at training.`,
+          week: save.currentWeek,
+          season: save.season,
+        }, ...(nextLegend.phoneMessages ?? [])].slice(0, 60) : nextLegend.phoneMessages,
       };
     }
   }
