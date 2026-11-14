@@ -1,0 +1,14 @@
+{
+  "source": "Pixabay",
+  "offline": true,
+  "assets": [
+    {
+      "file": "stadium-audience.jpg",
+      "bytes": 325619
+    }
+  ],
+  "downloadErrors": [
+    "fans-stadium-game.mp4: HTTP Error 403: Forbidden",
+    "stadium-aerial.mp4: HTTP Error 403: Forbidden"
+  ]
+}\n
