@@ -44,6 +44,7 @@ import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
 import { CareerHomeNewsItem, DayItem, ManagerHome, TableRow } from './CareerHome';
 import { ManagerPressConference } from './ManagerPressConference';
+import { ClubDevelopmentHub } from './ClubDevelopmentHub';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -54,7 +55,7 @@ interface ManagerHubProps {
   onExitToTitle: () => void;
 }
 
-type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'SETTINGS';
+type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'DEVELOPMENT' | 'SETTINGS';
 
 export const ManagerHub: React.FC<ManagerHubProps> = ({
   save,
@@ -488,6 +489,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
             { id: 'TRAINING', label: 'Training & Academy', icon: Dumbbell },
             { id: 'COMPETITIONS', label: 'Competitions', icon: Trophy },
             { id: 'CLUB', label: 'Manager Office', icon: Building2 },
+            { id: 'DEVELOPMENT', label: 'Development', icon: UserPlus },
           ].map((item) => {
             const Icon = item.icon;
             const active = tab === item.id;
@@ -1087,6 +1089,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
             </div>
           </div>
         )}
+
+        {tab === 'DEVELOPMENT' && <ClubDevelopmentHub save={save} onUpdateSave={onUpdateSave} />}
 
         {tab === 'SETTINGS' && (
           <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
