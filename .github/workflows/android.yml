@@ -39,6 +39,11 @@ jobs:
       - name: Sync web build into Android project
         run: npx cap sync android
 
+      - name: Generate Football Dynasty launcher icons
+        run: |
+          python3 -m pip install --quiet pillow cairosvg
+          python3 scripts/generate_android_icon.py
+
       - name: Build debug APK
         working-directory: android
         run: |
