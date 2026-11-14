@@ -936,7 +936,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                   </div>
                 </div>
               </div>
-            )}}
+            )}
           </div>
         )}
 
