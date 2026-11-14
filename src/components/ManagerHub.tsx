@@ -330,7 +330,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         id: `news_board_meeting_${Date.now()}`,
         week: save.currentWeek,
         season: save.season,
-        category: 'BOARD',
+        category: 'BOARD' as const,
         headline: `${manager.name} sets the tone in the board meeting`,
         body: label,
       }, ...save.news].slice(0, 35),
