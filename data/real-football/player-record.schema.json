@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://footballdynasty.local/schemas/player-record-2026-27.json",
+  "title": "Football Dynasty real-world player record",
+  "type": "object",
+  "required": [
+    "sourceId",
+    "name",
+    "clubId",
+    "leagueId",
+    "season",
+    "dataSource"
+  ],
+  "properties": {
+    "sourceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clubId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "leagueId": {
+      "type": "string",
+      "enum": [
+        "eng_prem",
+        "esp_liga",
+        "ita_serie",
+        "ger_bundesliga",
+        "fra_ligue1"
+      ]
+    },
+    "season": {
+      "const": "2026/27"
+    },
+    "dateOfBirth": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "ageAtSnapshot": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 15,
+      "maximum": 50
+    },
+    "nationality": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "position": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "GK",
+        "CB",
+        "LB",
+        "RB",
+        "CDM",
+        "CM",
+        "CAM",
+        "LW",
+        "RW",
+        "ST",
+        null
+      ]
+    },
+    "secondaryPositions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "GK",
+          "CB",
+          "LB",
+          "RB",
+          "CDM",
+          "CM",
+          "CAM",
+          "LW",
+          "RW",
+          "ST"
+        ]
+      }
+    },
+    "shirtNumber": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 99
+    },
+    "loanStatus": {
+      "type": "string",
+      "enum": [
+        "none",
+        "on_loan",
+        "loaned_out",
+        "unknown"
+      ],
+      "default": "unknown"
+    },
+    "loanParentClubId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dataSource": {
+      "type": "object",
+      "required": [
+        "url",
+        "checkedDate"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "checkedDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "additionalProperties": false
+    },
+    "portrait": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "assetPath",
+        "sourcePageUrl",
+        "creator",
+        "license",
+        "licenseUrl",
+        "modified",
+        "checkedDate"
+      ],
+      "properties": {
+        "assetPath": {
+          "type": "string"
+        },
+        "sourcePageUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string",
+          "enum": [
+            "CC0",
+            "Public Domain",
+            "CC BY",
+            "CC BY-SA"
+          ]
+        },
+        "licenseUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "modified": {
+          "type": "boolean"
+        },
+        "checkedDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
