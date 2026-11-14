@@ -484,6 +484,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                   <div className="text-xs text-amber-400 font-medium mt-1">
                     {player.position} ({player.playingStyle}) · Potential {player.potential}
                   </div>
+                  {player.injuredWeeks > 0 && <div className="text-[11px] text-rose-300 mt-1">Injured: {player.injuryType ?? 'Injury'} · {player.injuredWeeks} week(s) remaining</div>}
                 </div>
               </div>
               <div className="text-right font-mono-num">
@@ -671,6 +672,14 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               {contractNotice && <p className="text-xs text-emerald-300">{contractNotice}</p>}
               <button
                 type="button"
+                onClick={handleRequestLoan}
+                disabled={Boolean(player.loanParentClubId || legend.loanRequestPending || legend.squadRole === 'KEY_STAR' || legend.squadRole === 'CAPTAIN')}
+                className="min-h-[42px] w-full rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-200 border border-cyan-400/35 text-xs font-bold transition-colors cursor-pointer disabled:opacity-40"
+              >
+                {player.loanParentClubId ? `On Loan · ${player.loanWeeksRemaining ?? 0} Weeks Left` : legend.loanRequestPending ? 'Loan Request Submitted' : 'Ask Agent for a 12-Week Loan'}
+              </button>
+              <button
+                type="button"
                 onClick={handleRequestTransfer}
                 disabled={legend.squadRole === 'ACADEMY_PROSPECT'}
                 className="min-h-[42px] w-full rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-400/40 text-xs font-bold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
@@ -694,7 +703,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                       <div>
                         <div className="text-sm font-bold text-white">{suitor.name}</div>
                         <div className="text-xs text-slate-400 font-mono-num">
-                          €{off.proposedWage.toLocaleString()}/wk · {off.contractYears} yrs · Bonus €{off.signingBonus.toLocaleString()}
+                          {off.dealType === 'LOAN' ? '12-week loan · temporary move' : `€${off.proposedWage.toLocaleString()}/wk · ${off.contractYears} yrs · Bonus €${off.signingBonus.toLocaleString()}`}
                         </div>
                         <div className="text-xs text-slate-400 mt-1">{off.message}</div>
                       </div>
@@ -703,7 +712,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                         onClick={() => handleAcceptAgentOffer(off.id)}
                         className="min-h-[42px] px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold whitespace-nowrap cursor-pointer"
                       >
-                        Sign Contract
+                        {off.dealType === 'LOAN' ? 'Accept Loan' : 'Sign Contract'}
                       </button>
                     </div>
                   );
