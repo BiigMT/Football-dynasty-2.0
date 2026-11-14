@@ -118,6 +118,7 @@ export interface Player {
   releaseClause: number;
   clubId: string;
   isYouth?: boolean;
+  academyTrainingWeek?: number;
   isUserPlayer?: boolean;
   injuredWeeks: number;
   injuryType?: string;
