@@ -206,10 +206,20 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
 
   const userPlayerState = session.userPlayerId ? session.playerStates[session.userPlayerId] : undefined;
   const userPlayer = session.userPlayerId ? players[session.userPlayerId] : undefined;
+  const latestGoal = [...session.events].reverse().find((event) => event.type === 'GOAL');
+  const showGoalCelebration = lastGoalTs > 0 && Date.now() - lastGoalTs < 4200;
 
   return (
     <div className={`bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`}>
       <div className={isLiveMatch ? 'match-live-content' : isHalfTime ? 'match-halftime-content' : 'max-w-6xl mx-auto flex flex-col gap-4'}>
+        {showGoalCelebration && latestGoal && (
+          <div className="overflow-hidden rounded-xl border border-amber-300/50 bg-gradient-to-r from-amber-500/25 via-[#172533] to-cyan-500/20 px-4 py-3 shadow-lg">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0"><div className="text-[10px] font-black uppercase tracking-[.25em] text-amber-300">GOAL · {latestGoal.minute}'</div><div className="truncate text-base font-black text-white">{latestGoal.playerName ?? 'Goal scorer'} — {latestGoal.text}</div><div className="text-[11px] text-slate-300">THE CROWD ERUPTS · {latestGoal.teamSide === 'HOME' ? homeClub.name : awayClub.name} supporters are celebrating</div></div>
+              <div className="shrink-0 text-3xl" aria-hidden="true">⚽ 🎉</div>
+            </div>
+          </div>
+        )}
         {/* Top Broadcast Scoreboard */}
         <header className={`rounded-xl bg-[#131A22] border border-white/10 flex flex-wrap items-center justify-between ${isLiveMatch ? 'match-live-scoreboard' : isHalfTime ? 'match-halftime-scoreboard' : 'p-4 gap-4'}`}>
           <div className="flex items-center gap-3 min-w-0">
