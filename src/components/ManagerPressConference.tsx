@@ -88,6 +88,13 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
         </div>
         <div className="relative grid min-h-[280px] grid-cols-1 gap-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(8,145,178,.2),transparent_65%)] md:grid-cols-[1.4fr_1fr]">
           <div className="press-pan relative flex min-h-[250px] items-end justify-center overflow-hidden border-b border-white/10 px-4 pt-8 md:border-b-0 md:border-r">
+            <img
+              src="/media/pixabay/stadium-audience.jpg"
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ opacity: mediaReady ? 0.28 : 0.62 }}
+              aria-hidden="true"
+            />
             <video
               className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
               style={{ opacity: mediaReady ? 0.48 : 0 }}
