@@ -306,7 +306,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         id: `news_facilities_${Date.now()}`,
         week: save.currentWeek,
         season: save.season,
-        category: 'BOARD',
+        category: 'BOARD' as const,
         headline: `${club.name} upgrades its training facilities`,
         body: `The club invested €${cost.toLocaleString()} to improve its training complex. Future weekly training will be more effective.`,
       }, ...save.news].slice(0, 35),
