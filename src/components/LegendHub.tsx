@@ -532,9 +532,17 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               </div>
               <div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div>
             </div>
-            <div className="grid grid-cols-2 gap-2 rounded-lg bg-[#080d13] p-1">
-              <button type="button" onClick={() => setPhoneMode('SOCIAL')} className={`min-h-[40px] rounded-md text-xs font-bold flex items-center justify-center gap-2 ${phoneMode === 'SOCIAL' ? 'bg-amber-400 text-slate-950' : 'text-slate-400'}`}><Heart className="h-4 w-4" /> Social Feed</button>
-              <button type="button" onClick={() => setPhoneMode('MESSAGES')} className={`min-h-[40px] rounded-md text-xs font-bold flex items-center justify-center gap-2 ${phoneMode === 'MESSAGES' ? 'bg-amber-400 text-slate-950' : 'text-slate-400'}`}><MessageCircle className="h-4 w-4" /> Teammates</button>
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#080d13]">
+              <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=75" alt="Football stadium under floodlights" loading="lazy" className="h-28 sm:h-36 w-full object-cover opacity-85" />
+              <div className="px-3 py-2 flex items-center justify-between gap-2"><span className="text-[10px] uppercase tracking-widest font-bold text-amber-300">Matchday life</span><span className="text-[10px] text-slate-400">Your football world, wherever you are</span></div>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              <button type="button" onClick={() => setPhoneMode('SOCIAL')} className={`min-h-[68px] rounded-xl border p-2 flex flex-col items-center justify-center gap-1 ${phoneMode === 'SOCIAL' ? 'border-amber-400 bg-amber-400/15 text-amber-200' : 'border-white/10 bg-[#0b1118] text-slate-300'}`}><Heart className="h-5 w-5" /><span className="text-[10px] font-bold">Social</span></button>
+              <button type="button" onClick={() => setPhoneMode('MESSAGES')} className={`min-h-[68px] rounded-xl border p-2 flex flex-col items-center justify-center gap-1 ${phoneMode === 'MESSAGES' ? 'border-amber-400 bg-amber-400/15 text-amber-200' : 'border-white/10 bg-[#0b1118] text-slate-300'}`}><MessageCircle className="h-5 w-5" /><span className="text-[10px] font-bold">Messages</span></button>
+              <button type="button" onClick={() => { soundEngine.playClick(); setTab('COMPETITIONS'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Trophy className="h-5 w-5 text-amber-300" /><span className="text-[10px] font-bold">Fixtures</span></button>
+              <button type="button" onClick={() => { soundEngine.playClick(); setTab('AGENT'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><ArrowLeftRight className="h-5 w-5 text-cyan-300" /><span className="text-[10px] font-bold">Agent</span></button>
+              <button type="button" onClick={() => { soundEngine.playClick(); setTab('TRAINING'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Dumbbell className="h-5 w-5 text-emerald-300" /><span className="text-[10px] font-bold">Training</span></button>
+              <button type="button" onClick={() => { soundEngine.playClick(); setTab('MANAGER'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Users className="h-5 w-5 text-violet-300" /><span className="text-[10px] font-bold">Manager</span></button>
             </div>
             {phoneMode === 'SOCIAL' ? (
               <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-3">
