@@ -83,7 +83,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
     const gap = Math.max(0, player.potential - player.overall);
     const level = gap >= 18 ? 'Exceptional upside' : gap >= 10 ? 'Strong development potential' : gap >= 5 ? 'Room to improve' : 'Near current ceiling';
     // Reports estimate a range; the hidden database potential is not shown as certainty.
-    const scoutAccuracy = clamp(48 + Math.round(club.reputation * 0.35), 55, 88);
+    const scoutAccuracy = Math.max(55, Math.min(88, 48 + Math.round(club.reputation * 0.35)));
     const uncertainty = Math.max(3, Math.round((100 - scoutAccuracy) / 4));
     const report = {
       id: 'scout_' + player.id + '_' + save.season + '_' + save.currentWeek,
