@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "project": "Football Dynasty 2.0",
+  "note": "Curated Pixabay source catalogue. Entries are not bundled binaries until downloaded from their individual item pages and reviewed. Do not treat preview URLs as offline assets.",
+  "licencePolicy": {
+    "source": "https://pixabay.com/service/terms/",
+    "summary": "Pixabay grants broad use and adaptation rights but prohibits standalone redistribution. Review identifiable people, trademarks, property and other third-party rights for each item.",
+    "offlineIntegration": "Bundle only after meaningful integration into game screens or media sequences; never expose raw stock files as a downloadable stock pack."
+  },
+  "imageAssets": [
+    {
+      "id": "stadium-audience-1866738",
+      "category": "matchday",
+      "title": "Audience, Soccer, Stadium",
+      "creator": "Pexels",
+      "itemPage": "https://pixabay.com/photos/audience-soccer-stadium-1866738/",
+      "published": "2016-11-29",
+      "resolution": "8284x3818",
+      "format": "JPG",
+      "licenceAtSource": "Pixabay Content License",
+      "review": "Published before 2019-01-09; Pixabay terms identify pre-cutoff content as CC0. Still review any visible third-party rights.",
+      "plannedPath": "public/assets/pixabay/matchday/stadium-audience.jpg",
+      "intendedUse": "Wide matchday stadium atmosphere background"
+    },
+    {
+      "id": "football-stadium-fnb-1532096",
+      "category": "matchday",
+      "title": "Football Stadium",
+      "creator": "DavidDeschamps82",
+      "itemPage": "https://pixabay.com/photos/football-stadium-fnb-stadium-1532096/",
+      "published": "2016-07-22",
+      "resolution": "3872x2592",
+      "format": "JPG",
+      "licenceAtSource": "Pixabay Content License",
+      "review": "Published before 2019-01-09; review visible FNB / stadium / club marks and any other third-party rights before commercial use.",
+      "plannedPath": "public/assets/pixabay/matchday/stadium-crowd.jpg",
+      "intendedUse": "Stadium detail / match presentation"
+    },
+    {
+      "id": "football-match-2600732",
+      "category": "matchday",
+      "title": "Football Soccer Field Tournament",
+      "creator": "StockSnap",
+      "itemPage": "https://pixabay.com/photos/football-soccer-field-tournament-2600732/",
+      "published": "2017-08-06",
+      "resolution": "4608x3456",
+      "format": "JPG",
+      "licenceAtSource": "Pixabay Content License",
+      "review": "Published before 2019-01-09; check recognisable players, kit marks and other third-party rights.",
+      "plannedPath": "public/assets/pixabay/matchday/football-match-wide.jpg",
+      "intendedUse": "Matchday story / fixture feature"
+    },
+    {
+      "id": "football-crowd-1799462",
+      "category": "matchday",
+      "title": "Football Crowd Stadium Fans",
+      "creator": "Pixabay contributor (verify on item page)",
+      "itemPage": "https://pixabay.com/photos/football-crowd-stadium-fans-1799462/",
+      "published": "2016-11-09",
+      "resolution": "5472x3648",
+      "format": "JPG",
+      "licenceAtSource": "Pixabay Content License",
+      "review": "Published before 2019-01-09; inspect faces, brands and any model/property rights before use.",
+      "plannedPath": "public/assets/pixabay/matchday/fan-atmosphere.jpg",
+      "intendedUse": "Crowd / fan atmosphere panel"
+    }
+  ],
+  "videoSearches": [
+    {
+      "category": "press",
+      "searchPage": "https://pixabay.com/videos/search/football%20stadium%20crowd/",
+      "use": "Short crowd and stadium atmosphere clips for press / matchday transitions"
+    },
+    {
+      "category": "matchday",
+      "searchPage": "https://pixabay.com/videos/search/football%20match/",
+      "use": "Short football action and match presentation clips"
+    },
+    {
+      "category": "stadium",
+      "searchPage": "https://pixabay.com/videos/search/stadium%20match/",
+      "use": "Stadium establishing shots"
+    }
+  ],
+  "status": {
+    "sourcePagesVerified": true,
+    "individualImageBinaryDownloads": false,
+    "videoItemLicenceReviews": false,
+    "bundledOfflineFiles": false
+  }
+}
