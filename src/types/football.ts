@@ -431,6 +431,9 @@ export interface ScoutingReport {
   age: number;
   overall: number;
   potential: number;
+  potentialMin?: number;
+  potentialMax?: number;
+  confidence?: 'Low' | 'Medium' | 'High';
   assessment: string;
   season: number;
   week: number;
