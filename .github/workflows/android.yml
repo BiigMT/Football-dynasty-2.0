@@ -23,6 +23,8 @@ jobs:
             git add public/media/pixabay
             if ! git diff --cached --quiet; then
               git commit -m "assets: bundle Pixabay media for offline play"
+              git fetch origin main
+              git rebase origin/main
               git push
             fi
           fi
