@@ -19,6 +19,8 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
     .sort((a, b) => b.seasonStats.goals - a.seasonStats.goals || b.seasonStats.assists - a.seasonStats.assists)
     .slice(0, 8);
 
+  const leagueAssistLeaders = [...leagueScorers].sort((a, b) => b.seasonStats.assists - a.seasonStats.assists || b.seasonStats.goals - a.seasonStats.goals).slice(0, 5);
+
   const rankedNations = Object.values(save.nationalTeams).sort((a, b) => a.worldRank - b.worldRank);
 
   return (
@@ -145,6 +147,18 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
                   </div>
                 );
               })}
+            </div>
+            <div className="border-t border-white/10 pt-3">
+              <h4 className="mb-2 text-xs font-black uppercase tracking-wider text-amber-300">Playmaker Race · Assists</h4>
+              <div className="grid grid-cols-1 gap-1.5">
+                {leagueAssistLeaders.map((p, idx) => (
+                  <div key={p.id} className="flex items-center justify-between rounded-lg bg-[#0E141B] px-3 py-2 text-xs">
+                    <span className="min-w-0 truncate text-slate-200">{idx + 1}. {p.name}</span>
+                    <span className="ml-2 font-mono-num font-bold text-amber-300">{p.seasonStats.assists} A</span>
+                  </div>
+                ))}
+                {leagueAssistLeaders.length === 0 && <p className="text-xs text-slate-500">No assists recorded yet.</p>}
+              </div>
             </div>
           </div>
         </div>
