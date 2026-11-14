@@ -84,9 +84,14 @@
   ],
   "status": {
     "sourcePagesVerified": true,
-    "individualImageBinaryDownloads": false,
-    "videoItemLicenceReviews": false,
-    "bundledOfflineFiles": false
+    "individualImageBinaryDownloads": true,
+    "videoItemLicenceReviews": true,
+    "bundledOfflineFiles": true,
+    "offlineImageFiles": [
+      "public/media/pixabay/stadium-audience.jpg"
+    ],
+    "offlineVideoFiles": [],
+    "videoDownloadStatus": "Pixabay CDN returned HTTP 403 to the automated downloader; no video binaries are bundled."
   },
   "videoAssets": [
     {
