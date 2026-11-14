@@ -3,10 +3,6 @@
   "offline": true,
   "assets": [
     {
-      "file": "manifest.json",
-      "bytes": 272
-    },
-    {
       "file": "stadium-audience.jpg",
       "bytes": 325619
     }
