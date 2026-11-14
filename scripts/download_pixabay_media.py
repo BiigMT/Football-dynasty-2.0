@@ -66,7 +66,7 @@ def main():
         "offline": True,
         "assets": [
             {"file": p.name, "bytes": p.stat().st_size}
-            for p in sorted(OUT.iterdir()) if p.is_file() and p.stat().st_size > 0
+            for p in sorted(OUT.iterdir()) if p.is_file() and p.name != "manifest.json" and p.stat().st_size > 0
         ],
         "downloadErrors": errors,
     }
