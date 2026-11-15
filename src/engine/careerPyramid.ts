@@ -27,7 +27,7 @@ export function getAcademyStartingClub(
   const candidates = Object.values(clubs)
     .filter((club) => !sourceLeague || club.leagueId === sourceLeague.id)
     .sort((a, b) => a.reputation - b.reputation);
-  return candidates[Math.max(0, Math.floor(candidates.length * 0.75))] ??
+  return candidates[Math.max(0, Math.floor(candidates.length * 0.1))] ??
     candidates[candidates.length - 1] ??
     Object.values(clubs).sort((a, b) => a.reputation - b.reputation)[0];
 }
