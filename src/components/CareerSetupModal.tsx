@@ -11,6 +11,8 @@ import {
 import { LEAGUE_BLUEPRINTS, NATIONAL_TEAM_BLUEPRINTS } from '../engine/database';
 import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
+import { OFFLINE_CLUBS, type OfflineClub } from '../data/offlineDatabase';
+import { ClubPresentationModal } from './ClubPresentationModal';
 
 interface CareerSetupModalProps {
   mode: CareerMode;
@@ -92,6 +94,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [trialStep, setTrialStep] = useState(0);
   const [trialScore, setTrialScore] = useState(0);
   const [trialComplete, setTrialComplete] = useState(false);
+  const [showClubPresentation, setShowClubPresentation] = useState(false);
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
@@ -124,6 +127,23 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
+  const presentationSource = mode === 'MANAGER' ? selectedClub : academyOffer;
+  const rosterTemplate = OFFLINE_CLUBS.find((club) => club.division === 1) ?? OFFLINE_CLUBS[0];
+  const presentationClub: OfflineClub = {
+    ...rosterTemplate,
+    id: presentationSource.id,
+    fullName: presentationSource.name + ' Football Club',
+    name: presentationSource.name,
+    shortCode: presentationSource.shortName.slice(0, 3).toUpperCase(),
+    country: presentationSource.country,
+    leagueName: activeLeague.name,
+    stadiumName: presentationSource.stadiumName,
+    stadiumCapacity: presentationSource.stadiumCapacity,
+    primaryColor: presentationSource.primaryColor,
+    secondaryColor: presentationSource.secondaryColor,
+    clubPrestige: Math.max(1, Math.min(5, Math.round(presentationSource.reputation / 20))) as 1|2|3|4|5,
+    players: rosterTemplate.players.map((player) => ({ ...player, id: presentationSource.id + '-' + player.id, clubId: presentationSource.id })),
+  };
   const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
   const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
 
@@ -526,6 +546,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
               </div>
             )}
 
+            <button type="button" onClick={() => setShowClubPresentation(true)} className="min-h-[40px] w-full rounded border border-[#F6C21C]/50 bg-[#13386C]/40 text-[#F6C21C] text-xs font-bold tracking-wider">VIEW CLUB PRESENTATION · 22-MAN SQUAD</button>
+
             <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between gap-4">
               <div className="text-xs text-slate-400">
                 Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : academyOffer.name}</span>
@@ -545,6 +567,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
           </div>
         </div>
       </form>
+      {showClubPresentation && <ClubPresentationModal club={presentationClub} onClose={() => setShowClubPresentation(false)} />}
     </div>
   );
 };
