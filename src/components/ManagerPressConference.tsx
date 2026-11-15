@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NewsItem } from '../types/football';
 import { Mic, Newspaper, Radio, Users } from 'lucide-react';
+import { RealisticAvatar } from './RealisticAvatar';
 
 interface ManagerPressConferenceProps {
   managerName: string;
@@ -116,9 +117,7 @@ export const ManagerPressConference: React.FC<ManagerPressConferenceProps> = ({ 
             <div className="press-camera pointer-events-none absolute inset-0 z-20 bg-white" />
             <div className="pointer-events-none absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[.2em] text-white/80"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" /> Camera 01 · Media pool</div>
             <div className="manager-idle relative z-10 mb-0 flex flex-col items-center">
-              <div className="relative h-28 w-24 rounded-t-[42%] bg-[#b77d5e] shadow-lg"><div className="absolute -top-2 left-2 h-9 w-20 rounded-t-full bg-[#17191d]" /><div className="manager-eyes absolute left-6 top-12 flex gap-5"><span className="h-1.5 w-2 rounded-full bg-[#1c2025]" /><span className="h-1.5 w-2 rounded-full bg-[#1c2025]" /></div><div className="absolute left-10 top-[4.2rem] h-1 w-4 rounded-full bg-[#754b3e]" /></div>
-              <div className="h-28 w-44 rounded-t-[2.5rem] bg-gradient-to-b from-[#263c50] to-[#172838] shadow-xl"><div className="mx-auto mt-4 h-9 w-9 rounded-full border border-cyan-300/40 bg-cyan-400/15" /></div>
-              <div className="absolute bottom-20 left-1/2 h-10 w-2 -translate-x-1/2 rounded-full bg-slate-400"><div className="absolute -top-3 -left-2 h-3 w-6 rounded bg-slate-300" /></div>
+              <RealisticAvatar seed={managerName} name={managerName} outfit="manager_suit" expression="neutral" size={172} primaryColor="#235BA8" secondaryColor="#10243A" />
             </div>
           </div>
           <div className="flex flex-col justify-center p-5 sm:p-7">
