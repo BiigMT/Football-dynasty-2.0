@@ -348,7 +348,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         </header>
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
-          <button className="is-active" type="button" onClick={handleForwardTime}><span>01</span> MATCHDAY</button>
+          <button className="is-active" type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
           <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> MY PRO & TRAINING{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> PLAYER PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>04</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
