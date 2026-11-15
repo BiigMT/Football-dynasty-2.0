@@ -46,6 +46,8 @@ import { CompetitionsView } from './CompetitionsView';
 import { CareerHomeNewsItem, DayItem, ManagerHome, TableRow } from './CareerHome';
 import { ManagerPressConference } from './ManagerPressConference';
 import { ClubDevelopmentHub } from './ClubDevelopmentHub';
+import { TeamManagement } from './TeamManagement';
+import { MatchdayPreview } from './MatchdayPreview';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -78,6 +80,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const [offerYears, setOfferYears] = useState<number>(3);
   const [exchangeId, setExchangeId] = useState<string>('');
   const [negFeedback, setNegFeedback] = useState<string>('');
+  const [previewFixture, setPreviewFixture] = useState<Fixture | null>(null);
 
   const club = save.clubs[save.userClubId];
   const league = save.leagues[club.leagueId];
@@ -108,7 +111,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const handleForwardTime = () => {
     soundEngine.playClick();
     if (nextFixture) {
-      onLaunchMatch(nextFixture);
+      setPreviewFixture(nextFixture);
     } else if (leagueFinished) {
       soundEngine.playWhistle('FULL_TIME');
       onUpdateSave(advanceToNextSeason(save));
@@ -424,6 +427,10 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   };
 
+  if (previewFixture) {
+    return <MatchdayPreview fixture={previewFixture} clubs={save.clubs} players={save.players} onBack={() => setPreviewFixture(null)} onKickoff={() => onLaunchMatch(previewFixture)} />;
+  }
+
   if (manager.pressConferenceDone === false) {
     return (
       <div className="fd-manager-skin" data-manager-skin="true">
@@ -490,6 +497,18 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         onNavigate={handleHomeNavigate}
       />
     );
+  }
+
+  if (tab === 'SQUAD') {
+    return <TeamManagement
+      club={club}
+      players={save.players}
+      onBack={() => setTab('DASHBOARD')}
+      onSave={(tactics) => {
+        soundEngine.playClick();
+        onUpdateSave({ ...save, clubs: { ...save.clubs, [club.id]: { ...club, tactics } } });
+      }}
+    />;
   }
 
   const formationCoords = getFormationCoordinates(club.tactics.formation);
