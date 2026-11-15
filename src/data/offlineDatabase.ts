@@ -31,6 +31,10 @@ const clubSeeds = [
   ['turin-athletic','Turin Athletic','TUA','Italy','Turin Arena',41200,'#E8EDF5','#111827',4,'Gegenpress',1],
   ['lisbon-sporting','Lisbon Sporting','LIS','Portugal','Lisbon National',65400,'#176B4B','#E8EDF5',4,'Possession',1],
   ['porto-norte','Porto Norte','PON','Portugal','Norte Stadium',50300,'#17447D','#E8EDF5',4,'Counter-Attack',1],
+  ['danube-dynamo','Danube Dynamo','DAD','Austria','Danube Stadion',54800,'#163B71','#E8EDF5',3,'Possession',1],
+  ['amsterdam-union','Amsterdam Union','AMU','Netherlands','Canal Arena',61200,'#E87525','#173A78',4,'Gegenpress',1],
+  ['athens-olympic','Athens Olympic','ATH','Greece','Olympic Ground',47600,'#E8EDF5','#1B4B88',3,'Counter-Attack',1],
+  ['istanbul-continental','Istanbul Continental','ISC','Turkey','Continental Park',58900,'#C92D43','#E8EDF5',4,'Gegenpress',1],
   ['copperbelt-fc','Copperbelt FC','CPF','Zambia','Copper Arena',32000,'#13386C','#F6C21C',2,'Gegenpress',2],
   ['lusaka-athletic','Lusaka Athletic','LUA','Zambia','Independence Ground',28500,'#176B4B','#E8EDF5',2,'Possession',2],
   ['coastal-rangers','Coastal Rangers','COR','South Africa','Coastal Park',35000,'#0E4B70','#E8EDF5',2,'Counter-Attack',2],
@@ -43,7 +47,7 @@ const nations = ['England','Spain','Ghana','Nigeria','Italy','Germany','Senegal'
 const hash=(s:string)=>Array.from(s).reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),7);
 const clamp=(n:number,min=1,max=99)=>Math.max(min,Math.min(max,Math.round(n)));
 function makePlayer(seed:string, clubId:string, rep:number, index:number, division:number):OfflinePlayer {
-  const h=hash(seed+'-'+index), pos=positions[index], age=17+(h%19), base=clamp(rep-(division===2?12:0)+(h%15)-7,48,91);
+  const h=hash(seed+'-'+index), pos=positions[index], age=17+(h%20), base=clamp(rep-(division===2?12:0)+(h%15)-7,48,91);
   const gk=pos==='GK', def=['CB','LB','RB','CDM'].includes(pos), mid=['CM','CAM'].includes(pos), wing=['LW','RW'].includes(pos);
   const attrs:OfflineAttributes={
     pace:clamp(base+(wing?9:def?-5:0)+(h%9)-4), shooting:clamp(base+(gk?-55:wing?2:0)+(h%11)-5),
