@@ -487,50 +487,20 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         </div>
       </header>
 
-      {/* Sub-page Navigation */}
-      <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
-        <div className="max-w-7xl mx-auto flex items-center gap-1">
-          {[
-            { id: 'PHONE', label: 'My Phone', icon: Smartphone },
-            { id: 'MANAGER', label: 'Manager Talks', icon: MessageCircle },
-            { id: 'ATTRIBUTES', label: 'Player Profile', icon: BarChart3 },
-            { id: 'TRAINING', label: 'Training Drills', icon: Dumbbell },
-            { id: 'AGENT', label: 'Agent & Transfers', icon: ArrowLeftRight },
-            { id: 'COMPETITIONS', label: 'Competitions', icon: Trophy },
-            { id: 'LEGACY', label: 'Awards & History', icon: Award },
-          ].map((item) => {
-            const Icon = item.icon;
-            const active = tab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  soundEngine.playClick();
-                  setTab(item.id as LegendSection);
-                }}
-                className={`min-h-[46px] px-3.5 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer ${
-                  active ? 'border-amber-400 text-amber-300' : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
+      {/* Unified six-tab Player Career navigation */}
+      <nav className="fd-player-tabs" aria-label="Player career navigation">
+        {[
+          { id: 'DASHBOARD', label: 'CENTRAL' },
+          { id: 'TRAINING', label: 'TRAINING' },
+          { id: 'ATTRIBUTES', label: 'PROFILE' },
+          { id: 'AGENT', label: 'TRANSFERS' },
+          { id: 'LEGACY', label: 'AWARDS' },
+          { id: 'SETTINGS', label: 'SYSTEM' },
+        ].map((item) => <button key={item.id} type="button" aria-current={tab === item.id ? 'page' : undefined} className={tab === item.id ? 'is-active' : ''} onClick={() => { soundEngine.playClick(); setTab(item.id as LegendSection); }}><span>{item.label}</span></button>)}
       </nav>
 
       {/* Main Content */}
-      <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
-        <div className="relative mb-5 min-h-[116px] sm:min-h-[150px] overflow-hidden rounded-xl border border-amber-400/20 bg-[#101923]">
-          <img src={tab === 'TRAINING' ? '/media/game/training-ground.jpg' : tab === 'PHONE' ? '/media/game/phone-stadium.jpg' : tab === 'ATTRIBUTES' ? '/media/game/player-action.jpg' : tab === 'MANAGER' ? '/media/game/team-talk.jpg' : '/media/game/matchday-training.jpg'} alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
-          <div className="relative z-10 flex min-h-[116px] sm:min-h-[150px] flex-col justify-end p-4 sm:p-5">
-            <div className="text-[10px] font-bold uppercase tracking-[.24em] text-amber-300">Football Dynasty · Player Career</div>
-            <h2 className="mt-1 text-xl sm:text-2xl font-black text-white">{tab === 'PHONE' ? 'Your life beyond the pitch' : tab === 'TRAINING' ? 'Player development centre' : tab === 'ATTRIBUTES' ? 'Player performance profile' : tab === 'MANAGER' ? 'First-team relationship' : 'Your professional journey'}</h2>
-          </div>
-        </div>
+      <main className="career-subpage-content fd-player-page-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-3">
         {tab === 'MANAGER' && (
           <section className="rounded-xl bg-[#131A22] border border-white/10 p-4 sm:p-5 flex flex-col gap-4">
             <div><h2 className="text-lg font-bold text-white">Manager’s Office</h2><p className="text-xs text-slate-400">Discuss your role, minutes and future with the coaching staff.</p></div>
