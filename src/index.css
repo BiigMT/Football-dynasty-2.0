@@ -817,3 +817,17 @@
 .fd-player-creation-screen .fd-nation-thresholds span { padding:6px;border-radius:7px;background:#e2edf9;color:#526782;font-size:9px;font-weight:800; }
 .fd-player-creation-screen .fd-nation-thresholds b { display:inline;color:#16a34a;font-size:13px; }
 @media(max-width:700px) { .fd-player-creation-screen { padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom); } .fd-player-creation-screen > form > div:nth-child(2) { gap:10px; } }
+
+
+.fd-player-creation-screen .fd-origin-pathways { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px; }
+.fd-player-creation-screen .fd-origin-pathways button { min-width:0;padding:10px 8px;border:1px solid #d1deee;border-radius:10px;background:#f2f7fd;color:#526782;text-align:left;display:flex;flex-direction:column;gap:4px; }
+.fd-player-creation-screen .fd-origin-pathways button.is-selected { border:2px solid #13386c;background:#e2efff;color:#13386c;box-shadow:0 4px 12px rgba(19,56,108,.12); }
+.fd-player-creation-screen .fd-origin-pathways button > span { font-size:18px; }
+.fd-player-creation-screen .fd-origin-pathways button b { font-size:10px;line-height:1.15;color:#13386c; }
+.fd-player-creation-screen .fd-origin-pathways button small { font-size:9px;line-height:1.25;color:#526782; }
+.fd-player-creation-screen .fd-global-club { min-height:48px;padding:7px;border:1px solid #d1deee;border-radius:9px;background:#f4f8fd;color:#0f2342;display:flex;align-items:center;gap:8px;text-align:left; }
+.fd-player-creation-screen .fd-global-club.is-selected { border:2px solid #13386c;background:#e2efff; }
+.fd-player-creation-screen .fd-global-club span { min-width:0;flex:1; }
+.fd-player-creation-screen .fd-global-club b { display:block;font-size:11px;color:#13386c; }
+.fd-player-creation-screen .fd-global-club small { display:block;font-size:9px;color:#526782; }
+@media(max-width:560px) { .fd-player-creation-screen .fd-origin-pathways { grid-template-columns:1fr; } }
