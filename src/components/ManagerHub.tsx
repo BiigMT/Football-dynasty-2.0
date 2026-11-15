@@ -158,6 +158,27 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     };
   });
 
+  const scorerRows = Object.values(save.players)
+    .filter((player) => league.clubIds.includes(player.clubId) && player.seasonStats.goals > 0)
+    .sort((a, b) => b.seasonStats.goals - a.seasonStats.goals || b.seasonStats.assists - a.seasonStats.assists)
+    .slice(0, 3)
+    .map((player) => ({ name: player.name, club: save.clubs[player.clubId]?.shortName ?? '—', goals: player.seasonStats.goals }));
+
+  const calendarCells = Array.from({ length: 10 }, (_, index) => {
+    const week = save.currentWeek + index;
+    const fixture = league.fixtures.find((item) => !item.played && item.week === week &&
+      (item.homeClubId === club.id || item.awayClubId === club.id));
+    const opponentId = fixture ? (fixture.homeClubId === club.id ? fixture.awayClubId : fixture.homeClubId) : '';
+    const opponent = opponentId ? save.clubs[opponentId] : undefined;
+    return {
+      label: `WK ${String(week).padStart(2, '0')}`,
+      detail: fixture ? `vs ${opponent?.shortName ?? 'TBC'}` : index === 0 && save.weekTrained ? 'Training done' : 'Training',
+      icon: fixture ? '⚽' : '🏋',
+      active: index === 0,
+      match: Boolean(fixture),
+    };
+  });
+
   const homeNews: CareerHomeNewsItem[] = save.news.slice(0, 4).map((n) => ({
     tag: n.category,
     headline: n.headline,
@@ -440,8 +461,14 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       <ManagerHome
         club={club.name}
         clubColor={club.primaryColor}
+        clubSecondaryColor={club.secondaryColor}
         manager={manager.name}
         days={days}
+        scorers={scorerRows}
+        calendar={calendarCells}
+        seasonWeek={`SEASON ${save.season} · WEEK ${save.currentWeek}`}
+        pendingTransfers={save.transferOffers.some((offer) => offer.isIncomingToUser)}
+        trainingPending={!save.weekTrained}
         transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
         wageBudget={`€${Math.round(club.finances.wageBudgetWeekly / 1000)}K/wk`}
         news={homeNews}
