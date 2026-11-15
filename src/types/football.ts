@@ -511,6 +511,7 @@ export interface CareerSave {
   mode: CareerMode;
   difficulty?: GameDifficulty;
   playerLayout?: 'AUTO' | 'COMPACT' | 'WIDE';
+  playerOrientation?: 'AUTO' | 'LANDSCAPE' | 'PORTRAIT';
   createdAt: number;
   updatedAt: number;
   season: number;
