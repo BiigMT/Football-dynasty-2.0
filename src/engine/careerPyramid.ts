@@ -14,7 +14,7 @@ export function getAcademyStartingClub(clubs:Record<string,Club>,leagues:Record<
  return candidates.find(c=>getCareerTier(c)===4)||candidates[0]||Object.values(clubs).sort((a,b)=>a.reputation-b.reputation)[0];
 }
 export function getSquadLadderIndex(player:Player,trust:number):number {
- if(trust>=94&&player.squadRole==='CAPTAIN')return 5;
+ if(trust>=94&&player.overall>=86)return 5;
  if(trust>=86&&player.overall>=82)return 4;
  if(trust>=72&&player.overall>=68)return 3;
  if(trust>=58)return 2;
