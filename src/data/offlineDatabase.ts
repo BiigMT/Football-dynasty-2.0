@@ -1,10 +1,11 @@
 import type { Position } from '../types/football';
 
 export type OfflineTacticalIdentity = 'Possession' | 'Gegenpress' | 'Counter-Attack';
+export type OfflinePosition = Position | 'CF' | 'LWF' | 'RWF' | 'CMF';
 export interface OfflineAttributes { pace:number; shooting:number; passing:number; dribbling:number; defending:number; physical:number; goalkeeping:number; stamina:number; weakFoot:number; skillMoves:number; }
 export interface OfflinePlayer {
   id:string; name:string; nationality:string; age:number; heightCm:number; preferredFoot:'Left'|'Right';
-  squadNumber:number; primaryPos:Position; secondaryPos:Position[]; attributes:OfflineAttributes;
+  squadNumber:number; primaryPos:OfflinePosition; secondaryPos:OfflinePosition[]; attributes:OfflineAttributes;
   ovr:number; potential:number; potentialRange:[number,number]; marketValue:number; weeklyWage:number;
   contractExpiryYear:number; isAcademyProspect:boolean;
 }
@@ -42,13 +43,13 @@ const clubSeeds = [
 ] as const;
 const firstNames = ['Aiden','Mateo','Noah','Elias','Luca','Milan','Theo','Amir','Daniel','Jonas','Kofi','Tariq','Santiago','Rafael','Nico','Musa','Jamal','Ethan','Ibrahim','Felix','Andre','Samuel','Leo','Kai','Omar','Dario','Victor','Bastien','Malik','Enzo'];
 const surnames = ['Bennett','Silva','Mensah','Okafor','Moretti','Hansen','Diallo','Costa','Meyer','Ndlovu','Rossi','Adeyemi','Fernandez','Kamara','Pereira','Banda','Mokoena','Santos','Kovac','Traore','Mills','Duarte','Mwamba','Petrov','Clarke','Sarr','Mendes','Nkosi','Jensen','Moyo'];
-const positions:Position[] = ['GK','GK','CB','CB','CB','LB','RB','CB','CDM','CDM','CM','CM','CM','CAM','CAM','LW','RW','LW','ST','ST','ST','ST'];
+const positions:OfflinePosition[] = ['GK','GK','CB','CB','CB','LB','RB','CB','CDM','CDM','CMF','CMF','CM','CAM','CAM','LWF','RWF','LW','CF','ST','ST','ST'];
 const nations = ['England','Spain','Ghana','Nigeria','Italy','Germany','Senegal','Portugal','France','Zambia','Brazil','Morocco','Netherlands','South Africa'];
 const hash=(s:string)=>Array.from(s).reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),7);
 const clamp=(n:number,min=1,max=99)=>Math.max(min,Math.min(max,Math.round(n)));
 function makePlayer(seed:string, clubId:string, rep:number, index:number, division:number):OfflinePlayer {
   const h=hash(seed+'-'+index), pos=positions[index], age=17+(h%20), base=clamp(rep-(division===2?12:0)+(h%15)-7,48,91);
-  const gk=pos==='GK', def=['CB','LB','RB','CDM'].includes(pos), mid=['CM','CAM'].includes(pos), wing=['LW','RW'].includes(pos);
+  const gk=pos==='GK', def=['CB','LB','RB','CDM'].includes(pos), mid=['CM','CMF','CAM'].includes(pos), wing=['LW','RW','LWF','RWF'].includes(pos);
   const attrs:OfflineAttributes={
     pace:clamp(base+(wing?9:def?-5:0)+(h%9)-4), shooting:clamp(base+(gk?-55:wing?2:0)+(h%11)-5),
     passing:clamp(base+(mid?8:gk?-55:0)+(h%9)-4), dribbling:clamp(base+(wing||mid?7:0)+(h%9)-4),
@@ -59,7 +60,7 @@ function makePlayer(seed:string, clubId:string, rep:number, index:number, divisi
   const ovr=gk?clamp(attrs.goalkeeping*.48+attrs.passing*.08+attrs.physical*.12+attrs.stamina*.08+attrs.defending*.12+attrs.pace*.12):clamp((attrs.pace+attrs.shooting+attrs.passing+attrs.dribbling+attrs.defending+attrs.physical)/6);
   const potential=clamp(Math.max(ovr+2,Math.min(94,ovr+(age<22?8+(h%9):age<26?4+(h%5):2+(h%4)))));
   const value=Math.round(Math.pow(Math.max(1,ovr-35),2.35)*(age<23?1.5:age>30?.55:1.05)*18000/10000)*10000;
-  return {id:clubId+'-p'+String(index+1).padStart(2,'0'),name:firstNames[h%firstNames.length]+' '+surnames[Math.floor(h/11)%surnames.length],nationality:nations[h% nations.length],age,heightCm:pos==='GK'?188+h%10:170+h%24,preferredFoot:h%3===0?'Left':'Right',squadNumber:index+1,primaryPos:pos,secondaryPos:pos==='GK'?[]:pos==='CB'?['LB']:pos==='CM'?['CDM','CAM']:pos==='LW'?['RW','ST']:pos==='ST'?['CAM','LW']:['CM'],attributes:attrs,ovr,potential,potentialRange:[Math.max(ovr,potential-5),potential],marketValue:Math.max(25000,value),weeklyWage:Math.max(350,Math.round(value*.00035/50)*50),contractExpiryYear:2027+(h%5),isAcademyProspect:age<=19};
+  return {id:clubId+'-p'+String(index+1).padStart(2,'0'),name:firstNames[h%firstNames.length]+' '+surnames[Math.floor(h/11)%surnames.length],nationality:nations[h% nations.length],age,heightCm:pos==='GK'?188+h%10:170+h%24,preferredFoot:h%3===0?'Left':'Right',squadNumber:index+1,primaryPos:pos,secondaryPos:pos==='GK'?[]:pos==='CB'?['LB']:pos==='CM'?['CDM','CAM']:pos==='LW'?['RW','ST']:pos==='ST'||pos==='CF'?['CAM','LWF']:['CM'],attributes:attrs,ovr,potential,potentialRange:[Math.max(ovr,potential-5),potential],marketValue:Math.max(25000,value),weeklyWage:Math.max(350,Math.round(value*.00035/50)*50),contractExpiryYear:2027+(h%5),isAcademyProspect:age<=19};
 }
 export const OFFLINE_CLUBS:OfflineClub[]=clubSeeds.map((s)=>{const [id,name,code,country,stadium,capacity,primary,secondary,prestige,tactic,division]=s;const rep=prestige*17+10;return {id,fullName:name+' Football Club',name,shortCode:code,country,leagueName:division===1?'Dynasty Premier Division':'Dynasty Development League',division,stadiumName:stadium,stadiumCapacity:capacity,primaryColor:primary,secondaryColor:secondary,shieldStyle:hash(id)%3===0?'round':hash(id)%3===1?'classic':'modern',transferBudget:division===1?rep*rep*24000:rep*rep*3200,wageBudget:division===1?rep*rep*900:rep*rep*160,clubPrestige:prestige,tacticalIdentity:tactic,players:Array.from({length:22},(_,i)=>makePlayer(id,id,rep,i,division))};});
 export const OFFLINE_PLAYERS:OfflinePlayer[]=OFFLINE_CLUBS.flatMap(c=>c.players);
