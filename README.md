@@ -52,11 +52,27 @@ Please [open an issue](https://github.com/BiigMT/Football-dynasty-2.0/issues) an
 
 Do not post passwords, private keys, signing files or personal payment information in issues.
 
-## Support development ❤️
+## Support Football Dynasty ❤️
 
-Football Dynasty is independently developed. Contributions help fund development time, testing, art, licensed assets and future improvements.
+Football Dynasty is an independent project built for the love of football. If you enjoy the game, you can help support its development.
 
-**International donations are being arranged.** A verified payment link will be added here once the creator's payout and withdrawal method is confirmed. Please do not send money to unofficial accounts claiming to represent Football Dynasty.
+Your voluntary contribution can help with:
+- Development, bug fixing and device testing
+- Original artwork, photography and presentation
+- Game research, data preparation and future features
+- Hosting, tools and other project costs
+
+### Donations
+
+<em>Secure international donations are coming soon.</em>
+
+A payment link will appear here only after an official provider and its payout method have been verified. Until then:
+- **Please do not send money** to personal or unofficial accounts claiming to represent Football Dynasty.
+- Football Dynasty will never ask you to post or message your full card number, PIN, password or security code.
+- Payments, when enabled, will be handled by a secure third-party checkout. The game and this repository will not store your card details.
+- Donations are optional and do not unlock paid advantages or guarantee features, release dates or support.
+
+Thank you for supporting an independent football game. Every bit of encouragement helps. ⚽
 
 ## Community
 
