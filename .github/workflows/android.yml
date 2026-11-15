@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download licensed football photos for offline careers
+        if: github.ref_type == 'branch'
         run: |
           python3 scripts/download_game_photos.py
           if find public/media/game -type f ! -name manifest.json | grep -q .; then
@@ -31,6 +32,7 @@ jobs:
           fi
 
       - name: Download reviewed Pixabay media for offline APK
+        if: github.ref_type == 'branch'
         run: |
           python3 scripts/download_pixabay_media.py
           if find public/media/pixabay -type f ! -name manifest.json | grep -q .; then
