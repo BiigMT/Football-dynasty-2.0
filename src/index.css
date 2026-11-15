@@ -521,3 +521,11 @@
   .fd-realism-match .match-live-controls { min-height: 30px; }
   .fd-realism-match .match-live-grid { gap: 5px; }
 }
+
+
+/* Player Career broadcast shell: respect Capacitor safe areas in either orientation. */
+.fd-player-career-shell { width:100vw; min-height:100dvh; overflow-x:hidden; padding-top:env(safe-area-inset-top); padding-right:env(safe-area-inset-right); padding-bottom:env(safe-area-inset-bottom); padding-left:env(safe-area-inset-left); background:#0B101B; }
+.fd-player-career-shell .fd-player-hub { min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+.fd-player-match-mode { width:100vw; min-height:100dvh; overflow:hidden; }
+@media (orientation:portrait) { .fd-player-career-shell .fd-player-layout { grid-template-columns:minmax(0,1fr); } .fd-player-career-shell .fd-player-showcase { min-height:420px; } }
+@media (orientation:landscape) and (max-height:600px) { .fd-player-career-shell .fd-player-layout { gap:8px; } .fd-player-career-shell .fd-player-showcase { min-height:300px; } }
