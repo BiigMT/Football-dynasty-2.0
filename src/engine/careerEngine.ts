@@ -171,30 +171,60 @@ function createInternationalTournament(
   nationalTeams: Record<string, NationalTeam>,
   userNatId?: string
 ): InternationalTournament {
-  const isAfconYear = season % 2 === 1;
-  const africanTeams = Object.values(nationalTeams).filter((t) => t.region === 'AFRICA');
-  const pool = isAfconYear && africanTeams.length >= 4
-    ? africanTeams.slice(0, 4).map((t) => t.id)
-    : Object.values(nationalTeams)
-        .sort((a, b) => a.worldRank - b.worldRank)
-        .slice(0, 8)
-        .map((t) => t.id);
+  const allTeams = Object.values(nationalTeams);
+  const userTeam = userNatId ? nationalTeams[userNatId] : undefined;
+  const userNation = userTeam ? findNation(userTeam.name) : undefined;
+  const worldCupYear = season % 4 === 0 || (!userTeam && season % 2 === 0);
+  const confederation = userNation?.confederation ?? 'CAF';
+  const confederationNames: Record<string, { cup: string; league: string; short: string }> = {
+    CAF: { cup: 'Africa Cup of Nations', league: 'African Nations League', short: 'AFCON' },
+    UEFA: { cup: 'UEFA European Championship', league: 'UEFA Nations League', short: 'EURO' },
+    CONMEBOL: { cup: 'Copa América', league: 'CONMEBOL Nations League', short: 'COPA' },
+    CONCACAF: { cup: 'CONCACAF Gold Cup', league: 'CONCACAF Nations League', short: 'GOLD CUP' },
+    AFC: { cup: 'AFC Asian Cup', league: 'AFC Nations League', short: 'ASIAN CUP' },
+    OFC: { cup: 'OFC Nations Cup', league: 'OFC Nations League', short: 'OFC CUP' },
+  };
 
-  if (userNatId && !pool.includes(userNatId) && nationalTeams[userNatId]) {
+  let pool: string[];
+  let name: string;
+  let shortName: string;
+  let region: InternationalTournament['region'];
+
+  if (worldCupYear) {
+    pool = allTeams.sort((a, b) => a.worldRank - b.worldRank).slice(0, 8).map((team) => team.id);
+    name = 'FIFA World Cup';
+    shortName = 'WORLD CUP';
+    region = 'WORLD';
+  } else {
+    const confedTeams = allTeams
+      .filter((team) => findNation(team.name)?.confederation === confederation)
+      .sort((a, b) => a.worldRank - b.worldRank);
+    const regionalTeams = confedTeams.length >= 4
+      ? confedTeams
+      : allTeams.filter((team) => team.region === (userTeam?.region ?? 'AFRICA')).sort((a, b) => a.worldRank - b.worldRank);
+    pool = regionalTeams.slice(0, Math.min(8, regionalTeams.length)).map((team) => team.id);
+    if (pool.length < 4) {
+      pool = allTeams.sort((a, b) => a.worldRank - b.worldRank).slice(0, 8).map((team) => team.id);
+    }
+    const event = confederationNames[confederation] ?? confederationNames.CAF;
+    const nationsLeagueYear = season % 4 === 2;
+    name = nationsLeagueYear ? event.league : event.cup;
+    shortName = nationsLeagueYear ? 'NATIONS LEAGUE' : event.short;
+    region = userTeam?.region ?? (confederation === 'CAF' ? 'AFRICA' : confederation === 'CONMEBOL' ? 'SOUTH_AMERICA' : confederation === 'AFC' || confederation === 'OFC' ? 'ASIA' : confederation === 'CONCACAF' ? 'NORTH_AMERICA' : 'EUROPE');
+  }
+
+  if (userNatId && !pool.includes(userNatId) && nationalTeams[userNatId] && pool.length) {
     pool[pool.length - 1] = userNatId;
   }
 
-  const name = isAfconYear ? 'African Cup of Nations' : 'Dynasty World Cup';
-  const shortName = isAfconYear ? 'AFCON' : 'WORLD CUP';
   const fixtures = generateCupRound('intl_tourney', name, 'INTERNATIONAL', pool, 15, 1);
-
   return {
     id: `intl_s${season}`,
     name,
     shortName,
-    region: isAfconYear ? 'AFRICA' : 'WORLD',
+    region,
     season,
-    stage: pool.length === 4 ? 'SEMIFINAL' : 'QUARTERFINAL',
+    stage: pool.length <= 4 ? 'SEMIFINAL' : 'QUARTERFINAL',
     userTeamId: userNatId,
     fixtures,
   };
