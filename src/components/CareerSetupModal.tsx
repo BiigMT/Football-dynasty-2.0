@@ -236,7 +236,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
           </div>
         </div>
 
-        {mode === 'PLAYER' && <div className="fd-player-creation-steps" aria-label="Player creation steps">{[{step:1,label:'IDENTITY'},{step:2,label:'ORIGIN'},{step:3,label:'INTERNATIONAL'}].map(item=><button key={item.step} type="button" aria-current={creationStep===item.step?'step':undefined} className={creationStep===item.step?'is-active':creationStep>item.step?'is-complete':''} onClick={()=>{if(item.step<creationStep||item.step===2&&creationStep===1) setCreationStep(item.step);}}><b>0{item.step}</b><span>{item.label}</span></button>)}</div>}
+        {mode === 'PLAYER' && <div className="fd-player-creation-steps" aria-label="Player creation steps">{([{step:1,label:'IDENTITY'},{step:2,label:'ORIGIN'},{step:3,label:'INTERNATIONAL'}] as const).map(item=><button key={item.step} type="button" aria-current={creationStep===item.step?'step':undefined} className={creationStep===item.step?'is-active':creationStep>item.step?'is-complete':''} onClick={()=>{if(item.step<creationStep||item.step===2&&creationStep===1) setCreationStep(item.step);}}><b>0{item.step}</b><span>{item.label}</span></button>)}</div>}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Profile & Customization */}
           <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5" style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
