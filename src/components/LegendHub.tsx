@@ -541,7 +541,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div>
             </div>
             <div className="overflow-hidden rounded-xl border border-white/10 bg-[#080d13]">
-              <img src="/media/game/phone-stadium.jpg" alt="Football stadium under floodlights" loading="lazy" className="h-28 sm:h-36 w-full object-cover opacity-85" />
+              <img src={phoneMode === 'SOCIAL' ? "/media/game/phone-stadium.jpg" : "/media/game/phone-match.jpg"} alt="Football stadium and matchday atmosphere" loading="lazy" className="h-28 sm:h-36 w-full object-cover opacity-85" />
               <div className="px-3 py-2 flex items-center justify-between gap-2"><span className="text-[10px] uppercase tracking-widest font-bold text-amber-300">Matchday life</span><span className="text-[10px] text-slate-400">Your football world, wherever you are</span></div>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
