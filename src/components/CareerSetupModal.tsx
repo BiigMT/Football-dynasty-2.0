@@ -100,6 +100,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [trialComplete, setTrialComplete] = useState(false);
   const [showClubPresentation, setShowClubPresentation] = useState(false);
   const [originPathway, setOriginPathway] = useState<'TRIAL' | 'DOMESTIC' | 'GLOBAL'>('TRIAL');
+  const [creationStep, setCreationStep] = useState<1 | 2 | 3>(1);
   const [clubSearch, setClubSearch] = useState('');
 
   // Legend fields
@@ -234,9 +235,10 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
           </div>
         </div>
 
+        {mode === 'PLAYER' && <div className="fd-player-creation-steps" aria-label="Player creation steps">{[{step:1,label:'IDENTITY'},{step:2,label:'ORIGIN'},{step:3,label:'INTERNATIONAL'}].map(item=><button key={item.step} type="button" aria-current={creationStep===item.step?'step':undefined} className={creationStep===item.step?'is-active':creationStep>item.step?'is-complete':''} onClick={()=>{if(item.step<creationStep||item.step===2&&creationStep===1) setCreationStep(item.step);}}><b>0{item.step}</b><span>{item.label}</span></button>)}</div>}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Profile & Customization */}
-          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5">
+          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5" style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
             {mode === 'MANAGER' ? (
               <>
                 <h2 className="text-xl font-bold text-white">Manager Profile</h2>
@@ -466,10 +468,11 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                 </div>
               </>
             )}
+            {mode === 'PLAYER' && <button type="button" onClick={() => setCreationStep(2)} className="min-h-[46px] rounded-lg bg-[#235BA8] text-white text-sm font-bold">CONTINUE TO ORIGIN PATHWAY →</button>}
           </div>
 
           {/* Right Column: World League & Club Selection */}
-          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4">
+          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4" style={mode === 'PLAYER' && creationStep !== 2 ? {display:'none'} : undefined}>
             <h2 className="text-xl font-bold text-white">Select Region, League & Club</h2>
 
             {/* Region Tabs */}
@@ -551,20 +554,20 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
               <div className="text-xs text-slate-400">
                 Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : originPathway === 'TRIAL' ? academyOffer.name : selectedClub.name}</span>
               </div>
-              <button
-                type="submit"
-                disabled={mode !== 'MANAGER' && originPathway === 'TRIAL' && !trialComplete}
-                className={`min-h-[46px] px-6 py-2.5 rounded-lg font-bold text-sm transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                  mode === 'MANAGER'
-                    ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-950'
-                    : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
-                }`}
-              >
-                {mode === 'MANAGER' ? 'Sign Contract & Start' : originPathway === 'TRIAL' ? trialComplete ? 'Accept Academy Offer' : 'Complete Trial First' : 'Start Player Career'}
-              </button>
+              {mode === 'MANAGER' ? <button type="submit" className="min-h-[46px] px-6 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm">Sign Contract & Start</button> : <button type="button" disabled={originPathway === 'TRIAL' && !trialComplete} onClick={() => setCreationStep(3)} className="min-h-[46px] px-6 py-2.5 rounded-lg bg-[#235BA8] hover:bg-[#13386C] text-white font-bold text-sm disabled:opacity-40">CONTINUE TO INTERNATIONAL →</button>}
             </div>
           </div>
         </div>
+        {mode === 'PLAYER' && creationStep === 3 && <section className="fd-player-international-step rounded-xl border border-[#b9d2ee] bg-white/90 p-5 text-[#13386C]">
+          <div className="flex flex-wrap items-start justify-between gap-3"><div><div className="text-[10px] font-black tracking-[.2em] text-[#235BA8]">STEP 03 · NATIONAL TEAM ROADMAP</div><h2 className="mt-1 text-xl font-black">Your international career</h2><p className="mt-1 text-sm text-[#526782]">Your nationality determines the national-team pathway and tournament calendar.</p></div><span className="rounded-lg bg-[#e5effb] px-3 py-2 text-xs font-bold">{selectedNation?.confederation ?? 'INTERNATIONAL'}</span></div>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-[#d7e4f3] bg-white p-3"><small className="text-[10px] font-bold text-[#647b98]">U-21 SELECTION TARGET</small><div className="mt-1 text-3xl font-black">{selectedNation?.u21OvrRequired ?? 66} OVR</div><p className="mt-1 text-[11px] text-[#647b98]">Indicative game threshold for youth call-ups</p></div>
+            <div className="rounded-lg border border-[#d7e4f3] bg-white p-3"><small className="text-[10px] font-bold text-[#647b98]">SENIOR SELECTION TARGET</small><div className="mt-1 text-3xl font-black">{selectedNation?.seniorOvrRequired ?? 76} OVR</div><p className="mt-1 text-[11px] text-[#647b98]">Indicative game threshold for senior selection</p></div>
+            <div className="rounded-lg border border-[#d7e4f3] bg-white p-3"><small className="text-[10px] font-bold text-[#647b98]">FIRST TOURNAMENT WINDOW</small><div className="mt-1 text-2xl font-black">WEEK 15</div><p className="mt-1 text-[11px] text-[#647b98]">Season 1 international knockout window</p></div>
+          </div>
+          <div className="mt-4 rounded-lg border border-[#d7e4f3] bg-[#f5f9ff] p-3"><b className="text-sm">National pathway · {selectedNation?.name ?? nationality}</b><p className="mt-1 text-xs text-[#526782]">{selectedNation?.confederation === 'CAF' ? 'Africa Cup of Nations' : selectedNation?.confederation === 'UEFA' ? 'UEFA European Championship' : selectedNation?.confederation === 'CONMEBOL' ? 'Copa América' : selectedNation?.confederation === 'CONCACAF' ? 'CONCACAF Gold Cup' : selectedNation?.confederation === 'AFC' ? 'AFC Asian Cup' : 'OFC Nations Cup'} · Confederation tournament cycle with a global World Cup every fourth season. Call-ups depend on your overall rating, form and national-team eligibility.</p></div>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><button type="button" onClick={() => setCreationStep(2)} className="min-h-[44px] rounded-lg border border-[#b9cde4] bg-white px-4 text-sm font-bold text-[#235BA8]">← BACK TO ORIGIN</button><button type="submit" className="min-h-[46px] rounded-lg bg-[#13386C] px-6 text-sm font-black text-white">CREATE PLAYER & START CAREER</button></div>
+        </section>}
       </form>
       {showClubPresentation && <ClubPresentationModal club={presentationClub} onClose={() => setShowClubPresentation(false)} />}
     </div>
