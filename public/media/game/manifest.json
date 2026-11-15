@@ -1,7 +1,61 @@
 {
   "offline": true,
-  "assetCount": 1,
+  "assetCount": 8,
   "assets": [
+    {
+      "file": "matchday-training.jpg",
+      "bytes": 212853,
+      "source": "Pexels",
+      "creator": "Franco Monsalvo",
+      "page": "https://www.pexels.com/photo/soccer-players-practicing-on-field-with-audience-31543189/",
+      "license": "Pexels License",
+      "use": "matchday, player career dashboard, news"
+    },
+    {
+      "file": "training-ground.jpg",
+      "bytes": 135636,
+      "source": "Pexels",
+      "creator": "Franco Monsalvo",
+      "page": "https://www.pexels.com/photo/soccer-training-session-on-outdoor-field-38615752/",
+      "license": "Pexels License",
+      "use": "training, academy, player development"
+    },
+    {
+      "file": "team-talk.jpg",
+      "bytes": 148631,
+      "source": "Pexels",
+      "creator": "Tima Miroshnichenko",
+      "page": "https://www.pexels.com/photo/a-coach-talking-to-his-team-6077808/",
+      "license": "Pexels License",
+      "use": "team talks, dressing room, press room"
+    },
+    {
+      "file": "manager-tactics.jpg",
+      "bytes": 149164,
+      "source": "Pexels",
+      "creator": "Quyn Pham",
+      "page": "https://www.pexels.com/photo/a-coach-making-a-plan-for-the-team-13907431/",
+      "license": "Pexels License",
+      "use": "manager dashboard, tactics, transfer meeting"
+    },
+    {
+      "file": "player-action.jpg",
+      "bytes": 149468,
+      "source": "Pexels",
+      "creator": "Hardy Pictures",
+      "page": "https://www.pexels.com/photo/football-players-playing-on-a-football-pitch-15153169/",
+      "license": "Pexels License",
+      "use": "player career, player profile feature, match reports"
+    },
+    {
+      "file": "player-preparation.jpg",
+      "bytes": 119810,
+      "source": "Pexels",
+      "creator": "Franco Monsalvo",
+      "page": "https://www.pexels.com/photo/soccer-player-stretching-on-field-during-training-30584991/",
+      "license": "Pexels License",
+      "use": "fitness, recovery, training"
+    },
     {
       "file": "phone-stadium.jpg",
       "bytes": 40535,
@@ -10,36 +64,16 @@
       "page": "https://stocksnap.io/photo/soccer-field-5FKA3VHPRW",
       "license": "CC0",
       "use": "player phone wallpaper, social feed"
-    }
-  ],
-  "errors": [
-    {
-      "file": "matchday-training.jpg",
-      "error": "Invalid or unexpectedly small image response (212853 bytes)"
-    },
-    {
-      "file": "training-ground.jpg",
-      "error": "Invalid or unexpectedly small image response (135636 bytes)"
-    },
-    {
-      "file": "team-talk.jpg",
-      "error": "Invalid or unexpectedly small image response (148631 bytes)"
-    },
-    {
-      "file": "manager-tactics.jpg",
-      "error": "Invalid or unexpectedly small image response (149164 bytes)"
-    },
-    {
-      "file": "player-action.jpg",
-      "error": "Invalid or unexpectedly small image response (149468 bytes)"
-    },
-    {
-      "file": "player-preparation.jpg",
-      "error": "Invalid or unexpectedly small image response (119810 bytes)"
     },
     {
       "file": "phone-match.jpg",
-      "error": "Invalid or unexpectedly small image response (383408 bytes)"
+      "bytes": 383408,
+      "source": "Unsplash",
+      "creator": "Tanya Barrow",
+      "page": "https://unsplash.com/photos/soccer-players-warming-up-on-a-stadium-field-before-game-_xLfo1r9nGM",
+      "license": "Unsplash License",
+      "use": "player phone, fixtures and matchday stories"
     }
-  ]
+  ],
+  "errors": []
 }
