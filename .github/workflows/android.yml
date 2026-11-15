@@ -14,6 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download licensed football photos for offline careers
+        run: |
+          python3 scripts/download_game_photos.py
+          if find public/media/game -type f ! -name manifest.json | grep -q .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/media/game
+            if ! git diff --cached --quiet; then
+              git commit -m "assets: bundle offline football career photography"
+              git fetch origin main
+              git rebase origin/main
+              git push
+            fi
+          fi
+
       - name: Download reviewed Pixabay media for offline APK
         run: |
           python3 scripts/download_pixabay_media.py
