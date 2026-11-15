@@ -1,12 +1,13 @@
 import React,{useState} from 'react';
 import {CareerSave,Fixture} from '../types/football';
+import { GameOrientation } from './OrientationSelect';
 import {LegendHub} from './LegendHub';
 import {NationalTeamHub} from './NationalTeamHub';
 import {TrophyRoom} from './TrophyRoom';
 import {CareerPyramidPanel} from './CareerPyramidPanel';
 import {PlayerCareerShell} from './PlayerCareerShell';
 import {CAREER_PYRAMID,getCareerTier,getTierProgressionHint} from '../engine/careerPyramid';
-interface Props{save:CareerSave;muted:boolean;onToggleMute:()=>void;onUpdateSave:(next:CareerSave)=>void;onLaunchMatch:(fixture:Fixture)=>void;onExitToTitle:()=>void;}
+interface Props{save:CareerSave;orientation:GameOrientation;onOrientationChange:(next:GameOrientation)=>void;muted:boolean;onToggleMute:()=>void;onUpdateSave:(next:CareerSave)=>void;onLaunchMatch:(fixture:Fixture)=>void;onExitToTitle:()=>void;}
 export const PlayerCareerHub:React.FC<Props>=(props)=>{
  const [overlay,setOverlay]=useState<'NATIONAL'|'TROPHIES'|'PYRAMID'|null>(null);
  const player=props.save.legend?props.save.players[props.save.legend.playerId]:undefined;
