@@ -213,7 +213,7 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
       }
     >
       {n && (
-        <section className="fd-panel fd-hero">
+        <section className="fd-panel fd-hero" style={{ backgroundImage: "linear-gradient(90deg, rgba(5,10,16,.96) 0%, rgba(5,10,16,.78) 55%, rgba(5,10,16,.35) 100%), url('/media/game/matchday-training.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
           <div className="fd-heroText">
             <span className="fd-tag">{n.tag || 'BREAKING NEWS'}</span>
             <h2>{n.headline}</h2>
