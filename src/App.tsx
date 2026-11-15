@@ -394,6 +394,8 @@ export default function App() {
     return (
       <PlayerCareerHub
         save={activeSave}
+        orientation={orientation ?? 'landscape'}
+        onOrientationChange={chooseOrientation}
         muted={muted}
         onToggleMute={handleToggleMute}
         onUpdateSave={updateAndPersistSave}
