@@ -116,6 +116,7 @@ export interface Player {
   weeklyWage: number; // in EUR
   contractYears: number;
   releaseClause: number;
+  squadRole?: 'CRUCIAL' | 'IMPORTANT' | 'ROTATION' | 'PROSPECT';
   clubId: string;
   isYouth?: boolean;
   academyTrainingWeek?: number;
