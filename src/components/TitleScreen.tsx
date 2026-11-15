@@ -1,7 +1,8 @@
 import React from 'react';
-import { Volume2, VolumeX, Play, Trash2, Shield, Trophy } from 'lucide-react';
+import { Volume2, VolumeX, Play, Shield, Trophy } from 'lucide-react';
 import { CareerMode } from '../types/football';
 import { SaveSlotSummary } from '../engine/storage';
+import { SaveSlotsScreen } from './SaveSlotsScreen';
 import stadiumHero from '../assets/images/stadium_hero_backdrop_1794559201770.jpg';
 import managerEmblem from '../assets/images/manager_mode_emblem_1794559202903.jpg';
 import legendEmblem from '../assets/images/legend_mode_emblem_1794559202286.jpg';
@@ -184,80 +185,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           </div>
         </div>
 
-        {/* Career Save Slots */}
-        <section className="rounded-xl bg-[#131A22]/85 border border-white/10 p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-bold tracking-wide text-white">Career Save Slots</h3>
-            <span className="text-xs text-slate-400">Offline persistent storage · 4 slots</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {slots.map((slot, i) => (
-              <div
-                key={slot.slotId}
-                className="rounded-lg bg-[#0E141B] border border-white/8 p-3.5 flex flex-col justify-between gap-3"
-              >
-                {slot.empty ? (
-                  <>
-                    <div>
-                      <div className="text-xs text-slate-500 font-mono-num">Slot {i + 1} · Empty</div>
-                      <div className="text-sm font-medium text-slate-400 mt-1">No career saved</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onStartNewCareer('MANAGER', slot.slotId)}
-                        className="min-h-[40px] flex-1 px-2.5 py-1.5 rounded bg-white/5 hover:bg-cyan-500/20 text-xs text-slate-300 hover:text-cyan-300 transition-colors whitespace-nowrap cursor-pointer"
-                      >
-                        + Manager
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onStartNewCareer('PLAYER', slot.slotId)}
-                        className="min-h-[40px] flex-1 px-2.5 py-1.5 rounded bg-white/5 hover:bg-amber-500/20 text-xs text-slate-300 hover:text-amber-300 transition-colors whitespace-nowrap cursor-pointer"
-                      >
-                        + Legend
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <div className="flex items-center justify-between text-xs font-mono-num text-slate-400">
-                        <span>
-                          Slot {i + 1} · {slot.mode === 'MANAGER' ? 'Manager' : 'Legend'}
-                        </span>
-                        <span>
-                          S{slot.season} W{slot.week}
-                        </span>
-                      </div>
-                      <div className="text-sm font-semibold text-white mt-1 truncate">{slot.title}</div>
-                      <div className="text-xs text-slate-400 truncate">
-                        {slot.hasHalfTimeMatch ? 'Paused at Half-Time (45\')' : slot.subtitle}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onLoadCareer(slot.slotId)}
-                        className="min-h-[40px] flex-1 px-3 py-1.5 rounded bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer"
-                      >
-                        Load Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onDeleteSlot(slot.slotId)}
-                        className="min-h-[40px] min-w-[40px] flex items-center justify-center rounded bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
-                        aria-label={`Delete save slot ${i + 1}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+        <SaveSlotsScreen
+          slots={slots}
+          onLoad={onLoadCareer}
+          onNewCareer={onStartNewCareer}
+          onDelete={onDeleteSlot}
+        />
       </main>
 
       {/* Flat Footer Hint */}
