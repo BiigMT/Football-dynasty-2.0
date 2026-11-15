@@ -450,3 +450,74 @@
 .fd-realism-match .match-live-events > div:first-child {
   border-left-color: #d5b56b;
 }
+
+
+/* PES 2017-inspired Matchday broadcast finish — scoped to the live match screen. */
+.fd-realism-match.match-live-screen {
+  background-color: #0d1b2a !important;
+  background-image:
+    radial-gradient(ellipse at 50% -20%, rgba(35,91,168,.24), transparent 58%),
+    linear-gradient(180deg, #0d1b2a 0%, #07111d 100%) !important;
+}
+.fd-realism-match .match-live-scoreboard {
+  background: linear-gradient(105deg, #0d1b2a 0%, #13386c 54%, #0d1b2a 100%) !important;
+  border: 1px solid rgba(151,184,221,.3) !important;
+  border-top: 2px solid #f6c21c !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.08), 0 5px 18px rgba(0,0,0,.3);
+}
+.fd-realism-match .match-live-scoreboard > div:nth-child(2) > div > span:nth-child(2) {
+  color: #f6c21c !important;
+  background: rgba(5,13,23,.72) !important;
+  border-color: rgba(246,194,28,.45) !important;
+  padding: 5px 10px !important;
+  font-weight: 900;
+}
+.fd-realism-match .match-live-scoreboard > div:first-child,
+.fd-realism-match .match-live-scoreboard > div:last-child { flex: 1 1 0; }
+.fd-realism-match .match-live-grid {
+  grid-template-columns: minmax(0, 1.86fr) minmax(245px, 1fr);
+}
+.fd-realism-match .match-live-pitch-column > .relative {
+  border: 1px solid rgba(215,231,242,.26);
+  border-radius: 5px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.fd-realism-match .match-live-stats,
+.fd-realism-match .match-live-timeline {
+  background: linear-gradient(180deg, rgba(19,56,108,.55), rgba(9,19,31,.96)) !important;
+  border-color: rgba(135,168,205,.28) !important;
+}
+.fd-realism-match .match-live-stats > div:not(:first-child) span:first-child {
+  color: #f6f8fb;
+}
+.fd-realism-match .match-live-events > div {
+  border-left-width: 3px;
+  border-left-color: rgba(246,194,28,.65);
+}
+.fd-realism-match .match-live-events > div:has(span:first-child) span:first-child {
+  color: #f6c21c !important;
+  font-weight: 900;
+}
+.fd-realism-match .match-live-controls {
+  background: linear-gradient(90deg, #0d1b2a, #163b68, #0d1b2a) !important;
+  border-color: rgba(151,184,221,.26) !important;
+}
+.fd-realism-match .match-live-controls button[class*="bg-cyan-500"] {
+  background: #f6c21c !important;
+  color: #101820 !important;
+}
+.fd-realism-match .match-live-controls button:hover {
+  border-color: rgba(246,194,28,.6);
+}
+@media (max-width: 700px) and (orientation: portrait) {
+  .fd-realism-match .match-live-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.05fr) minmax(0, .95fr);
+  }
+}
+@media (max-height: 620px) and (orientation: landscape) {
+  .fd-realism-match .match-live-content { gap: 4px; }
+  .fd-realism-match .match-live-scoreboard { min-height: 43px; }
+  .fd-realism-match .match-live-controls { min-height: 30px; }
+  .fd-realism-match .match-live-grid { gap: 5px; }
+}
