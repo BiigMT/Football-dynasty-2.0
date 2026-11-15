@@ -430,7 +430,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   }
 
   return (
-    <div className="fd-realism-player min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
+    <div className="fd-realism-player min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col" data-layout={save.playerLayout ?? 'AUTO'}>
       {/* Sub-page Header */}
       <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-amber-400/35 px-4 sm:px-6 py-3">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
@@ -879,24 +879,24 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         {tab === 'SETTINGS' && (
           <div className="fd-system-console max-w-3xl mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
-            <h3 className="text-xl font-bold text-white">Career Settings</h3>
-            <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B]">
+            <div><h3 className="text-xl font-bold text-white">Career Settings</h3><p className="text-xs text-slate-400 mt-1">These preferences are stored in this career save.</p></div>
+            <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
+              <div className="flex items-center justify-between gap-3"><div><b className="text-sm text-slate-100">Career difficulty</b><p className="text-[11px] text-slate-500 mt-1">Affects development and match challenge where supported.</p></div><span className="text-xs font-bold text-[#235BA8]">{save.difficulty ?? 'NORMAL'}</span></div>
+              <div className="grid grid-cols-3 gap-2 mt-3">
+                {(['EASY', 'NORMAL', 'HARD'] as const).map(level => <button key={level} type="button" aria-pressed={(save.difficulty ?? 'NORMAL') === level} onClick={() => onUpdateSave({ ...save, difficulty: level })} className={`min-h-[40px] rounded-lg border text-xs font-bold ${(save.difficulty ?? 'NORMAL') === level ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{level}</button>)}
+              </div>
+            </section>
+            <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
+              <div><b className="text-sm text-slate-100">Career layout</b><p className="text-[11px] text-slate-500 mt-1">Choose how wide the Player Career screens should appear.</p></div>
+              <div className="grid grid-cols-3 gap-2 mt-3">
+                {([{id:'AUTO',label:'AUTO'},{id:'COMPACT',label:'COMPACT'},{id:'WIDE',label:'WIDE'}] as const).map(layout => <button key={layout.id} type="button" aria-pressed={(save.playerLayout ?? 'AUTO') === layout.id} onClick={() => onUpdateSave({ ...save, playerLayout: layout.id })} className={`min-h-[40px] rounded-lg border text-xs font-bold ${(save.playerLayout ?? 'AUTO') === layout.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{layout.label}</button>)}
+              </div>
+            </section>
+            <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B] border border-white/10">
               <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
-              <button
-                type="button"
-                onClick={onToggleMute}
-                className="min-h-[40px] px-4 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-semibold cursor-pointer"
-              >
-                {muted ? 'Muted (Enable)' : 'Enabled (Mute)'}
-              </button>
+              <button type="button" onClick={onToggleMute} className="min-h-[40px] px-4 rounded-lg bg-[#dcecff] text-[#13386C] text-xs font-semibold cursor-pointer">{muted ? 'Muted (Enable)' : 'Enabled (Mute)'}</button>
             </div>
-            <button
-              type="button"
-              onClick={onExitToTitle}
-              className="min-h-[44px] w-full rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm font-semibold cursor-pointer"
-            >
-              Save & Return to Title Screen
-            </button>
+            <button type="button" onClick={onExitToTitle} className="min-h-[44px] w-full rounded-lg bg-[#235BA8] hover:bg-[#13386C] text-white text-sm font-semibold cursor-pointer">Save & Return to Title Screen</button>
           </div>
         )}
       </main>
