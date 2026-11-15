@@ -98,7 +98,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
-  const [age, setAge] = useState(18);
+  const [age, setAge] = useState(16);
   const [heightCm, setHeightCm] = useState(181);
   const [weightKg, setWeightKg] = useState(74);
   const [preferredFoot, setPreferredFoot] = useState<'Right' | 'Left' | 'Both'>('Right');
@@ -340,13 +340,13 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
                   <div className="grid grid-cols-2 gap-2">
                     <label className="flex flex-col gap-1 text-xs text-slate-400">
-                      <span>Age (17–21)</span>
+                      <span>Academy age (16–17)</span>
                       <input
                         type="number"
-                        min={17}
-                        max={21}
+                        min={16}
+                        max={17}
                         value={age}
-                        onChange={(e) => setAge(Math.max(17, Math.min(21, Number(e.target.value))))}
+                        onChange={(e) => setAge(Math.max(16, Math.min(17, Number(e.target.value))))}
                         className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white font-mono-num"
                       />
                     </label>
