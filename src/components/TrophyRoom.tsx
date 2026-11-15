@@ -1,0 +1,9 @@
+import React from 'react';
+import {CareerSave} from '../types/football';
+interface Props{save:CareerSave;onClose:()=>void;}
+export const TrophyRoom:React.FC<Props>=({save,onClose})=>{
+ const legend=save.legend;const awards=legend?.individualAwards||[];const trophies=legend?.trophies||[];
+ const items=[...awards.map(a=>({name:a.award,season:a.season,type:'INDIVIDUAL'})),...trophies.map(t=>({name:t,season:0,type:'TEAM'}))];
+ return <div className="fixed inset-0 z-[90] bg-[#080e18]/96 backdrop-blur-md text-white overflow-y-auto p-4 sm:p-8"><div className="max-w-5xl mx-auto"><header className="flex justify-between items-center border-b border-white/10 pb-4"><div><div className="text-[10px] tracking-[.3em] text-amber-300 font-black">THE LEGACY COLLECTION</div><h2 className="text-3xl font-black">TROPHY ROOM</h2></div><button onClick={onClose} className="px-4 py-2 bg-white/10 rounded-lg">CLOSE ✕</button></header><div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">{[[trophies.length,'TEAM TROPHIES'],[awards.length,'INDIVIDUAL AWARDS'],[save.players[legend?.playerId||'']?.internationalCaps||0,'CAPS'],[save.season,'SEASONS']].map(x=><div key={x[1]} className="bg-[#151e2e] p-4 rounded-xl"><b className="text-3xl">{x[0]}</b><p className="text-xs text-slate-400">{x[1]}</p></div>)}</div><h3 className="text-xl font-black mt-7">HONOURS CABINET</h3><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">{items.map((a,i)=><div key={i} className="border border-amber-300/20 bg-gradient-to-br from-[#1c2634] to-[#101722] rounded-xl p-4 flex items-center gap-3"><span className="text-3xl">🏆</span><div><div className="font-black text-sm">{a.name}</div><div className="text-[10px] tracking-widest text-amber-300">{a.type} {a.season?'· SEASON '+a.season:''}</div></div></div>)}</div>{!items.length&&<p className="text-slate-400 text-sm mt-4">Your cabinet is waiting for its first piece of silverware.</p>}</div></div>;
+};
+export default TrophyRoom;
