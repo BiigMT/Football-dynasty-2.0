@@ -348,11 +348,11 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         </header>
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
-          <button className="is-active" type="button" onClick={handleForwardTime}><span>01</span> PLAY MATCHDAY</button>
-          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> TRAINING{!save.weekTrained ? <i /> : null}</button>
+          <button className="is-active" type="button" onClick={handleForwardTime}><span>01</span> MATCHDAY</button>
+          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> MY PRO & TRAINING{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> PLAYER PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>04</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> CAREER HISTORY</button>
+          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> AWARDS & TROPHIES</button>
           <button type="button" onClick={() => setTab('SETTINGS')}><span>06</span> SYSTEM</button>
         </nav>
 
