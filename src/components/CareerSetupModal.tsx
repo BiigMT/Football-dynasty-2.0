@@ -127,6 +127,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
+  const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
+  const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
   const presentationSource = mode === 'MANAGER' ? selectedClub : academyOffer;
   const rosterTemplate = OFFLINE_CLUBS.find((club) => club.division === 1) ?? OFFLINE_CLUBS[0];
   const presentationClub: OfflineClub = {
@@ -142,10 +144,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
     primaryColor: presentationSource.primaryColor,
     secondaryColor: presentationSource.secondaryColor,
     clubPrestige: Math.max(1, Math.min(5, Math.round(presentationSource.reputation / 20))) as 1|2|3|4|5,
-    players: rosterTemplate.players.map((player) => ({ ...player, id: presentationSource.id + '-' + player.id, clubId: presentationSource.id })),
+    players: rosterTemplate.players.map((player) => ({ ...player, id: presentationSource.id + '-' + player.id })),
   };
-  const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
-  const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
