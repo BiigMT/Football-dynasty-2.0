@@ -69,6 +69,7 @@ const Shell: React.FC<{
             <small>{m.sub}</small>
           </span>
           <i>›</i>
+          {m.notify && <span className="fd-notify" aria-label="Pending action" />}
         </button>
       ))}
     </aside>
