@@ -85,7 +85,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const [phoneMode, setPhoneMode] = useState<'SOCIAL' | 'MESSAGES'>('SOCIAL');
   const [negotiatingOfferId, setNegotiatingOfferId] = useState<string | null>(null);
   useEffect(() => {
-    const orientation = save.playerOrientation ?? 'AUTO';
+    const orientation = save.playerOrientation ?? 'LANDSCAPE';
     if (orientation === 'AUTO') {
       void ScreenOrientation.unlock().catch(() => undefined);
       return;
@@ -387,11 +387,11 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         </header>
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
-          <button className="is-active" type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
-          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> MY PRO & TRAINING{!save.weekTrained ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> PLAYER PROFILE</button>
+          <button className={tab === 'DASHBOARD' ? 'is-active' : ''} aria-current={tab === 'DASHBOARD' ? 'page' : undefined} type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
+          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> MY PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>04</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> AWARDS & TROPHIES</button>
+          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> AWARDS & INTL</button>
           <button type="button" onClick={() => setTab('SETTINGS')}><span>06</span> SYSTEM</button>
         </nav>
 
@@ -420,6 +420,17 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             </div>
           </section>
 
+          <section className="fd-player-panel fd-player-objectives">
+            <div className="fd-player-panel-title"><div><small>MANAGER & AGENT OBJECTIVES</small><h3>YOUR NEXT BREAKTHROUGH</h3></div><span className="fd-player-trust-score">{legend.managerTrust} TRUST</span></div>
+            <div className="fd-player-objective-status"><b>{legend.managerTrust >= 65 ? 'IN THE FIRST-TEAM FRAME' : 'FIGHTING FOR BENCH SPOT'}</b><span>Manager confidence · {legend.managerTrust}%</span><div className="fd-player-stat-track"><i style={{width: legend.managerTrust + '%'}} /></div></div>
+            <div className="fd-player-objective-list">
+              <div><span>●</span><b>Earn a promotion</b><strong>{legend.managerTrust}/65</strong></div>
+              <div><span>●</span><b>Score reserve goals</b><strong>{player.seasonStats.goals}/3</strong></div>
+              <div><span>●</span><b>Average match rating 7.0+</b><strong>{player.seasonStats.averageRating ? player.seasonStats.averageRating.toFixed(1) : '—'}</strong></div>
+            </div>
+            <div className="fd-player-quick-actions"><button type="button" onClick={() => setTab('TRAINING')}>WEEKLY TRAINING DRILL <b>+1 SKILL POINT READY</b></button><button type="button" onClick={() => setTab('COMPETITIONS')}>NATIONAL TEAM TRACKER <b>{natTeam?.name ?? player.nationality + ' U-21'}</b></button></div>
+          </section>
+
           <aside className="fd-player-sidebar">
             <section className="fd-player-panel fd-player-attributes">
               <div className="fd-player-panel-title"><div><small>PLAYER PERFORMANCE</small><h3>KEY ATTRIBUTES</h3></div><button type="button" onClick={() => setTab('ATTRIBUTES')}>FULL PROFILE ↗</button></div>
@@ -436,7 +447,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <section className="fd-player-panel fd-player-table">
               <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
               <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
-              {tableRows.slice(0, 4).map((row) => <div className={`fd-player-table-row${row.me ? ' is-user' : ''}`} key={row.club}><span>{row.pos}</span><span><i style={{ background: row.color || '#789' }} />{row.club}</span><span>{row.p}</span><span>{row.gd > 0 ? '+' : ''}{row.gd}</span><b>{row.pts}</b></div>)}
+              {tableRows.slice(0, 5).map((row) => <div className={`fd-player-table-row${row.me ? ' is-user' : ''}`} key={row.club}><span>{row.pos}</span><span><i style={{ background: row.color || '#789' }} />{row.club}</span><span>{row.p}</span><span>{row.gd > 0 ? '+' : ''}{row.gd}</span><b>{row.pts}</b></div>)}
             </section>
             <section className="fd-player-panel fd-player-fixtures">
               <div className="fd-player-panel-title"><div><small>THE ROAD AHEAD</small><h3>UPCOMING FIXTURES</h3></div><span>5 WEEKS</span></div>
