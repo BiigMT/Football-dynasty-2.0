@@ -1047,7 +1047,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
   // Generate Transfer Interest for Become a Legend if performing well
   if (nextSave.legend && transferWindowOpen && Math.random() < 0.55) {
     const uPlayer = nextSave.players[nextSave.legend.playerId];
-    if (uPlayer && uPlayer.overall >= 72) {
+    if (uPlayer && uPlayer.overall >= 72 && Math.random() < Math.min(0.88, 0.35 + (nextSave.legend.agentReputation ?? 55) / 180)) {
       const suitor = Object.values(nextSave.clubs).find(
         (c) =>
           c.id !== nextSave.userClubId &&
@@ -1316,6 +1316,8 @@ export function applyLegendDrill(save: CareerSave, drill: IndividualDrill): Care
     legend: {
       ...save.legend,
       managerTrust: Math.min(100, save.legend.managerTrust + 1),
+      developmentXp: (save.legend.developmentXp ?? 0) + 20,
+      skillPoints: (save.legend.skillPoints ?? 0) + 1,
     },
   };
 }
