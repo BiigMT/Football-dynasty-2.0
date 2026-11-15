@@ -14,7 +14,7 @@ export function getCareerTier(club?: Club): CareerTier {
   if (!club) return 4;
   const match = club.leagueId.match(/_tier_([1-4])$/);
   if (match) return Number(match[1]) as CareerTier;
-  return 4;
+  return club.reputation >= 84 ? 1 : club.reputation >= 69 ? 2 : club.reputation >= 56 ? 3 : 4;
 }
 
 export function getAcademyStartingClub(
