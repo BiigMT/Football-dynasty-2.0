@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { MatchCenter } from './MatchCenter';
-import { MatchSession, Player, Club } from '../types/football';
+import { MatchSession } from '../types/football';
+import { startMatchKickoff } from '../engine/matchEngine';
+import { soundEngine } from '../engine/audio';
 
 export type PlayerMatchModeProps = React.ComponentProps<typeof MatchCenter>;
 
@@ -11,11 +13,12 @@ export type PlayerMatchModeProps = React.ComponentProps<typeof MatchCenter>;
  */
 export const PlayerMatchMode: React.FC<PlayerMatchModeProps> = (props) => {
   const [briefingAccepted, setBriefingAccepted] = useState(props.initialSession.phase !== 'PRE_MATCH');
-  const session: MatchSession = props.initialSession;
+  const [matchSession, setMatchSession] = useState<MatchSession>(props.initialSession);
+  const session: MatchSession = matchSession;
   const user = session.userPlayerId ? props.players[session.userPlayerId] : undefined;
   const home = props.clubs[session.homeClubId];
   const away = props.clubs[session.awayClubId];
-  if (briefingAccepted) return <div className="fd-player-match-mode min-h-[100dvh] bg-[#07111d]"><MatchCenter {...props}/></div>;
+  if (briefingAccepted) return <div className="fd-player-match-mode min-h-[100dvh] bg-[#07111d]"><MatchCenter {...props} initialSession={matchSession}/></div>;
   return <div className="fd-player-match-mode fixed inset-0 z-[80] flex min-h-[100dvh] items-center justify-center overflow-y-auto bg-[#07111d] p-3 text-white" style={{paddingTop:'max(16px,env(safe-area-inset-top))',paddingBottom:'max(16px,env(safe-area-inset-bottom))'}}>
     <div className="w-full max-w-4xl overflow-hidden rounded-2xl border border-[#F6C21C]/30 bg-[#101b29] shadow-2xl">
       <div className="bg-gradient-to-r from-[#13386C] via-[#235BA8] to-[#13386C] px-4 py-4 sm:px-7">
@@ -40,7 +43,7 @@ export const PlayerMatchMode: React.FC<PlayerMatchModeProps> = (props) => {
           <div className="mt-2 space-y-2">{session.userObjectives.map((objective) => <div key={objective.id} className="flex items-center justify-between gap-2 text-xs"><span className="text-slate-300">{objective.label}</span><b className={objective.completed?'text-emerald-300':'text-white'}>{objective.current}/{objective.target}</b></div>)}</div>
         </div>
       </div>
-      <div className="mx-4 mb-4 flex flex-wrap items-center justify-between gap-3 sm:mx-8 sm:mb-7"><p className="max-w-xl text-[10px] leading-relaxed text-slate-500">Your performance, match rating, objectives and key-moment decisions will influence manager trust, development and selection. The live 2D match engine is shared with the game's tactical simulation.</p><button onClick={()=>setBriefingAccepted(true)} className="min-h-12 rounded-lg bg-gradient-to-r from-[#F6C21C] to-[#dca90e] px-7 text-xs font-black tracking-widest text-[#101722]">ENTER MATCHDAY →</button></div>
+      <div className="mx-4 mb-4 flex flex-wrap items-center justify-between gap-3 sm:mx-8 sm:mb-7"><p className="max-w-xl text-[10px] leading-relaxed text-slate-500">Your performance, match rating, objectives and key-moment decisions will influence manager trust, development and selection. The live 2D match engine is shared with the game's tactical simulation.</p><button onClick={()=>{ soundEngine.playWhistle('KICKOFF'); setMatchSession((current)=>current.phase==='PRE_MATCH'?startMatchKickoff(current):current); setBriefingAccepted(true); }} className="min-h-12 rounded-lg bg-gradient-to-r from-[#F6C21C] to-[#dca90e] px-7 text-xs font-black tracking-widest text-[#101722]">KICK OFF MATCH →</button></div>
     </div>
   </div>;
 };
