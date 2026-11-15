@@ -98,6 +98,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   const [trialScore, setTrialScore] = useState(0);
   const [trialComplete, setTrialComplete] = useState(false);
   const [showClubPresentation, setShowClubPresentation] = useState(false);
+  const [originPathway, setOriginPathway] = useState<'TRIAL' | 'DOMESTIC' | 'GLOBAL'>('TRIAL');
+  const [clubSearch, setClubSearch] = useState('');
 
   // Legend fields
   const [playerName, setPlayerName] = useState('Kofi Mensah');
@@ -113,6 +115,23 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
     hairColor: HAIR_COLORS[0],
     faceStyle: 'YOUTHFUL',
   });
+
+  const handlePlayerNationalityChange = (value: string) => {
+    setNationality(value);
+    const nation = findNation(value);
+    if (!nation) return;
+    const region: Region = nation.confederation === 'CAF' ? 'AFRICA' : nation.confederation === 'CONMEBOL' ? 'SOUTH_AMERICA' : nation.confederation === 'AFC' || nation.confederation === 'OFC' ? 'ASIA' : nation.confederation === 'CONCACAF' ? 'NORTH_AMERICA' : 'EUROPE';
+    const league = LEAGUE_BLUEPRINTS.find((item) => item.clubs.some((team) => team.country === nation.name)) ?? LEAGUE_BLUEPRINTS.find((item) => item.region === region);
+    if (league) {
+      setSelectedRegion(region);
+      setSelectedLeagueId(league.id);
+      setSelectedClubId(league.clubs.find((team) => team.country === nation.name)?.id ?? league.clubs[0].id);
+    }
+  };
+  const selectGlobalClub = (clubId: string) => {
+    const league = LEAGUE_BLUEPRINTS.find((item) => item.clubs.some((team) => team.id === clubId));
+    if (league) { setSelectedRegion(league.region); setSelectedLeagueId(league.id); setSelectedClubId(clubId); }
+  };
 
   const handleRegionChange = (r: Region) => {
     setSelectedRegion(r);
@@ -131,9 +150,10 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
   const selectedNation = findNation(nationality);
+  const selectedNation = findNation(nationality);
   const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
   const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
-  const presentationSource = mode === 'MANAGER' ? selectedClub : academyOffer;
+  const presentationSource = mode === 'MANAGER' ? selectedClub : originPathway === 'TRIAL' ? academyOffer : selectedClub;
   const rosterTemplate = OFFLINE_CLUBS.find((club) => club.division === 1) ?? OFFLINE_CLUBS[0];
   const presentationClub: OfflineClub = {
     ...rosterTemplate,
@@ -184,7 +204,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         shirtNumber,
         playingStyle: STYLES_BY_POS[position],
         appearance,
-        clubId: academyOffer.id,
+        clubId: originPathway === 'TRIAL' ? academyOffer.id : selectedClub.id,
         difficulty,
         trialRating,
       });
@@ -313,7 +333,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                     <div className="flex flex-col gap-2">
                       <input value={nationQuery} onChange={(e) => setNationQuery(e.target.value)} placeholder="Search 79 nations..." className="min-h-[36px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white" />
                       <select value={nationConfederation} onChange={(e) => setNationConfederation(e.target.value)} className="min-h-[34px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white"><option value="ALL">All confederations</option>{CONFEDERATIONS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
-                      <select value={nationality} onChange={(e) => setNationality(e.target.value)} className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-amber-400 focus:outline-none">
+                      <select value={nationality} onChange={(e) => handlePlayerNationalityChange(e.target.value)} className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-amber-400 focus:outline-none">
                         {NATIONS_DATABASE.filter((n) => (nationConfederation === 'ALL' || n.confederation === nationConfederation) && n.name.toLowerCase().includes(nationQuery.toLowerCase())).map((n) => <option key={n.code} value={n.name}>{n.name} · {n.confederation} · U21 {n.u21OvrRequired} / Senior {n.seniorOvrRequired}</option>)}
                       </select>
                     </div>
@@ -505,41 +525,23 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                <div className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4">
-                  <div className="text-xs font-bold uppercase tracking-wider text-amber-300">Academy trial day</div>
-                  <p className="mt-1 text-sm text-slate-300">Your performance decides which club offers you a place. No instant first-team superstar contract.</p>
-                  <div className="mt-3 rounded-lg border border-white/10 bg-[#0B0F14] p-3">
-                    <div className="flex items-center justify-between text-xs"><span className="font-bold text-white">{trialComplete ? 'Scout assessment complete' : ['Round 1 · First touch','Round 2 · Passing drill','Round 3 · Finishing chance'][trialStep]}</span><span className="text-amber-300">{trialComplete ? trialRating + '/100' : 'Challenge ' + (trialStep + 1) + '/3'}</span></div>
-                    <p className="mt-2 text-xs text-slate-400">{trialComplete ? 'Your three actions have been assessed. Your score determines the level of academy offer.' : ['A difficult ball arrives under pressure. Choose your first touch.','A teammate makes a run. Decide how to release the ball.','You get one chance in front of goal. Choose your finish.'][trialStep]}</p>
-                    {!trialComplete ? (
-                      <div className="mt-3 grid gap-2">
-                        {(trialStep === 0 ? [{label:'Control into space',points:30},{label:'Shield and keep possession',points:24},{label:'Attempt an ambitious flick',points:18}] : trialStep === 1 ? [{label:'Thread a through ball',points:30},{label:'Play a safe short pass',points:25},{label:'Switch play quickly',points:27}] : [{label:'Place the shot',points:30},{label:'Strike with power',points:26},{label:'Try a first-time finish',points:28}]).map((action) => (
-                          <button key={action.label} type="button" onClick={() => {
-                            const total = trialScore + action.points;
-                            setTrialScore(total);
-                            if (trialStep === 2) {
-                              const score = Math.max(55, Math.min(96, Math.round((total / 90) * 100)));
-                              setTrialRating(score);
-                              setTrialComplete(true);
-                            } else {
-                              setTrialStep((step) => step + 1);
-                            }
-                          }} className="min-h-[40px] rounded-md border border-white/10 px-3 py-2 text-left text-xs font-semibold text-white hover:border-amber-400 hover:bg-amber-500/10">{action.label}</button>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="mt-3 flex items-center justify-between"><span className="text-xs text-emerald-300">Trial score locked in</span><button type="button" onClick={() => { setTrialStep(0); setTrialScore(0); setTrialRating(65); setTrialComplete(false); }} className="text-xs text-amber-300 underline">Replay trial</button></div>
-                    )}
-                  </div>
+                <div className="fd-origin-pathways">
+                  {[
+                    {id:'TRIAL' as const,title:'GLOBAL YOUTH SHOWCASE',sub:'Play the academy exit trial',icon:'🏟️'},
+                    {id:'DOMESTIC' as const,title:'HOMETOWN ACADEMY',sub:'Start in your nation’s football system',icon:'🏠'},
+                    {id:'GLOBAL' as const,title:'CHOOSE A STARTER CLUB',sub:'Browse clubs across available leagues',icon:'🌍'}
+                  ].map(path=><button key={path.id} type="button" onClick={()=>setOriginPathway(path.id)} className={originPathway===path.id?'is-selected':''}><span>{path.icon}</span><b>{path.title}</b><small>{path.sub}</small></button>)}
                 </div>
-                <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Your academy offer</div>
-                  <div className="mt-2 flex items-center gap-3">
-                    <ClubBadge shortName={academyOffer.shortName} primaryColor={academyOffer.primaryColor} secondaryColor={academyOffer.secondaryColor} size={48} />
-                    <div><div className="font-bold text-white">{academyOffer.name}</div><div className="text-xs text-slate-400">{activeLeague.name} · Academy intake · Rep {academyOffer.reputation}</div></div>
-                  </div>
-                  <p className="mt-2 text-xs text-slate-400">You will begin as an academy prospect and earn your way into the senior squad.</p>
-                </div>
+                {originPathway === 'TRIAL' ? (
+                  <>
+                    <div className="rounded-xl border border-amber-400/25 bg-amber-500/5 p-4"><div className="text-xs font-bold uppercase tracking-wider text-amber-300">Academy trial day</div><p className="mt-1 text-sm text-slate-300">Your three trial challenges determine the academy offer and squad entry level.</p><div className="mt-3 rounded-lg border border-white/10 bg-[#0B0F14] p-3"><div className="flex items-center justify-between text-xs"><b className="text-white">{trialComplete?'Scout assessment complete':['Round 1 · First touch','Round 2 · Passing drill','Round 3 · Finishing chance'][trialStep]}</b><span className="text-amber-300">{trialComplete?trialRating+'/100':'Challenge '+(trialStep+1)+'/3'}</span></div><p className="mt-2 text-xs text-slate-400">{trialComplete?'Your score determines the level of academy offer.':['A difficult ball arrives under pressure. Choose your first touch.','A teammate makes a run. Decide how to release the ball.','You get one chance in front of goal. Choose your finish.'][trialStep]}</p>{!trialComplete?<div className="mt-3 grid gap-2">{(trialStep===0?[{label:'Control into space',points:30},{label:'Shield and keep possession',points:24},{label:'Attempt an ambitious flick',points:18}]:trialStep===1?[{label:'Thread a through ball',points:30},{label:'Play a safe short pass',points:25},{label:'Switch play quickly',points:27}]:[{label:'Place the shot',points:30},{label:'Strike with power',points:26},{label:'Try a first-time finish',points:28}]).map(action=><button key={action.label} type="button" onClick={()=>{const total=trialScore+action.points;setTrialScore(total);if(trialStep===2){setTrialRating(Math.max(55,Math.min(96,Math.round(total/90*100)));setTrialComplete(true);}else setTrialStep(step=>step+1);}} className="min-h-[40px] rounded-md border border-white/10 px-3 py-2 text-left text-xs font-semibold text-white">{action.label}</button>)}</div>:<button type="button" onClick={()=>{setTrialStep(0);setTrialScore(0);setTrialRating(65);setTrialComplete(false);}} className="mt-3 text-xs text-amber-300 underline">Replay trial</button>}</div></div>
+                    <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4"><div className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Your academy offer</div><div className="mt-2 flex items-center gap-3"><ClubBadge shortName={academyOffer.shortName} primaryColor={academyOffer.primaryColor} secondaryColor={academyOffer.secondaryColor} size={48}/><div><b className="text-white">{academyOffer.name}</b><div className="text-xs text-slate-400">{activeLeague.name} · Academy intake · Rep {academyOffer.reputation}</div></div></div></div>
+                  </>
+                ) : originPathway === 'DOMESTIC' ? (
+                  <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-emerald-300">Domestic academy pathway</div><p className="mt-1 text-xs text-slate-300">A home-country start for {selectedNation?.name??nationality}. Your regional league is selected where a domestic club is available.</p><div className="mt-3 flex flex-wrap gap-2">{(selectedNation?.localAcademies??[]).map(name=><span key={name} className="rounded-lg border border-emerald-300/20 bg-white/70 px-3 py-2 text-xs font-bold text-[#13386C]">{name}</span>)}</div><div className="mt-3 flex items-center gap-3"><ClubBadge shortName={selectedClub.shortName} primaryColor={selectedClub.primaryColor} secondaryColor={selectedClub.secondaryColor} size={44}/><div><b className="text-white">{selectedClub.name}</b><p className="text-xs text-slate-400">{selectedClub.country} · {activeLeague.name} · Youth entry</p></div></div></div>
+                ) : (
+                  <div className="rounded-xl border border-blue-300/30 bg-blue-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-blue-200">Global starter club directory</div><input value={clubSearch} onChange={e=>setClubSearch(e.target.value)} placeholder="Search clubs worldwide..." className="mt-3 min-h-[40px] w-full rounded-lg px-3 text-sm"/><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[320px] overflow-y-auto">{LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name}))).filter(team=>team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase())).slice(0,80).map(team=><button key={team.id} type="button" onClick={()=>selectGlobalClub(team.id)} className={selectedClub.id===team.id?'fd-global-club is-selected':'fd-global-club'}><ClubBadge shortName={team.shortName} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} size={32}/><span><b>{team.name}</b><small>{team.country} · {team.leagueName}</small></span><small>REP {team.reputation}</small></button>)}</div><p className="mt-2 text-[10px] text-slate-400">Squad depth is evaluated when your save is created. You still begin as a youth prospect.</p></div>
+                )}
               </div>
             )}
 
@@ -547,18 +549,18 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
             <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between gap-4">
               <div className="text-xs text-slate-400">
-                Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : academyOffer.name}</span>
+                Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : originPathway === 'TRIAL' ? academyOffer.name : selectedClub.name}</span>
               </div>
               <button
                 type="submit"
-                disabled={mode !== 'MANAGER' && !trialComplete}
+                disabled={mode !== 'MANAGER' && originPathway === 'TRIAL' && !trialComplete}
                 className={`min-h-[46px] px-6 py-2.5 rounded-lg font-bold text-sm transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   mode === 'MANAGER'
                     ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-950'
                     : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
                 }`}
               >
-                {mode === 'MANAGER' ? 'Sign Contract & Start' : trialComplete ? 'Accept Academy Offer' : 'Complete Trial First'}
+                {mode === 'MANAGER' ? 'Sign Contract & Start' : originPathway === 'TRIAL' ? trialComplete ? 'Accept Academy Offer' : 'Complete Trial First' : 'Start Player Career'}
               </button>
             </div>
           </div>
