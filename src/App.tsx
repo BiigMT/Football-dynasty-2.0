@@ -339,7 +339,7 @@ export default function App() {
   if (screen === 'MATCH' && activeSave && activeSave.activeMatch) {
     const allClubs = getMatchClubsMap(activeSave);
     return (
-      {activeSave.mode === 'PLAYER' ? <PlayerMatchMode
+      activeSave.mode === 'PLAYER' ? <PlayerMatchMode
         initialSession={activeSave.activeMatch}
         clubs={allClubs}
         players={activeSave.players}
@@ -355,7 +355,7 @@ export default function App() {
         onToggleMute={handleToggleMute}
         onPersistMatchState={handlePersistMatchState}
         onFinishMatch={handleFinishMatch}
-      />}
+      />
     );
   }
 
