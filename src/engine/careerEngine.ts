@@ -30,7 +30,7 @@ import {
   pickPlayingStyle,
 } from './database';
 import { quickSimulateFullMatch } from './matchEngine';
-import { getAcademyStartingClub } from './careerPyramid';
+import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyramid } from './careerPyramid';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -286,7 +286,11 @@ export function createLegendCareer(params: {
   const world = buildWorldDatabase();
   const requestedClub = world.clubs[params.clubId];
   const trialRating = params.trialRating ?? 78;
-  const club = getAcademyStartingClub(world.clubs, world.leagues, params.clubId) ?? requestedClub;
+  const academyClub = getAcademyStartingClub(world.clubs, world.leagues, params.clubId) ?? requestedClub;
+  const pyramid = initializeFourTierPyramid(world.clubs, world.leagues);
+  world.clubs = pyramid.clubs;
+  world.leagues = pyramid.leagues;
+  const club = world.clubs[academyClub?.id ?? params.clubId] ?? requestedClub;
   const startingAge = params.age <= 16 ? 16 : 17;
   const baseAttr = params.difficulty === 'HARD' ? 52 : params.difficulty === 'EASY' ? 58 : 55;
   const isGK = params.position === 'GK';
@@ -1680,6 +1684,21 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
       careerHistory: histEntry ? [...p.careerHistory, histEntry] : p.careerHistory,
     };
   });
+
+  // Player Career promotion / relegation: champions move up, bottom clubs move down.
+  if (save.mode === 'PLAYER') {
+    const pyramidMovement = applyPromotionRelegation(nextClubs, nextLeagues);
+    Object.assign(nextClubs, pyramidMovement.clubs);
+    Object.assign(nextLeagues, pyramidMovement.leagues);
+    pyramidMovement.movements.forEach((movement) => nextNews.unshift({
+      id: 'pyramid_' + nextSeason + '_' + movement.replace(/[^a-z0-9]/gi, '_'),
+      week: 1,
+      season: nextSeason,
+      category: 'ACADEMY',
+      headline: movement,
+      body: 'The new season begins with movement across the four-tier career pyramid.',
+    }));
+  }
 
   // Reset all league standings & fixtures
   Object.keys(nextLeagues).forEach((lid) => {
