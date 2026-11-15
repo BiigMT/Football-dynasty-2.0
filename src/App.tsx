@@ -9,6 +9,7 @@ import {
 } from './engine/careerEngine';
 import { getFormationSlots } from './engine/database';
 import { createMatchSession } from './engine/matchEngine';
+import { initializeFourTierPyramid } from './engine/careerPyramid';
 import { deleteCareer, listSaveSlots, loadCareer, saveCareer, SaveSlotSummary } from './engine/storage';
 import { soundEngine } from './engine/audio';
 import { TitleScreen } from './components/TitleScreen';
@@ -80,8 +81,16 @@ export default function App() {
 
   const handleLoadCareer = async (slotId: string) => {
     soundEngine.playClick();
-    const loaded = await loadCareer(slotId);
+    let loaded = await loadCareer(slotId);
     if (!loaded) return;
+    // Upgrade older Player Career saves without disturbing a match already in progress.
+    const hasPyramid = Object.keys(loaded.leagues).some((id) => /_tier_[1-4]$/.test(id));
+    if (loaded.mode === 'PLAYER' && !hasPyramid && !loaded.activeMatch) {
+      const pyramid = initializeFourTierPyramid(loaded.clubs, loaded.leagues);
+      loaded = { ...loaded, clubs: pyramid.clubs, leagues: pyramid.leagues, updatedAt: Date.now() };
+      await saveCareer(loaded);
+      await refreshSlots();
+    }
     setActiveSave(loaded);
     if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
       setScreen('MATCH');
