@@ -14,6 +14,7 @@ import { deleteCareer, listSaveSlots, loadCareer, saveCareer, SaveSlotSummary } 
 import { soundEngine } from './engine/audio';
 import { TitleScreen } from './components/TitleScreen';
 import { CareerSetupModal } from './components/CareerSetupModal';
+import { PlayerCreationWizard } from './components/PlayerCreationWizard';
 import { ManagerHub } from './components/ManagerHub';
 import { PlayerCareerHub } from './components/PlayerCareerHub';
 import { MatchCenter } from './components/MatchCenter';
@@ -335,13 +336,22 @@ export default function App() {
 
   if (screen === 'SETUP') {
     return (
-      <CareerSetupModal
-        mode={setupTarget.mode}
-        slotId={setupTarget.slotId}
-        onCancel={() => setScreen('TITLE')}
-        onConfirmManager={handleConfirmManager}
-        onConfirmLegend={handleConfirmLegend}
-      />
+      {setupTarget.mode === 'PLAYER' ? (
+        <PlayerCreationWizard
+          slotId={setupTarget.slotId}
+          onCancel={() => setScreen('TITLE')}
+          onConfirmManager={handleConfirmManager}
+          onConfirmLegend={handleConfirmLegend}
+        />
+      ) : (
+        <CareerSetupModal
+          mode="MANAGER"
+          slotId={setupTarget.slotId}
+          onCancel={() => setScreen('TITLE')}
+          onConfirmManager={handleConfirmManager}
+          onConfirmLegend={handleConfirmLegend}
+        />
+      )}
     );
   }
 
