@@ -30,6 +30,7 @@ import {
   pickPlayingStyle,
 } from './database';
 import { quickSimulateFullMatch } from './matchEngine';
+import { getAcademyStartingClub } from './careerPyramid';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -284,13 +285,10 @@ export function createLegendCareer(params: {
 }): CareerSave {
   const world = buildWorldDatabase();
   const requestedClub = world.clubs[params.clubId];
-  const academyCandidates = Object.values(world.clubs)
-    .filter((candidate) => candidate.leagueId === requestedClub.leagueId)
-    .sort((a, b) => a.reputation - b.reputation);
   const trialRating = params.trialRating ?? 78;
-  const offerIndex = Math.min(academyCandidates.length - 1, trialRating >= 90 ? 2 : trialRating >= 82 ? 1 : 0);
-  const club = academyCandidates[offerIndex] ?? requestedClub;
-  const baseAttr = Math.max(42, Math.min(54, 46 + Math.floor((params.difficulty === 'HARD' ? 0 : params.difficulty === 'EASY' ? 4 : 2))));
+  const club = getAcademyStartingClub(world.clubs, world.leagues, params.clubId) ?? requestedClub;
+  const startingAge = params.age <= 16 ? 16 : 17;
+  const baseAttr = params.difficulty === 'HARD' ? 52 : params.difficulty === 'EASY' ? 58 : 55;
   const isGK = params.position === 'GK';
   const isDef = ['CB', 'LB', 'RB', 'CDM'].includes(params.position);
   const isAtt = ['ST', 'LW', 'RW', 'CAM'].includes(params.position);
@@ -317,7 +315,7 @@ export function createLegendCareer(params: {
   };
 
   const overall = calculateOverall(params.position, attributes);
-  const potential = Math.min(95, Math.max(overall + 12, 88));
+  const potential = Math.max(84, Math.min(92, 84 + Math.round((trialRating - 55) * 0.2)));
   const marketValue = calculateMarketValue(overall, params.age, potential);
   const userPlayerId = 'legend_user_player';
 
@@ -325,7 +323,7 @@ export function createLegendCareer(params: {
     id: userPlayerId,
     name: params.playerName,
     nationality: params.nationality,
-    age: params.age,
+    age: startingAge,
     heightCm: params.heightCm,
     weightKg: params.weightKg,
     preferredFoot: params.preferredFoot,
@@ -335,7 +333,7 @@ export function createLegendCareer(params: {
     playingStyle: params.playingStyle || pickPlayingStyle(params.position, Math.random),
     appearance: params.appearance,
     attributes,
-    overall,
+    overall: Math.max(52, Math.min(58, overall)),
     potential,
     form: 76,
     sharpness: 78,
@@ -347,7 +345,10 @@ export function createLegendCareer(params: {
     weeklyWage: Math.max(4500, Math.round((marketValue * 0.002) / 500) * 500),
     contractYears: 3,
     releaseClause: marketValue * 2,
-    clubId: params.clubId,
+    clubId: club.id,
+    squadRole: 'PROSPECT',
+    potentialRange: [potential - 5, potential],
+    scoutingProgress: 0,
     isUserPlayer: true,
     isYouth: true,
     injuredWeeks: 0,
@@ -393,7 +394,7 @@ export function createLegendCareer(params: {
     season: 1,
     currentWeek: 1,
     transferWindowOpen: true,
-    userClubId: params.clubId,
+    userClubId: club.id,
     legend: {
       playerId: userPlayerId,
       managerTrust: Math.max(48, Math.min(68, Math.round(trialRating * 0.65))),
