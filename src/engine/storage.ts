@@ -3,7 +3,7 @@ import { CareerSave } from '../types/football';
 const STORAGE_KEY_PREFIX = 'football_dynasty_save_slot_';
 const DB_NAME = 'football-dynasty-storage';
 const STORE_NAME = 'career-saves';
-export const SAVE_SLOTS = ['slot_1', 'slot_2', 'slot_3', 'slot_4'] as const;
+export const SAVE_SLOTS = ['slot_1', 'slot_2', 'slot_3', 'slot_4', 'slot_5'] as const;
 
 export interface SaveSlotSummary {
   slotId: string;
@@ -15,6 +15,17 @@ export interface SaveSlotSummary {
   week?: number;
   updatedAt?: number;
   hasHalfTimeMatch?: boolean;
+  clubName?: string;
+  clubShortName?: string;
+  clubCountry?: string;
+  clubPrimaryColor?: string;
+  clubSecondaryColor?: string;
+  managerName?: string;
+  playerName?: string;
+  playerOverall?: number;
+  marketValue?: number;
+  transferBudget?: number;
+  leaguePosition?: number;
 }
 
 function openSaveDatabase(): Promise<IDBDatabase> {
@@ -120,22 +131,28 @@ export async function listSaveSlots(): Promise<SaveSlotSummary[]> {
     const data = await loadCareer(slotId);
     if (!data) return { slotId, empty: true };
     const club = data.clubs?.[data.userClubId];
-    if (data.mode === 'MANAGER' && data.manager) {
-      return {
-        slotId, empty: false, mode: 'MANAGER',
-        title: `${data.manager.name} · ${club?.name ?? 'Club'}`,
-        subtitle: `Master League · ${data.manager.trophies.length} Trophies`,
-        season: data.season, week: data.currentWeek, updatedAt: data.updatedAt,
-        hasHalfTimeMatch: data.activeMatch?.phase === 'HALF_TIME',
-      };
-    }
-    const uPlayer = data.legend ? data.players?.[data.legend.playerId] : undefined;
+    const player = data.legend ? data.players?.[data.legend.playerId] : undefined;
+    const league = club ? data.leagues?.[club.leagueId] : undefined;
+    const sorted = league ? [...league.standings].sort((a, b) =>
+      b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst)
+    ) : [];
+    const position = sorted.findIndex(row => row.clubId === data.userClubId);
     return {
-      slotId, empty: false, mode: 'PLAYER',
-      title: `${uPlayer?.name ?? 'Legend'} (${uPlayer?.overall ?? 70} OVR)`,
-      subtitle: `Become a Legend · ${club?.name ?? 'Club'}`,
+      slotId, empty: false, mode: data.mode,
+      title: data.mode === 'MANAGER'
+        ? `${data.manager?.name ?? 'Manager'} · ${club?.name ?? 'Club'}`
+        : `${player?.name ?? 'Legend'} (${player?.overall ?? 70} OVR)`,
+      subtitle: data.mode === 'MANAGER'
+        ? `Master League · ${data.manager?.trophies.length ?? 0} Trophies`
+        : `Become a Legend · ${club?.name ?? 'Club'}`,
       season: data.season, week: data.currentWeek, updatedAt: data.updatedAt,
       hasHalfTimeMatch: data.activeMatch?.phase === 'HALF_TIME',
+      clubName: club?.name, clubShortName: club?.shortName, clubCountry: club?.country,
+      clubPrimaryColor: club?.primaryColor, clubSecondaryColor: club?.secondaryColor,
+      managerName: data.manager?.name, playerName: player?.name,
+      playerOverall: player?.overall, marketValue: player?.marketValue,
+      transferBudget: club?.finances.transferBudget,
+      leaguePosition: position >= 0 ? position + 1 : undefined,
     };
   }));
 }
