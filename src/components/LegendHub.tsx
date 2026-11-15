@@ -76,6 +76,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const [tab, setTab] = useState<LegendSection>('DASHBOARD');
   const [contractNotice, setContractNotice] = useState('');
   const [phoneMode, setPhoneMode] = useState<'SOCIAL' | 'MESSAGES'>('SOCIAL');
+  const [negotiatingOfferId, setNegotiatingOfferId] = useState<string | null>(null);
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
@@ -781,7 +782,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                         onClick={() => handleAcceptAgentOffer(off.id)}
                         className="min-h-[42px] px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold whitespace-nowrap cursor-pointer"
                       >
-                        {off.dealType === 'LOAN' ? 'Accept Loan' : 'Sign Contract'}
+                        {off.dealType === 'LOAN' ? 'Review Loan Terms' : 'Negotiate Contract'}
                       </button>
                     </div>
                   );
@@ -791,6 +792,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           </div>
         )}
 
+        {negotiatingOfferId && (() => { const offer = legend.agentOffers.find(o => o.id === negotiatingOfferId); const target = offer ? save.clubs[offer.fromClubId] : undefined; return offer && target ? <div className="fd-negotiation-overlay"><section className="fd-negotiation-room"><span className="fd-eyebrow">CONTRACT NEGOTIATION · ROUND {offer.round}</span><h2>{target.name} want to sign you</h2><p>Take a seat with the club representatives and review your proposed terms.</p><div className="fd-negotiation-terms"><div><span>WEEKLY WAGE</span><b>€{offer.proposedWage.toLocaleString()}</b></div><div><span>CONTRACT</span><b>{offer.contractYears} YEARS</b></div><div><span>SIGNING BONUS</span><b>€{offer.signingBonus.toLocaleString()}</b></div><div><span>TRANSFER FEE</span><b>€{offer.fee.toLocaleString()}</b></div></div><div className="fd-negotiation-actions"><button type="button" onClick={()=>setNegotiatingOfferId(null)}>DECLINE MEETING</button><button type="button" onClick={()=>{const nextWage=Math.round(offer.proposedWage*1.08/50)*50;onUpdateSave({...save,legend:{...legend,agentOffers:legend.agentOffers.map(o=>o.id===offer.id?{...o,proposedWage:nextWage,round:o.round+1,message:'Your agent countered the opening offer. The club has improved its wage proposal.'}:o)}});}}>COUNTER +8%</button><button type="button" onClick={()=>{handleAcceptAgentOffer(offer.id);setNegotiatingOfferId(null);}}>ACCEPT & SIGN</button></div></section></div> : null; })()}
         {tab === 'COMPETITIONS' && <CompetitionsView save={save} />}
 
         {tab === 'LEGACY' && (
@@ -870,7 +872,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         )}
 
         {tab === 'SETTINGS' && (
-          <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
+          <div className="fd-system-console max-w-3xl mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
             <h3 className="text-xl font-bold text-white">Career Settings</h3>
             <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B]">
               <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
