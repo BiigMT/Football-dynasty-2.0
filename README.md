@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/BiigMT/Football-dynasty-2.0/releases">Android beta releases</a> ·
+  <a href="https://zanja.co.zm/campaigns/funds/21/support-football-dynasty-20">❤️ Support Football Dynasty</a> ·
   <a href="https://github.com/BiigMT/Football-dynasty-2.0/issues">Report a bug</a>
 </p>
 
@@ -62,12 +63,18 @@ Your voluntary contribution can help with:
 - Game research, data preparation and future features
 - Hosting, tools and other project costs
 
-### Donations
+### Donate to Football Dynasty 2.0
 
-<em>Secure international donations are coming soon.</em>
+If you would like to help fund development, please use the official campaign page:
 
-A payment link will appear here only after an official provider and its payout method have been verified. Until then:
-- **Please do not send money** to personal or unofficial accounts claiming to represent Football Dynasty.
+<p align="center">
+  <a href="https://zanja.co.zm/campaigns/funds/21/support-football-dynasty-20"><strong>❤️ SUPPORT FOOTBALL DYNASTY 2.0 — DONATE HERE</strong></a>
+</p>
+
+Campaign link: https://zanja.co.zm/campaigns/funds/21/support-football-dynasty-20
+
+Please review the campaign page and payment details before contributing. Until payment and payout arrangements are confirmed by the provider:
+- **Do not send money** to personal or unofficial accounts claiming to represent Football Dynasty.
 - Football Dynasty will never ask you to post or message your full card number, PIN, password or security code.
 - Payments, when enabled, will be handled by a secure third-party checkout. The game and this repository will not store your card details.
 - Donations are optional and do not unlock paid advantages or guarantee features, release dates or support.
