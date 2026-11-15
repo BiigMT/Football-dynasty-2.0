@@ -32,7 +32,7 @@ export const RealisticAvatar:React.FC<RealisticAvatarProps>=({
  return <svg viewBox="0 0 100 128" width={width??size} height={height??size*1.28} className={className} role="img" aria-label={name} xmlns="http://www.w3.org/2000/svg">
  <defs>
   <linearGradient id={id+'-skin'} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff0df"/><stop offset=".22" stopColor={skin}/><stop offset=".72" stopColor={skin}/><stop offset="1" stopColor={shadow}/></linearGradient>
-  <radialGradient id={id+'-light'} cx=".35" cy=".25" r=".8"><stop stopColor="#fff" stopOpacity=".42"/><stop offset=".6" stopColor="#fff" stopOpacity=".04"/><stop offset="1" stopColor={shadow} stopOpacity=".5}/></radialGradient>
+  <radialGradient id={id+'-light'} cx=".35" cy=".25" r=".8"><stop stopColor="#fff" stopOpacity=".42"/><stop offset=".6" stopColor="#fff" stopOpacity=".04"/><stop offset="1" stopColor={shadow} stopOpacity=".5" /></radialGradient>
   <linearGradient id={id+'-jacket'} x1="0" y1="0" x2="1" y2="1"><stop stopColor={jacket}/><stop offset=".55" stopColor={secondaryColor}/><stop offset="1" stopColor="#080f18"/></linearGradient>
   <linearGradient id={id+'-eye'} x1="0" y1="0" x2="0" y2="1"><stop stopColor="#fff"/><stop offset="1" stopColor="#aeb7bd"/></linearGradient>
   <linearGradient id={id+'-hair'} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#777" stopOpacity=".2"/><stop offset=".3" stopColor={hair}/><stop offset="1" stopColor="#090b0e"/></linearGradient>
@@ -41,7 +41,7 @@ export const RealisticAvatar:React.FC<RealisticAvatarProps>=({
  <path d="M4 132 Q7 94 27 88 L39 82 H61 L73 88 Q94 96 97 132Z" fill={'url(#'+id+'-jacket)'}/>
  {outfit==='manager_suit'&&<><path d="M36 86 L50 99 L42 128 H10 Q15 98 36 86Z" fill="#263647"/><path d="M64 86 L50 99 L58 128 H90 Q85 98 64 86Z" fill="#101b28"/><path d="M47 98 L50 103 L53 98 L55 128 H45Z" fill={tieColor}/><path d="M38 85 L50 98 L43 105 L32 91Z M62 85 L50 98 L57 105 L68 91Z" fill="#f4f5f4"/></>}
  {outfit==='agent'&&<path d="M39 85 L50 99 L61 85 L58 80 H42Z" fill="#111820"/>}
- {outfit==='player_kit'&&<><path d="M4 132 Q7 94 27 88 L39 82 H61 L73 88 Q94 96 97 132Z" fill={primaryColor}/>{kitPattern==='vertical_stripes'&&<path d="M27 88 L38 84 L40 128 H26Z M48 98 L56 84 L62 87 L58 128 H47Z M75 90 L85 98 L82 128 H69Z" fill={secondaryColor}/ >}{kitPattern==='sash'&&<path d="M22 91 L34 84 L82 128 H65Z" fill={secondaryColor}/>}<path d="M39 83 L50 98 L61 83" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="2"/>{shirtNumber!==undefined&&<text x="50" y="119" textAnchor="middle" fontSize="10" fontWeight="900" fill="#fff">{shirtNumber}</text>}</>}
+ {outfit==='player_kit'&&<><path d="M4 132 Q7 94 27 88 L39 82 H61 L73 88 Q94 96 97 132Z" fill={primaryColor}/>{kitPattern==='vertical_stripes'&&<path d="M27 88 L38 84 L40 128 H26Z M48 98 L56 84 L62 87 L58 128 H47Z M75 90 L85 98 L82 128 H69Z" fill={secondaryColor} />}{kitPattern==='sash'&&<path d="M22 91 L34 84 L82 128 H65Z" fill={secondaryColor}/>}<path d="M39 83 L50 98 L61 83" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="2"/>{shirtNumber!==undefined&&<text x="50" y="119" textAnchor="middle" fontSize="10" fontWeight="900" fill="#fff">{shirtNumber}</text>}</>}
  <path d="M41 68 H59 V89 Q50 98 41 89Z" fill={'url(#'+id+'-skin)'}/>
  <path d="M34 43 Q29 48 32 57 Q35 62 38 56 M66 43 Q71 48 68 57 Q65 62 62 56" fill={skin} stroke={shadow}/>
  <path d={face} fill={'url(#'+id+'-skin)'}/><path d={face} fill={'url(#'+id+'-light)'}/>
