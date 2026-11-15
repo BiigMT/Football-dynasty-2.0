@@ -28,6 +28,7 @@ import {
 import { soundEngine } from '../engine/audio';
 import { calculateMarketValue, calculateOverall } from '../engine/database';
 import { PlayerPortrait } from './PlayerPortrait';
+import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 
@@ -87,6 +88,9 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const isStarter = club.tactics.startingXI.includes(player.id);
   const isBench = club.tactics.bench.includes(player.id);
   const natTeam = legend.nationalTeamId ? save.nationalTeams[legend.nationalTeamId] : undefined;
+  const nationProfile = findNation(player.nationality);
+  const u21CallUpOvr = nationProfile?.u21OvrRequired ?? 66;
+  const seniorCallUpOvr = nationProfile?.seniorOvrRequired ?? 76;
   const teammates = Object.values(save.players).filter((p) => p.clubId === club.id && p.id !== player.id).sort((a, b) => b.overall - a.overall).slice(0, 4);
   const phoneMessages = legend.phoneMessages ?? [];
   const socialPosts = legend.socialPosts ?? [];
