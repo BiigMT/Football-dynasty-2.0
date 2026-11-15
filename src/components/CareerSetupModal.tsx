@@ -150,7 +150,6 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
   const selectedNation = findNation(nationality);
-  const selectedNation = findNation(nationality);
   const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
   const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
   const presentationSource = mode === 'MANAGER' ? selectedClub : originPathway === 'TRIAL' ? academyOffer : selectedClub;
