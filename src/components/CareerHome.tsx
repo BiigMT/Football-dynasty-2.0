@@ -133,31 +133,6 @@ const LeagueTable: React.FC<{ title: string; rows: TableRow[]; onSee?: () => voi
 );
 
 /* ======================= MANAGER CAREER HOME ======================= */
-export type ManagerHomeProps = {
-  club: string;
-  clubColor?: string;
-  manager: string;
-  days: DayItem[];
-  transferBudget: string;
-  wageBudget: string;
-  news: CareerHomeNewsItem[];
-  leagueName: string;
-  table: TableRow[];
-  ticker: string[];
-  forwardTitle?: string;
-  forwardSub?: string;
-  onForward: () => void;
-  onNavigate: (key: string) => void;
-};
-
-const MANAGER_MENU: MenuItem[] = [
-  { key: 'team', title: 'TEAM MANAGEMENT', sub: 'Squad & Tactics', icon: '👥' },
-  { key: 'transfers', title: 'TRANSFER MARKET', sub: 'Recruitment', icon: '🤝' },
-  { key: 'office', title: 'MANAGER OFFICE', sub: 'Club & Finance', icon: '💼' },
-  { key: 'competitions', title: 'COMPETITIONS', sub: 'League & Cups', icon: '🏆' },
-  { key: 'settings', title: 'SYSTEM', sub: 'Game Settings', icon: '⚙' },
-];
-
 export type ScorerRow = { name: string; club: string; goals: number };
 export type CalendarCell = { label: string; detail: string; icon: string; active?: boolean; match?: boolean };
 
