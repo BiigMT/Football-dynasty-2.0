@@ -864,3 +864,132 @@
   .fd-player-creation-screen .fd-player-creation-steps button {justify-content:center;padding:7px 4px;gap:5px;font-size:9px;}
   .fd-player-creation-screen .fd-player-creation-steps button b {width:22px;height:22px;}
 }
+
+
+/* 2026-11-15 emergency Player Career console repair.
+   Landscape is the fixed design canvas; portrait devices rotate the console canvas
+   rather than collapsing the six-tab navigation and dashboard into a phone column. */
+.fd-player-career-shell.fd-player-console {
+  position:fixed !important; inset:0 !important; width:100vw !important; height:100dvh !important;
+  min-height:0 !important; overflow:hidden !important; padding:0 !important;
+  background:linear-gradient(135deg,#173f7a 0%,#2d64b3 58%,#5b8ad1 100%) !important;
+}
+.fd-player-career-shell .fd-player-hub {
+  width:100%; height:100%; min-height:0; display:grid !important;
+  grid-template-rows:52px 38px minmax(0,1fr) 28px !important;
+  gap:0 !important; overflow:hidden !important;
+}
+.fd-player-career-shell .fd-player-head {
+  min-height:0 !important; height:52px !important; padding:4px 12px !important;
+  display:grid !important; grid-template-columns:minmax(210px,1.05fr) minmax(280px,1fr) auto !important;
+  align-items:center !important; gap:10px !important; overflow:hidden !important;
+}
+.fd-player-career-shell .fd-player-identity { min-width:0 !important; display:flex !important; align-items:center !important; gap:8px !important; }
+.fd-player-career-shell .fd-player-crest { flex:0 0 34px !important; width:34px !important; height:38px !important; display:grid; place-items:center; }
+.fd-player-career-shell .fd-player-headshot { flex:0 0 36px !important; width:36px !important; height:36px !important; }
+.fd-player-career-shell .fd-player-headcopy { min-width:0 !important; }
+.fd-player-career-shell .fd-player-headcopy .fd-player-kicker { font-size:7px !important; line-height:1 !important; letter-spacing:.12em; }
+.fd-player-career-shell .fd-player-headcopy h1 { margin:2px 0 0 !important; font-size:clamp(14px,1.5vw,20px) !important; line-height:1 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fd-player-career-shell .fd-player-headcopy p { margin:2px 0 0 !important; font-size:9px !important; line-height:1 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fd-player-career-shell .fd-player-meta { min-width:0 !important; display:flex !important; align-items:center !important; justify-content:flex-end !important; gap:5px !important; }
+.fd-player-career-shell .fd-player-meta > div { min-width:48px; padding:4px 6px !important; border-radius:6px !important; text-align:center; }
+.fd-player-career-shell .fd-player-meta strong { display:block; font-size:13px !important; line-height:1 !important; white-space:nowrap; }
+.fd-player-career-shell .fd-player-meta small { display:block; margin-top:2px; font-size:6px !important; line-height:1 !important; white-space:nowrap; }
+.fd-player-career-shell .fd-player-head-actions { display:flex !important; gap:5px !important; }
+.fd-player-career-shell .fd-player-head-actions button { min-height:30px !important; padding:4px 8px !important; font-size:9px !important; white-space:nowrap; }
+.fd-player-career-shell > .fixed { position:absolute !important; top:7px !important; right:12px !important; z-index:60 !important; display:flex !important; gap:5px !important; }
+.fd-player-career-shell > .fixed button { min-height:34px !important; padding:4px 8px !important; font-size:8px !important; white-space:nowrap; }
+.fd-player-career-shell .fd-player-head { padding-right:340px !important; }
+.fd-player-career-shell .fd-player-tabs {
+  height:38px !important; min-height:38px !important; display:grid !important;
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important; gap:4px !important;
+  padding:0 10px !important; overflow:hidden !important; align-items:stretch !important;
+  background:rgba(248,251,255,.97) !important;
+}
+.fd-player-career-shell .fd-player-tabs button {
+  min-width:0 !important; min-height:38px !important; height:38px !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  gap:5px !important; padding:2px 5px !important; white-space:nowrap !important;
+  overflow:visible !important; text-overflow:clip !important; line-height:1 !important;
+  font-size:clamp(8px,1.05vw,12px) !important; letter-spacing:0 !important;
+  border-bottom:3px solid transparent !important;
+}
+.fd-player-career-shell .fd-player-tabs button span { flex:0 0 auto; overflow:visible !important; }
+.fd-player-career-shell .fd-player-tabs button.is-active,
+.fd-player-career-shell .fd-player-tabs button[aria-current="page"] { background:#e5effb !important; border-bottom-color:#13386c !important; color:#13386c !important; }
+.fd-player-career-shell .fd-player-layout {
+  min-height:0 !important; height:100% !important; overflow:hidden !important;
+  display:grid !important; grid-template-columns:repeat(12,minmax(0,1fr)) !important;
+  grid-template-rows:minmax(0,1.08fr) minmax(0,.92fr) !important;
+  gap:8px !important; padding:8px 10px !important;
+}
+.fd-player-career-shell .fd-player-showcase { grid-column:span 6 !important; grid-row:1 !important; min-width:0 !important; min-height:0 !important; height:100% !important; }
+.fd-player-career-shell .fd-player-objectives {
+  grid-column:span 6 !important; grid-row:1 !important; min-width:0 !important; min-height:0 !important;
+  display:flex !important; flex-direction:column !important; gap:8px !important; padding:12px !important;
+  background:rgba(255,255,255,.93) !important; border:1px solid #fff !important; border-radius:14px !important;
+  color:#0f2342 !important; box-shadow:0 8px 24px rgba(5,26,58,.14) !important; backdrop-filter:blur(14px);
+}
+.fd-player-career-shell .fd-player-sidebar { display:contents !important; }
+.fd-player-career-shell .fd-player-sidebar > section {
+  grid-row:2 !important; grid-column:span 3 !important; min-width:0 !important; min-height:0 !important;
+  overflow:hidden !important; padding:9px !important; border-radius:12px !important;
+  background:rgba(255,255,255,.93) !important; border:1px solid #fff !important;
+  color:#0f2342 !important; box-shadow:0 6px 18px rgba(5,26,58,.12) !important;
+}
+.fd-player-career-shell .fd-player-panel-title { display:flex; align-items:center; justify-content:space-between; gap:5px; margin-bottom:6px; }
+.fd-player-career-shell .fd-player-panel-title small { display:block; color:#607590 !important; font-size:8px !important; font-weight:900; letter-spacing:.1em; }
+.fd-player-career-shell .fd-player-panel-title h3 { margin:1px 0 0; color:#0f2342 !important; font-size:13px !important; line-height:1.05; }
+.fd-player-career-shell .fd-player-stat { margin:5px 0 !important; }
+.fd-player-career-shell .fd-player-stat > div:first-child { display:flex; justify-content:space-between; gap:5px; color:#0f2342 !important; font-size:10px !important; }
+.fd-player-career-shell .fd-player-stat-track { height:5px !important; margin-top:3px; background:#dce7f4 !important; border-radius:8px; overflow:hidden; }
+.fd-player-career-shell .fd-player-stat-track i { display:block; height:100%; background:linear-gradient(90deg,#235ba8,#16a34a) !important; border-radius:8px; }
+.fd-player-career-shell .fd-player-depth-list { display:flex; flex-direction:column; gap:3px; }
+.fd-player-career-shell .fd-player-empty { color:#607590 !important; font-size:9px !important; }
+.fd-player-career-shell .fd-player-table-head,
+.fd-player-career-shell .fd-player-table-row { display:grid; grid-template-columns:18px minmax(0,1fr) 25px 25px 28px; align-items:center; gap:3px; padding:4px 3px; font-size:9px; color:#526782; }
+.fd-player-career-shell .fd-player-table-head { font-weight:900; border-bottom:1px solid #d7e3f1; }
+.fd-player-career-shell .fd-player-table-row span:nth-child(2) { display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#0f2342; }
+.fd-player-career-shell .fd-player-table-row span:nth-child(2) i { flex:0 0 8px; width:8px; height:8px; border-radius:50%; }
+.fd-player-career-shell .fd-player-table-row.is-user { background:#e2efff !important; color:#13386c !important; font-weight:900; border-radius:5px; }
+.fd-player-career-shell .fd-player-fixture { display:flex; align-items:center; gap:6px; padding:5px 2px !important; border-bottom:1px solid #e1eaf5; color:#0f2342; }
+.fd-player-career-shell .fd-player-fixture b { display:block; font-size:9px !important; color:#0f2342 !important; }
+.fd-player-career-shell .fd-player-fixture small { display:block; font-size:7px !important; color:#647b98 !important; }
+.fd-player-career-shell .fd-player-week { flex:0 0 25px; color:#235ba8; font-size:9px; font-weight:900; }
+.fd-player-career-shell .fd-player-news { min-height:28px !important; height:28px !important; display:flex !important; align-items:center !important; overflow:hidden !important; padding:0 10px !important; gap:12px !important; background:#102f59 !important; color:#fff !important; }
+.fd-player-career-shell .fd-player-news > div { min-width:0; flex:1; display:flex; gap:28px; white-space:nowrap; overflow:hidden; }
+.fd-player-career-shell .fd-player-news span { color:#e8f2ff !important; font-size:9px !important; }
+.fd-player-career-shell .fd-player-news small { color:#d2e3f7 !important; white-space:nowrap; font-size:7px !important; }
+.fd-player-career-shell .fd-player-objectives .fd-player-panel-title h3,
+.fd-player-career-shell .fd-player-objectives h3 { color:#0f2342 !important; }
+.fd-player-career-shell .fd-player-trust-score { padding:5px 8px; border-radius:7px; background:#e0f5e9; color:#08783a; font-size:10px; font-weight:900; white-space:nowrap; }
+.fd-player-career-shell .fd-player-objective-status { display:grid; grid-template-columns:1fr auto; gap:4px 10px; align-items:center; padding:8px; border-radius:9px; background:#eef5fd; }
+.fd-player-career-shell .fd-player-objective-status b { color:#13386c !important; font-size:11px; }
+.fd-player-career-shell .fd-player-objective-status span { color:#647b98; font-size:9px; }
+.fd-player-career-shell .fd-player-objective-status .fd-player-stat-track { grid-column:1/-1; }
+.fd-player-career-shell .fd-player-objective-list { display:grid; gap:5px; }
+.fd-player-career-shell .fd-player-objective-list > div { display:grid; grid-template-columns:12px minmax(0,1fr) auto; align-items:center; gap:6px; font-size:10px; }
+.fd-player-career-shell .fd-player-objective-list > div span { color:#16a34a; }
+.fd-player-career-shell .fd-player-objective-list > div b { color:#0f2342; }
+.fd-player-career-shell .fd-player-objective-list > div strong { color:#235ba8; font-variant-numeric:tabular-nums; }
+.fd-player-career-shell .fd-player-quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:auto; }
+.fd-player-career-shell .fd-player-quick-actions button { min-width:0; padding:8px; border-radius:8px; background:#e7f0fc; border:1px solid #cbdced; color:#13386c; text-align:left; font-size:9px; font-weight:900; }
+.fd-player-career-shell .fd-player-quick-actions button b { display:block; margin-top:3px; color:#16834a; font-size:8px; }
+.fd-player-career-shell .fd-player-match-cta { background:#f6c21c !important; color:#10243e !important; border:0 !important; font-weight:1000 !important; }
+@media (orientation:portrait) {
+ .fd-player-career-shell.fd-player-console { width:100dvh !important; height:100vw !important; min-height:0 !important; transform:rotate(90deg) translateY(-100%); transform-origin:top left; left:100vw !important; top:0 !important; }
+}
+@media (max-width:900px) and (orientation:landscape) {
+ .fd-player-career-shell .fd-player-head { grid-template-columns:minmax(150px,1fr) minmax(230px,1fr) auto !important; }
+ .fd-player-career-shell .fd-player-head { padding-right:330px !important; }
+ .fd-player-career-shell .fd-player-headcopy .fd-player-kicker { display:none; }
+ .fd-player-career-shell .fd-player-layout { gap:5px !important; padding:5px !important; }
+ .fd-player-career-shell .fd-player-sidebar > section { padding:6px !important; }
+}
+@media (max-height:520px) and (orientation:landscape) {
+ .fd-player-career-shell .fd-player-hub { grid-template-rows:46px 34px minmax(0,1fr) 24px !important; }
+ .fd-player-career-shell .fd-player-head { height:46px !important; }
+ .fd-player-career-shell .fd-player-tabs,.fd-player-career-shell .fd-player-tabs button { height:34px !important; min-height:34px !important; }
+ .fd-player-career-shell .fd-player-news { height:24px !important; min-height:24px !important; }
+ .fd-player-career-shell .fd-player-layout { grid-template-rows:minmax(0,1fr) minmax(0,.9fr) !important; }
+}
