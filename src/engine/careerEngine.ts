@@ -1564,6 +1564,13 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
   // Top scorer & MVP in user league
   const leaguePlayers = Object.values(nextPlayers).filter((p) => nextClubs[p.clubId]?.leagueId === userLeague.id);
   const goldenBoot = [...leaguePlayers].sort((a, b) => b.seasonStats.goals - a.seasonStats.goals)[0];
+  const bestYoungPlayer = [...leaguePlayers]
+    .filter((p) => p.age <= 21 && p.seasonStats.appearances >= 8)
+    .sort((a, b) => b.seasonStats.averageRating - a.seasonStats.averageRating)[0];
+  const playmaker = [...leaguePlayers].sort((a, b) => b.seasonStats.assists - a.seasonStats.assists)[0];
+  const goldenGlove = [...leaguePlayers]
+    .filter((p) => p.position === 'GK')
+    .sort((a, b) => b.seasonStats.cleanSheets - a.seasonStats.cleanSheets)[0];
   const ballonDor = Object.values(nextPlayers).sort(
     (a, b) => b.overall * 0.6 + b.seasonStats.averageRating * 6 + b.seasonStats.goals * 0.8 - (a.overall * 0.6 + a.seasonStats.averageRating * 6 + a.seasonStats.goals * 0.8)
   )[0];
@@ -1595,6 +1602,15 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
     }
     if (ballonDor?.id === nextLegend.playerId) {
       nextLegend.individualAwards.push({ season: save.season, award: 'Dynasty Ballon d\'Or' });
+    }
+    if (bestYoungPlayer?.id === nextLegend.playerId) {
+      nextLegend.individualAwards.push({ season: save.season, award: 'Young Player of the Season' });
+    }
+    if (playmaker?.id === nextLegend.playerId && (playmaker.seasonStats.assists ?? 0) > 0) {
+      nextLegend.individualAwards.push({ season: save.season, award: 'League Playmaker' });
+    }
+    if (goldenGlove?.id === nextLegend.playerId && goldenGlove.seasonStats.cleanSheets > 0) {
+      nextLegend.individualAwards.push({ season: save.season, award: 'Golden Glove' });
     }
     if (uP && uP.age >= 35) {
       // Optional auto-note near retirement age
