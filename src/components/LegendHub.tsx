@@ -87,8 +87,8 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   useEffect(() => {
     const orientation = save.playerOrientation ?? 'LANDSCAPE';
     if (orientation === 'AUTO') {
-      void ScreenOrientation.unlock().catch(() => undefined);
-      return;
+      void ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => undefined);
+      return () => { void ScreenOrientation.unlock().catch(() => undefined); };
     }
     void ScreenOrientation.lock({ orientation: orientation.toLowerCase() as 'landscape' | 'portrait' }).catch(() => undefined);
     return () => { void ScreenOrientation.unlock().catch(() => undefined); };
@@ -303,30 +303,14 @@ export const LegendHub: React.FC<LegendHubProps> = ({
       },
     ];
 
-    const keyAttrs =
-      player.position === 'GK'
-        ? [
-            { label: 'Goalkeeping', value: player.attributes.goalkeeping },
-            { label: 'Reactions', value: player.attributes.reactions },
-            { label: 'Positioning', value: player.attributes.positioning },
-            { label: 'Jumping', value: player.attributes.jumping },
-            { label: 'Passing', value: player.attributes.passing },
-          ]
-        : ['CB', 'LB', 'RB', 'CDM'].includes(player.position)
-        ? [
-            { label: 'Tackling', value: player.attributes.tackling },
-            { label: 'Marking', value: player.attributes.marking },
-            { label: 'Positioning', value: player.attributes.positioning },
-            { label: 'Speed', value: player.attributes.speed },
-            { label: 'Stamina', value: player.attributes.stamina },
-          ]
-        : [
-            { label: 'Finishing', value: player.attributes.finishing },
-            { label: 'Dribbling', value: player.attributes.dribbling },
-            { label: 'Passing', value: player.attributes.passing },
-            { label: 'Speed', value: player.attributes.speed },
-            { label: 'Vision', value: player.attributes.vision },
-          ];
+    const keyAttrs = [
+      { label: 'PAC', value: player.attributes.speed },
+      { label: 'SHO', value: player.attributes.shooting },
+      { label: 'PAS', value: player.attributes.passing },
+      { label: 'DRI', value: player.attributes.dribbling },
+      { label: 'DEF', value: player.attributes.tackling },
+      { label: 'PHY', value: player.attributes.strength },
+    ];
 
     const objectives = [
       `Selection: ${isStarter ? 'Starting XI' : isBench ? 'Bench Impact Sub' : 'Earn Starting Spot via Training'}`,
