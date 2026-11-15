@@ -1316,3 +1316,222 @@
   .fd-root[data-mode="manager"] .fd-main { overflow-y:auto; grid-template-columns:1fr; grid-template-rows:minmax(240px,42vh) auto; }
   .fd-sidebar { grid-template-rows:minmax(190px,auto) minmax(140px,auto); }
 }
+
+
+/* =========================================================
+   MANAGER CAREER — unified PES royal-blue / gold skin.
+   Applied to every manager sub-screen, not only the home hub.
+   ========================================================= */
+.fd-manager-skin,
+.fd-manager-skin * {
+  box-sizing: border-box;
+}
+.fd-manager-skin {
+  --mgr-blue: #13386C;
+  --mgr-blue-mid: #235BA8;
+  --mgr-navy: #0D1B2A;
+  --mgr-gold: #F6C21C;
+  --mgr-paper: #E8EDF5;
+  --mgr-muted: #bdc9d8;
+  min-height: 100dvh;
+  color: #f7f9fc !important;
+  background:
+    linear-gradient(180deg, rgba(19,56,108,.91), rgba(8,31,59,.96)),
+    url('/media/game/training-ground.jpg') center 55% / cover fixed,
+    #13386C !important;
+  font-family: 'Barlow Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif !important;
+  color-scheme: dark;
+}
+.fd-manager-skin header {
+  color: #fff;
+  background: linear-gradient(90deg, #0D1B2A, #17477f 55%, #0D1B2A) !important;
+  border-color: rgba(246,194,28,.72) !important;
+  box-shadow: 0 3px 14px #07162970;
+}
+.fd-manager-skin nav {
+  color: #132d4e;
+  background: #E8EDF5 !important;
+  border-color: #9eacc0 !important;
+}
+.fd-manager-skin nav button {
+  color: #25415f !important;
+  border-color: transparent !important;
+  font-weight: 900;
+  letter-spacing: .25px;
+}
+.fd-manager-skin nav button[class*="border-cyan"],
+.fd-manager-skin nav button[aria-current="page"] {
+  color: #10233d !important;
+  border-color: #F6C21C !important;
+  background: linear-gradient(180deg, #fff, #dce5f1) !important;
+}
+.fd-manager-skin main {
+  color: #f7f9fc;
+}
+.fd-manager-skin main > div:first-child {
+  border-color: rgba(246,194,28,.38) !important;
+  background-color: #0D1B2A !important;
+  box-shadow: 0 5px 18px #06182b70;
+}
+.fd-manager-skin h1,
+.fd-manager-skin h2,
+.fd-manager-skin h3,
+.fd-manager-skin h4 {
+  color: #fff;
+  font-family: 'Barlow Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif !important;
+  font-weight: 900;
+  letter-spacing: .25px;
+}
+.fd-manager-skin h2,
+.fd-manager-skin h3 {
+  text-transform: uppercase;
+}
+.fd-manager-skin [class~="bg-[#131A22]"],
+.fd-manager-skin [class~="bg-[#0E141B]"],
+.fd-manager-skin [class~="bg-[#101923]"],
+.fd-manager-skin [class~="bg-[#14212d]"],
+.fd-manager-skin [class~="bg-[#080e15]"] {
+  background: rgba(13,27,42,.92) !important;
+  border-color: rgba(226,237,249,.2) !important;
+  box-shadow: 0 4px 14px #06182b35;
+}
+.fd-manager-skin [class~="bg-[#0B0F14]"] {
+  background: #102b4b !important;
+}
+.fd-manager-skin [class~="border-white/10"],
+.fd-manager-skin [class~="border-white/15"],
+.fd-manager-skin [class~="border-cyan-400/20"],
+.fd-manager-skin [class~="border-cyan-500/35"] {
+  border-color: rgba(226,237,249,.22) !important;
+}
+.fd-manager-skin [class~="text-cyan-300"],
+.fd-manager-skin [class~="text-cyan-400"],
+.fd-manager-skin [class~="text-cyan-500"] {
+  color: #F6C21C !important;
+}
+.fd-manager-skin [class~="text-slate-100"],
+.fd-manager-skin [class~="text-slate-200"],
+.fd-manager-skin [class~="text-white"] {
+  color: #f7f9fc !important;
+}
+.fd-manager-skin [class~="text-slate-300"],
+.fd-manager-skin [class~="text-slate-400"],
+.fd-manager-skin [class~="text-slate-500"] {
+  color: #bdc9d8 !important;
+}
+.fd-manager-skin [class~="bg-cyan-400"],
+.fd-manager-skin [class~="bg-cyan-500"],
+.fd-manager-skin [class~="bg-cyan-600"] {
+  color: #10233d !important;
+  background: #F6C21C !important;
+  border: 1px solid #ffe17a !important;
+  box-shadow: inset 0 1px #ffffff55, 0 2px 8px #0004;
+}
+.fd-manager-skin button {
+  font-family: inherit;
+  transition: background-color .15s ease, border-color .15s ease, transform .12s ease;
+}
+.fd-manager-skin button:not(:disabled):hover {
+  border-color: #F6C21C !important;
+}
+.fd-manager-skin button:disabled {
+  opacity: .48;
+}
+.fd-manager-skin input,
+.fd-manager-skin select,
+.fd-manager-skin textarea {
+  color: #f7f9fc !important;
+  background: #081a2c !important;
+  border: 1px solid rgba(226,237,249,.28) !important;
+  border-radius: 3px !important;
+  accent-color: #F6C21C;
+}
+.fd-manager-skin input:focus,
+.fd-manager-skin select:focus,
+.fd-manager-skin textarea:focus {
+  outline: 2px solid #F6C21C !important;
+  outline-offset: 1px;
+}
+.fd-manager-skin option {
+  color: #f7f9fc;
+  background: #0D1B2A;
+}
+.fd-manager-skin table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #f7f9fc;
+  font-variant-numeric: tabular-nums;
+}
+.fd-manager-skin th {
+  color: #F6C21C !important;
+  background: #102b4b;
+  border-bottom: 1px solid #F6C21C55;
+  font-size: 10px;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+.fd-manager-skin td {
+  color: #eaf0f7;
+  border-color: rgba(226,237,249,.13) !important;
+}
+.fd-manager-skin tr:nth-child(even) td {
+  background: rgba(255,255,255,.025);
+}
+.fd-manager-skin ::selection {
+  color: #10233d;
+  background: #F6C21C;
+}
+.fd-manager-skin img {
+  image-rendering: auto;
+}
+.fd-manager-skin .career-subpage-content {
+  max-width: none;
+  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  background: linear-gradient(180deg, rgba(19,56,108,.14), rgba(5,23,43,.24));
+}
+.fd-manager-skin .career-subpage-content > .relative {
+  border-radius: 3px !important;
+}
+.fd-manager-skin .career-subpage-content .rounded-xl,
+.fd-manager-skin .career-subpage-content .rounded-lg {
+  border-radius: 3px !important;
+}
+.fd-manager-skin .career-subpage-content .rounded-xl[class*="border"],
+.fd-manager-skin .career-subpage-content .rounded-lg[class*="border"] {
+  border-color: rgba(226,237,249,.2) !important;
+}
+.fd-manager-skin .career-subpage-content .text-emerald-300,
+.fd-manager-skin .career-subpage-content .text-emerald-400,
+.fd-manager-skin .career-subpage-content .text-amber-300 {
+  color: #F6C21C !important;
+}
+.fd-manager-skin .career-subpage-content .bg-emerald-500\/10,
+.fd-manager-skin .career-subpage-content .bg-amber-500\/10 {
+  background: rgba(246,194,28,.09) !important;
+}
+.fd-manager-skin .career-subpage-content .border-emerald-400\/20,
+.fd-manager-skin .career-subpage-content .border-emerald-400\/30,
+.fd-manager-skin .career-subpage-content .border-amber-400\/30 {
+  border-color: rgba(246,194,28,.42) !important;
+}
+.fd-manager-skin .overflow-x-auto,
+.fd-manager-skin .overflow-y-auto {
+  scrollbar-color: #F6C21C #0D1B2A;
+  scrollbar-width: thin;
+}
+.fd-manager-skin .career-subpage-content > * {
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .fd-manager-skin header > div {
+    gap: 8px;
+  }
+  .fd-manager-skin nav > div {
+    min-width: max-content;
+  }
+  .fd-manager-skin .career-subpage-content {
+    padding: 10px !important;
+  }
+}
