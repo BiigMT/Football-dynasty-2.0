@@ -515,6 +515,18 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     );
     const conceded = st.side === 'HOME' ? awayGoals : homeGoals;
     const cleanSheet = conceded === 0 && (p.position === 'GK' || ['CB', 'LB', 'RB'].includes(p.position)) ? 1 : 0;
+    const scoutingProgress = p.potentialRange && !p.scouted
+      ? Math.min(100, (p.scoutingProgress ?? 0) + Math.max(5, Math.round((st.slotIndex >= 0 ? 82 : 24) / 10)))
+      : p.scoutingProgress;
+    const potentialRange = p.potentialRange && scoutingProgress !== undefined
+      ? (() => {
+          const remainingWidth = Math.ceil((p.potentialRange![1] - p.potentialRange![0]) * (1 - scoutingProgress / 100));
+          return [
+            Math.max(p.overall, p.potential - Math.ceil(remainingWidth / 2)),
+            Math.min(99, p.potential + Math.floor(remainingWidth / 2)),
+          ] as [number, number];
+        })()
+      : p.potentialRange;
 
     nextPlayers[p.id] = {
       ...p,
@@ -524,6 +536,9 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       injuredWeeks: st.injured ? Math.max(p.injuredWeeks, 2 + Math.floor(Math.random() * 3)) : p.injuredWeeks,
       injuryType: st.injured ? (p.position === 'GK' ? 'Muscle strain' : Math.random() < 0.5 ? 'Hamstring strain' : 'Ankle knock') : p.injuryType,
       suspendedMatches: st.redCard ? 1 : p.suspendedMatches,
+      potentialRange,
+      scoutingProgress,
+      scouted: p.potentialRange ? (scoutingProgress ?? 0) >= 100 : p.scouted,
       seasonStats: {
         ...p.seasonStats,
         appearances: p.seasonStats.appearances + 1,
