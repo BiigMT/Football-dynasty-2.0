@@ -62,6 +62,8 @@ const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = 
   { key: 'goalkeeping', label: 'Goalkeeping' },
 ];
 
+const marketValueLabel = (value: number) => value >= 1000000 ? `€${(value / 1000000).toFixed(1)}M` : `€${Math.round(value / 1000)}K`;
+
 export const LegendHub: React.FC<LegendHubProps> = ({
   save,
   muted,
@@ -313,43 +315,98 @@ export const LegendHub: React.FC<LegendHubProps> = ({
       `${player.name}: ${player.overall} OVR (${player.potential} POT) · Value €${(player.marketValue / 1000000).toFixed(1)}M`,
     ];
 
+    const upcomingFixtures = league.fixtures
+      .filter((fixture) => !fixture.played && fixture.week >= save.currentWeek &&
+        (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+      .sort((a, b) => a.week - b.week)
+      .slice(0, 5);
+
     return (
-      <PlayerHome
-        name={player.name}
-        position={player.position}
-        age={player.age}
-        club={club.name}
-        clubColor={club.primaryColor}
-        number={player.shirtNumber}
-        overall={player.overall}
-        potential={player.potential}
-        skin={player.appearance.skinTone}
-        hair={player.appearance.hairColor}
-        form={player.form}
-        morale={player.morale}
-        fitness={player.fitness}
-        managerTrust={legend.managerTrust}
-        attrs={keyAttrs}
-        days={days}
-        nextMatch={
-          nextFixture && opp
-            ? `${nextFixture.homeClubId === club.id ? 'vs' : '@'} ${opp.name}`
-            : leagueFinished
-            ? `Season ${save.season} Complete`
-            : 'Midweek Recovery'
-        }
-        objectives={objectives}
-        marketValue={`€${(player.marketValue / 1000000).toFixed(1)}M`}
-        ticker={ticker}
-        table={tableRows}
-        leagueName={league.name}
-        forwardTitle={nextFixture ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'FORWARD TIME'}
-        forwardSub={
-          nextFixture ? nextFixture.competitionName : leagueFinished ? 'Roll to next season' : 'Advance to next week'
-        }
-        onForward={handleForwardTime}
-        onNavigate={handleHomeNavigate}
-      />
+      <div className="fd-player-hub" data-player-hub="true">
+        <header className="fd-player-head">
+          <div className="fd-player-identity">
+            <div className="fd-player-crest" style={{ background: club.primaryColor }}>
+              <span>{club.shortName.slice(0, 3).toUpperCase()}</span>
+            </div>
+            <PlayerPortrait appearance={player.appearance} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={58} className="fd-player-headshot" />
+            <div className="fd-player-headcopy">
+              <div className="fd-player-kicker">FOOTBALL DYNASTY · BECOME A LEGEND</div>
+              <h1>{player.name}</h1>
+              <p>{player.position} · Age {player.age} · #{player.shirtNumber} · {club.name}</p>
+            </div>
+          </div>
+          <div className="fd-player-meta">
+            <div><strong>{player.overall}</strong><small>OVERALL</small></div>
+            <div><strong>{player.potential}</strong><small>POTENTIAL</small></div>
+            <div><strong>{marketValueLabel(player.marketValue)}</strong><small>MARKET VALUE</small></div>
+            <div><strong>S{save.season} · W{save.currentWeek}</strong><small>SEASON / WEEK</small></div>
+          </div>
+          <div className="fd-player-head-actions">
+            <button type="button" onClick={onToggleMute} aria-label="Toggle sound">{muted ? '♪ OFF' : '♪ ON'}</button>
+            <button type="button" onClick={onExitToTitle}>EXIT</button>
+          </div>
+        </header>
+
+        <nav className="fd-player-tabs" aria-label="Player career navigation">
+          <button className="is-active" type="button" onClick={handleForwardTime}><span>01</span> PLAY MATCHDAY</button>
+          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> TRAINING{!save.weekTrained ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> PLAYER PROFILE</button>
+          <button type="button" onClick={() => setTab('AGENT')}><span>04</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> CAREER HISTORY</button>
+          <button type="button" onClick={() => setTab('SETTINGS')}><span>06</span> SYSTEM</button>
+        </nav>
+
+        <main className="fd-player-layout">
+          <section className="fd-player-showcase">
+            <img className="fd-player-showcase-bg" src="/media/game/player-preparation.jpg" alt="" />
+            <div className="fd-player-showcase-shade" />
+            <div className="fd-player-watermark">{club.shortName}</div>
+            <div className="fd-player-showcase-top">
+              <span className="fd-player-pill">{legend.squadRole.replace(/_/g, ' ')}</span>
+              <span className="fd-player-pill fd-player-gold">PLAYER SPOTLIGHT</span>
+            </div>
+            <div className="fd-player-portrait-stage">
+              <PlayerPortrait appearance={player.appearance} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={210} className="fd-player-feature-portrait" />
+              <div className="fd-player-rating"><strong>{player.overall}</strong><span>OVR</span><em>POT {player.potential}</em></div>
+            </div>
+            <div className="fd-player-showcase-copy">
+              <div className="fd-player-kicker">THE ROAD TO GREATNESS · {club.name.toUpperCase()}</div>
+              <h2>{player.name}</h2>
+              <p>{player.position} · {player.playingStyle.replace(/_/g, ' ')} · Squad No. {player.shirtNumber}</p>
+              <blockquote>“The next performance is the one that matters. Keep working, keep believing.”</blockquote>
+              <div className="fd-player-condition">
+                <span>FORM <b>{player.form}</b></span><span>MORALE <b>{player.morale}</b></span><span>FITNESS <b>{player.fitness}</b></span><span>TRUST <b>{legend.managerTrust}</b></span>
+              </div>
+              <button className="fd-player-match-cta" type="button" onClick={handleForwardTime}>{nextFixture ? 'ENTER MATCHDAY' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
+            </div>
+          </section>
+
+          <aside className="fd-player-sidebar">
+            <section className="fd-player-panel fd-player-attributes">
+              <div className="fd-player-panel-title"><div><small>PLAYER PERFORMANCE</small><h3>KEY ATTRIBUTES</h3></div><button type="button" onClick={() => setTab('ATTRIBUTES')}>FULL PROFILE ↗</button></div>
+              {keyAttrs.map((attr) => <div className="fd-player-stat" key={attr.label}><div><span>{attr.label}</span><b>{attr.value}</b></div><div className="fd-player-stat-track"><i style={{ width: `${Math.max(0, Math.min(100, attr.value))}%` }} /></div></div>)}
+            </section>
+            <section className="fd-player-panel fd-player-table">
+              <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
+              <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
+              {tableRows.slice(0, 4).map((row) => <div className={`fd-player-table-row${row.me ? ' is-user' : ''}`} key={row.club}><span>{row.pos}</span><span><i style={{ background: row.color || '#789' }} />{row.club}</span><span>{row.p}</span><span>{row.gd > 0 ? '+' : ''}{row.gd}</span><b>{row.pts}</b></div>)}
+            </section>
+            <section className="fd-player-panel fd-player-fixtures">
+              <div className="fd-player-panel-title"><div><small>THE ROAD AHEAD</small><h3>UPCOMING FIXTURES</h3></div><span>5 WEEKS</span></div>
+              <div className="fd-player-fixture-list">
+                {upcomingFixtures.map((fixture) => {
+                  const home = fixture.homeClubId === club.id;
+                  const opponentId = home ? fixture.awayClubId : fixture.homeClubId;
+                  const opponent = save.clubs[opponentId] ?? save.nationalTeams[opponentId];
+                  return <div className="fd-player-fixture" key={fixture.id}><span className="fd-player-week">W{fixture.week}</span><div><b>{home ? 'VS' : '@'} {opponent?.name ?? 'TBC'}</b><small>{fixture.competitionName}</small></div><span className="fd-player-fixture-dot">●</span></div>;
+                })}
+                {!upcomingFixtures.length && <p className="fd-player-empty">No upcoming fixtures scheduled.</p>}
+              </div>
+            </section>
+          </aside>
+        </main>
+        <footer className="fd-player-news"><b>DYNASTY NEWS</b><div>{ticker.slice(0, 5).map((item, index) => <span key={index}>{item}</span>)}</div><small>LIVE CAREER FEED</small></footer>
+      </div>
     );
   }
 
