@@ -335,24 +335,21 @@ export default function App() {
   }
 
   if (screen === 'SETUP') {
-    return (
-      {setupTarget.mode === 'PLAYER' ? (
-        <PlayerCreationWizard
-          slotId={setupTarget.slotId}
-          onCancel={() => setScreen('TITLE')}
-          onConfirmManager={handleConfirmManager}
-          onConfirmLegend={handleConfirmLegend}
-        />
-      ) : (
-        <CareerSetupModal
-          mode="MANAGER"
-          slotId={setupTarget.slotId}
-          onCancel={() => setScreen('TITLE')}
-          onConfirmManager={handleConfirmManager}
-          onConfirmLegend={handleConfirmLegend}
-        />
-      )}
-    );
+    if (setupTarget.mode === 'PLAYER') {
+      return <PlayerCreationWizard
+        slotId={setupTarget.slotId}
+        onCancel={() => setScreen('TITLE')}
+        onConfirmManager={handleConfirmManager}
+        onConfirmLegend={handleConfirmLegend}
+      />;
+    }
+    return <CareerSetupModal
+      mode="MANAGER"
+      slotId={setupTarget.slotId}
+      onCancel={() => setScreen('TITLE')}
+      onConfirmManager={handleConfirmManager}
+      onConfirmLegend={handleConfirmLegend}
+    />;
   }
 
   if (screen === 'MATCH' && activeSave && activeSave.activeMatch) {
