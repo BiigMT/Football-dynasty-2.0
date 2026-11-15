@@ -221,7 +221,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     : 'AWAY END ERUPTS · THE HOME CROWD FALLS SILENT';
 
   return (
-    <div className={`fd-realism-match bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`} style={{ backgroundImage: "linear-gradient(rgba(7,12,18,.88), rgba(7,12,18,.96)), url('/media/pixabay/stadium-audience.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+    <div className={`fd-realism-match bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`} style={{ backgroundImage: "linear-gradient(rgba(7,12,18,.88), rgba(7,12,18,.96)), url('/media/game/matchday-training.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className={isLiveMatch ? 'match-live-content' : isHalfTime ? 'match-halftime-content' : 'max-w-6xl mx-auto flex flex-col gap-4'}>
         {showGoalCelebration && latestGoal && (
           <div className="overflow-hidden rounded-xl border border-amber-300/50 bg-gradient-to-r from-amber-500/25 via-[#172533] to-cyan-500/20 px-4 py-3 shadow-lg animate-pulse">
