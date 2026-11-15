@@ -521,6 +521,7 @@ export interface CareerSave {
   internationalTournament?: InternationalTournament;
   activeMatch?: MatchSession;
   transferOffers: TransferOffer[];
+  transferClauses?: Record<string, { playerId: string; fromClubId: string; toClubId: string; sellOnPercentage: number }>;
   news: NewsItem[];
   trainingFocus: TrainingFocus;
   weekTrained: boolean;
