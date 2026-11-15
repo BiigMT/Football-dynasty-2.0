@@ -357,6 +357,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <div><strong>{player.overall}</strong><small>OVERALL</small></div>
             <div><strong>{player.potential}</strong><small>POTENTIAL</small></div>
             <div><strong>{marketValueLabel(player.marketValue)}</strong><small>MARKET VALUE</small></div>
+            <div><strong>€{player.weeklyWage.toLocaleString()}</strong><small>WEEKLY WAGE</small></div>
             <div><strong>S{save.season} · W{save.currentWeek}</strong><small>SEASON / WEEK</small></div>
           </div>
           <div className="fd-player-head-actions">
@@ -466,6 +467,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:flex items-center gap-3 rounded-lg border border-[#d5e3f4] bg-white/75 px-3 py-2"><span className="text-[10px] font-bold text-[#526782]">VALUE <b className="text-[#13386c]">{marketValueLabel(player.marketValue)}</b></span><span className="text-[10px] font-bold text-[#526782]">WAGE <b className="text-[#13386c]">€{player.weeklyWage.toLocaleString()}/wk</b></span></div>
             {legend.internationalCallUp && natTeam && (
               <div className="hidden md:flex items-center gap-1.5 text-xs text-emerald-400 font-medium mr-2">
                 <Flag className="w-3.5 h-3.5" />
