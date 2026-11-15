@@ -13,8 +13,9 @@ import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { OFFLINE_CLUBS, type OfflineClub } from '../data/offlineDatabase';
 import { ClubPresentationModal } from './ClubPresentationModal';
+import { NATIONS_DATABASE, CONFEDERATIONS } from '../data/nationsDatabase';
 
-interface CareerSetupModalProps {
+export interface CareerSetupModalProps {
   mode: CareerMode;
   slotId: string;
   onCancel: () => void;
@@ -87,7 +88,9 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
   // Manager fields
   const [managerName, setManagerName] = useState('Alex Mercer');
-  const [nationality, setNationality] = useState('Nigeria');
+  const [nationality, setNationality] = useState('Zambia');
+  const [nationQuery, setNationQuery] = useState('');
+  const [nationConfederation, setNationConfederation] = useState<string>('ALL');
   const [philosophy, setPhilosophy] = useState<'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced'>('Gegenpress');
   const [difficulty, setDifficulty] = useState<GameDifficulty>('NORMAL');
   const [trialRating, setTrialRating] = useState(65);
@@ -230,17 +233,13 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                   </label>
                   <label className="flex flex-col gap-1.5 text-xs text-slate-400">
                     <span>Nationality</span>
-                    <select
-                      value={nationality}
-                      onChange={(e) => setNationality(e.target.value)}
-                      className="min-h-[44px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none"
-                    >
-                      {NATIONAL_TEAM_BLUEPRINTS.map((n) => (
-                        <option key={n.id} value={n.name}>
-                          {n.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex flex-col gap-2">
+                      <input value={nationQuery} onChange={(e) => setNationQuery(e.target.value)} placeholder="Search 79 nations..." className="min-h-[38px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white" />
+                      <select value={nationConfederation} onChange={(e) => setNationConfederation(e.target.value)} className="min-h-[36px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white"><option value="ALL">All confederations</option>{CONFEDERATIONS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+                      <select value={nationality} onChange={(e) => setNationality(e.target.value)} className="min-h-[44px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none">
+                        {NATIONS_DATABASE.filter((n) => (nationConfederation === 'ALL' || n.confederation === nationConfederation) && n.name.toLowerCase().includes(nationQuery.toLowerCase())).map((n) => <option key={n.code} value={n.name}>{n.name} · {n.confederation} · U21 {n.u21OvrRequired} / Senior {n.seniorOvrRequired}</option>)}
+                      </select>
+                    </div>
                   </label>
                 </div>
 
@@ -310,17 +309,13 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                   </label>
                   <label className="flex flex-col gap-1 text-xs text-slate-400">
                     <span>Nationality</span>
-                    <select
-                      value={nationality}
-                      onChange={(e) => setNationality(e.target.value)}
-                      className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-amber-400 focus:outline-none"
-                    >
-                      {NATIONAL_TEAM_BLUEPRINTS.map((n) => (
-                        <option key={n.id} value={n.name}>
-                          {n.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex flex-col gap-2">
+                      <input value={nationQuery} onChange={(e) => setNationQuery(e.target.value)} placeholder="Search 79 nations..." className="min-h-[36px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white" />
+                      <select value={nationConfederation} onChange={(e) => setNationConfederation(e.target.value)} className="min-h-[34px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white"><option value="ALL">All confederations</option>{CONFEDERATIONS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+                      <select value={nationality} onChange={(e) => setNationality(e.target.value)} className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-amber-400 focus:outline-none">
+                        {NATIONS_DATABASE.filter((n) => (nationConfederation === 'ALL' || n.confederation === nationConfederation) && n.name.toLowerCase().includes(nationQuery.toLowerCase())).map((n) => <option key={n.code} value={n.name}>{n.name} · {n.confederation} · U21 {n.u21OvrRequired} / Senior {n.seniorOvrRequired}</option>)}
+                      </select>
+                    </div>
                   </label>
 
                   <label className="flex flex-col gap-1 text-xs text-slate-400">
