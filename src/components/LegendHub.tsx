@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 import {
   ArrowLeft,
   Dumbbell,
@@ -83,6 +84,15 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const [contractNotice, setContractNotice] = useState('');
   const [phoneMode, setPhoneMode] = useState<'SOCIAL' | 'MESSAGES'>('SOCIAL');
   const [negotiatingOfferId, setNegotiatingOfferId] = useState<string | null>(null);
+  useEffect(() => {
+    const orientation = save.playerOrientation ?? 'AUTO';
+    if (orientation === 'AUTO') {
+      void ScreenOrientation.unlock().catch(() => undefined);
+      return;
+    }
+    void ScreenOrientation.lock({ orientation: orientation.toLowerCase() as 'landscape' | 'portrait' }).catch(() => undefined);
+    return () => { void ScreenOrientation.unlock().catch(() => undefined); };
+  }, [save.playerOrientation]);
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
@@ -902,6 +912,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <div className="flex items-center justify-between gap-3"><div><b className="text-sm text-slate-100">Career difficulty</b><p className="text-[11px] text-slate-500 mt-1">Affects development and match challenge where supported.</p></div><span className="text-xs font-bold text-[#235BA8]">{save.difficulty ?? 'NORMAL'}</span></div>
               <div className="grid grid-cols-3 gap-2 mt-3">
                 {(['EASY', 'NORMAL', 'HARD'] as const).map(level => <button key={level} type="button" aria-pressed={(save.difficulty ?? 'NORMAL') === level} onClick={() => onUpdateSave({ ...save, difficulty: level })} className={`min-h-[40px] rounded-lg border text-xs font-bold ${(save.difficulty ?? 'NORMAL') === level ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{level}</button>)}
+              </div>
+            </section>
+            <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
+              <div><b className="text-sm text-slate-100">Device orientation</b><p className="text-[11px] text-slate-500 mt-1">Lock the phone display for Player Career. Auto restores system rotation.</p></div>
+              <div className="grid grid-cols-3 gap-2 mt-3">
+                {([{id:'AUTO',label:'AUTO'},{id:'LANDSCAPE',label:'LANDSCAPE'},{id:'PORTRAIT',label:'PORTRAIT'}] as const).map(value => <button key={value.id} type="button" aria-pressed={(save.playerOrientation ?? 'AUTO') === value.id} onClick={() => onUpdateSave({ ...save, playerOrientation: value.id })} className={`min-h-[40px] rounded-lg border text-[10px] font-bold ${(save.playerOrientation ?? 'AUTO') === value.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{value.label}</button>)}
               </div>
             </section>
             <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
