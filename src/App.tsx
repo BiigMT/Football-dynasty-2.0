@@ -14,8 +14,9 @@ import { soundEngine } from './engine/audio';
 import { TitleScreen } from './components/TitleScreen';
 import { CareerSetupModal } from './components/CareerSetupModal';
 import { ManagerHub } from './components/ManagerHub';
-import { LegendHub } from './components/LegendHub';
+import { PlayerCareerHub } from './components/PlayerCareerHub';
 import { MatchCenter } from './components/MatchCenter';
+import { PlayerMatchMode } from './components/PlayerMatchMode';
 import { StudioIntro } from './components/StudioIntro';
 import { OrientationSelect, GameOrientation } from './components/OrientationSelect';
 import { CareerModeSelect } from './components/CareerModeSelect';
@@ -338,7 +339,7 @@ export default function App() {
   if (screen === 'MATCH' && activeSave && activeSave.activeMatch) {
     const allClubs = getMatchClubsMap(activeSave);
     return (
-      <MatchCenter
+      {activeSave.mode === 'PLAYER' ? <PlayerMatchMode
         initialSession={activeSave.activeMatch}
         clubs={allClubs}
         players={activeSave.players}
@@ -346,7 +347,15 @@ export default function App() {
         onToggleMute={handleToggleMute}
         onPersistMatchState={handlePersistMatchState}
         onFinishMatch={handleFinishMatch}
-      />
+      /> : <MatchCenter
+        initialSession={activeSave.activeMatch}
+        clubs={allClubs}
+        players={activeSave.players}
+        muted={muted}
+        onToggleMute={handleToggleMute}
+        onPersistMatchState={handlePersistMatchState}
+        onFinishMatch={handleFinishMatch}
+      />}
     );
   }
 
@@ -367,7 +376,7 @@ export default function App() {
       );
     }
     return (
-      <LegendHub
+      <PlayerCareerHub
         save={activeSave}
         muted={muted}
         onToggleMute={handleToggleMute}
