@@ -510,6 +510,7 @@ export interface CareerSave {
   slotId: string;
   mode: CareerMode;
   difficulty?: GameDifficulty;
+  playerLayout?: 'AUTO' | 'COMPACT' | 'WIDE';
   createdAt: number;
   updatedAt: number;
   season: number;
