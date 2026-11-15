@@ -662,9 +662,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 })}
               </div>
 
-              {selectedSlotIdx !== null && (
+              {selectedSlotIdx != null && (
                 <div className="text-xs text-cyan-300 bg-cyan-500/10 border border-cyan-400/30 px-3 py-2 rounded-lg">
-                  Slot {selectedSlotIdx + 1} ({formationSlots[selectedSlotIdx]}) selected — click any player on the right to swap.
+                  Slot {(selectedSlotIdx ?? 0) + 1} ({formationSlots[selectedSlotIdx ?? 0]}) selected — click any player on the right to swap.
                 </div>
               )}
 
