@@ -1318,6 +1318,8 @@ export function promoteYouthProspect(save: CareerSave): CareerSave {
   });
   prospect.overall = targetOverall;
   prospect.potential = potentialRange[0] + Math.floor(Math.random() * (potentialRange[1] - potentialRange[0] + 1));
+  prospect.potentialRange = [Math.max(prospect.overall, prospect.potential - 5), prospect.potential];
+  prospect.scoutingProgress = 0;
   prospect.scouted = false;
 
   return {
