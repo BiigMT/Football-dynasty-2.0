@@ -31,6 +31,7 @@ import {
 } from './database';
 import { quickSimulateFullMatch } from './matchEngine';
 import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyramid } from './careerPyramid';
+import { findNation } from '../data/nationsDatabase';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -722,7 +723,10 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       // Check National Team Call-Up
       const natTeam = nextLegend.nationalTeamId ? save.nationalTeams[nextLegend.nationalTeamId] : undefined;
       let callUp = nextLegend.internationalCallUp;
-      if (natTeam && !callUp && nextOvr >= natTeam.reputation - 8) {
+      const nationProfile = findNation(uPlayer.nationality);
+      const callUpThreshold = uPlayer.age <= 21 ? nationProfile?.u21OvrRequired : nationProfile?.seniorOvrRequired;
+      const hasInternationalForm = userSt.rating >= 7.0 || uPlayer.seasonStats.averageRating >= 7.0;
+      if (natTeam && !callUp && nextOvr >= (callUpThreshold ?? natTeam.reputation - 8) && hasInternationalForm) {
         callUp = true;
         if (!natTeam.squadPlayerIds.includes(uPlayer.id)) {
           natTeam.squadPlayerIds = [uPlayer.id, ...natTeam.squadPlayerIds.slice(0, 17)];
@@ -733,7 +737,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
           season: save.season,
           category: 'INTERNATIONAL',
           headline: `INTERNATIONAL CALL-UP: ${natTeam.name} summon ${uPlayer.name}!`,
-          body: `${uPlayer.name}'s club form has earned an official call-up to the ${natTeam.name} senior national squad.`,
+          body: `${uPlayer.name} has met the ${uPlayer.age <= 21 ? 'U-21' : 'senior'} OVR threshold (${callUpThreshold ?? natTeam.reputation - 8}) and delivered the required match form to earn an official ${natTeam.name} call-up.`,
         });
       }
 
