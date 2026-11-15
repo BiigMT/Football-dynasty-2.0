@@ -26,6 +26,7 @@ import {
   sortStandings,
 } from '../engine/careerEngine';
 import { soundEngine } from '../engine/audio';
+import { calculateMarketValue, calculateOverall } from '../engine/database';
 import { PlayerPortrait } from './PlayerPortrait';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
@@ -181,6 +182,18 @@ export const LegendHub: React.FC<LegendHubProps> = ({
     if (!destinations.length) return;
     const offers = destinations.map((destination, index) => ({ id: 'loan_offer_' + Date.now() + '_' + index, playerId: player.id, fromClubId: destination.id, toClubId: club.id, dealType: 'LOAN' as const, fee: 0, loanFee: 0, proposedWage: player.weeklyWage, contractYears: 1, signingBonus: 0, releaseClause: player.releaseClause, status: 'PENDING' as const, round: 1, message: destination.name + ' can offer regular first-team football on a 12-week loan.', isIncomingToUser: true }));
     onUpdateSave({ ...save, legend: { ...legend, loanRequestPending: true, managerTrust: Math.max(15, legend.managerTrust - 4), agentOffers: [...offers, ...legend.agentOffers].slice(0, 4), phoneNotifications: [{ id: 'loan_request_' + Date.now(), title: 'Loan request submitted', body: 'Your agent has arranged temporary opportunities. Review the clubs in Agent & Transfers.', kind: 'TRANSFER' as const, week: save.currentWeek, season: save.season }, ...(legend.phoneNotifications ?? [])].slice(0, 20) }, news: [{ id: 'loan_news_' + Date.now(), week: save.currentWeek, season: save.season, category: 'TRANSFER' as const, headline: player.name + ' asks for a loan move', body: 'The player wants regular minutes and has asked the club to consider a temporary move.' }, ...save.news].slice(0, 35) });
+  };
+
+  const spendSkillPoint = (attribute: keyof PlayerAttributes) => {
+    const points = legend.skillPoints ?? 0;
+    if (points < 1 || player.attributes[attribute] >= 99) return;
+    const attributes = { ...player.attributes, [attribute]: Math.min(99, player.attributes[attribute] + 1) };
+    const overall = calculateOverall(player.position, attributes);
+    onUpdateSave({
+      ...save,
+      players: { ...save.players, [player.id]: { ...player, attributes, overall, marketValue: calculateMarketValue(overall, player.age, player.potential) } },
+      legend: { ...legend, skillPoints: points - 1 },
+    });
   };
 
   const handleRetire = () => {
@@ -666,6 +679,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 {save.weekTrained ? 'Trained This Week' : 'Session Available'}
               </span>
             </div>
+            <div className="rounded-xl border border-amber-400/25 bg-[#0E141B] p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2"><div><div className="text-xs font-black uppercase tracking-wider text-amber-300">Development Skill Points</div><div className="text-[10px] text-slate-400">Earn one point for each weekly individual training session.</div></div><div className="text-2xl font-black text-amber-300">{legend.skillPoints ?? 0}</div></div>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {([{key:'speed',label:'Pace'},{key:'finishing',label:'Finishing'},{key:'passing',label:'Passing'},{key:'dribbling',label:'Dribbling'}] as Array<{key:keyof PlayerAttributes;label:string}>).map((item)=> <button key={item.key} type="button" disabled={(legend.skillPoints??0)<1 || player.attributes[item.key]>=99} onClick={()=>spendSkillPoint(item.key)} className="min-h-10 rounded-lg border border-white/10 bg-[#172b40] px-2 text-[10px] font-bold text-white disabled:opacity-35">+1 {item.label}</button>)}
+              </div>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
                 { id: 'FINISHING', label: 'Finishing & Shot Power', desc: '+Finishing, +Shooting' },
@@ -702,6 +721,13 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-5 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4">
               <h3 className="text-lg font-bold text-white">Contract & Agent</h3>
+              <div className="rounded-lg border border-cyan-300/20 bg-[#0E141B] p-3">
+                <div className="text-[10px] font-black uppercase tracking-wider text-cyan-200">Choose your representative</div>
+                <div className="mt-1 text-[10px] text-slate-400">A stronger agency improves the chance of receiving approaches during transfer windows.</div>
+                <div className="mt-2 grid grid-cols-1 gap-2">
+                  {[{name:'Independent Representative',rep:55,desc:'Personal attention · balanced network'},{name:'NextGen Sports Agency',rep:72,desc:'Youth development · emerging clubs'},{name:'Elite Global Agency',rep:90,desc:'Major clubs · stronger transfer network'}].map((agent)=> <button key={agent.name} type="button" onClick={()=>onUpdateSave({...save,legend:{...legend,agentName:agent.name,agentReputation:agent.rep}})} className={'rounded-lg border p-2 text-left '+((legend.agentName??'Independent Representative')===agent.name?'border-amber-300 bg-amber-300/10':'border-white/10 bg-[#101b29]')}><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-white">{agent.name}</span><span className="text-[10px] font-black text-amber-300">REP {agent.rep}</span></div><div className="text-[9px] text-slate-400">{agent.desc}</div></button>)}
+                </div>
+              </div>
               <div className="text-xs text-slate-300 flex flex-col gap-2">
                 <div className="flex justify-between py-1.5 border-b border-white/5">
                   <span className="text-slate-400">Current Club</span>
