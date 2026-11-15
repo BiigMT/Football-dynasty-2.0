@@ -93,21 +93,50 @@ export function applyPromotionRelegation(
   const movements: string[] = [];
   groups.forEach((divisions) => {
     divisions.sort((a, b) => a.tier - b.tier);
+    const swaps: Array<{ upperTier: number; promoted: string; relegated: string }> = [];
     for (let tier = 1; tier <= 3; tier += 1) {
       const upper = divisions.find((league) => league.tier === tier);
       const lower = divisions.find((league) => league.tier === tier + 1);
       if (!upper || !lower || upper.clubIds.length < 2 || lower.clubIds.length < 2) continue;
       const relegated = sortedTable(upper).slice(-1)[0]?.clubId;
       const promoted = sortedTable(lower)[0]?.clubId;
-      if (!relegated || !promoted || relegated === promoted) continue;
-      const upperIds = upper.clubIds.map((id) => id === relegated ? promoted : id);
-      const lowerIds = lower.clubIds.map((id) => id === promoted ? relegated : id);
-      nextLeagues[upper.id] = { ...upper, clubIds: upperIds, standings: blankRows(upperIds), fixtures: generateRoundRobinFixtures(upper.id, upper.name, upperIds) };
-      nextLeagues[lower.id] = { ...lower, clubIds: lowerIds, standings: blankRows(lowerIds), fixtures: generateRoundRobinFixtures(lower.id, lower.name, lowerIds) };
-      nextClubs[promoted] = { ...nextClubs[promoted], leagueId: upper.id };
-      nextClubs[relegated] = { ...nextClubs[relegated], leagueId: lower.id };
-      movements.push(nextClubs[promoted].name + ' promoted to Tier ' + tier, nextClubs[relegated].name + ' relegated to Tier ' + (tier + 1));
+      if (relegated && promoted && relegated !== promoted) swaps.push({ upperTier: tier, promoted, relegated });
     }
+    if (!swaps.length) return;
+    const replacements = new Map<string, string>();
+    swaps.forEach(({ promoted, relegated, upperTier }) => {
+      replacements.set(promoted, 'PROMOTE:' + upperTier);
+      replacements.set(relegated, 'RELEGATE:' + (upperTier + 1));
+    });
+    divisions.forEach((division) => {
+      const clubIds = division.clubIds.map((clubId) => {
+        const movement = replacements.get(clubId);
+        if (!movement) return clubId;
+        const [kind, target] = movement.split(':');
+        const destinationTier = Number(target);
+        if (kind === 'PROMOTE' && destinationTier === division.tier + 1) return clubId;
+        if (kind === 'RELEGATE' && destinationTier === division.tier - 1) return clubId;
+        const matchingSwap = swaps.find((swap) => swap.promoted === clubId || swap.relegated === clubId);
+        if (!matchingSwap) return clubId;
+        return matchingSwap.promoted === clubId ? matchingSwap.relegated : matchingSwap.promoted;
+      });
+      nextLeagues[division.id] = {
+        ...division,
+        clubIds,
+        standings: blankRows(clubIds),
+        fixtures: generateRoundRobinFixtures(division.id, division.name, clubIds),
+      };
+      clubIds.forEach((clubId) => {
+        const club = nextClubs[clubId];
+        if (club) nextClubs[clubId] = { ...club, leagueId: division.id };
+      });
+    });
+    swaps.forEach(({ upperTier, promoted, relegated }) => {
+      movements.push(
+        nextClubs[promoted].name + ' promoted to Tier ' + upperTier,
+        nextClubs[relegated].name + ' relegated to Tier ' + (upperTier + 1)
+      );
+    });
   });
   return { clubs: nextClubs, leagues: nextLeagues, movements };
 }
