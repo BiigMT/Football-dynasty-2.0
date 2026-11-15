@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ArrowLeft, Check } from 'lucide-react';
 import {
   CareerMode,
@@ -8,7 +8,7 @@ import {
   Position,
   Region,
 } from '../types/football';
-import { LEAGUE_BLUEPRINTS } from '../engine/database';
+import { buildWorldDatabase, LEAGUE_BLUEPRINTS } from '../engine/database';
 import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { OFFLINE_CLUBS, type OfflineClub } from '../data/offlineDatabase';
@@ -80,6 +80,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   onConfirmManager,
   onConfirmLegend,
 }) => {
+  const careerWorld = useMemo(() => mode === 'PLAYER' ? buildWorldDatabase() : null, [mode]);
   const [selectedRegion, setSelectedRegion] = useState<Region>('EUROPE');
   const regionLeagues = LEAGUE_BLUEPRINTS.filter((l) => l.region === selectedRegion);
   const [selectedLeagueId, setSelectedLeagueId] = useState<string>(regionLeagues[0]?.id ?? 'eng_prem');
@@ -539,7 +540,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                 ) : originPathway === 'DOMESTIC' ? (
                   <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-emerald-300">Domestic academy pathway</div><p className="mt-1 text-xs text-slate-300">A home-country start for {selectedNation?.name??nationality}. Your regional league is selected where a domestic club is available.</p><div className="mt-3 flex flex-wrap gap-2">{(selectedNation?.localAcademies??[]).map(name=><span key={name} className="rounded-lg border border-emerald-300/20 bg-white/70 px-3 py-2 text-xs font-bold text-[#13386C]">{name}</span>)}</div><div className="mt-3 flex items-center gap-3"><ClubBadge shortName={selectedClub.shortName} primaryColor={selectedClub.primaryColor} secondaryColor={selectedClub.secondaryColor} size={44}/><div><b className="text-white">{selectedClub.name}</b><p className="text-xs text-slate-400">{selectedClub.country} · {activeLeague.name} · Youth entry</p></div></div></div>
                 ) : (
-                  <div className="rounded-xl border border-blue-300/30 bg-blue-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-blue-200">Global starter club directory</div><input value={clubSearch} onChange={e=>setClubSearch(e.target.value)} placeholder="Search clubs worldwide..." className="mt-3 min-h-[40px] w-full rounded-lg px-3 text-sm"/><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[320px] overflow-y-auto">{LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name,leagueTier:l.tier}))).filter(team=>team.leagueTier>=2&&team.leagueTier<=4&&(team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase()))).slice(0,80).map(team=><button key={team.id} type="button" onClick={()=>selectGlobalClub(team.id)} className={selectedClub.id===team.id?'fd-global-club is-selected':'fd-global-club'}><ClubBadge shortName={team.shortName} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} size={32}/><span><b>{team.name}</b><small>{team.country} · Tier {team.leagueTier} · {team.leagueName}</small></span><small>REP {team.reputation}</small></button>)}</div><p className="mt-2 text-[10px] text-slate-400">Squad depth is evaluated when your save is created. You still begin as a youth prospect.</p></div>
+                  <div className="rounded-xl border border-blue-300/30 bg-blue-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-blue-200">Global starter club directory</div><input value={clubSearch} onChange={e=>setClubSearch(e.target.value)} placeholder="Search clubs worldwide..." className="mt-3 min-h-[40px] w-full rounded-lg px-3 text-sm"/><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[320px] overflow-y-auto">{LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name,leagueTier:l.tier}))).filter(team=>team.leagueTier>=2&&team.leagueTier<=4&&(team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase()))).slice(0,80).map(team=>{const depth=careerWorld?Object.values(careerWorld.players).filter(p=>p.clubId===team.id&&(p.position===position||p.secondaryPositions?.includes(position))).sort((a,b)=>b.overall-a.overall):[];return <button key={team.id} type="button" onClick={()=>selectGlobalClub(team.id)} className={selectedClub.id===team.id?'fd-global-club is-selected':'fd-global-club'}><ClubBadge shortName={team.shortName} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} size={32}/><span><b>{team.name}</b><small>{team.country} · Tier {team.leagueTier} · {team.leagueName}</small><small>{position} depth: {depth.length} player(s) · best OVR {depth[0]?.overall ?? '—'}</small></span><small>REP {team.reputation}</small></button>})}</div><p className="mt-2 text-[10px] text-slate-400">Position depth is calculated from the offline club roster for your selected role. You still begin as a youth prospect.</p></div>
                 )}
               </div>
             )}
