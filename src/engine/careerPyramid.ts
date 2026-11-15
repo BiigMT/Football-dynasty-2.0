@@ -104,22 +104,12 @@ export function applyPromotionRelegation(
     }
     if (!swaps.length) return;
     const replacements = new Map<string, string>();
-    swaps.forEach(({ promoted, relegated, upperTier }) => {
-      replacements.set(promoted, 'PROMOTE:' + upperTier);
-      replacements.set(relegated, 'RELEGATE:' + (upperTier + 1));
+    swaps.forEach(({ promoted, relegated }) => {
+      replacements.set(promoted, relegated);
+      replacements.set(relegated, promoted);
     });
     divisions.forEach((division) => {
-      const clubIds = division.clubIds.map((clubId) => {
-        const movement = replacements.get(clubId);
-        if (!movement) return clubId;
-        const [kind, target] = movement.split(':');
-        const destinationTier = Number(target);
-        if (kind === 'PROMOTE' && destinationTier === division.tier + 1) return clubId;
-        if (kind === 'RELEGATE' && destinationTier === division.tier - 1) return clubId;
-        const matchingSwap = swaps.find((swap) => swap.promoted === clubId || swap.relegated === clubId);
-        if (!matchingSwap) return clubId;
-        return matchingSwap.promoted === clubId ? matchingSwap.relegated : matchingSwap.promoted;
-      });
+      const clubIds = division.clubIds.map((clubId) => replacements.get(clubId) ?? clubId);
       nextLeagues[division.id] = {
         ...division,
         clubIds,
