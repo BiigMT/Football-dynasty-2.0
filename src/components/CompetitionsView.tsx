@@ -28,6 +28,14 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
 
   return (
     <div className="flex flex-col gap-5">
+      <div className="relative min-h-[118px] overflow-hidden rounded-xl border border-cyan-400/20 bg-[#101923]">
+        <img src="/media/game/matchday-training.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
+        <div className="relative z-10 flex min-h-[118px] flex-col justify-end p-4">
+          <div className="text-[10px] font-bold uppercase tracking-[.24em] text-cyan-300">World football</div>
+          <h2 className="text-xl font-black text-white">Leagues, cups & continental nights</h2>
+        </div>
+      </div>
       {/* Sub-navigation */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-1 p-1 rounded-lg bg-[#131A22] border border-white/10">
