@@ -1351,7 +1351,9 @@ export function executeTransfer(
   proposedWage: number,
   contractYears: number,
   releaseClause: number,
-  exchangePlayerId?: string
+  exchangePlayerId?: string,
+  squadRole?: Player['squadRole'],
+  signingBonus = 0
 ): CareerSave {
   const player = save.players[playerId];
   const buyer = save.clubs[buyerClubId];
@@ -1384,6 +1386,7 @@ export function executeTransfer(
       ...buyer.finances,
       transferBudget: Math.max(0, buyer.finances.transferBudget - fee),
       weeklyWageBill: buyer.finances.weeklyWageBill + proposedWage,
+      cashBalance: Math.max(0, buyer.finances.cashBalance - Math.max(0, signingBonus)),
     },
     tactics: {
       ...buyer.tactics,
@@ -1418,6 +1421,7 @@ export function executeTransfer(
     weeklyWage: proposedWage,
     contractYears,
     releaseClause,
+    squadRole,
     morale: 85,
   };
 
@@ -1457,6 +1461,7 @@ export function evaluateTransferBid(
     signingBonus: number;
     releaseClause: number;
     exchangePlayerId?: string;
+    squadRole?: Player['squadRole'];
   }
 ): { accepted: boolean; counterFee?: number; message: string; save: CareerSave } {
   const player = save.players[params.playerId];
@@ -1492,7 +1497,9 @@ export function evaluateTransferBid(
       params.proposedWage,
       params.contractYears,
       params.releaseClause,
-      params.exchangePlayerId
+      params.exchangePlayerId,
+      params.squadRole,
+      params.signingBonus
     );
     return {
       accepted: true,
