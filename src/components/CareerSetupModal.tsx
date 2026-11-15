@@ -51,6 +51,7 @@ const REGIONS: { id: Region; label: string }[] = [
   { id: 'EUROPE', label: 'Europe' },
   { id: 'SOUTH_AMERICA', label: 'South America' },
   { id: 'ASIA', label: 'Asia' },
+  { id: 'NORTH_AMERICA', label: 'North America' },
 ];
 
 const POSITIONS: Position[] = ['ST', 'LW', 'RW', 'CAM', 'CM', 'CDM', 'LB', 'RB', 'CB', 'GK'];
@@ -81,7 +82,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   onConfirmLegend,
 }) => {
   const careerWorld = useMemo(() => mode === 'PLAYER' ? buildWorldDatabase() : null, [mode]);
-  const [selectedRegion, setSelectedRegion] = useState<Region>('EUROPE');
+  const [selectedRegion, setSelectedRegion] = useState<Region>(mode === 'PLAYER' ? 'AFRICA' : 'EUROPE');
   const regionLeagues = LEAGUE_BLUEPRINTS.filter((l) => l.region === selectedRegion);
   const [selectedLeagueId, setSelectedLeagueId] = useState<string>(regionLeagues[0]?.id ?? 'eng_prem');
   const activeLeague = LEAGUE_BLUEPRINTS.find((l) => l.id === selectedLeagueId) ?? regionLeagues[0] ?? LEAGUE_BLUEPRINTS[0];
