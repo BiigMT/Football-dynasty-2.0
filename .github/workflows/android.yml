@@ -3,6 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [main, master]
+    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
@@ -43,7 +44,6 @@ jobs:
               git push
             fi
           fi
-
 
       - uses: actions/setup-node@v4
         with:
@@ -98,11 +98,21 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      - name: Publish direct APK download
+      - name: Publish public beta release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: football-dynasty-build-${{ github.run_number }}
-          name: Football Dynasty Android build ${{ github.run_number }}
-          body: "Install the APK asset directly. Do not download or install the source ZIP."
+          tag_name: ${{ github.ref_name }}
+          name: Football Dynasty 2.0 – ${{ github.ref_name }} Public Beta
+          body: |
+            ## Football Dynasty 2.0 – Public Beta
+
+            Thank you for testing Football Dynasty.
+
+            - Download the APK asset below to install the Android beta.
+            - This is a beta build and may contain bugs.
+            - Please report issues through the repository's Issues page.
+            - Do not install the source-code ZIP as the Android app.
           files: android/app/build/outputs/apk/debug/app-debug.apk
-          make_latest: true
+          prerelease: true
+          make_latest: false
