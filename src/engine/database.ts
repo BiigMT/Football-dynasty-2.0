@@ -12,6 +12,7 @@ import {
   Position,
   Region,
 } from '../types/football';
+import { NATIONS_DATABASE } from '../data/nationsDatabase';
 
 interface ClubBlueprint {
   id: string;
@@ -934,6 +935,61 @@ export function buildWorldDatabase(): {
       reputation: nt.reputation,
       formation: nt.formation,
       squadPlayerIds: matchingPlayers,
+    };
+  }
+
+
+  // Complete the playable national-team pool from the 79-nation career database.
+  // Existing hand-tuned national teams keep their bespoke ratings and squads.
+  for (const nation of NATIONS_DATABASE) {
+    if (Object.values(nationalTeams).some((team) => team.name === nation.name)) continue;
+    const region: Region = nation.confederation === 'CAF'
+      ? 'AFRICA'
+      : nation.confederation === 'CONMEBOL'
+      ? 'SOUTH_AMERICA'
+      : nation.confederation === 'CONCACAF'
+      ? 'NORTH_AMERICA'
+      : nation.confederation === 'AFC' || nation.confederation === 'OFC'
+      ? 'ASIA'
+      : 'EUROPE';
+    const reputation = clamp(92 - nation.worldRanking * 0.24, 58, 90);
+    const squad: string[] = Object.values(players)
+      .filter((player) => player.nationality === nation.name)
+      .sort((a, b) => b.overall - a.overall)
+      .slice(0, 18)
+      .map((player) => player.id);
+    const positions: Position[] = ['GK','GK','CB','CB','CB','LB','RB','CDM','CM','CM','CAM','LW','RW','ST','ST','CM'];
+    let generated = 0;
+    while (squad.length < 16) {
+      seedCounter += 3571;
+      const player = generatePlayer({
+        id: `nat_${nation.code.toLowerCase()}_player_${generated + 1}`,
+        clubId: 'free_agent',
+        region,
+        country: nation.name,
+        position: positions[generated % positions.length],
+        targetOverall: clamp(reputation - 8 + (generated % 5), 56, 88),
+        shirtNumber: generated + 1,
+        seed: seedCounter,
+      });
+      player.nationality = nation.name;
+      players[player.id] = player;
+      squad.push(player.id);
+      generated++;
+    }
+    const id = `nat_${nation.code.toLowerCase()}`;
+    nationalTeams[id] = {
+      id,
+      name: nation.name,
+      code: nation.code,
+      region,
+      primaryColor: nation.primaryKitColor,
+      secondaryColor: nation.secondaryKitColor,
+      rankingPoints: Math.max(500, 2200 - nation.worldRanking * 6),
+      worldRank: nation.worldRanking,
+      reputation,
+      formation: '4-3-3',
+      squadPlayerIds: squad,
     };
   }
 
