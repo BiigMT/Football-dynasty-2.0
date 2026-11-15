@@ -482,6 +482,10 @@ export interface LegendProfile {
   retired: boolean;
   retirementSummary?: string;
   agentOffers: TransferOffer[];
+  agentName?: string;
+  agentReputation?: number;
+  developmentXp?: number;
+  skillPoints?: number;
   phoneMessages?: PlayerPhoneMessage[];
   socialPosts?: PlayerSocialPost[];
   phoneFollowers?: number;
