@@ -17,6 +17,7 @@ import {
   Users,
 } from 'lucide-react';
 import { CareerSave, Fixture, IndividualDrill, PlayerAttributes } from '../types/football';
+import { GameOrientation } from './OrientationSelect';
 import {
   advanceToNextSeason,
   advanceWeek,
@@ -34,6 +35,8 @@ import { DayItem, PlayerHome, TableRow } from './CareerHome';
 
 interface LegendHubProps {
   save: CareerSave;
+  orientation: GameOrientation;
+  onOrientationChange: (next: GameOrientation) => void;
   muted: boolean;
   onToggleMute: () => void;
   onUpdateSave: (next: CareerSave) => void;
@@ -68,6 +71,8 @@ const marketValueLabel = (value: number) => value >= 1000000 ? `€${(value / 10
 
 export const LegendHub: React.FC<LegendHubProps> = ({
   save,
+  orientation,
+  onOrientationChange,
   muted,
   onToggleMute,
   onUpdateSave,
@@ -92,6 +97,11 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const u21CallUpOvr = nationProfile?.u21OvrRequired ?? 66;
   const seniorCallUpOvr = nationProfile?.seniorOvrRequired ?? 76;
   const teammates = Object.values(save.players).filter((p) => p.clubId === club.id && p.id !== player.id).sort((a, b) => b.overall - a.overall).slice(0, 4);
+  const positionDepth = Object.values(save.players)
+    .filter((p) => p.clubId === club.id && (p.position === player.position || p.secondaryPositions.includes(player.position)))
+    .sort((a, b) => b.overall - a.overall);
+  const positionRank = Math.max(1, positionDepth.findIndex((p) => p.id === player.id) + 1);
+  const positionLeader = positionDepth[0];
   const phoneMessages = legend.phoneMessages ?? [];
   const socialPosts = legend.socialPosts ?? [];
   const rivalClubId = nextFixture ? (nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId) : '';
@@ -404,6 +414,14 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <section className="fd-player-panel fd-player-attributes">
               <div className="fd-player-panel-title"><div><small>PLAYER PERFORMANCE</small><h3>KEY ATTRIBUTES</h3></div><button type="button" onClick={() => setTab('ATTRIBUTES')}>FULL PROFILE ↗</button></div>
               {keyAttrs.map((attr) => <div className="fd-player-stat" key={attr.label}><div><span>{attr.label}</span><b>{attr.value}</b></div><div className="fd-player-stat-track"><i style={{ width: `${Math.max(0, Math.min(100, attr.value))}%` }} /></div></div>)}
+            </section>
+            <section className="fd-player-panel fd-player-attributes">
+              <div className="fd-player-panel-title"><div><small>SQUAD COMPETITION</small><h3>POSITION DEPTH · {player.position}</h3></div><span>RANK {positionRank}/{positionDepth.length}</span></div>
+              <div className="fd-player-depth-list">
+                {positionDepth.slice(0, 4).map((peer, index) => <div className="fd-player-stat" key={peer.id}><div><span>{index + 1}. {peer.name}{peer.id === player.id ? ' · YOU' : ''}</span><b>{peer.overall} OVR</b></div><div className="fd-player-stat-track"><i style={{ width: peer.overall + '%' }} /></div></div>)}
+                {!positionDepth.length && <p className="fd-player-empty">No direct positional competition found.</p>}
+              </div>
+              <p className="fd-player-empty">{positionLeader?.id === player.id ? 'You are currently the highest-rated option in your position.' : positionLeader ? positionLeader.name + ' leads the position group. Close the ' + Math.max(0, positionLeader.overall - player.overall) + '-point OVR gap to challenge.' : 'Position depth updates with the squad.'}</p>
             </section>
             <section className="fd-player-panel fd-player-table">
               <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
@@ -890,6 +908,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <div><b className="text-sm text-slate-100">Career layout</b><p className="text-[11px] text-slate-500 mt-1">Choose how wide the Player Career screens should appear.</p></div>
               <div className="grid grid-cols-3 gap-2 mt-3">
                 {([{id:'AUTO',label:'AUTO'},{id:'COMPACT',label:'COMPACT'},{id:'WIDE',label:'WIDE'}] as const).map(layout => <button key={layout.id} type="button" aria-pressed={(save.playerLayout ?? 'AUTO') === layout.id} onClick={() => onUpdateSave({ ...save, playerLayout: layout.id })} className={`min-h-[40px] rounded-lg border text-xs font-bold ${(save.playerLayout ?? 'AUTO') === layout.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{layout.label}</button>)}
+              </div>
+            </section>
+            <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
+              <div><b className="text-sm text-slate-100">Screen orientation</b><p className="text-[11px] text-slate-500 mt-1">Saved on this device and applied when the platform supports rotation locking.</p></div>
+              <div className="grid grid-cols-2 gap-2 mt-3">
+                {([{id:'landscape',label:'LANDSCAPE'},{id:'portrait',label:'PORTRAIT'}] as const).map(item => <button key={item.id} type="button" aria-pressed={orientation === item.id} onClick={() => onOrientationChange(item.id)} className={`min-h-[40px] rounded-lg border text-xs font-bold ${orientation === item.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{item.label}</button>)}
               </div>
             </section>
             <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B] border border-white/10">
