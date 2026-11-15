@@ -13,7 +13,7 @@ import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { OFFLINE_CLUBS, type OfflineClub } from '../data/offlineDatabase';
 import { ClubPresentationModal } from './ClubPresentationModal';
-import { NATIONS_DATABASE, CONFEDERATIONS } from '../data/nationsDatabase';
+import { NATIONS_DATABASE, CONFEDERATIONS, findNation, getNationFlagSvg } from '../data/nationsDatabase';
 
 export interface CareerSetupModalProps {
   mode: CareerMode;
@@ -130,6 +130,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   const selectedClub = activeLeague.clubs.find((c) => c.id === selectedClubId) ?? activeLeague.clubs[0];
+  const selectedNation = findNation(nationality);
   const academyCandidates = [...activeLeague.clubs].sort((a, b) => a.reputation - b.reputation);
   const academyOffer = academyCandidates[Math.min(academyCandidates.length - 1, trialRating >= 88 ? 2 : trialRating >= 75 ? 1 : 0)] ?? selectedClub;
   const presentationSource = mode === 'MANAGER' ? selectedClub : academyOffer;
@@ -191,7 +192,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-slate-100 py-6 px-4 sm:px-6">
+    <div className={mode === 'PLAYER' ? "fd-player-creation-screen min-h-screen py-5 px-3 sm:px-5" : "min-h-screen bg-[#0B0F14] text-slate-100 py-6 px-4 sm:px-6"}>
       <form onSubmit={handleSubmit} className="max-w-5xl mx-auto flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -316,6 +317,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                         {NATIONS_DATABASE.filter((n) => (nationConfederation === 'ALL' || n.confederation === nationConfederation) && n.name.toLowerCase().includes(nationQuery.toLowerCase())).map((n) => <option key={n.code} value={n.name}>{n.name} · {n.confederation} · U21 {n.u21OvrRequired} / Senior {n.seniorOvrRequired}</option>)}
                       </select>
                     </div>
+                    {selectedNation && <div className="fd-nation-card"><div className="flex items-center gap-2"><span dangerouslySetInnerHTML={{__html:getNationFlagSvg(selectedNation.code,42)}}/><div><b>{selectedNation.name}</b><small>{selectedNation.confederation} · World ranking estimate #{selectedNation.worldRanking}</small></div></div><div className="fd-nation-thresholds"><span>U-21 OVR <b>{selectedNation.u21OvrRequired}</b></span><span>SENIOR OVR <b>{selectedNation.seniorOvrRequired}</b></span></div><small>Academy pathway: {selectedNation.localAcademies.slice(0,2).join(' · ')}</small></div>}
                   </label>
 
                   <label className="flex flex-col gap-1 text-xs text-slate-400">
