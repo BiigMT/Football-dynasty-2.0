@@ -726,3 +726,76 @@
  .fd-player-career-shell .fd-player-layout { padding:6px; gap:6px; }
  .fd-player-career-shell .fd-realism-player .career-subpage-content { padding:6px !important; }
 }
+
+
+/* Final Player Career inner-page bento treatment — Player Career only. */
+.fd-player-career-shell .fd-realism-player { height:100%; min-height:0 !important; overflow:hidden !important; }
+.fd-player-career-shell .fd-realism-player > header > div { max-width:none !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content { display:block; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content > div,
+.fd-player-career-shell .fd-realism-player .career-subpage-content > section { max-width:none; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#131A22]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#0E141B]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#0b1118]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#101b29]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#172b40]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#141f2b]"] {
+  background:rgba(255,255,255,.92) !important; color:#0f2342 !important; border-color:#cbdced !important;
+}
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-white"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-slate-100"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-slate-200"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-slate-300"] { color:#0f2342 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-slate-400"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="text-slate-500"] { color:#526782 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="border-white/"] { border-color:#d4e2f2 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content button:disabled { opacity:.48; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content > div > section,
+.fd-player-career-shell .fd-realism-player .career-subpage-content > div > div[class*="rounded-xl"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content > section {
+  border-radius:14px !important; box-shadow:0 7px 22px rgba(5,26,58,.10);
+}
+.fd-player-career-shell .fd-realism-player .career-subpage-content h2,
+.fd-player-career-shell .fd-realism-player .career-subpage-content h3 { color:#0f2342 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content button[class*="bg-amber-500"] { background:#1d529c !important;color:white !important;border-color:#1d529c !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content button[class*="bg-emerald-500"] { background:#16a34a !important;color:white !important;border-color:#16a34a !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content button[class*="bg-cyan-500"] { background:#e4f1ff !important;color:#13386c !important;border-color:#b8d2f0 !important; }
+.fd-player-career-shell .fd-player-tabs button { min-height:42px; }
+.fd-player-career-shell .fd-player-tabs button span { font-size:inherit; }
+.fd-player-career-shell .fd-player-page-content { max-width:none !important; }
+.fd-player-career-shell .fd-player-page-content > div { width:100%; }
+.fd-player-career-shell .fd-profile-attribute-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.fd-player-career-shell .fd-profile-attribute-grid > div { background:#f4f8fd !important;border:1px solid #dce7f3;border-radius:10px;padding:10px; }
+.fd-player-career-shell .fd-training-console { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr); align-items:start; }
+.fd-player-career-shell .fd-training-console > div:first-child { grid-column:1/-1; }
+.fd-player-career-shell .fd-training-console > div:nth-child(2) { grid-column:2; grid-row:2; }
+.fd-player-career-shell .fd-training-console > div:nth-child(3) { grid-column:1; grid-row:2; }
+.fd-player-career-shell .fd-training-console > div:nth-child(3) > button { background:#f3f8fe !important;border-color:#d2e1f1 !important;color:#0f2342 !important; }
+.fd-player-career-shell .fd-transfer-console > div,
+.fd-player-career-shell .fd-awards-console > div { min-width:0; }
+.fd-player-career-shell .fd-transfer-console [class*="rounded-lg"][class*="bg-[#0E141B]"],
+.fd-player-career-shell .fd-awards-console [class*="rounded-lg"][class*="bg-[#0E141B]"] { background:#f3f8fe !important; }
+.fd-player-career-shell .fd-system-console { max-width:760px !important; }
+.fd-player-career-shell .fd-system-console > div { background:#f3f8fe !important;border:1px solid #d5e3f2;border-radius:10px; }
+.fd-player-career-shell .fd-negotiation-overlay { position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:rgba(7,24,49,.68);backdrop-filter:blur(8px); }
+.fd-player-career-shell .fd-negotiation-room { width:min(560px,100%);padding:24px;border-radius:18px;background:linear-gradient(145deg,#fff,#eaf3fd);border:1px solid #fff;box-shadow:0 24px 70px rgba(0,0,0,.3);color:#0f2342; }
+.fd-player-career-shell .fd-negotiation-room h2 { margin-top:7px;font-size:26px;font-weight:900;color:#0f2342; }
+.fd-player-career-shell .fd-negotiation-room p { margin-top:5px;color:#526782;font-size:13px; }
+.fd-player-career-shell .fd-negotiation-terms { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0; }
+.fd-player-career-shell .fd-negotiation-terms > div { padding:12px;border-radius:10px;background:#f4f8fd;border:1px solid #d5e3f2;display:flex;flex-direction:column;gap:4px; }
+.fd-player-career-shell .fd-negotiation-terms span { font-size:9px;letter-spacing:.12em;color:#647b98;font-weight:900; }
+.fd-player-career-shell .fd-negotiation-terms b { color:#13386c;font-size:17px; }
+.fd-player-career-shell .fd-negotiation-actions { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px; }
+.fd-player-career-shell .fd-negotiation-actions button { min-height:42px;border-radius:8px;background:#e2ecf8;color:#13386c;font-size:10px;font-weight:900;padding:7px; }
+.fd-player-career-shell .fd-negotiation-actions button:last-child { background:#16a34a;color:white; }
+@media(max-width:760px) {
+ .fd-player-career-shell .fd-profile-attribute-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .fd-player-career-shell .fd-training-console { display:flex;flex-direction:column; }
+ .fd-player-career-shell .fd-training-console > div { width:100%; }
+ .fd-player-career-shell .fd-realism-player .career-subpage-content { overflow-y:auto !important; }
+}
+@media(max-width:520px) {
+ .fd-player-career-shell .fd-profile-attribute-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .fd-player-career-shell .fd-negotiation-actions { grid-template-columns:1fr; }
+ .fd-player-career-shell .fd-realism-player nav button { line-height:1.05; }
+}
