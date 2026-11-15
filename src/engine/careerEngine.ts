@@ -373,7 +373,12 @@ export function createLegendCareer(params: {
   };
 
   world.players[userPlayerId] = userPlayer;
-  // Academy prospects stay outside the senior matchday squad until promoted.
+  // Start in the development pathway and make the prospect available as a reserve substitute.
+  world.clubs[club.id] = {
+    ...club,
+    tactics: { ...club.tactics, bench: [...club.tactics.bench.filter(id => id !== userPlayerId).slice(0, 6), userPlayerId] },
+  };
+  // The player is not inserted into the starting XI; first-team minutes must be earned.
 
 
   const { cupFixtures, continentalFixtures } = buildSeasonCupAndContinental(
