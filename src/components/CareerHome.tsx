@@ -3,7 +3,7 @@ import './careerHome.css';
 
 /* ---------- Types mapped from football.ts models ---------- */
 export type DayItem = { label: string; sub: string; icon: string; active?: boolean };
-export type MenuItem = { key: string; title: string; sub: string; icon: string };
+export type MenuItem = { key: string; title: string; sub: string; icon: string; notify?: boolean };
 export type TableRow = { pos: number; club: string; p: number; gd: number; pts: number; color?: string; me?: boolean };
 export type CareerHomeNewsItem = { tag: string; headline: string; body: string };
 /* ---------- Small shared pieces ---------- */
@@ -151,107 +151,141 @@ export type ManagerHomeProps = {
 };
 
 const MANAGER_MENU: MenuItem[] = [
-  { key: 'team', title: 'TEAM MANAGEMENT', sub: 'Squad Selection & Tactics', icon: '👥' },
-  { key: 'transfers', title: 'TRANSFER MARKET', sub: 'Buy, Sell & Scout Players', icon: '🤝' },
-  { key: 'office', title: 'MANAGER OFFICE', sub: 'Contracts, Finances & Goals', icon: '💼' },
-  { key: 'competitions', title: 'COMPETITIONS', sub: 'Leagues & Tournaments', icon: '🏆' },
-  { key: 'national', title: 'NATIONAL TEAM', sub: 'Call-ups & International', icon: '🌍' },
-  { key: 'stats', title: 'TRAINING & ACADEMY', sub: 'Drills & Youth Prospects', icon: '📊' },
+  { key: 'team', title: 'TEAM MANAGEMENT', sub: 'Squad & Tactics', icon: '👥' },
+  { key: 'transfers', title: 'TRANSFER MARKET', sub: 'Recruitment', icon: '🤝' },
+  { key: 'office', title: 'MANAGER OFFICE', sub: 'Club & Finance', icon: '💼' },
+  { key: 'competitions', title: 'COMPETITIONS', sub: 'League & Cups', icon: '🏆' },
+  { key: 'settings', title: 'SYSTEM', sub: 'Game Settings', icon: '⚙' },
 ];
+
+export type ScorerRow = { name: string; club: string; goals: number };
+export type CalendarCell = { label: string; detail: string; icon: string; active?: boolean; match?: boolean };
+
+export type ManagerHomeProps = {
+  club: string;
+  clubColor?: string;
+  clubSecondaryColor?: string;
+  manager: string;
+  days: DayItem[];
+  transferBudget: string;
+  wageBudget: string;
+  news: CareerHomeNewsItem[];
+  leagueName: string;
+  table: TableRow[];
+  scorers: ScorerRow[];
+  calendar: CalendarCell[];
+  seasonWeek: string;
+  pendingTransfers?: boolean;
+  trainingPending?: boolean;
+  ticker: string[];
+  forwardTitle?: string;
+  forwardSub: string;
+  onForward: () => void;
+  onNavigate: (key: string) => void;
+};
+
+const MANAGER_MENU: MenuItem[] = [
+  { key: 'team', title: 'TEAM MANAGEMENT', sub: 'Squad & Tactics', icon: '👥' },
+  { key: 'transfers', title: 'TRANSFER MARKET', sub: 'Recruitment', icon: '🤝' },
+  { key: 'office', title: 'MANAGER OFFICE', sub: 'Club & Finance', icon: '💼' },
+  { key: 'competitions', title: 'COMPETITIONS', sub: 'League & Cups', icon: '🏆' },
+  { key: 'settings', title: 'SYSTEM', sub: 'Game Settings', icon: '⚙' },
+];
+
+export const ClubShieldWidget: React.FC<{ name: string; primary?: string; secondary?: string; size?: number }> = ({
+  name, primary = '#235BA8', secondary = '#F6C21C', size = 34,
+}) => {
+  const id = React.useId().replace(/:/g, '');
+  return (
+    <svg className="fd-shield" width={size} height={size * 1.12} viewBox="0 0 48 54" role="img" aria-label={name + ' shield'}>
+      <defs>
+        <clipPath id={id}><path d="M4 3H44V30Q44 42 24 51Q4 42 4 30Z" /></clipPath>
+      </defs>
+      <path d="M2 1H46V30Q46 45 24 53Q2 45 2 30Z" fill="#071629" stroke="#F6C21C" strokeWidth="1.5" />
+      <g clipPath={`url(#${id})`}>
+        <rect x="4" y="3" width="40" height="48" fill={primary} />
+        <path d="M8 3H15V51H8ZM22 3H29V51H22ZM36 3H43V51H36Z" fill={secondary} opacity=".82" />
+        <path d="M3 19L43 7V15L3 27Z" fill="#fff" opacity=".22" />
+        <path d="M24 20L26.8 26L33 26.7L28.5 31L29.6 37L24 34L18.4 37L19.5 31L15 26.7L21.2 26Z" fill="#F6C21C" stroke="#fff" strokeWidth=".6" />
+      </g>
+      <path d="M2 1H46V30Q46 45 24 53Q2 45 2 30Z" fill="none" stroke="#F6C21C" strokeWidth="1.5" />
+    </svg>
+  );
+};
 
 export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
   const [slide, setSlide] = React.useState(0);
-  const news = p.news.length ? p.news : [{ tag: 'CAREER BRIEFING', headline: 'Your football world starts here', body: 'Every result, transfer and league update is generated locally and saved with this career.' }];
+  const news = p.news.length ? p.news : [{ tag: 'CLUB NEWS', headline: 'A new chapter begins', body: 'Your decisions will shape the season ahead.' }];
   const n = news[slide % news.length];
+  const menu = MANAGER_MENU.map((item) => ({
+    ...item,
+    notify: item.key === 'transfers' ? p.pendingTransfers : item.key === 'team' ? p.trainingPending : false,
+  }));
   return (
     <Shell
       mode="manager"
-      menu={MANAGER_MENU}
+      menu={menu}
       onMenu={p.onNavigate}
       onForward={p.onForward}
-      forwardTitle={p.forwardTitle ?? 'FORWARD TIME'}
-      forwardSub={p.forwardSub ?? 'Continue to next event'}
+      forwardTitle={p.forwardTitle ?? 'PLAY MATCHDAY'}
+      forwardSub={p.forwardSub}
       ticker={p.ticker}
       top={
         <>
           <div className="fd-club">
-            <Badge name={p.club} color={p.clubColor} size={52} />
+            <ClubShieldWidget name={p.club} primary={p.clubColor} secondary={p.clubSecondaryColor} size={44} />
             <div>
               <h1>{p.club.toUpperCase()}</h1>
-              <small>Manager: {p.manager}</small>
+              <small>MANAGER: {p.manager.toUpperCase()}</small>
             </div>
           </div>
+          <div className="fd-seasonStamp"><b>{p.seasonWeek}</b><small>CAREER SEASON</small></div>
           <div className="fd-days">
-            {p.days.map((d, i) => (
+            {p.days.slice(0, 3).map((d, i) => (
               <div key={i} className={'fd-day' + (d.active ? ' on' : '')}>
-                <div>
-                  <b>{d.label}</b>
-                  <small>{d.sub}</small>
-                </div>
-                <span>{d.icon}</span>
+                <div><b>{d.label}</b><small>{d.sub}</small></div><span>{d.icon}</span>
               </div>
             ))}
           </div>
-          <div className="fd-money">
-            <span>🪙</span>
-            <div>
-              <b>{p.transferBudget}</b>
-              <small>Transfer Budget</small>
-            </div>
-          </div>
-          <div className="fd-money">
-            <span>💰</span>
-            <div>
-              <b>{p.wageBudget}</b>
-              <small>Wage Budget</small>
-            </div>
-          </div>
-          <button type="button" className="fd-gear" onClick={() => p.onNavigate('settings')} aria-label="Settings">
-            ⚙
-          </button>
+          <div className="fd-money"><span>€</span><div><b>{p.transferBudget}</b><small>TRANSFER BUDGET</small></div></div>
+          <div className="fd-money"><span>€</span><div><b>{p.wageBudget}</b><small>WAGE / WEEK</small></div></div>
+          <button type="button" className="fd-gear" onClick={() => p.onNavigate('settings')} aria-label="System settings">⚙</button>
         </>
       }
     >
-      {n && (
-        <section className="fd-panel fd-hero" style={{ backgroundImage: "linear-gradient(90deg, rgba(5,10,16,.96) 0%, rgba(5,10,16,.78) 55%, rgba(5,10,16,.35) 100%), url('/media/game/matchday-training.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
-          <div className="fd-heroText">
-            <span className="fd-tag">{n.tag || 'BREAKING NEWS'}</span>
-            <h2>{n.headline}</h2>
-            <p>{n.body}</p>
-            <button type="button" className="fd-ghost" onClick={() => p.onNavigate('office')}>
-              Read More →
-            </button>
-          </div>
-          <Portrait kit={p.clubColor ?? '#f4f4f4'} />
-          <div className="fd-dots">
-            {news.map((_, i) => (
-              <i key={i} className={i === slide % news.length ? 'on' : ''} onClick={() => setSlide(i)} />
-            ))}
-          </div>
-        </section>
-      )}
-      <section className="fd-panel fd-offline">
-        <div className="fd-panelHead">
-          <h3>OFFLINE CLUB WORLD</h3>
-          <span className="fd-localStatus"><i /> SAVED LOCALLY</span>
-        </div>
-        <p className="fd-offlineLead">Your club. Your decisions. Your football history.</p>
-        <p className="fd-offlineCopy">
-          The football world runs on this device. Match results, transfers, training,
-          player development and league standings come from your saved career — no
-          internet connection or live social feed required.
-        </p>
-        <div className="fd-offlineFeatures">
-          <span>⚽ Matchdays</span>
-          <span>🤝 Transfers</span>
-          <span>🏆 Competitions</span>
-          <span>📋 Club records</span>
-        </div>
-        <button type="button" className="fd-ghost" onClick={() => p.onNavigate('office')}>
-          Open Club Office →
-        </button>
+      <section className="fd-showcase">
+        {n && (
+          <article className="fd-panel fd-hero" style={{ backgroundImage: "linear-gradient(0deg, rgba(5,16,34,.98) 0%, rgba(5,16,34,.78) 38%, rgba(5,16,34,.08) 100%), url('/media/game/team-talk.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="fd-showcasePattern" />
+            <div className="fd-slideCount">{(slide % news.length) + 1} / {news.length}</div>
+            <div className="fd-heroPortrait"><Portrait kit={p.clubColor ?? '#f4f4f4'} /></div>
+            <div className="fd-heroText">
+              <span className="fd-tag">{n.tag || 'CLUB NEWS'}</span>
+              <h2>{n.headline}</h2>
+              <p>{n.body}</p>
+              <button type="button" className="fd-ghost" onClick={() => p.onNavigate('office')}>READ STORY →</button>
+            </div>
+            <div className="fd-dots">
+              {news.map((_, i) => <button type="button" aria-label={`Show story ${i + 1}`} key={i} className={i === slide % news.length ? 'on' : ''} onClick={() => setSlide(i)} />)}
+            </div>
+          </article>
+        )}
       </section>
-      <LeagueTable title={p.leagueName} rows={p.table} onSee={() => p.onNavigate('competitions')} />
+      <aside className="fd-sidebar">
+        <section className="fd-panel fd-standings">
+          <div className="fd-panelHead"><h3>{p.leagueName.toUpperCase()} · TOP 5</h3><button type="button" onClick={() => p.onNavigate('competitions')}>FULL TABLE →</button></div>
+          <table>
+            <thead><tr><th>#</th><th>CLUB</th><th>PTS</th></tr></thead>
+            <tbody>{p.table.slice(0, 5).map((r) => <tr key={r.pos} className={r.me ? 'me' : ''}><td>{r.pos}</td><td><span className="fd-tableClub"><ClubShieldWidget name={r.club} primary={r.color} secondary="#F6C21C" size={21} />{r.club}</span></td><td>{r.pts}</td></tr>)}</tbody>
+          </table>
+          <div className="fd-scorerHead">GOAL RANKING</div>
+          <div className="fd-scorers">{p.scorers.slice(0, 3).map((s, i) => <div className="fd-scorer" key={s.name}><b>{i + 1}</b><span>{s.name}<small>{s.club}</small></span><strong>{s.goals}</strong></div>)}</div>
+        </section>
+        <section className="fd-panel fd-calendar">
+          <div className="fd-panelHead"><h3>FIXTURES & SCHEDULE</h3><span>{p.seasonWeek}</span></div>
+          <div className="fd-calendarGrid">{p.calendar.slice(0, 10).map((d, i) => <div key={i} className={'fd-calendarCell' + (d.active ? ' today' : '') + (d.match ? ' match' : '')}><b>{d.label}</b><span>{d.icon}</span><small>{d.detail}</small></div>)}</div>
+        </section>
+      </aside>
     </Shell>
   );
 };
