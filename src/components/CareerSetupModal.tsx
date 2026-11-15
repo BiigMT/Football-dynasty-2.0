@@ -8,7 +8,7 @@ import {
   Position,
   Region,
 } from '../types/football';
-import { LEAGUE_BLUEPRINTS, NATIONAL_TEAM_BLUEPRINTS } from '../engine/database';
+import { LEAGUE_BLUEPRINTS } from '../engine/database';
 import { ClubBadge } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
 import { OFFLINE_CLUBS, type OfflineClub } from '../data/offlineDatabase';
