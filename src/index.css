@@ -831,3 +831,15 @@
 .fd-player-creation-screen .fd-global-club b { display:block;font-size:11px;color:#13386c; }
 .fd-player-creation-screen .fd-global-club small { display:block;font-size:9px;color:#526782; }
 @media(max-width:560px) { .fd-player-creation-screen .fd-origin-pathways { grid-template-columns:1fr; } }
+
+
+/* Persistent Player Career layout preference; Manager Career is intentionally untouched. */
+.fd-player-career-shell .fd-realism-player[data-layout="COMPACT"] .fd-player-page-content {
+  max-width: 60rem !important;
+}
+.fd-player-career-shell .fd-realism-player[data-layout="WIDE"] .fd-player-page-content {
+  max-width: 90rem !important;
+}
+.fd-player-career-shell .fd-realism-player[data-layout="AUTO"] .fd-player-page-content {
+  max-width: 80rem !important;
+}
