@@ -1,0 +1,45 @@
+{
+  "offline": true,
+  "assetCount": 1,
+  "assets": [
+    {
+      "file": "phone-stadium.jpg",
+      "bytes": 40535,
+      "source": "StockSnap",
+      "creator": "Abigail Keenan",
+      "page": "https://stocksnap.io/photo/soccer-field-5FKA3VHPRW",
+      "license": "CC0",
+      "use": "player phone wallpaper, social feed"
+    }
+  ],
+  "errors": [
+    {
+      "file": "matchday-training.jpg",
+      "error": "Invalid or unexpectedly small image response (212853 bytes)"
+    },
+    {
+      "file": "training-ground.jpg",
+      "error": "Invalid or unexpectedly small image response (135636 bytes)"
+    },
+    {
+      "file": "team-talk.jpg",
+      "error": "Invalid or unexpectedly small image response (148631 bytes)"
+    },
+    {
+      "file": "manager-tactics.jpg",
+      "error": "Invalid or unexpectedly small image response (149164 bytes)"
+    },
+    {
+      "file": "player-action.jpg",
+      "error": "Invalid or unexpectedly small image response (149468 bytes)"
+    },
+    {
+      "file": "player-preparation.jpg",
+      "error": "Invalid or unexpectedly small image response (119810 bytes)"
+    },
+    {
+      "file": "phone-match.jpg",
+      "error": "Invalid or unexpectedly small image response (383408 bytes)"
+    }
+  ]
+}
