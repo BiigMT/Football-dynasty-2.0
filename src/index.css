@@ -658,3 +658,71 @@
   .fd-root[data-mode="player"] .fd-forward,.fd-root[data-mode="player"] .fd-item {padding:8px;gap:7px;}
   .fd-root[data-mode="player"] .fd-main {gap:7px;padding:7px;grid-template-rows:minmax(170px,1fr) minmax(130px,.8fr);}
 }
+
+
+/* Player Career inner console unification — deliberately does not touch Manager Career. */
+.fd-player-career-shell.fd-player-console { position:relative; width:100vw; height:100dvh; min-height:100dvh; overflow:hidden; color:#0f2342 !important; background:linear-gradient(135deg,#173f7a 0%,#2d64b3 52%,#5b8ad1 100%) !important; }
+.fd-player-career-shell .fd-player-hub { height:100%; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+.fd-player-career-shell .fd-player-head { flex:0 0 auto; min-height:76px; padding:8px 14px; gap:10px; }
+.fd-player-career-shell .fd-player-crest { clip-path:polygon(50% 0,94% 15%,88% 72%,50% 100%,12% 72%,6% 15%); }
+.fd-player-career-shell .fd-player-meta > div:first-child { background:#16a34a !important; border-color:#16a34a !important; color:#fff !important; }
+.fd-player-career-shell .fd-player-meta > div:first-child strong,
+.fd-player-career-shell .fd-player-meta > div:first-child small { color:#fff !important; }
+.fd-player-career-shell .fd-player-tabs { flex:0 0 auto; display:grid !important; grid-template-columns:repeat(6,minmax(0,1fr)); gap:0 !important; width:100%; overflow:hidden !important; padding:0 6px; }
+.fd-player-career-shell .fd-player-tabs button { min-width:0 !important; width:100%; min-height:42px; justify-content:center; padding:6px 2px !important; white-space:nowrap; overflow:hidden; text-overflow:clip; font-size:clamp(9px,1.35vw,12px) !important; font-weight:900; letter-spacing:.025em; border-bottom:4px solid transparent !important; }
+.fd-player-career-shell .fd-player-tabs button span { overflow:hidden; text-overflow:clip; }
+.fd-player-career-shell .fd-player-tabs button.is-active { border-bottom-color:#13386c !important; background:#e5effb !important; }
+.fd-player-career-shell .fd-player-layout { flex:1 1 auto; min-height:0; overflow:hidden; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(260px,.9fr); gap:10px; padding:10px; }
+.fd-player-career-shell .fd-player-showcase { min-height:0; height:100%; }
+.fd-player-career-shell .fd-player-sidebar { min-height:0; overflow-y:auto; }
+.fd-player-career-shell .fd-player-news { flex:0 0 auto; min-height:30px; }
+.fd-player-career-shell .fd-realism-player { background:transparent !important; color:#0f2342 !important; }
+.fd-player-career-shell .fd-realism-player > header { flex:0 0 auto; background:rgba(245,249,255,.96) !important; border-bottom:2px solid #13386c !important; color:#0f2342 !important; padding:7px 12px !important; }
+.fd-player-career-shell .fd-realism-player > header button { background:#eaf2fc !important; color:#13386c !important; border:1px solid #c8d9ee !important; }
+.fd-player-career-shell .fd-realism-player nav { flex:0 0 auto; display:grid !important; grid-template-columns:repeat(6,minmax(0,1fr)); overflow:hidden !important; padding:0 5px !important; background:rgba(245,249,255,.96) !important; border-bottom:1px solid #c9d9ec !important; }
+.fd-player-career-shell .fd-realism-player nav > div { display:contents; }
+.fd-player-career-shell .fd-realism-player nav button { min-width:0 !important; width:100%; justify-content:center; padding:6px 1px !important; white-space:normal !important; text-align:center; color:#526782 !important; font-size:clamp(8px,1.25vw,11px) !important; border-bottom:4px solid transparent !important; }
+.fd-player-career-shell .fd-realism-player nav button[aria-current="page"] { color:#13386c !important; background:#e5effb !important; border-bottom-color:#13386c !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content { flex:1 1 auto; min-height:0; width:100%; max-width:none; overflow-y:auto; overscroll-behavior:contain; padding:10px !important; color:#0f2342 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content > section,
+.fd-player-career-shell .fd-realism-player .career-subpage-content > div,
+.fd-player-career-shell .fd-realism-player .career-subpage-content section,
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#131A22]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#101923]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#0b1118]"],
+.fd-player-career-shell .fd-realism-player .career-subpage-content [class*="bg-[#0B0F14]"] {
+  background:rgba(255,255,255,.91) !important; color:#0f2342 !important; border-color:#d4e2f2 !important; border-radius:12px !important; box-shadow:0 5px 18px rgba(5,26,58,.10);
+}
+.fd-player-career-shell .fd-realism-player .career-subpage-content h1,
+.fd-player-career-shell .fd-realism-player .career-subpage-content h2,
+.fd-player-career-shell .fd-realism-player .career-subpage-content h3,
+.fd-player-career-shell .fd-realism-player .career-subpage-content strong,
+.fd-player-career-shell .fd-realism-player .career-subpage-content b { color:#0f2342 !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content p,
+.fd-player-career-shell .fd-realism-player .career-subpage-content small,
+.fd-player-career-shell .fd-realism-player .career-subpage-content label,
+.fd-player-career-shell .fd-realism-player .career-subpage-content span { }
+.fd-player-career-shell .fd-realism-player .career-subpage-content input,
+.fd-player-career-shell .fd-realism-player .career-subpage-content select,
+.fd-player-career-shell .fd-realism-player .career-subpage-content textarea { background:#f7faff !important; color:#0f2342 !important; border-color:#c9d9ec !important; }
+.fd-player-career-shell .fd-realism-player .career-subpage-content button { border-radius:8px; }
+@media (max-width:760px) {
+ .fd-player-career-shell .fd-player-head { flex-wrap:wrap; min-height:68px; padding:6px 8px; }
+ .fd-player-career-shell .fd-player-meta { gap:4px !important; }
+ .fd-player-career-shell .fd-player-meta > div { padding:4px 5px !important; }
+ .fd-player-career-shell .fd-player-layout { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(240px,1fr) minmax(180px,.8fr); overflow-y:auto; }
+}
+@media (max-width:520px) {
+ .fd-player-career-shell .fd-player-tabs button { font-size:8px !important; letter-spacing:0; }
+ .fd-player-career-shell .fd-player-identity { gap:6px !important; }
+ .fd-player-career-shell .fd-player-headshot { width:38px !important; height:38px !important; }
+ .fd-player-career-shell .fd-player-headcopy h1 { font-size:16px !important; }
+ .fd-player-career-shell .fd-player-headcopy p { font-size:9px !important; }
+ .fd-player-career-shell .fd-realism-player nav button { font-size:8px !important; }
+}
+@media (orientation:landscape) and (max-height:600px) {
+ .fd-player-career-shell .fd-player-head { min-height:58px; padding:4px 9px; }
+ .fd-player-career-shell .fd-player-tabs button { min-height:34px; }
+ .fd-player-career-shell .fd-player-layout { padding:6px; gap:6px; }
+ .fd-player-career-shell .fd-realism-player .career-subpage-content { padding:6px !important; }
+}
