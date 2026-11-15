@@ -21,7 +21,7 @@ ASSETS = [
 def download(asset):
     req=Request(asset["url"],headers={"User-Agent":UA,"Accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","Referer":asset["page"]})
     with urlopen(req,timeout=90) as response: data=response.read()
-    if len(data)<20_000 or not (data.startswith(bytes.fromhex("ffd8ff")) or data.startswith(bytes.fromhex("89504e47")) or data[:4]==b"RIFF"):
+    if len(data)<20_000 or not (data.startswith(bytes.fromhex("ffd8ff")) or data.startswith(bytes.fromhex("89504e47")) or data[:4]==b"RIFF" or (data[4:8]==b"ftyp" and data[8:12] in (b"avif",b"avis"))):
         raise RuntimeError(f"Invalid or unexpectedly small image response ({len(data)} bytes)")
     (OUT/asset["file"]).write_bytes(data)
     return {"file":asset["file"],"bytes":len(data),"source":asset["source"],"creator":asset["creator"],"page":asset["page"],"license":asset["license"],"use":asset["use"]}
