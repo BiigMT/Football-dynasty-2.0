@@ -154,6 +154,14 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="relative min-h-[132px] overflow-hidden rounded-xl border border-cyan-400/20 bg-[#101923]">
+        <img src="/media/game/training-ground.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
+        <div className="relative z-10 flex min-h-[132px] flex-col justify-end p-4">
+          <div className="text-[10px] font-bold uppercase tracking-[.24em] text-cyan-300">Club infrastructure</div>
+          <h2 className="text-xl font-black text-white">Academy, scouting & player development</h2>
+        </div>
+      </div>
       <section className="rounded-xl border border-white/10 bg-[#131A22] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div><h3 className="text-lg font-black text-white">Youth Academy & Recruitment</h3><p className="text-xs text-slate-400">Find the next generation and build them into first-team players.</p></div>
