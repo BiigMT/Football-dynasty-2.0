@@ -414,6 +414,10 @@ export function createLegendCareer(params: {
       trophies: [],
       retired: false,
       agentOffers: [],
+      agentName: 'Independent Representative',
+      agentReputation: 55,
+      developmentXp: 0,
+      skillPoints: 0,
     },
     clubs: world.clubs,
     players: world.players,
@@ -1045,7 +1049,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
   const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
 
   // Generate Transfer Interest for Become a Legend if performing well
-  if (nextSave.legend && transferWindowOpen && Math.random() < 0.55) {
+  if (nextSave.legend && transferWindowOpen) {
     const uPlayer = nextSave.players[nextSave.legend.playerId];
     if (uPlayer && uPlayer.overall >= 72 && Math.random() < Math.min(0.88, 0.35 + (nextSave.legend.agentReputation ?? 55) / 180)) {
       const suitor = Object.values(nextSave.clubs).find(
