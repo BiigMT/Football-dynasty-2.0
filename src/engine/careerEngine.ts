@@ -1300,21 +1300,25 @@ export function promoteYouthProspect(save: CareerSave): CareerSave {
   if (!club) return save;
   const positions: Position[] = ['CB', 'CM', 'CAM', 'LW', 'ST', 'GK'];
   const pos = positions[Math.floor(Math.random() * positions.length)];
+  const prospectTierRoll = Math.random();
+  const prospectTier = prospectTierRoll > 0.96 ? 'WONDERKID' : prospectTierRoll > 0.68 ? 'FIRST_TEAM_REGULAR' : 'SQUAD_PROSPECT';
+  const potentialRange = prospectTier === 'WONDERKID' ? [85, 91] : prospectTier === 'FIRST_TEAM_REGULAR' ? [78, 84] : [70, 77];
+  const targetOverall = 48 + Math.floor(Math.random() * 17);
   const prospect = generatePlayer({
     id: `youth_${club.id}_${Date.now()}`,
     clubId: club.id,
     region: club.region,
-    country: club.country === 'Pan-Africa' ? 'Egypt' : club.country,
+    country: club.country === 'Pan-Africa' ? 'Zambia' : club.country,
     position: pos,
-    // Academy recruits are raw prospects, not ready-made first-team stars.
-    // Club reputation influences the ceiling slightly, but keeps starting OVR modest.
-    targetOverall: Math.min(59, Math.max(45, 42 + Math.round((club.reputation - 60) * 0.42))),
+    targetOverall,
     shirtNumber: 30 + Math.floor(Math.random() * 20),
-    age: 17,
+    age: 15 + Math.floor(Math.random() * 4),
     isYouth: true,
     seed: Date.now() % 999999,
   });
-  prospect.potential = Math.min(86, Math.max(prospect.overall + 10, 62 + Math.floor(Math.random() * 15)));
+  prospect.overall = targetOverall;
+  prospect.potential = potentialRange[0] + Math.floor(Math.random() * (potentialRange[1] - potentialRange[0] + 1));
+  prospect.scouted = false;
 
   return {
     ...save,
@@ -1600,13 +1604,31 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
 
     const newAge = p.age + 1;
     const attrs = { ...p.attributes };
-    if (newAge <= 23 && p.overall < p.potential) {
-      attrs.speed = Math.min(97, attrs.speed + 1);
-      attrs.ballControl = Math.min(97, attrs.ballControl + 1);
-      attrs.reactions = Math.min(97, attrs.reactions + 1);
-    } else if (newAge >= 32) {
-      attrs.speed = Math.max(40, attrs.speed - 2);
-      attrs.stamina = Math.max(42, attrs.stamina - 2);
+    const minutesShare = Math.min(1, p.seasonStats.minutes / 2400);
+    const performanceFactor = p.seasonStats.ratingCount > 0
+      ? Math.max(0.35, Math.min(1.35, (p.seasonStats.averageRating - 5.5) / 2.1))
+      : 0.45;
+    if (newAge >= 16 && newAge <= 22 && p.overall < p.potential) {
+      const growth = Math.max(0, Math.min(2, Math.round((0.5 + minutesShare) * performanceFactor)));
+      attrs.speed = Math.min(97, attrs.speed + growth);
+      attrs.acceleration = Math.min(97, attrs.acceleration + growth);
+      attrs.ballControl = Math.min(97, attrs.ballControl + growth);
+      attrs.dribbling = Math.min(97, attrs.dribbling + growth);
+      attrs.reactions = Math.min(97, attrs.reactions + Math.max(0, growth - 1));
+      attrs.stamina = Math.min(97, attrs.stamina + (minutesShare > 0.35 ? 1 : 0));
+    } else if (newAge >= 23 && newAge <= 29) {
+      attrs.passing = Math.min(98, attrs.passing + 1);
+      attrs.vision = Math.min(98, attrs.vision + 1);
+      attrs.positioning = Math.min(98, attrs.positioning + 1);
+    } else if (newAge >= 30) {
+      const decline = newAge >= 34 ? 2 : 1;
+      attrs.speed = Math.max(40, attrs.speed - decline);
+      attrs.acceleration = Math.max(40, attrs.acceleration - decline);
+      attrs.stamina = Math.max(42, attrs.stamina - decline);
+      attrs.strength = Math.max(42, attrs.strength - (newAge >= 36 ? 1 : 0));
+      attrs.passing = Math.min(98, attrs.passing + (newAge <= 34 ? 1 : 0));
+      attrs.vision = Math.min(98, attrs.vision + (newAge <= 34 ? 1 : 0));
+      attrs.positioning = Math.min(98, attrs.positioning + (newAge <= 34 ? 1 : 0));
     }
     const nextOvr = calculateOverall(p.position, attrs);
     nextPlayers[pid] = {
