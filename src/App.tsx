@@ -18,8 +18,9 @@ import { LegendHub } from './components/LegendHub';
 import { MatchCenter } from './components/MatchCenter';
 import { StudioIntro } from './components/StudioIntro';
 import { OrientationSelect, GameOrientation } from './components/OrientationSelect';
+import { CareerModeSelect } from './components/CareerModeSelect';
 
-type AppScreen = 'TITLE' | 'SETUP' | 'CAREER' | 'MATCH';
+type AppScreen = 'TITLE' | 'MODE_SELECT' | 'SETUP' | 'CAREER' | 'MATCH';
 
 
 export default function App() {
@@ -73,7 +74,7 @@ export default function App() {
   const handleStartNewCareer = (mode: CareerMode, slotId: string) => {
     soundEngine.playClick();
     setSetupTarget({ mode, slotId });
-    setScreen('SETUP');
+    setScreen('MODE_SELECT');
   };
 
   const handleLoadCareer = async (slotId: string) => {
@@ -304,6 +305,20 @@ export default function App() {
         onDeleteSlot={handleDeleteSlot}
         orientation={orientation}
         onChangeOrientation={() => setOrientation(null)}
+      />
+    );
+  }
+
+  if (screen === 'MODE_SELECT') {
+    return (
+      <CareerModeSelect
+        slots={slots}
+        onStart={(mode) => {
+          setSetupTarget((current) => ({ ...current, mode }));
+          setScreen('SETUP');
+        }}
+        onLoad={handleLoadCareer}
+        onBack={() => setScreen('TITLE')}
       />
     );
   }
