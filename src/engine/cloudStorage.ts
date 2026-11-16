@@ -1,6 +1,5 @@
 import {
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -33,7 +32,9 @@ async function uploadSave(uid: string, save: CareerSave): Promise<void> {
   const parentRef = saveRef(uid, save.slotId);
   const oldChunks = await getDocs(collection(parentRef, 'chunks'));
 
-  let pendingBatch = writeBatch(firestore);\n  let pendingWrites = 0;\n  const operations: Array<() => void> = [];
+  let pendingBatch = writeBatch(firestore);
+  let pendingWrites = 0;
+  const operations: Array<() => void> = [];
   chunks.forEach((data, index) => {
     operations.push(() => {
       const chunkId = `chunk_${String(index).padStart(4, '0')}`;
@@ -48,8 +49,6 @@ async function uploadSave(uid: string, save: CareerSave): Promise<void> {
     }
   });
 
-  let pendingBatch = writeBatch(firestore);
-  let pendingWrites = 0;
   for (const operation of operations) {
     operation();
     pendingWrites += 1;
