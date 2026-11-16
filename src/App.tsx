@@ -11,6 +11,7 @@ import { getFormationSlots } from './engine/database';
 import { createMatchSession } from './engine/matchEngine';
 import { initializeFourTierPyramid } from './engine/careerPyramid';
 import { deleteCareer, listSaveSlots, loadCareer, saveCareer, SaveSlotSummary } from './engine/storage';
+import { saveCareerToCloud } from './engine/cloudStorage';
 import { soundEngine } from './engine/audio';
 import { TitleScreen } from './components/TitleScreen';
 import { CareerSetupModal } from './components/CareerSetupModal';
@@ -68,7 +69,7 @@ export default function App() {
 
   const updateAndPersistSave = (next: CareerSave) => {
     setActiveSave(next);
-    void saveCareer(next).then(refreshSlots).catch((error: unknown) => {
+    void saveCareer(next).then(async () => {\n      try {\n        await saveCareerToCloud({ ...next, updatedAt: Date.now() });\n      } catch (cloudError) {\n        // Cloud failures never block or roll back the on-device career save.\n        console.warn('Cloud save deferred; the local career is safe.', cloudError);\n      }\n      await refreshSlots();\n    }).catch((error: unknown) => {
       console.error('Career save failed:', error);
       window.alert(error instanceof Error ? error.message : 'Could not save your career. Please try again.');
     });
