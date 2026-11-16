@@ -33,7 +33,7 @@ async function uploadSave(uid: string, save: CareerSave): Promise<void> {
   const parentRef = saveRef(uid, save.slotId);
   const oldChunks = await getDocs(collection(parentRef, 'chunks'));
 
-  const operations: Array<() => void> = [];
+  let pendingBatch = writeBatch(firestore);\n  let pendingWrites = 0;\n  const operations: Array<() => void> = [];
   chunks.forEach((data, index) => {
     operations.push(() => {
       const chunkId = `chunk_${String(index).padStart(4, '0')}`;
