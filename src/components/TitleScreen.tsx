@@ -3,6 +3,7 @@ import { Volume2, VolumeX, Play, Shield, Trophy } from 'lucide-react';
 import { CareerMode } from '../types/football';
 import { SaveSlotSummary } from '../engine/storage';
 import { SaveSlotsScreen } from './SaveSlotsScreen';
+import { AccountPanel } from './AccountPanel';
 import stadiumHero from '../assets/images/stadium_hero_backdrop_1794559201770.jpg';
 import managerEmblem from '../assets/images/manager_mode_emblem_1794559202903.jpg';
 import legendEmblem from '../assets/images/legend_mode_emblem_1794559202286.jpg';
@@ -67,7 +68,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
       </div>
 
       {/* Main Hero & Mode Selection */}
-      <main className="relative z-10 max-w-6xl mx-auto w-full px-6 py-4 flex flex-col gap-8">
+      <main className="relative z-10 max-w-6xl mx-auto w-full px-6 py-4 flex flex-col gap-8">\n        <AccountPanel />
         {/* Bespoke SVG Title Lockup */}
         <div className="max-w-2xl">
           <svg
