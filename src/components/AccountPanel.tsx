@@ -18,6 +18,22 @@ export function AccountPanel() {
 
   useEffect(() => onAuthStateChanged(firebaseAuth, setUser), []);
 
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    setBusy(true);
+    void syncCareerSaves(user.uid).then((result) => {
+      if (!cancelled) {
+        setMessage(`Sync complete · ${result.uploaded} uploaded · ${result.downloaded} restored · ${result.unchanged} unchanged.`);
+      }
+    }).catch((error) => {
+      if (!cancelled) setMessage(error instanceof Error ? error.message : 'Cloud sync failed. Local saves are safe.');
+    }).finally(() => {
+      if (!cancelled) setBusy(false);
+    });
+    return () => { cancelled = true; };
+  }, [user?.uid]);
+
   const runAuth = async (mode: 'signin' | 'signup') => {
     setBusy(true);
     setMessage('');
