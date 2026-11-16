@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function validSlot(slotId) {
+      return slotId in ['slot_1', 'slot_2', 'slot_3', 'slot_4', 'slot_5'];
+    }
+
+    match /users/{userId}/careerSaves/{slotId} {
+      allow read, write: if isOwner(userId) && validSlot(slotId);
+
+      match /chunks/{chunkId} {
+        allow read, write: if isOwner(userId) && validSlot(slotId);
+      }
+    }
+
+    // Deny every other document unless a future feature adds an explicit rule.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
