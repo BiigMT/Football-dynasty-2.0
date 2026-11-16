@@ -69,7 +69,15 @@ export default function App() {
 
   const updateAndPersistSave = (next: CareerSave) => {
     setActiveSave(next);
-    void saveCareer(next).then(async () => {\n      try {\n        await saveCareerToCloud({ ...next, updatedAt: Date.now() });\n      } catch (cloudError) {\n        // Cloud failures never block or roll back the on-device career save.\n        console.warn('Cloud save deferred; the local career is safe.', cloudError);\n      }\n      await refreshSlots();\n    }).catch((error: unknown) => {
+    void saveCareer(next).then(async () => {
+      try {
+        await saveCareerToCloud({ ...next, updatedAt: Date.now() });
+      } catch (cloudError) {
+        // Cloud failures never block or roll back the on-device career save.
+        console.warn('Cloud save deferred; the local career is safe.', cloudError);
+      }
+      await refreshSlots();
+    }).catch((error: unknown) => {
       console.error('Career save failed:', error);
       window.alert(error instanceof Error ? error.message : 'Could not save your career. Please try again.');
     });
