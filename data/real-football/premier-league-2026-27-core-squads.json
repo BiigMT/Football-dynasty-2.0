@@ -1,0 +1,352 @@
+{
+  "season": "2026/27",
+  "snapshotDate": "2026-09-22",
+  "source": "Premier League official squad-number publication",
+  "sourceUrl": "https://www.premierleague.com/en/news/4725682",
+  "clubs": [
+    {
+      "clubId": "arsenal",
+      "clubName": "Arsenal",
+      "players": [
+        {
+          "fullName": "David Raya",
+          "shirtNumber": 1
+        },
+        {
+          "fullName": "William Saliba",
+          "shirtNumber": 2
+        },
+        {
+          "fullName": "Cristhian Mosquera",
+          "shirtNumber": 3
+        },
+        {
+          "fullName": "Ben White",
+          "shirtNumber": 4
+        },
+        {
+          "fullName": "Piero Hincapie",
+          "shirtNumber": 5
+        },
+        {
+          "fullName": "Gabriel Magalhaes",
+          "shirtNumber": 6
+        },
+        {
+          "fullName": "Bukayo Saka",
+          "shirtNumber": 7
+        },
+        {
+          "fullName": "Martin Odegaard",
+          "shirtNumber": 8
+        },
+        {
+          "fullName": "Eberechi Eze",
+          "shirtNumber": 10
+        },
+        {
+          "fullName": "Jurrien Timber",
+          "shirtNumber": 12
+        },
+        {
+          "fullName": "Kepa Arrizabalaga",
+          "shirtNumber": 13
+        },
+        {
+          "fullName": "Viktor Gyokeres",
+          "shirtNumber": 14
+        },
+        {
+          "fullName": "Ezri Konsa",
+          "shirtNumber": 15
+        },
+        {
+          "fullName": "Christos Tzolis",
+          "shirtNumber": 17
+        },
+        {
+          "fullName": "Noni Madueke",
+          "shirtNumber": 20
+        },
+        {
+          "fullName": "Ethan Nwaneri",
+          "shirtNumber": 22
+        },
+        {
+          "fullName": "Mikel Merino",
+          "shirtNumber": 23
+        },
+        {
+          "fullName": "Kai Havertz",
+          "shirtNumber": 29
+        }
+      ]
+    },
+    {
+      "clubId": "manchester-city",
+      "clubName": "Manchester City",
+      "players": [
+        {
+          "fullName": "Gianluigi Donnarumma",
+          "shirtNumber": 1
+        },
+        {
+          "fullName": "Ruben Dias",
+          "shirtNumber": 3
+        },
+        {
+          "fullName": "Elliot Anderson",
+          "shirtNumber": 5
+        },
+        {
+          "fullName": "Marc Guehi",
+          "shirtNumber": 6
+        },
+        {
+          "fullName": "Iliman Ndiaye",
+          "shirtNumber": 7
+        },
+        {
+          "fullName": "Mateo Kovacic",
+          "shirtNumber": 8
+        },
+        {
+          "fullName": "Erling Haaland",
+          "shirtNumber": 9
+        },
+        {
+          "fullName": "Rayan Cherki",
+          "shirtNumber": 10
+        },
+        {
+          "fullName": "Jeremy Doku",
+          "shirtNumber": 11
+        },
+        {
+          "fullName": "Marcus Bettinelli",
+          "shirtNumber": 13
+        },
+        {
+          "fullName": "Enzo Fernandez",
+          "shirtNumber": 17
+        },
+        {
+          "fullName": "Rayan Ait-Nouri",
+          "shirtNumber": 21
+        },
+        {
+          "fullName": "Josko Gvardiol",
+          "shirtNumber": 24
+        },
+        {
+          "fullName": "Matheus Nunes",
+          "shirtNumber": 27
+        },
+        {
+          "fullName": "Geronimo Rulli",
+          "shirtNumber": 28
+        },
+        {
+          "fullName": "Claudio Echeverri",
+          "shirtNumber": 30
+        },
+        {
+          "fullName": "Ayyoub Bouaddi",
+          "shirtNumber": 32
+        },
+        {
+          "fullName": "Nico O'Reilly",
+          "shirtNumber": 33
+        },
+        {
+          "fullName": "Allan",
+          "shirtNumber": 37
+        },
+        {
+          "fullName": "Antoine Semenyo",
+          "shirtNumber": 42
+        },
+        {
+          "fullName": "Abdukodir Khusanov",
+          "shirtNumber": 45
+        },
+        {
+          "fullName": "Phil Foden",
+          "shirtNumber": 47
+        },
+        {
+          "fullName": "Rico Lewis",
+          "shirtNumber": 82
+        }
+      ]
+    },
+    {
+      "clubId": "liverpool",
+      "clubName": "Liverpool",
+      "players": [
+        {
+          "fullName": "Alisson Becker",
+          "shirtNumber": 1
+        },
+        {
+          "fullName": "Joe Gomez",
+          "shirtNumber": 2
+        },
+        {
+          "fullName": "Wataru Endo",
+          "shirtNumber": 3
+        },
+        {
+          "fullName": "Virgil van Dijk",
+          "shirtNumber": 4
+        },
+        {
+          "fullName": "Jeremy Jacquet",
+          "shirtNumber": 5
+        },
+        {
+          "fullName": "Milos Kerkez",
+          "shirtNumber": 6
+        },
+        {
+          "fullName": "Florian Wirtz",
+          "shirtNumber": 7
+        },
+        {
+          "fullName": "Dominik Szoboszlai",
+          "shirtNumber": 8
+        },
+        {
+          "fullName": "Alexander Isak",
+          "shirtNumber": 9
+        },
+        {
+          "fullName": "Alexis Mac Allister",
+          "shirtNumber": 10
+        },
+        {
+          "fullName": "Conor Bradley",
+          "shirtNumber": 12
+        },
+        {
+          "fullName": "Federico Chiesa",
+          "shirtNumber": 14
+        },
+        {
+          "fullName": "Giovanni Leoni",
+          "shirtNumber": 15
+        },
+        {
+          "fullName": "Cody Gakpo",
+          "shirtNumber": 18
+        },
+        {
+          "fullName": "Kostas Tsimikas",
+          "shirtNumber": 21
+        },
+        {
+          "fullName": "Hugo Ekitike",
+          "shirtNumber": 22
+        },
+        {
+          "fullName": "Victor Munoz",
+          "shirtNumber": 23
+        },
+        {
+          "fullName": "Giorgi Mamardashvili",
+          "shirtNumber": 25
+        },
+        {
+          "fullName": "Jeremie Frimpong",
+          "shirtNumber": 30
+        },
+        {
+          "fullName": "Ryan Gravenberch",
+          "shirtNumber": 38
+        },
+        {
+          "fullName": "Rio Ngumoha",
+          "shirtNumber": 73
+        }
+      ]
+    },
+    {
+      "clubId": "manchester-united",
+      "clubName": "Manchester United",
+      "players": [
+        {
+          "fullName": "Senne Lammens",
+          "shirtNumber": 1
+        },
+        {
+          "fullName": "Diogo Dalot",
+          "shirtNumber": 2
+        },
+        {
+          "fullName": "Noussair Mazraoui",
+          "shirtNumber": 3
+        },
+        {
+          "fullName": "Matthijs de Ligt",
+          "shirtNumber": 4
+        },
+        {
+          "fullName": "Harry Maguire",
+          "shirtNumber": 5
+        },
+        {
+          "fullName": "Lisandro Martinez",
+          "shirtNumber": 6
+        },
+        {
+          "fullName": "Mason Mount",
+          "shirtNumber": 7
+        },
+        {
+          "fullName": "Bruno Fernandes",
+          "shirtNumber": 8
+        },
+        {
+          "fullName": "Marcus Rashford",
+          "shirtNumber": 9
+        },
+        {
+          "fullName": "Joshua Zirkzee",
+          "shirtNumber": 11
+        },
+        {
+          "fullName": "Patrick Dorgu",
+          "shirtNumber": 13
+        },
+        {
+          "fullName": "Amad Diallo",
+          "shirtNumber": 16
+        },
+        {
+          "fullName": "Youri Tielemans",
+          "shirtNumber": 18
+        },
+        {
+          "fullName": "Bryan Mbeumo",
+          "shirtNumber": 19
+        },
+        {
+          "fullName": "Luke Shaw",
+          "shirtNumber": 23
+        },
+        {
+          "fullName": "Manuel Ugarte",
+          "shirtNumber": 25
+        },
+        {
+          "fullName": "Benjamin Sesko",
+          "shirtNumber": 30
+        },
+        {
+          "fullName": "Kobbie Mainoo",
+          "shirtNumber": 37
+        }
+      ]
+    }
+  ]
+}
