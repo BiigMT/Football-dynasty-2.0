@@ -95,7 +95,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     }
     scene=new THREE.Scene(); scene.background=new THREE.Color('#080e1a'); scene.fog=new THREE.Fog('#101e2d',75,175);
     camera=new THREE.PerspectiveCamera(39,host.clientWidth/Math.max(1,host.clientHeight),.1,300);
-    camera.position.copy(cameraTarget); camera.lookAt(lookTarget);
+    camera.up.set(0,1,0); camera.position.copy(cameraTarget); camera.lookAt(lookTarget);
 
     const hemi=new THREE.HemisphereLight('#dbeafe','#142b1c',2.0); scene.add(hemi);
     const key=new THREE.DirectionalLight('#fff3d1',3.2); key.position.set(-32,58,24); key.castShadow=!/Android|iPhone|iPad/i.test(navigator.userAgent||''); key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-70;key.shadow.camera.right=70;key.shadow.camera.top=55;key.shadow.camera.bottom=-55;scene.add(key);
@@ -266,7 +266,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
       const mode=live.cameraMode;
       if(mode==='TACTICAL'){cameraTarget.set(0,93,.01);lookTarget.set(0,0,0);camera.fov=48;}
       else if(mode==='DUGOUT'){cameraTarget.set(-4,13,48);lookTarget.set(0,0,0);camera.fov=47;}
-      else{cameraTarget.set(THREE.MathUtils.clamp(ball.position.x*.22,-12,12),31,47);lookTarget.set(ball.position.x*.22,0,0);camera.fov=39;}
+      else{cameraTarget.set(THREE.MathUtils.clamp(ball.position.x*.18,-10,10),43,76);lookTarget.set(ball.position.x*.18,0,0);camera.fov=42;}
       camera.position.lerp(cameraTarget,Math.min(1,dt*1.7));camera.lookAt(lookTarget);camera.updateProjectionMatrix();
       renderer.render(scene,camera);
     };
