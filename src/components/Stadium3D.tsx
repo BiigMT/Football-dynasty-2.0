@@ -4,6 +4,7 @@ import { Club, MatchSession, Player } from '../types/football';
 import { getFormationCoordinates } from '../engine/matchEngine';
 import { getMatchPresentationCue } from '../engine/matchPresentation';
 import { getDynamicPlayerTarget } from '../engine/matchPositioning';
+import { advanceBallPresentation, getPlayerSeparationOffset, steerPlayerVelocity } from '../engine/matchPhysics';
 
 export type StadiumCameraMode = 'TV' | 'TACTICAL' | 'DUGOUT';
 interface Stadium3DProps {
@@ -17,7 +18,7 @@ interface Stadium3DProps {
   onFps?: (fps:number)=>void;
 }
 
-type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number; action?: 'PASS'|'TACKLE'|'SHOT'|'SAVE'|'CELEBRATE'; actionUntil?: number; presentationTarget?: {x:number;y:number}; presentationUntil?: number };
+type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; velocity:any; phase: number; action?: 'PASS'|'TACKLE'|'SHOT'|'SAVE'|'CELEBRATE'; actionUntil?: number; presentationTarget?: {x:number;y:number}; presentationUntil?: number };
 const FIELD_W = 105;
 const FIELD_D = 68;
 const mapPitch = (x:number,y:number) => new THREE.Vector3(((x/100)-.5)*FIELD_W,0,((y/100)-.5)*FIELD_D);
@@ -136,7 +137,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
 
     const addRigs=(ids:string[],side:'HOME'|'AWAY',club:Club)=>{
       const formation=getFormationCoordinates(side==='HOME'?session.homeTactics.formation:session.awayTactics.formation);
-      ids.forEach((id,index)=>{const p=players[id];if(!p)return;const st=session.playerStates[id];if(st?.redCard)return;const f=formation[index]??{x:50,y:50};let x=f.x,y=f.y;if(side==='AWAY'){x=100-x;y=100-y;}const pos=mapPitch(x,y);const colors=side==='HOME'?['#00a8e8','#f8fafc']:['#ffc107','#111827'];const athlete=makeAthlete(colors[0],colors[1]);athlete.group.position.copy(pos);scene.add(athlete.group);const badge=makePlayerBadge(p,st?.stamina??100,p.shirtNumber,colors[0]);athlete.group.add(badge);rigs.set(id,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id,side,base:pos.clone(),phase:index*.8});});
+      ids.forEach((id,index)=>{const p=players[id];if(!p)return;const st=session.playerStates[id];if(st?.redCard)return;const f=formation[index]??{x:50,y:50};let x=f.x,y=f.y;if(side==='AWAY'){x=100-x;y=100-y;}const pos=mapPitch(x,y);const colors=side==='HOME'?['#00a8e8','#f8fafc']:['#ffc107','#111827'];const athlete=makeAthlete(colors[0],colors[1]);athlete.group.position.copy(pos);scene.add(athlete.group);const badge=makePlayerBadge(p,st?.stamina??100,p.shirtNumber,colors[0]);athlete.group.add(badge);rigs.set(id,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id,side,base:pos.clone(),velocity:new THREE.Vector3(),phase:index*.8});});
     };
     addRigs(session.homeTactics.startingXI,'HOME',homeClub);addRigs(session.awayTactics.startingXI,'AWAY',awayClub);
 
@@ -189,23 +190,34 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         const pos=mapPitch(side==='HOME'?f.x:100-f.x,side==='HOME'?f.y:100-f.y);
         athlete.group.position.copy(pos);scene.add(athlete.group);
         const badge=makePlayerBadge(p,st.stamina,p.shirtNumber,colors[0]);athlete.group.add(badge);
-        rigs.set(st.playerId,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id:st.playerId,side,base:pos.clone(),phase:rigs.size*.71});
+        rigs.set(st.playerId,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id:st.playerId,side,base:pos.clone(),velocity:new THREE.Vector3(),phase:rigs.size*.71});
       });
       const targetBall=mapPitch(s.ballPos.x,s.ballPos.y);
+      const rigPositions=Array.from(rigs.values()).filter(r=>r.root.visible).map(r=>({x:r.root.position.x,z:r.root.position.z}));
       if(activeBallFlight){
         const progress=Math.min(1,Math.max(0,(elapsed-activeBallFlight.startedAt)/activeBallFlight.duration));
         const eased=progress*progress*(3-2*progress);
         const flight=activeBallFlight;
         ball.position.lerpVectors(flight.from,flight.to,eased);
         ball.position.y=.34+Math.sin(progress*Math.PI)*flight.arc;
+        ballVelocity.set(0,0,0);
         if(progress>=1){activeBallFlight=null;ballTarget.copy(targetBall);}
       }else{
-        ballVelocity.lerp(targetBall.clone().sub(ball.position),Math.min(1,dt*4));
-        ballTarget.lerp(targetBall,Math.min(1,dt*3.2));
-        const arc=Math.min(3.8,ballVelocity.length()*.11);
-        ball.position.set(ballTarget.x, .34+Math.sin(Math.min(1,ballVelocity.length()*.07)*Math.PI)*arc, ballTarget.z);
+        const step=advanceBallPresentation(
+          {
+            position:{x:ball.position.x,y:ball.position.y,z:ball.position.z},
+            velocity:{x:ballVelocity.x,y:ballVelocity.y,z:ballVelocity.z},
+          },
+          {x:targetBall.x,z:targetBall.z},
+          rigPositions,
+          dt,
+        );
+        ball.position.set(step.position.x,step.position.y,step.position.z);
+        ballVelocity.set(step.velocity.x,step.velocity.y,step.velocity.z);
+        ballTarget.copy(targetBall);
       }
-      ball.rotation.x+=dt*4;ball.rotation.z+=dt*3;ballShadow.position.set(ball.position.x,.03,ball.position.z);ballShadow.scale.setScalar(Math.max(.5,1.25-ball.position.y*.13));
+      const ballSpin=ballVelocity.length();
+      ball.rotation.x+=dt*(3.5+ballSpin*.55);ball.rotation.z+=dt*(2.5+ballSpin*.42);ballShadow.position.set(ball.position.x,.03,ball.position.z);ballShadow.scale.setScalar(Math.max(.5,1.25-ball.position.y*.13));
       rigs.forEach((rig,id)=>{
         const p=live.players[id],st=s.playerStates[id];if(!p||!st)return;
         rig.root.visible=st.onPitch&&!st.redCard;
@@ -215,7 +227,26 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         let targetPoint=getDynamicPlayerTarget(f,s.ballPos,rig.side,p.position,tactics);
         if(rig.presentationTarget&&(rig.presentationUntil??0)>elapsed){targetPoint=rig.presentationTarget;}
         else{rig.presentationTarget=undefined;rig.presentationUntil=undefined;}
-        const target=mapPitch(targetPoint.x,targetPoint.y);rig.root.position.lerp(target,Math.min(1,dt*(rig.presentationTarget?4.8:2.2)));
+        const target=mapPitch(targetPoint.x,targetPoint.y);
+        const separation=getPlayerSeparationOffset(
+          {x:rig.root.position.x,z:rig.root.position.z},
+          rigPositions.filter(point=>Math.hypot(point.x-rig.root.position.x,point.z-rig.root.position.z)>0.001),
+        );
+        target.x=THREE.MathUtils.clamp(target.x+separation.x,-51.4,51.4);
+        target.z=THREE.MathUtils.clamp(target.z+separation.z,-33.1,33.1);
+        const speedRating=Math.max(30,Math.min(97,p.attributes.speed));
+        const staminaFactor=.78+Math.max(0,Math.min(100,st.stamina))/450;
+        const maxSpeed=(3.1+speedRating/100*3.2)*staminaFactor*(rig.presentationTarget?1.18:1);
+        const velocity=steerPlayerVelocity(
+          {x:rig.root.position.x,z:rig.root.position.z},
+          {x:rig.velocity.x,z:rig.velocity.z},
+          {x:target.x,z:target.z},
+          dt,maxSpeed,rig.presentationTarget?19:15,
+        );
+        rig.velocity.set(velocity.x,0,velocity.z);
+        rig.root.position.x=THREE.MathUtils.clamp(rig.root.position.x+velocity.x*dt,-52,52);
+        rig.root.position.z=THREE.MathUtils.clamp(rig.root.position.z+velocity.z*dt,-34,34);
+        rig.root.rotation.z=THREE.MathUtils.clamp(-velocity.x*.018,-.12,.12);
         const dx=ball.position.x-rig.root.position.x,dz=ball.position.z-rig.root.position.z;
         if(Math.hypot(dx,dz)>.15)rig.root.rotation.y=Math.atan2(dx,dz);
         const running= !live.reducedMotion && s.phase!=='HALF_TIME' && s.phase!=='FULL_TIME';
