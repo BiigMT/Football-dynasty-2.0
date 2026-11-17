@@ -10,7 +10,7 @@ export const AFRICAN_CLUB_SQUADS_2026:OfficialClubSquad[] = [
       {name:'Mostafa Shobeir'},{name:'Yassin Marei'},{name:'Ahmed El Sayed Zizo'},{name:'Karim Fouad'},{name:'Ahmed Eid'},
       {name:'Amr El Gazar'},{name:'Youssef Belammari'},{name:'Hady Reyad'},{name:'Mounsef Bakrar'},{name:'Soufiane Benjdida'},
       {name:'Hamza Alaa'},{name:'Omar El Saaiy'},{name:'Ali Mahmoud'},{name:'Tawfik Mohamed'},{name:'Kabaka'},
-      {name:'Omar Moawad'},{name:'Mohamed Abdallah'},{name:'Karim El Debes'},{name:'Akram Tawfik'},{name:'Aqtay Abdallah'},
+      {name:'Omar Moawad'},{name:'Mohamed Abdallah'},{name:'Karim El Debes'},{name:'Akram Tawfik'},{name:'Aqtay Abdallah'},{name:'Afsha'},{name:'Ahmed Reda'},{name:'Mohamed Rafat'},{name:'Reda Slim'},
     ],
   },
   {
@@ -49,4 +49,12 @@ export const AFRICAN_SQUAD_SOURCES = {
   alAhly:'https://www.alahlyegypt.com/en/football/first-team',
   esperance:'https://www.est.org.tn/fr/equipe-pro',
   enyimba:'https://enyimbafc.net/first-team/',
+} as const;
+
+
+/** Counts manually checked against each linked official first-team roster page. */
+export const AFRICAN_SQUAD_EXPECTED_COUNTS = {
+  alAhly: 34,
+  esperance: 32,
+  enyimba: 22,
 } as const;
