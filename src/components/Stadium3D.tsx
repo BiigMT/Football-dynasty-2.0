@@ -105,10 +105,10 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     rect(-52.5,-34,52.5,34);line([new THREE.Vector3(0,.04,-34),new THREE.Vector3(0,.04,34)]);
     const circle=(radius:number,cx=0,cz=0)=>{const pts=[];for(let i=0;i<=80;i++){const a=i/80*Math.PI*2;pts.push(new THREE.Vector3(cx+Math.cos(a)*radius,.04,cz+Math.sin(a)*radius));}line(pts);};
     circle(9.15);circle(.65);
-    rect(-52.5,-20.16,-36,-20.16);rect(-52.5,-20.16,-36,20.16);rect(-52.5,20.16,-36,20.16);
-    rect(36,-20.16,52.5,-20.16);rect(36,-20.16,36,20.16);rect(36,20.16,52.5,20.16);
-    rect(-52.5,-9.16,-41.5,-9.16);rect(-52.5,-9.16,-41.5,9.16);rect(-52.5,9.16,-41.5,9.16);
-    rect(41.5,-9.16,52.5,-9.16);rect(41.5,-9.16,41.5,9.16);rect(41.5,9.16,52.5,9.16);
+    rect(-52.5,-20.16,-36,20.16);
+    rect(36,-20.16,52.5,20.16);
+    rect(-52.5,-9.16,-41.5,9.16);
+    rect(41.5,-9.16,52.5,9.16);
     circle(1, -41.5,0);circle(1,41.5,0);
 
     // Goals, posts and net grids.
