@@ -117,7 +117,7 @@ const preservedPlayer = {
   clubId:careerClub.clubId,
   shirtNumber:careerIdentity.shirtNumber!,
   overall:78,
-  wage:12000,
+  weeklyWage:12000,
   seasonStats:{appearances:17,goals:6,assists:4},
   careerHistory:[{season:2025,clubId:careerClub.clubId,appearances:17}],
 } as unknown as Player;
@@ -131,7 +131,7 @@ const updatedCareerPlayer=careerPlayerPool[preservedPlayer.id];
 assert.equal(updatedCareerPlayer.id,'career_player_preserved','Career player IDs must remain stable');
 assert.equal(updatedCareerPlayer.name,careerIdentity.name,'Career player identity should be updated from the verified roster');
 assert.equal(updatedCareerPlayer.overall,78,'Career player overall must be preserved');
-assert.equal(updatedCareerPlayer.wage,12000,'Career player wage must be preserved');
+assert.equal(updatedCareerPlayer.weeklyWage,12000,'Career player wage must be preserved');
 assert.deepEqual(updatedCareerPlayer.seasonStats,preservedPlayer.seasonStats,'Career season statistics must be preserved');
 assert.deepEqual(updatedCareerPlayer.careerHistory,preservedPlayer.careerHistory,'Career history must be preserved');
 console.log('Validated real-player identity import preserves career IDs, ratings, wages and progression.');
