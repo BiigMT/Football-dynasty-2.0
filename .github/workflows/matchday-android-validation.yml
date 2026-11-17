@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/complete-squads-deeper-3d-engine
+      - feature/global-verified-squads-physics
   pull_request:
     branches:
       - main
@@ -39,6 +40,9 @@ jobs:
 
       - name: Validate 3D player positioning
         run: npm run validate:positioning
+
+      - name: Validate 3D match physics
+        run: npm run validate:physics
 
       - name: Production web build
         run: npm run build

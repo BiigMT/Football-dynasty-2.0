@@ -1,29 +1,42 @@
- # Real squads and deeper 3D match presentation
+# Verified real squads and 3D match presentation
 
-## Real-world squad integration
-- Bundles the Premier League's official 2026/27 squad-number snapshot for all 20 clubs (564 player entries).
-- New manager/player careers reconcile the real player names and shirt numbers into the generated player pool.
-- Existing generated player IDs are preserved; additional registered players use deterministic IDs derived from club and normalized player name.
-- Existing saves are not rewritten or migrated by this import.
-- The source confirms squad membership and shirt numbers only. Positions, nationality, date of birth, ratings, attributes, wages, contracts and market values remain game-generated until separately verified. They must not be presented as official real-world data.
-- Source: https://www.premierleague.com/en/news/4725682/all-20-premier-league-clubs-squad-numbers-for-202627-season (published 22 September 2026).
+Snapshot date: 17 November 2026.
 
-## Squad management layout
-- Team Management now separates the seven matchday substitutes from the complete registered squad.
-- The full-squad view shows starters, bench and reserves with status, position, age, fitness and simulated OVR in a scrollable panel.
-- A reserve can be promoted into the XI or matchday bench without changing the save schema.
+## European roster coverage
+
+The new-career player database now maps **96 club squads and 2,745 player entries** across the five current game leagues:
+- Premier League: 20 clubs (564 players)
+- LaLiga: 20 clubs
+- Serie A: 20 clubs
+- Bundesliga: 18 clubs
+- Ligue 1: 18 clubs
+
+The 76 non-Premier-League European mappings (LaLiga 20, Serie A 20, Bundesliga 18 and Ligue 1 18) are in the European roster dataset; the Premier League's 20 clubs and 564 entries are in its separate official squad dataset. The three leagues requested for expansion use their real competition formats: Serie A 20, Bundesliga 18 and Ligue 1 18. The game database already has these club slots; the roster importer now covers every one of those club IDs.
+
+Roster names and shirt numbers are imported only when present in the cited roster or registration source. Official club first-team pages are preferred. UEFA squad registration pages are used for clubs where accessible. AJ Auxerre and RC Strasbourg currently rely on independent roster listings cross-checked with official club/league announcements; those two sources are explicitly flagged in the source register. Shirt numbers are omitted where source evidence is missing or conflicting.
+
+The importer does not fabricate player ratings, positions, nationality, birth dates, wages, contracts, potential or technical attributes. Those remain game-generated until reliable data sources are licensed and integrated.
+
+## Player-career integration and saves
+
+- The squad importer is wired into the initial career database build. Newly created player careers receive the real names and verified shirt numbers mapped to the correct existing club IDs.
+- Existing generated player IDs are preserved where a generated player record is matched.
+- Existing career saves are not rewritten or migrated. The roster import affects new careers, not already-saved careers.
+- Real-world roster identities are separate from game-generated player ratings and simulation attributes.
 
 ## 3D match presentation
-- Adds a presentation-only choreography layer driven by the existing match events and current formation/player state.
-- Pass events create a ball flight and move a nearby teammate into the receiving lane.
-- Shot events create a longer, higher ball flight toward the existing simulated shot endpoint.
-- Tackle and save events move the relevant player rig toward the action area; existing rig action animations remain in use.
-- Players now adjust their presentation positions as a connected block based on ball location, player role, pressing style and mentality. Away-side coordinates are mirrored correctly; goalkeepers and defenders retain tighter positional constraints.
-- `npm run validate:positioning` checks side mirroring, tactical intensity, keeper restraint and pitch bounds; this check is included in Android CI.
-- The choreography never changes the authoritative match simulation, score, player attributes, or save schema.
-- This is deeper event-driven 3D presentation, not yet a deterministic physics simulation or per-frame tactical AI.
 
-## Interface constraint
-- No match-screen layout, HUD, button, panel, overlay or navigation component is changed by this branch.
-- MatchCenter, ConsoleMatchday and PostMatchBroadcast are intentionally untouched.
-- The existing match screen remains the same; only the 3D renderer's internal animation is extended.
+- Players use acceleration, braking and stamina/speed-scaled steering.
+- Soft separation reduces overlapping player rigs while respecting pitch bounds.
+- The presentation ball uses inertia, ground friction, player-body deflection, impact bounce, spin and pitch-boundary rebounds.
+- Scripted pass/shot flights remain presentation cues; the match engine remains authoritative for possession, shots, goals and results.
+
+## Preserved interface constraints
+
+- No match-screen layout, HUD, buttons, panels, overlays or navigation changes.
+- Squad depth and roster management remain outside the match screen.
+- Production is not changed by this pull request.
+
+## Validation
+
+CI checks TypeScript, all roster mappings and duplicate shirt numbers, 3D positioning/physics, production web build and Android debug APK assembly.

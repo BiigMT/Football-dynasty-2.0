@@ -1,6 +1,9 @@
 import type { Player } from '../types/football';
 import { PREMIER_LEAGUE_2026_SQUADS } from './premierLeagueSquads2026';
 
+export interface OfficialSquadPlayer { name:string; shirtNumber?:number; }
+export interface OfficialClubSquad { clubId:string; clubName:string; players:OfficialSquadPlayer[]; }
+
 const slug = (value:string) => value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
 /**
@@ -12,8 +15,8 @@ const slug = (value:string) => value.toLowerCase().normalize('NFKD').replace(/[\
  * Positions, nationality, DOB, ratings and contracts are intentionally not
  * overwritten because the squad-number source does not establish those facts.
  */
-export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):void {
-  for(const squad of PREMIER_LEAGUE_2026_SQUADS){
+export function applyOfficialSquads(players:Record<string,Player>, squads:readonly OfficialClubSquad[]):void {
+  for(const squad of squads){
     const existing=Object.values(players)
       .filter(p=>p.clubId===squad.clubId)
       .sort((a,b)=>a.shirtNumber-b.shirtNumber || a.id.localeCompare(b.id));
@@ -25,7 +28,7 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
     }
     const reservedIds=new Set(
       squad.players
-        .map(entry=>exactByNumber.get(entry.shirtNumber)?.id)
+        .map(entry=>entry.shirtNumber ? exactByNumber.get(entry.shirtNumber)?.id : undefined)
         .filter((id):id is string=>Boolean(id))
     );
     const usedIds=new Set<string>();
@@ -38,7 +41,9 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
 
       // A shirt-number match is more reliable than assuming generated roster
       // order corresponds to official registration order.
-      let current=exactByNumber.get(entry.shirtNumber);
+      let current=entry.shirtNumber
+        ? exactByNumber.get(entry.shirtNumber)
+        : existing.find(p=>slug(p.name)===key && !usedIds.has(p.id));
       if(current && usedIds.has(current.id)) current=undefined;
 
       // For newly registered numbers, use an unused generated record without
@@ -49,7 +54,7 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
 
       if(current){
         usedIds.add(current.id);
-        players[current.id]={...current,name:entry.name,shirtNumber:entry.shirtNumber};
+        players[current.id]={...current,name:entry.name,shirtNumber:entry.shirtNumber ?? current.shirtNumber};
         return;
       }
 
@@ -58,11 +63,17 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
       const template=existing[index%existing.length];
       const id='real_'+squad.clubId+'_'+key;
       if(players[id]) return;
+      const occupiedNumbers=new Set(Object.values(players).filter(p=>p.clubId===squad.clubId).map(p=>p.shirtNumber));
+      let shirtNumber=entry.shirtNumber;
+      if(!shirtNumber || occupiedNumbers.has(shirtNumber)){
+        shirtNumber=1;
+        while(occupiedNumbers.has(shirtNumber) && shirtNumber<99) shirtNumber++;
+      }
       players[id]={
         ...template,
         id,
         name:entry.name,
-        shirtNumber:entry.shirtNumber,
+        shirtNumber,
         clubId:squad.clubId,
         seasonStats:{...template.seasonStats},
         careerHistory:[],
@@ -72,4 +83,9 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
       };
     });
   }
+}
+
+/** Backwards-compatible entry point for the existing Premier League snapshot. */
+export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):void {
+  applyOfficialSquads(players,PREMIER_LEAGUE_2026_SQUADS);
 }
