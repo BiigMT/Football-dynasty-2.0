@@ -23,7 +23,8 @@ export function getDynamicPlayerTarget(
     ? point
     : {x:100-point.x,y:100-point.y};
 
-  const base=toLocal(formationPoint);
+  // Formation points are already expressed in each team's attacking frame.
+  const base=formationPoint;
   const ball=toLocal(ballPosition);
   const isKeeper=position==='GK';
   const isDefender=['CB','LB','RB'].includes(position);
