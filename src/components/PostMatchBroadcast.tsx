@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Club, MatchSession, Player } from '../types/football';
+import RealisticAvatar from './RealisticAvatar';
 
 interface Props { session:MatchSession; homeClub:Club; awayClub:Club; players:Record<string,Player>; onContinue:()=>void; onReport?:()=>void; onReplay?:()=>void; boardTrustDelta?:number; xpGained?:number; }
 const ratingTone=(v:number)=>v>=8?'text-emerald-300 bg-emerald-400/15 border-emerald-300/30':v>=7?'text-cyan-200 bg-cyan-400/15 border-cyan-300/25':v>=6?'text-amber-200 bg-amber-400/15 border-amber-300/25':'text-rose-200 bg-rose-400/15 border-rose-300/25';
@@ -7,7 +8,7 @@ const short=(name:string)=>name.trim().split(/\s+/).slice(-1)[0];
 export const PostMatchBroadcast:React.FC<Props>=({session,homeClub,awayClub,players,onContinue,onReport,onReplay,boardTrustDelta,xpGained})=>{
  const [momentsOpen,setMomentsOpen]=useState(false);
  const ratings=useMemo(()=>Object.values(session.playerStates).filter(s=>s.clubId===session.homeClubId||s.clubId===session.awayClubId).sort((a,b)=>b.rating-a.rating),[session.playerStates,session.homeClubId,session.awayClubId]);
- const motm=ratings[0];const motmPlayer=motm?players[motm.playerId]:undefined;
+ const motm=ratings[0];const motmPlayer=motm?players[motm.playerId]:undefined;const motmClub=motm?.side==='AWAY'?awayClub:homeClub;
  const scorers=session.events.filter(e=>e.type==='GOAL');
  const goals=(side:'HOME'|'AWAY')=>scorers.filter(e=>e.teamSide===side).map(e=>`${short(e.playerName??'Scorer')} ${e.minute}'`).join(' · ')||'—';
  const statRows:{label:string;a:number;b:number;max:number;suffix?:string;subA?:number;subB?:number}[]=[{label:'EXPECTED GOALS',a:session.homeStats.xG,b:session.awayStats.xG,max:Math.max(session.homeStats.xG,session.awayStats.xG,1)},{label:'POSSESSION',a:session.homeStats.possession,b:session.awayStats.possession,max:100,suffix:'%'},{label:'SHOTS (ON TARGET)',a:session.homeStats.shots,b:session.awayStats.shots,max:Math.max(session.homeStats.shots,session.awayStats.shots,1),subA:session.homeStats.shotsOnTarget,subB:session.awayStats.shotsOnTarget},{label:'TACKLES',a:session.homeStats.tackles,b:session.awayStats.tackles,max:Math.max(session.homeStats.tackles,session.awayStats.tackles,1)}];
@@ -25,7 +26,7 @@ export const PostMatchBroadcast:React.FC<Props>=({session,homeClub,awayClub,play
    <article className="relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-amber-300/20 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,193,7,.2),transparent_60%),linear-gradient(160deg,#15263b,#0b1422)] p-3">
     <div className="text-[9px] font-black tracking-[.22em] text-amber-300">★ PLAYER OF THE MATCH</div>
     <div className="my-2 flex min-h-0 flex-1 flex-col items-center justify-center">
-     <div className="relative grid aspect-square w-[min(38%,170px)] place-items-center rounded-full border border-amber-300/35 bg-gradient-to-br from-amber-300/20 to-cyan-300/10 shadow-[0_0_45px_rgba(0,229,255,.12)]"><div className="text-6xl">🏆</div><span className="absolute -bottom-2 rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-xs font-black text-emerald-200">{motm?.rating.toFixed(1)??'—'} RATING</span></div>
+     <div className="relative grid aspect-square w-[min(38%,170px)] place-items-center rounded-full border border-amber-300/35 bg-gradient-to-br from-amber-300/20 to-cyan-300/10 shadow-[0_0_45px_rgba(0,229,255,.12)]"><RealisticAvatar seed={motmPlayer?.id??"motm"} name={motmPlayer?.name??"Player of the Match"} size={132} outfit="player_kit" primaryColor={motmClub.primaryColor} secondaryColor={motmClub.secondaryColor} shirtNumber={motmPlayer?.shirtNumber} className="h-full w-full rounded-full"/><span className="absolute -bottom-2 rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-xs font-black text-emerald-200">{motm?.rating.toFixed(1)??'—'} RATING</span></div>
      <div className="mt-4 text-center"><div className="text-xl font-black">{motmPlayer?.name??'Match award pending'}</div><div className="mt-1 text-[9px] font-bold tracking-[.18em] text-amber-200">MAN OF THE MATCH</div></div>
     </div>
     <div className="grid grid-cols-2 gap-1.5">{[{v:motm?.goals??0,l:'GOALS'},{v:motm?.assists??0,l:'ASSISTS'},{v:motm?.passes??0,l:'PASSES'},{v:motm?.tackles??0,l:'TACKLES'}].map(x=><div key={x.l} className="rounded-lg border border-white/10 bg-black/20 p-2"><div className="text-lg font-black tabular-nums">{x.v}</div><div className="text-[8px] font-bold tracking-widest text-slate-500">{x.l}</div></div>)}</div>
