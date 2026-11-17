@@ -871,6 +871,24 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
       { name: 'Soriba Diaoune', shirtNumber: 35 },
     ],
   },
+
+  {
+    clubId: 'esp_liga_elc', clubName: 'Elche CF',
+    // Names confirmed in current official Elche match reports and 2026/27 signing announcements.
+    // No shirt numbers are supplied because the complete official roster list was not accessible.
+    players: [
+      { name: 'Matías Dituro' }, { name: 'Alejandro Iturbe' }, { name: 'Buba Sangaré' },
+      { name: 'Roy Revivo' }, { name: 'Federico Redondo' }, { name: 'Marc Aguado' },
+      { name: 'Germán Valera' }, { name: 'Gonzalo Villar' }, { name: 'Martim Carvalho Neto' },
+      { name: 'José Antonio Morente Oliva' }, { name: 'Víctor Chust' }, { name: 'Abiel Osorio' },
+      { name: 'Fer Niño' }, { name: 'Lucas Cepeda' }, { name: 'Rubén Sánchez' },
+      { name: 'Thomas Lemar' }, { name: 'Josan' }, { name: 'Pedro Bigas' },
+      { name: 'Facundo Buonanotte' }, { name: 'Javi Morcillo' }, { name: 'Ezequiel Ponce' },
+      { name: 'Kevin Lomónaco' }, { name: 'Iñaki Peña' }, { name: 'Grady Diangana' },
+      { name: 'Adrià Pedrosa' }, { name: 'Héctor Fort' }, { name: 'Leo Petrot' },
+      { name: 'Álvaro Rodríguez' }, { name: 'Rafa Mir' }, { name: 'André Da Silva' },
+    ],
+  },
 ];
 
 export const EUROPEAN_SQUAD_SOURCES = {
