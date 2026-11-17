@@ -25,7 +25,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const userTactics=userSide==='HOME'?session.homeTactics:session.awayTactics;
   const userClub=userSide==='HOME'?homeClub:awayClub;
   const userStates=useMemo(()=>Object.values(session.playerStates).filter(s=>s.clubId===userClub.id).sort((a,b)=>a.slotIndex-b.slotIndex),[session.playerStates,userClub.id]);
-    const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
+  const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
   return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>
    <div className="relative h-full w-full overflow-hidden bg-[#080e1a]">
     <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Suspense fallback={<div className="grid h-full place-items-center bg-[#080e1a] text-xs font-bold tracking-widest text-cyan-200">LOADING STADIUM ENGINE…</div>}><Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera} onFps={setFps}/></Suspense>}</div>
