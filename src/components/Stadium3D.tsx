@@ -113,7 +113,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
 
     // Goals, posts and net grids.
     const postMat=new THREE.MeshStandardMaterial({color:'#f8fafc',metalness:.25,roughness:.28});
-    [-1,1].forEach(side=>{const x=side*52.5,z=-3.66;const frame=new THREE.Group();[[-3.66,0],[3.66,0]].forEach(([dz])=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,2.44,8),postMat);p.position.set(x,1.22,z+dz);frame.add(p);});const bar=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,7.32,8),postMat);bar.rotation.z=Math.PI/2;bar.position.set(x,2.44,z);frame.add(bar);const net=new THREE.Mesh(new THREE.BoxGeometry(3.2,2.4,7.32),new THREE.MeshBasicMaterial({color:'#dbeafe',wireframe:true,transparent:true,opacity:.16}));net.position.set(x-side*1.6,1.2,z);frame.add(net);scene.add(frame);});
+    [-1,1].forEach(side=>{const x=side*52.5,z=0;const frame=new THREE.Group();[[-3.66,0],[3.66,0]].forEach(([dz])=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,2.44,8),postMat);p.position.set(x,1.22,z+dz);frame.add(p);});const bar=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,7.32,8),postMat);bar.rotation.x=Math.PI/2;bar.position.set(x,2.44,z);frame.add(bar);const net=new THREE.Mesh(new THREE.BoxGeometry(3.2,2.4,7.32),new THREE.MeshBasicMaterial({color:'#dbeafe',wireframe:true,transparent:true,opacity:.16}));net.position.set(x-side*1.6,1.2,z);frame.add(net);scene.add(frame);});
     // Stadium bowl with tier bands and a crowd ring built as one instanced mesh.
     const standMat=new THREE.MeshStandardMaterial({color:'#17283a',roughness:.94});
     for(let tier=0;tier<3;tier++){const stand=new THREE.Mesh(new THREE.CylinderGeometry(61+tier*5,58+tier*5,5,64,1,true),standMat);stand.position.y=6+tier*5;scene.add(stand);}
