@@ -13,7 +13,9 @@ import {
   Region,
 } from '../types/football';
 import { NATIONS_DATABASE } from '../data/nationsDatabase';
-import { applyOfficialPremierLeagueSquads } from '../data/applyOfficialSquads';
+import { applyOfficialPremierLeagueSquads, applyOfficialSquads } from '../data/applyOfficialSquads';
+import { AFRICAN_CLUB_SQUADS_2026 } from '../data/africanClubSquads2026';
+import { EUROPEAN_CLUB_SQUADS_2026 } from '../data/europeanClubSquads2026';
 
 interface ClubBlueprint {
   id: string;
@@ -91,13 +93,13 @@ export const LEAGUE_BLUEPRINTS: LeagueBlueprint[] = [
     region: 'AFRICA',
     tier: 1,
     clubs: [
-      { id: 'cairo_eagles', name: 'Cairo Red Eagles', shortName: 'CRE', country: 'Egypt', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 82, stadiumName: 'Cairo International', stadiumCapacity: 75000, formation: '4-3-3' },
+      { id: 'cairo_eagles', name: 'Al Ahly SC', shortName: 'AHL', country: 'Egypt', primaryColor: '#DC2626', secondaryColor: '#111827', reputation: 82, stadiumName: 'Cairo International', stadiumCapacity: 75000, formation: '4-3-3' },
       { id: 'casa_wydad', name: 'Casablanca Atlas', shortName: 'CAS', country: 'Morocco', primaryColor: '#B91C1C', secondaryColor: '#FFFFFF', reputation: 80, stadiumName: 'Stade Mohammed V', stadiumCapacity: 67000, formation: '4-2-3-1' },
       { id: 'tshwane_downs', name: 'Tshwane Brazilians', shortName: 'TSH', country: 'South Africa', primaryColor: '#EAB308', secondaryColor: '#16A34A', reputation: 81, stadiumName: 'Loftus Versfeld', stadiumCapacity: 51700, formation: '3-5-2' },
-      { id: 'tunis_esperance', name: 'Tunis Blood & Gold', shortName: 'TUN', country: 'Tunisia', primaryColor: '#F59E0B', secondaryColor: '#DC2626', reputation: 78, stadiumName: 'Rades Olympic', stadiumCapacity: 60000, formation: '4-3-3' },
+      { id: 'tunis_esperance', name: 'Espérance Sportive de Tunis', shortName: 'EST', country: 'Tunisia', primaryColor: '#F59E0B', secondaryColor: '#DC2626', reputation: 78, stadiumName: 'Rades Olympic', stadiumCapacity: 60000, formation: '4-3-3' },
       { id: 'lubumbashi_ravens', name: 'Lubumbashi Ravens', shortName: 'LUB', country: 'DR Congo', primaryColor: '#1E293B', secondaryColor: '#F8FAFC', reputation: 77, stadiumName: 'Kamalondo Arena', stadiumCapacity: 18500, formation: '4-4-2' },
       { id: 'dar_lions', name: 'Dar es Salaam Simba', shortName: 'DAR', country: 'Tanzania', primaryColor: '#EF4444', secondaryColor: '#FFFFFF', reputation: 75, stadiumName: 'Mkapa National', stadiumCapacity: 60000, formation: '4-2-3-1' },
-      { id: 'enyimba_elephants', name: 'Aba Elephants', shortName: 'ABA', country: 'Nigeria', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'Enyimba Township', stadiumCapacity: 25000, formation: '4-3-3' },
+      { id: 'enyimba_elephants', name: 'Enyimba FC', shortName: 'ENY', country: 'Nigeria', primaryColor: '#2563EB', secondaryColor: '#FFFFFF', reputation: 76, stadiumName: 'Enyimba Township', stadiumCapacity: 25000, formation: '4-3-3' },
       { id: 'lusaka_arrows', name: 'Lusaka Dynamos', shortName: 'LUS', country: 'Zambia', primaryColor: '#15803D', secondaryColor: '#F97316', reputation: 74, stadiumName: 'Heroes National', stadiumCapacity: 60000, formation: '4-4-2' },
     ],
   },
@@ -997,6 +999,8 @@ export function buildWorldDatabase(): {
   // Apply club identities after national-team selection so added reserve clones are not
   // accidentally treated as extra international players.
   applyOfficialPremierLeagueSquads(players);
+  applyOfficialSquads(players,AFRICAN_CLUB_SQUADS_2026);
+  applyOfficialSquads(players,EUROPEAN_CLUB_SQUADS_2026);
 
   return { clubs, players, leagues, nationalTeams };
 }
