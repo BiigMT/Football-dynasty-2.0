@@ -1,0 +1,187 @@
+{
+  "season": "2026/27",
+  "snapshotDate": "2026-11-17",
+  "purpose": "Traceable source register for the 20-league global expansion. A league is not marked roster-complete until every in-game club has a checked squad snapshot and the roster validator passes.",
+  "leagues": [
+    {
+      "id": "por_primeira",
+      "country": "Portugal",
+      "region": "Europe",
+      "name": "Portuguese Primeira Liga",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/portugal/2026-2027/porprim.htm",
+      "status": "available"
+    },
+    {
+      "id": "ned_eredivisie",
+      "country": "Netherlands",
+      "region": "Europe",
+      "name": "Dutch Eredivisie",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/netherl/2026-2027/nethere.htm",
+      "status": "available"
+    },
+    {
+      "id": "bel_pro",
+      "country": "Belgium",
+      "region": "Europe",
+      "name": "Belgian Pro League",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/belgium/2026-2027/belpro.htm",
+      "status": "available"
+    },
+    {
+      "id": "tur_super",
+      "country": "Turkey",
+      "region": "Europe",
+      "name": "Turkish Süper Lig",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/turkey/2026-2027/tursuper.htm",
+      "status": "available"
+    },
+    {
+      "id": "sco_prem",
+      "country": "Scotland",
+      "region": "Europe",
+      "name": "Scottish Premiership",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/scots/2026-2027/scotsp.htm",
+      "status": "available"
+    },
+    {
+      "id": "gre_super",
+      "country": "Greece",
+      "region": "Europe",
+      "name": "Greek Super League",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/greece/2026-2027/gresuper.htm",
+      "status": "available"
+    },
+    {
+      "id": "aut_bundes",
+      "country": "Austria",
+      "region": "Europe",
+      "name": "Austrian Bundesliga",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/austria/2026-2027/ausbun.htm",
+      "status": "available"
+    },
+    {
+      "id": "usa_mls",
+      "country": "United States / Canada",
+      "region": "North America",
+      "name": "Major League Soccer",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/usa/2026/usamls.htm",
+      "status": "available"
+    },
+    {
+      "id": "mex_liga",
+      "country": "Mexico",
+      "region": "North America",
+      "name": "Liga MX",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/mexico/2026-2027/mexaper.htm",
+      "status": "available"
+    },
+    {
+      "id": "bra_seriea",
+      "country": "Brazil",
+      "region": "South America",
+      "name": "Campeonato Brasileiro Série A",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/brazil/2026/bracamp.htm",
+      "status": "available"
+    },
+    {
+      "id": "arg_primera",
+      "country": "Argentina",
+      "region": "South America",
+      "name": "Argentine Primera División",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/arg/2026/argclaus.htm",
+      "status": "available"
+    },
+    {
+      "id": "col_primera",
+      "country": "Colombia",
+      "region": "South America",
+      "name": "Categoría Primera A",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "chi_primera",
+      "country": "Chile",
+      "region": "South America",
+      "name": "Primera División de Chile",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "uru_primera",
+      "country": "Uruguay",
+      "region": "South America",
+      "name": "Primera División de Uruguay",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "ksa_pro",
+      "country": "Saudi Arabia",
+      "region": "Asia",
+      "name": "Saudi Pro League",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "jpn_j1",
+      "country": "Japan",
+      "region": "Asia",
+      "name": "J1 League",
+      "season": "2026/27",
+      "squadSource": "https://footballsquads.hosting7.idnet.net/japan/2026-2027/japjlge.htm",
+      "status": "available"
+    },
+    {
+      "id": "kor_k1",
+      "country": "South Korea",
+      "region": "Asia",
+      "name": "K League 1",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "ind_super",
+      "country": "India",
+      "region": "Asia",
+      "name": "Indian Super League",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "uae_pro",
+      "country": "United Arab Emirates",
+      "region": "Asia",
+      "name": "UAE Pro League",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    },
+    {
+      "id": "qat_stars",
+      "country": "Qatar",
+      "region": "Asia",
+      "name": "Qatar Stars League",
+      "season": "2026/27",
+      "squadSource": null,
+      "status": "needs-source-verification"
+    }
+  ]
+}
