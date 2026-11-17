@@ -109,6 +109,10 @@ export function advanceBallPresentation(
     if(vy<0)vy=-vy*.28;
     if(vy<.55)vy=0;
   }
+  if(x < -52.3){x=-52.3;vx=Math.abs(vx)*.25;}
+  if(x > 52.3){x=52.3;vx=-Math.abs(vx)*.25;}
+  if(z < -33.8){z=-33.8;vz=Math.abs(vz)*.25;}
+  if(z > 33.8){z=33.8;vz=-Math.abs(vz)*.25;}
   const speed=Math.hypot(vx,vz);
   return {
     position:{x,y,z},
