@@ -27,3 +27,13 @@
 - No match-screen layout, HUD, button, panel, overlay or navigation component is changed by this branch.
 - MatchCenter, ConsoleMatchday and PostMatchBroadcast are intentionally untouched.
 - The existing match screen remains the same; only the 3D renderer's internal animation is extended.
+
+
+## 3D movement and presentation physics (17 Nov 2026)
+
+- Player rigs now use acceleration and braking rather than direct positional interpolation.
+- Movement speed is scaled by the player's simulated speed attribute and current match stamina.
+- A soft separation force discourages overlapping player rigs while keeping all movement inside pitch bounds.
+- The presentation ball now accelerates toward authoritative simulation coordinates, brakes near its target and spins in proportion to movement speed. Scripted event flights remain presentation cues.
+- These changes do not modify match outcomes, player attributes, save data or match-screen UI.
+- Automated steering, braking and separation checks run through npm run validate:physics in Android CI.
