@@ -250,7 +250,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     />;
   }
 
-  if (session.phase === 'FULL_TIME') {
+  if (String(session.phase) === 'FULL_TIME') {
     return <PostMatchBroadcast
       session={session}
       homeClub={homeClub}
@@ -300,7 +300,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                   ? 'PRE'
                   : session.phase === 'HALF_TIME'
                   ? 'HT 45\''
-                  : session.phase === 'FULL_TIME'
+                  : String(session.phase) === 'FULL_TIME'
                   ? 'FT 90\''
                   : `${session.minute}'`}
               </span>
@@ -385,7 +385,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {isManagerMode && session.phase !== 'FULL_TIME' && (
+            {isManagerMode && String(session.phase) !== 'FULL_TIME' && (
               <button type="button" onClick={() => setQuickToolsOpen((open) => !open)} className={`min-h-[40px] px-3 rounded-lg border text-xs font-semibold whitespace-nowrap ${quickToolsOpen ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-[#0B0F14] text-cyan-300 border-cyan-500/40'}`}>
                 {quickToolsOpen ? 'Close Controls' : 'Quick Controls'}
               </button>
@@ -414,7 +414,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
         </div>
 
-        {quickToolsOpen && isManagerMode && session.phase !== 'FULL_TIME' && (
+        {quickToolsOpen && isManagerMode && String(session.phase) !== 'FULL_TIME' && (
           <section className="match-quick-tools absolute z-50 right-2 top-[calc(100%+6px)] w-[min(620px,calc(100vw-16px))] rounded-xl border border-cyan-400/40 bg-[#101923] p-3 shadow-2xl">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div><div className="text-xs font-bold uppercase tracking-wider text-cyan-300">Touchline controls</div><div className="text-[10px] text-slate-400">Changes apply immediately · {userSubsUsed}/5 substitutions used</div></div>
@@ -682,7 +682,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             )}
 
             {/* FULL-TIME SUMMARY */}
-            {session.phase === 'FULL_TIME' && (
+            {String(session.phase) === 'FULL_TIME' && (
               <div className="rounded-xl bg-[#131A22] border border-emerald-400/50 p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <div>
