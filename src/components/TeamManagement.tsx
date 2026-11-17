@@ -48,15 +48,33 @@ export const TeamManagement: React.FC<Props> = ({ club, players, onSave, onBack 
     return list.length ? Math.round(list.reduce((s,p)=>s+p.overall,0)/list.length) : 0;
   },[xi,players]);
   const update=(patch:Partial<ClubTactics>)=>setTactics(prev=>({...prev,...patch}));
+  const squadPlayers=useMemo(()=>Object.values(players).filter(p=>p.clubId===club.id).sort((a,b)=>b.overall-a.overall),[players,club.id]);
+  const [squadView,setSquadView]=useState<'MATCHDAY'|'FULL_SQUAD'>('MATCHDAY');
   const selectPlayer=(id:string)=>{
     if(!selected){setSelected(id);return;}
     if(selected===id){setSelected(null);return;}
     const nextXI=[...tactics.startingXI], nextBench=[...tactics.bench];
-    const a=nextXI.indexOf(selected), b=nextBench.indexOf(id), c=nextXI.indexOf(id);
-    if(a>=0 && b>=0){nextXI[a]=id;nextBench[b]=selected;}
-    else if(a>=0 && c>=0){nextXI[a]=id;nextXI[c]=selected;}
-    else if(b>=0 && c>=0){nextBench[b]=selected;nextXI[c]=id;}
-    else if(a>=0){nextXI[a]=id;if(nextBench.length<7)nextBench.push(selected);}
+    const selectedXI=nextXI.indexOf(selected), tappedXI=nextXI.indexOf(id);
+    const selectedBench=nextBench.indexOf(selected), tappedBench=nextBench.indexOf(id);
+    const selectedReserve=selectedXI<0&&selectedBench<0;
+    const tappedReserve=tappedXI<0&&tappedBench<0;
+    if(selectedXI>=0&&tappedBench>=0){nextXI[selectedXI]=id;nextBench[tappedBench]=selected;}
+    else if(selectedBench>=0&&tappedXI>=0){nextBench[selectedBench]=id;nextXI[tappedXI]=selected;}
+    else if(selectedXI>=0&&tappedXI>=0){nextXI[selectedXI]=id;nextXI[tappedXI]=selected;}
+    else if(selectedBench>=0&&tappedBench>=0){nextBench[selectedBench]=id;nextBench[tappedBench]=selected;}
+    else if(selectedReserve&&tappedBench>=0){nextBench[tappedBench]=selected;}
+    else if(selectedBench>=0&&tappedReserve){nextBench[selectedBench]=id;}
+    else if(selectedReserve&&tappedXI>=0){
+      nextXI[tappedXI]=selected;
+      if(nextBench.length)nextBench[nextBench.length-1]=id;
+      else nextBench.push(id);
+    }
+    else if(selectedXI>=0&&tappedReserve){
+      nextXI[selectedXI]=id;
+      if(nextBench.length)nextBench[nextBench.length-1]=selected;
+      else nextBench.push(selected);
+    }
+    else {setSelected(id);return;}
     update({startingXI:nextXI,bench:nextBench});setSelected(null);
   };
   const rating=(id:string,index:number)=>{
@@ -86,8 +104,22 @@ export const TeamManagement: React.FC<Props> = ({ club, players, onSave, onBack 
           <div className="flex flex-wrap items-center justify-between gap-2 mt-3 text-[10px] text-slate-400"><span>Tap a starter, then a bench player to make a substitution.</span><span className="text-[#F6C21C]">POSITION FIT · OVR</span></div>
         </section>
         <section className="rounded-xl border border-white/10 bg-[#0D1B2A]/90 p-3">
-          <div className="flex justify-between items-center mb-3"><h3 className="font-bold">BENCH & RESERVES</h3><span className="text-[10px] text-slate-500">{bench.length} AVAILABLE</span></div>
-          <div className="space-y-2">{bench.map(id=>{const p=players[id];if(!p)return null;return <button key={id} onClick={()=>selectPlayer(id)} className={`w-full flex items-center gap-3 p-2 rounded-lg border text-left ${selected===id?'border-[#F6C21C] bg-[#F6C21C]/10':'border-white/10 bg-[#07111f]/70'}`}><RealisticAvatar seed={p.id} name={p.name} size={38} primaryColor={club.primaryColor} secondaryColor={club.secondaryColor} shirtNumber={p.shirtNumber}/><div className="min-w-0 flex-1"><div className="font-bold text-sm truncate">{p.name}</div><div className="text-[10px] text-slate-400">{p.position} · Age {p.age} · Fitness {p.fitness}%</div></div><div className="text-xl font-black text-[#F6C21C]">{p.overall}</div></button>})}</div>
+          <div className="flex justify-between items-center gap-2 mb-3"><div><h3 className="font-bold">SQUAD DEPTH</h3><span className="text-[10px] text-slate-500">{squadPlayers.length} REGISTERED PLAYERS · {xi.length} STARTERS</span></div><div className="text-right text-[10px] text-slate-500">OVR</div></div>
+          <div className="grid grid-cols-2 gap-1 rounded-lg bg-[#07111f] p-1 mb-3">
+            <button onClick={()=>setSquadView('MATCHDAY')} className={`py-2 rounded text-[10px] font-black tracking-wider ${squadView==='MATCHDAY'?'bg-[#235BA8] text-white':'text-slate-400'}`}>MATCHDAY · {bench.length}</button>
+            <button onClick={()=>setSquadView('FULL_SQUAD')} className={`py-2 rounded text-[10px] font-black tracking-wider ${squadView==='FULL_SQUAD'?'bg-[#235BA8] text-white':'text-slate-400'}`}>FULL SQUAD · {squadPlayers.length}</button>
+          </div>
+          <div className="space-y-2 max-h-[56vh] overflow-y-auto pr-1">
+            {(squadView==='MATCHDAY'?bench.map(id=>players[id]).filter(Boolean):squadPlayers).map(p=>{
+              const status=xi.includes(p.id)?'STARTER':bench.includes(p.id)?'BENCH':'RESERVE';
+              return <button key={p.id} onClick={()=>selectPlayer(p.id)} className={`w-full flex items-center gap-2 p-2 rounded-lg border text-left ${selected===p.id?'border-[#F6C21C] bg-[#F6C21C]/10':'border-white/10 bg-[#07111f]/70'}`}>
+                <RealisticAvatar seed={p.id} name={p.name} size={36} primaryColor={club.primaryColor} secondaryColor={club.secondaryColor} shirtNumber={p.shirtNumber}/>
+                <div className="min-w-0 flex-1"><div className="font-bold text-xs truncate">{p.name}</div><div className="text-[10px] text-slate-400">{p.position} · Age {p.age} · Fitness {p.fitness}%</div></div>
+                <div className="text-right shrink-0"><div className="text-lg leading-none font-black text-[#F6C21C]">{p.overall}</div><div className="text-[8px] tracking-wider text-slate-500">{status}</div></div>
+              </button>;
+            })}
+          </div>
+          <p className="text-[10px] text-slate-500 mt-2">Select any reserve and a starter or matchday player to promote them. Ratings and attributes remain game-simulated.</p>
           <div className="mt-4 p-3 rounded-lg bg-black/20 border border-white/5"><div className="text-[10px] tracking-widest text-slate-500 mb-2">SET-PIECE RESPONSIBILITIES</div>{(['captainId'] as const).map(k=><label key={k} className="block text-xs text-slate-300">Captain<select value={tactics[k]} onChange={e=>update({captainId:e.target.value})} className="block w-full mt-1 mb-2 p-2 bg-[#07111f] rounded border border-white/10">{xi.map(id=><option key={id} value={id}>{players[id]?.name??id}</option>)}</select></label>)}</div>
         </section>
       </div> : <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
