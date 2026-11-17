@@ -256,7 +256,10 @@ export type MatchEventType =
   | 'FOUL'
   | 'HALF_TIME'
   | 'FULL_TIME'
-  | 'KEY_MOMENT';
+  | 'KEY_MOMENT'
+  | 'PASS'
+  | 'TACKLE'
+  | 'SHOT';
 
 export interface MatchEvent {
   id: string;

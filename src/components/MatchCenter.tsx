@@ -32,6 +32,9 @@ import {
 import { soundEngine } from '../engine/audio';
 import { ClubBadge } from './ClubBadge';
 import { MatchPitchCanvas } from './MatchPitchCanvas';
+import { Match3DCanvas } from './Match3DCanvas';
+import { ConsoleMatchday } from './ConsoleMatchday';
+import { PostMatchBroadcast } from './PostMatchBroadcast';
 
 interface MatchCenterProps {
   initialSession: MatchSession;
@@ -62,6 +65,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const [subInId, setSubInId] = useState<string>('');
   const [interviewDone, setInterviewDone] = useState<boolean>(false);
   const [quickToolsOpen, setQuickToolsOpen] = useState<boolean>(false);
+  const [matchView, setMatchView] = useState<'3D' | 'TACTICAL'>('3D');
 
   const homeClub = clubs[session.homeClubId];
   const awayClub = clubs[session.awayClubId];
@@ -190,6 +194,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     setSubInId('');
   };
 
+  const handleConsoleSub = (outId: string, inId: string) => {
+    if (!outId || !inId || userSubsUsed >= 5) return;
+    soundEngine.playClick();
+    const next = makeMatchSubstitution(session, userSide, outId, inId);
+    setSession(next);
+    onPersistMatchState(next);
+  };
+
   const handleKeyMomentDecision = (choiceId: string) => {
     soundEngine.playKick(0.95);
     const next = resolveKeyMomentChoice(session, choiceId, clubs, players);
@@ -219,6 +231,35 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     : goalIsHome
     ? 'HOME END IN FULL VOICE · FLAGS AND FISTS IN THE AIR'
     : 'AWAY END ERUPTS · THE HOME CROWD FALLS SILENT';
+
+  if (isLiveMatch) {
+    return <ConsoleMatchday
+      session={session}
+      homeClub={homeClub}
+      awayClub={awayClub}
+      players={players}
+      running={running}
+      speedMs={speedMs}
+      userSide={userSide}
+      subsUsed={userSubsUsed}
+      onPause={() => setRunning((value) => !value)}
+      onSpeed={setSpeedMs}
+      onMentality={(mentality) => mentality === 'COUNTER' ? updateUserTactics({ mentality: 'BALANCED', passing: 'DIRECT_LONG', pressing: 'MID_PRESS' }) : updateUserTactics({ mentality })}
+      onShout={(talk) => talk === 'HIGH_PRESS' ? updateUserTactics({ pressing: 'GEGENPRESS' }) : talk === 'TIGHTEN_UP' ? updateUserTactics({ mentality: 'DEFENSIVE', pressing: 'LOW_BLOCK' }) : handleTeamTalk('DEMAND_MORE')}
+      onSubstitute={handleConsoleSub}
+    />;
+  }
+
+  if (String(session.phase) === 'FULL_TIME') {
+    return <PostMatchBroadcast
+      session={session}
+      homeClub={homeClub}
+      awayClub={awayClub}
+      players={players}
+      onContinue={() => onFinishMatch(session)}
+      onReport={() => onPersistMatchState(session)}
+    />;
+  }
 
   return (
     <div className={`fd-realism-match bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`} style={{ backgroundImage: "linear-gradient(rgba(7,12,18,.88), rgba(7,12,18,.96)), url('/media/game/matchday-training.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
@@ -259,7 +300,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
                   ? 'PRE'
                   : session.phase === 'HALF_TIME'
                   ? 'HT 45\''
-                  : session.phase === 'FULL_TIME'
+                  : String(session.phase) === 'FULL_TIME'
                   ? 'FT 90\''
                   : `${session.minute}'`}
               </span>
@@ -344,7 +385,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {isManagerMode && session.phase !== 'FULL_TIME' && (
+            {isManagerMode && String(session.phase) !== 'FULL_TIME' && (
               <button type="button" onClick={() => setQuickToolsOpen((open) => !open)} className={`min-h-[40px] px-3 rounded-lg border text-xs font-semibold whitespace-nowrap ${quickToolsOpen ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-[#0B0F14] text-cyan-300 border-cyan-500/40'}`}>
                 {quickToolsOpen ? 'Close Controls' : 'Quick Controls'}
               </button>
@@ -373,7 +414,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           </div>
         </div>
 
-        {quickToolsOpen && isManagerMode && session.phase !== 'FULL_TIME' && (
+        {quickToolsOpen && isManagerMode && String(session.phase) !== 'FULL_TIME' && (
           <section className="match-quick-tools absolute z-50 right-2 top-[calc(100%+6px)] w-[min(620px,calc(100vw-16px))] rounded-xl border border-cyan-400/40 bg-[#101923] p-3 shadow-2xl">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div><div className="text-xs font-bold uppercase tracking-wider text-cyan-300">Touchline controls</div><div className="text-[10px] text-slate-400">Changes apply immediately · {userSubsUsed}/5 substitutions used</div></div>
@@ -435,13 +476,20 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         <div className={isLiveMatch ? 'match-live-grid' : isHalfTime ? 'match-halftime-grid' : 'grid grid-cols-1 lg:grid-cols-12 gap-4'}>
           {/* Left: 2D Tactical Pitch + Key Moment / Half-Time Console */}
           <div className={isLiveMatch ? 'match-live-pitch-column' : isHalfTime ? 'match-halftime-pitch-column' : 'lg:col-span-7 flex flex-col gap-4'}>
-            <MatchPitchCanvas
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[10px] font-black uppercase tracking-[.2em] text-cyan-300">Matchday camera</div>
+              <div className="flex rounded-lg border border-white/10 bg-[#101820] p-1">
+                <button type="button" onClick={() => setMatchView('3D')} className={`rounded-md px-3 py-2 text-[10px] font-black tracking-wider ${matchView === '3D' ? 'bg-cyan-400 text-slate-950' : 'text-slate-300'}`}>3D BROADCAST</button>
+                <button type="button" onClick={() => setMatchView('TACTICAL')} className={`rounded-md px-3 py-2 text-[10px] font-black tracking-wider ${matchView === 'TACTICAL' ? 'bg-cyan-400 text-slate-950' : 'text-slate-300'}`}>TACTICAL</button>
+              </div>
+            </div>
+            {matchView === '3D' ? <Match3DCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} /> : <MatchPitchCanvas
               session={session}
               homeClub={homeClub}
               awayClub={awayClub}
               players={players}
               lastGoalTimestamp={lastGoalTs}
-            />
+            />}
 
             {/* Become a Legend Key Moment Interactive Decision */}
             {session.pendingKeyMoment && (
@@ -634,7 +682,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             )}
 
             {/* FULL-TIME SUMMARY */}
-            {session.phase === 'FULL_TIME' && (
+            {String(session.phase) === 'FULL_TIME' && (
               <div className="rounded-xl bg-[#131A22] border border-emerald-400/50 p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <div>

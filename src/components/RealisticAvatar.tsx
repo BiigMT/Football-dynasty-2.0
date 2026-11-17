@@ -3,7 +3,7 @@ import React, { useId } from 'react';
 export type AvatarOutfit = 'manager_suit' | 'player_kit' | 'agent';
 export type AvatarExpression = 'neutral' | 'pleased' | 'annoyed' | 'determined';
 export type AvatarFaceShape = 'oval' | 'square_jaw' | 'lean' | 'broad';
-export type AvatarHairStyle = 'fade' | 'buzzcut' | 'curly_crop' | 'swept_back' | 'receding';
+export type AvatarHairStyle = 'fade' | 'buzzcut' | 'curly_crop' | 'swept_back' | 'receding' | 'afro' | 'locs' | 'mohawk';
 export type AvatarFacialHair = 'clean' | 'stubble' | 'beard' | 'mustache';
 export type KitPattern = 'solid' | 'vertical_stripes' | 'sash';
 export interface RealisticAvatarProps {
@@ -23,10 +23,10 @@ export const RealisticAvatar:React.FC<RealisticAvatarProps>=({
  const uid=useId().replace(/:/g,''); const id='fd-avatar-'+uid; const h=hash(seed);
  const skin=skinTone||SKIN[h%8][0], shadow=SKIN[h%8][1], hair=hairColor||HAIR[(h>>>8)%HAIR.length];
  const shape=faceShape||(['oval','square_jaw','lean','broad'] as const)[(h>>>3)%4];
- const style=hairStyle||(['fade','buzzcut','curly_crop','swept_back','receding'] as const)[(h>>>6)%5];
+ const style=hairStyle||(['fade','buzzcut','curly_crop','swept_back','receding','afro','locs','mohawk'] as const)[(h>>>6)%8];
  const beard=facialHair||(['clean','stubble','beard','mustache'] as const)[(h>>>12)%4];
  const face=shape==='square_jaw'?'M35 43 Q35 22 50 21 Q65 22 65 43 L63 61 Q59 77 50 78 Q41 77 37 61Z':shape==='broad'?'M32 43 Q32 21 50 20 Q68 21 68 43 L65 62 Q60 78 50 79 Q40 78 35 62Z':shape==='lean'?'M37 42 Q37 22 50 21 Q63 22 63 42 L60 62 Q56 76 50 77 Q44 76 40 62Z':'M34 42 Q34 21 50 21 Q66 21 66 42 L63 61 Q59 76 50 78 Q41 76 37 61Z';
- const hairPath=style==='buzzcut'?'M33 39 Q31 20 50 19 Q69 20 67 39 L63 31 Q50 27 37 32Z':style==='receding'?'M34 38 Q33 19 50 19 Q65 19 66 37 L62 29 Q57 25 53 29 Q43 26 38 34Z':style==='swept_back'?'M32 39 Q30 17 50 17 Q69 16 69 38 Q61 28 48 28 Q40 28 32 39Z':'M32 40 Q30 18 50 18 Q70 18 68 40 L64 31 Q52 27 37 33Z';
+ const hairPath=style==='afro'?'M27 43 Q23 15 50 14 Q77 15 73 43 Q68 33 63 31 Q50 24 37 31 Q32 34 27 43Z':style==='locs'?'M31 40 Q27 18 50 18 Q73 18 69 40 L66 62 Q62 55 61 42 L56 59 L51 42 L46 60 L41 42 L36 58 L34 40Z':style==='mohawk'?'M39 40 Q37 14 50 12 Q63 14 61 40 L57 32 L43 32Z':style==='buzzcut'?'M33 39 Q31 20 50 19 Q69 20 67 39 L63 31 Q50 27 37 32Z':style==='receding'?'M34 38 Q33 19 50 19 Q65 19 66 37 L62 29 Q57 25 53 29 Q43 26 38 34Z':style==='swept_back'?'M32 39 Q30 17 50 17 Q69 16 69 38 Q61 28 48 28 Q40 28 32 39Z':'M32 40 Q30 18 50 18 Q70 18 68 40 L64 31 Q52 27 37 33Z';
  const mouth=expression==='pleased'?'M43 62 Q50 69 57 62':expression==='annoyed'?'M43 65 Q50 60 57 65':expression==='determined'?'M44 64 L56 64':'M44 63 Q50 65 56 63';
  const jacket=outfit==='manager_suit'?'#1b2938':outfit==='agent'?'#303b46':primaryColor;
  return <svg viewBox="0 0 100 128" width={width??size} height={height??size*1.28} className={className} role="img" aria-label={name} xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +47,7 @@ export const RealisticAvatar:React.FC<RealisticAvatarProps>=({
  <path d={face} fill={'url(#'+id+'-skin)'}/><path d={face} fill={'url(#'+id+'-light)'}/>
  <path d={hairPath} fill={'url(#'+id+'-hair)'}/>
  {style==='curly_crop'&&<g fill={hair}>{Array.from({length:10},(_,i)=><circle key={i} cx={34+(i%5)*8} cy={22+Math.floor(i/5)*4} r="5"/>)}</g>}
- {style==='fade'&&<path d="M33 35 Q32 47 36 49 M67 35 Q68 47 64 49" fill="none" stroke={hair} strokeWidth="3"/>}
+ {style==='afro'&&<g fill={hair}>{Array.from({length:18},(_,i)=><circle key={i} cx={29+(i%6)*8} cy={19+Math.floor(i/6)*7} r="5.5"/>)}</g>}{style==='locs'&&<g fill="none" stroke={hair} strokeWidth="3.2" strokeLinecap="round">{[35,42,50,58,65].map((x,i)=><path key={i} d={`M${x} 24 Q${x-3} 42 ${x+1} ${54+(i%2)*8}`}/>)}</g>}{style==='mohawk'&&<path d="M46 17 Q50 9 54 17 L57 37 L43 37Z" fill={hair}/>} {style==='fade'&&<path d="M33 35 Q32 47 36 49 M67 35 Q68 47 64 49" fill="none" stroke={hair} strokeWidth="3"/>}
  <path d={expression==='annoyed'||expression==='determined'?'M38 42 L47 39 M53 39 L62 42':'M38 40 Q43 37 47 40 M53 40 Q57 37 62 40'} fill="none" stroke={hair} strokeWidth="2.7" strokeLinecap="round"/>
  <path d="M37 45 Q42 42 47 45 Q43 49 38 47Z M53 45 Q58 42 63 45 Q62 49 57 47Z" fill={'url(#'+id+'-eye)'}/>
  <ellipse cx="42" cy="45.5" rx="2" ry="2.4" fill="#49372a"/><ellipse cx="58" cy="45.5" rx="2" ry="2.4" fill="#49372a"/><circle cx="43" cy="44.8" r=".65" fill="#fff"/><circle cx="59" cy="44.8" r=".65" fill="#fff"/>

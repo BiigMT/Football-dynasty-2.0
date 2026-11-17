@@ -983,6 +983,12 @@ export function simulateNextMinute(
   const ballX = atkSide === 'HOME' ? 52 + Math.random() * 38 : 10 + Math.random() * 38;
   const ballY = 14 + Math.random() * 72;
   let finalBall = { x: ballX, y: ballY };
+  const passer = pickWeightedPlayer(atkTactics, nextStates, players, ['CM', 'CAM', 'CDM', 'LB', 'RB', 'LW', 'RW']);
+  if (passer) events.push({
+    id: `ev_pass_${nextMin}_${Date.now()}`, minute: nextMin, half, type: 'PASS',
+    teamSide: atkSide, playerId: passer.id, playerName: passer.name,
+    text: `${passer.name} completes a pass for ${atkClubName}.`,
+  });
 
   // Check Become a Legend Interactive Key Moment (3-4 per match)
   let pendingKeyMoment: KeyMomentPrompt | undefined;
@@ -1016,6 +1022,11 @@ export function simulateNextMinute(
           nextStates[shooter.id] = { ...nextStates[shooter.id], shots: nextStates[shooter.id].shots + 1 };
         }
         finalBall = atkSide === 'HOME' ? { x: 89, y: 42 + Math.random() * 16 } : { x: 11, y: 42 + Math.random() * 16 };
+        events.push({
+          id: `ev_shot_${nextMin}_${Date.now()}`, minute: nextMin, half, type: 'SHOT',
+          teamSide: atkSide, playerId: shooter.id, playerName: shooter.name,
+          text: `${shooter.name} strikes at goal for ${atkClubName}.`,
+        });
 
         const shotAccuracy = 0.34 + (shooter.attributes.finishing - 68) * 0.006 + (shooter.attributes.shooting - 68) * 0.004;
         const onTarget = Math.random() < Math.max(0.22, Math.min(0.68, shotAccuracy));
@@ -1109,6 +1120,11 @@ export function simulateNextMinute(
                 rating: Math.min(10, Number((nextStates[gk.id].rating + 0.35).toFixed(1))),
               };
             }
+            events.push({
+              id: `ev_keeper_save_${nextMin}_${Date.now()}`, minute: nextMin, half, type: 'SAVE',
+              teamSide: defSide, playerId: gk?.id, playerName: gk?.name,
+              text: `${gk?.name ?? 'The goalkeeper'} makes a save to deny ${shooter.name}.`,
+            });
             if (Math.random() < 0.4) {
               atkStats.corners += 1;
               events.push({
@@ -1137,6 +1153,11 @@ export function simulateNextMinute(
             rating: Math.min(10, Number((nextStates[tackler.id].rating + 0.12).toFixed(1))),
           };
         }
+        events.push({
+          id: `ev_tackle_${nextMin}_${Date.now()}`, minute: nextMin, half, type: 'TACKLE',
+          teamSide: defSide, playerId: tackler.id, playerName: tackler.name,
+          text: `${tackler.name} wins the tackle and turns over possession.`,
+        });
       } else if (tackler) {
         defStats.fouls += 1;
         const cardRoll = Math.random();
