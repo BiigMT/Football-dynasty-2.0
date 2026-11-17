@@ -524,7 +524,7 @@ export interface ClubOperations {
   staff: Partial<Record<ClubStaffRole, ClubStaffMember>>;
   facilities: { training: number; medical: number; academy: number; scouting: number; stadium: number };
   sponsor?: { name: string; weeklyIncome: number; weeksRemaining: number };
-  boardCommitment?: { type: 'YOUTH' | 'UNITY' | 'RESULTS'; season: number; deadlineWeek: number };
+  boardCommitment?: { type: 'YOUTH' | 'UNITY' | 'RESULTS'; season: number; deadlineWeek: number; targetAcademyLevel?: number };
   ticketPrice: number;
   supporterMood: number;
 }
