@@ -71,15 +71,18 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const host=hostRef.current; if(!host)return;
     let renderer:any, scene:any, camera:any, raf=0, resizeObserver:ResizeObserver|undefined;
     const rigs=new Map<string,Rig>();
+    let homeFormationName=session.homeTactics.formation, awayFormationName=session.awayTactics.formation;
+    let homeFormation=getFormationCoordinates(homeFormationName), awayFormation=getFormationCoordinates(awayFormationName);
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
     let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
     const processedEventIds=new Set<string>(session.events.map(event=>event.id));
     try{
       renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'low-power'});
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+      const isMobileDevice=/Android|iPhone|iPad/i.test(navigator.userAgent||'');
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,isMobileDevice?1:1.35));
       renderer.setSize(host.clientWidth,host.clientHeight);
-      renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+      renderer.shadowMap.enabled=!isMobileDevice; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
       renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure=1.15; host.appendChild(renderer.domElement);
     }catch{
@@ -91,7 +94,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     camera.position.copy(cameraTarget); camera.lookAt(lookTarget);
 
     const hemi=new THREE.HemisphereLight('#dbeafe','#142b1c',2.0); scene.add(hemi);
-    const key=new THREE.DirectionalLight('#fff3d1',3.2); key.position.set(-32,58,24); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-70;key.shadow.camera.right=70;key.shadow.camera.top=55;key.shadow.camera.bottom=-55;scene.add(key);
+    const key=new THREE.DirectionalLight('#fff3d1',3.2); key.position.set(-32,58,24); key.castShadow=!/Android|iPhone|iPad/i.test(navigator.userAgent||''); key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-70;key.shadow.camera.right=70;key.shadow.camera.top=55;key.shadow.camera.bottom=-55;scene.add(key);
     [[-54,30,-38],[54,30,-38],[-54,30,38],[54,30,38]].forEach(([x,y,z])=>{
       const lamp=new THREE.PointLight('#d9edff',850,105,2); lamp.position.set(x,y,z); scene.add(lamp);
       const mast=new THREE.Mesh(new THREE.CylinderGeometry(.18,.3,28,6),new THREE.MeshStandardMaterial({color:'#344457',metalness:.65,roughness:.4}));mast.position.set(x,14,z);scene.add(mast);
@@ -120,8 +123,9 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const standMat=new THREE.MeshStandardMaterial({color:'#17283a',roughness:.94});
     for(let tier=0;tier<3;tier++){const stand=new THREE.Mesh(new THREE.CylinderGeometry(61+tier*5,58+tier*5,5,64,1,true),standMat);stand.position.y=6+tier*5;scene.add(stand);}
     const crowdGeo=new THREE.SphereGeometry(.16,5,4), crowdMat=new THREE.MeshStandardMaterial({color:'#94a3b8',roughness:1});
-    const crowd=new THREE.InstancedMesh(crowdGeo,crowdMat,1250);const dummy=new THREE.Object3D();
-    for(let i=0;i<1250;i++){const a=i*2.39996,r=63+(i%4)*1.8;dummy.position.set(Math.cos(a)*r,8+(i%3)*4,Math.sin(a)*r);dummy.scale.setScalar(.55+(i%5)*.12);dummy.updateMatrix();crowd.setMatrixAt(i,dummy.matrix);crowd.setColorAt(i,new THREE.Color(['#e2e8f0','#64748b','#0ea5e9','#f59e0b','#ef4444'][i%5]));}scene.add(crowd);
+    const crowdCount=/Android|iPhone|iPad/i.test(navigator.userAgent||'')?650:1250;
+    const crowd=new THREE.InstancedMesh(crowdGeo,crowdMat,crowdCount);const dummy=new THREE.Object3D();
+    for(let i=0;i<crowdCount;i++){const a=i*2.39996,r=63+(i%4)*1.8;dummy.position.set(Math.cos(a)*r,8+(i%3)*4,Math.sin(a)*r);dummy.scale.setScalar(.55+(i%5)*.12);dummy.updateMatrix();crowd.setMatrixAt(i,dummy.matrix);crowd.setColorAt(i,new THREE.Color(['#e2e8f0','#64748b','#0ea5e9','#f59e0b','#ef4444'][i%5]));}scene.add(crowd);
 
     const shadow=new THREE.Mesh(new THREE.CircleGeometry(1.15,20),new THREE.MeshBasicMaterial({color:'#020617',transparent:true,opacity:.34,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.025;scene.add(shadow);ballShadow=shadow;
     ball=new THREE.Mesh(new THREE.SphereGeometry(.34,18,14),new THREE.MeshStandardMaterial({color:'#f8fafc',roughness:.38}));ball.position.copy(lastBall).setY(.38);ball.castShadow=true;scene.add(ball);
@@ -138,6 +142,8 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const tick=(now:number)=>{
       raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;fpsFrames++;if(now-fpsWindow>=1000){liveRef.current.onFps?.(Math.round(fpsFrames*1000/(now-fpsWindow)));fpsFrames=0;fpsWindow=now;}
       const live=liveRef.current,s=live.session;
+      if(s.homeTactics.formation!==homeFormationName){homeFormationName=s.homeTactics.formation;homeFormation=getFormationCoordinates(homeFormationName);}
+      if(s.awayTactics.formation!==awayFormationName){awayFormationName=s.awayTactics.formation;awayFormation=getFormationCoordinates(awayFormationName);}
       const freshEvents=s.events.filter(event=>!processedEventIds.has(event.id));
       freshEvents.forEach(event=>{
         processedEventIds.add(event.id);
@@ -154,7 +160,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         const side=st.side,club=side==='HOME'?live.homeClub:live.awayClub;
         const colors=side==='HOME'?['#00a8e8','#f8fafc']:['#ffc107','#111827'];
         const athlete=makeAthlete(colors[0],colors[1]);
-        const formation=getFormationCoordinates(side==='HOME'?s.homeTactics.formation:s.awayTactics.formation);
+        const formation=side==='HOME'?homeFormation:awayFormation;
         const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
         const pos=mapPitch(side==='HOME'?f.x:100-f.x,side==='HOME'?f.y:100-f.y);
         athlete.group.position.copy(pos);scene.add(athlete.group);
@@ -170,7 +176,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
       rigs.forEach((rig,id)=>{
         const p=live.players[id],st=s.playerStates[id];if(!p||!st)return;
         rig.root.visible=st.onPitch&&!st.redCard;
-        const formation=getFormationCoordinates(rig.side==='HOME'?s.homeTactics.formation:s.awayTactics.formation);
+        const formation=rig.side==='HOME'?homeFormation:awayFormation;
         const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
         let tx=f.x,ty=f.y;if(rig.side==='AWAY'){tx=100-tx;ty=100-ty;}
         const bx=s.ballPos.x,by=s.ballPos.y;
