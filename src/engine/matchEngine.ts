@@ -121,14 +121,14 @@ function buildObjectivesForPlayer(player: Player): MatchObjective[] {
   if (pos === 'GK') {
     return [
       { id: 'obj_saves', label: 'Make 3+ saves', target: 3, current: 0, type: 'SAVES', completed: false },
-      { id: 'obj_cs', label: 'Keep a clean sheet', target: 1, current: 1, type: 'CLEAN_SHEET', completed: true },
+      { id: 'obj_cs', label: 'Keep a clean sheet', target: 1, current: 0, type: 'CLEAN_SHEET', completed: false },
       { id: 'obj_rat', label: 'Earn 7.0+ match rating', target: 7.0, current: 6.3, type: 'RATING', completed: false },
     ];
   }
   if (['CB', 'LB', 'RB', 'CDM'].includes(pos)) {
     return [
       { id: 'obj_tck', label: 'Win 3+ tackles', target: 3, current: 0, type: 'TACKLES', completed: false },
-      { id: 'obj_cs', label: 'Concede <= 1 goal', target: 1, current: 0, type: 'CLEAN_SHEET', completed: true },
+      { id: 'obj_cs', label: 'Concede <= 1 goal', target: 1, current: 0, type: 'CLEAN_SHEET', completed: false },
       { id: 'obj_rat', label: 'Earn 7.0+ match rating', target: 7.0, current: 6.3, type: 'RATING', completed: false },
     ];
   }
