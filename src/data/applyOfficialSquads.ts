@@ -1,0 +1,75 @@
+import type { Player } from '../types/football';
+import { PREMIER_LEAGUE_2026_SQUADS } from './premierLeagueSquads2026';
+
+const slug = (value:string) => value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+/**
+ * Reconciles official 2026/27 names and shirt numbers into the generated
+ * player pool. Exact shirt-number matches are preferred; remaining official
+ * entries use an unused generated record. Existing IDs and simulated
+ * attributes/contracts stay intact.
+ *
+ * Positions, nationality, DOB, ratings and contracts are intentionally not
+ * overwritten because the squad-number source does not establish those facts.
+ */
+export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):void {
+  for(const squad of PREMIER_LEAGUE_2026_SQUADS){
+    const existing=Object.values(players)
+      .filter(p=>p.clubId===squad.clubId)
+      .sort((a,b)=>a.shirtNumber-b.shirtNumber || a.id.localeCompare(b.id));
+    if(!existing.length) continue;
+
+    const exactByNumber=new Map<number,Player>();
+    for(const player of existing){
+      if(!exactByNumber.has(player.shirtNumber)) exactByNumber.set(player.shirtNumber,player);
+    }
+    const reservedIds=new Set(
+      squad.players
+        .map(entry=>exactByNumber.get(entry.shirtNumber)?.id)
+        .filter((id):id is string=>Boolean(id))
+    );
+    const usedIds=new Set<string>();
+    const seenNames=new Set<string>();
+
+    squad.players.forEach((entry,index)=>{
+      const key=slug(entry.name);
+      if(seenNames.has(key)) return;
+      seenNames.add(key);
+
+      // A shirt-number match is more reliable than assuming generated roster
+      // order corresponds to official registration order.
+      let current=exactByNumber.get(entry.shirtNumber);
+      if(current && usedIds.has(current.id)) current=undefined;
+
+      // For newly registered numbers, use an unused generated record without
+      // stealing one already reserved for a later exact shirt-number match.
+      if(!current){
+        current=existing.find(p=>!usedIds.has(p.id) && !reservedIds.has(p.id));
+      }
+
+      if(current){
+        usedIds.add(current.id);
+        players[current.id]={...current,name:entry.name,shirtNumber:entry.shirtNumber};
+        return;
+      }
+
+      // The generated pool is smaller than the official list: clone a
+      // simulation template but give the real player a deterministic ID.
+      const template=existing[index%existing.length];
+      const id='real_'+squad.clubId+'_'+key;
+      if(players[id]) return;
+      players[id]={
+        ...template,
+        id,
+        name:entry.name,
+        shirtNumber:entry.shirtNumber,
+        clubId:squad.clubId,
+        seasonStats:{...template.seasonStats},
+        careerHistory:[],
+        injuredWeeks:0,
+        suspendedMatches:0,
+        isYouth:template.age<=21,
+      };
+    });
+  }
+}

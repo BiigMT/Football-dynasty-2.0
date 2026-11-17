@@ -3,7 +3,7 @@ name: Matchday Android validation
 on:
   push:
     branches:
-      - feature/console-quality-3d-matchday
+      - feature/complete-squads-deeper-3d-engine
   pull_request:
     branches:
       - main
@@ -34,6 +34,11 @@ jobs:
 
       - name: TypeScript validation
         run: npm run lint
+      - name: Validate official squad data
+        run: npm run validate:squads
+
+      - name: Validate 3D player positioning
+        run: npm run validate:positioning
 
       - name: Production web build
         run: npm run build

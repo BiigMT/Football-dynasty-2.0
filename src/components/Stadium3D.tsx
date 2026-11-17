@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { Club, MatchSession, Player } from '../types/football';
 import { getFormationCoordinates } from '../engine/matchEngine';
+import { getMatchPresentationCue } from '../engine/matchPresentation';
+import { getDynamicPlayerTarget } from '../engine/matchPositioning';
 
 export type StadiumCameraMode = 'TV' | 'TACTICAL' | 'DUGOUT';
 interface Stadium3DProps {
@@ -15,7 +17,7 @@ interface Stadium3DProps {
   onFps?: (fps:number)=>void;
 }
 
-type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number; action?: 'PASS'|'TACKLE'|'SHOT'|'SAVE'|'CELEBRATE'; actionUntil?: number };
+type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number; action?: 'PASS'|'TACKLE'|'SHOT'|'SAVE'|'CELEBRATE'; actionUntil?: number; presentationTarget?: {x:number;y:number}; presentationUntil?: number };
 const FIELD_W = 105;
 const FIELD_D = 68;
 const mapPitch = (x:number,y:number) => new THREE.Vector3(((x/100)-.5)*FIELD_W,0,((y/100)-.5)*FIELD_D);
@@ -74,6 +76,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     let homeFormationName=session.homeTactics.formation, awayFormationName=session.awayTactics.formation;
     let homeFormation=getFormationCoordinates(homeFormationName), awayFormation=getFormationCoordinates(awayFormationName);
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
+    let activeBallFlight:{from:any;to:any;startedAt:number;duration:number;arc:number}|null=null;
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
     let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
     const processedEventIds=new Set<string>(session.events.map(event=>event.id));
@@ -147,7 +150,28 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
       const freshEvents=s.events.filter(event=>!processedEventIds.has(event.id));
       freshEvents.forEach(event=>{
         processedEventIds.add(event.id);
+        const cue=getMatchPresentationCue(event,s,live.players,homeFormation,awayFormation);
         const actor=event.playerId?rigs.get(event.playerId):undefined;
+        const cueDuration=elapsed+Math.max(1,(cue.ballFlight?.durationMs??900)/1000);
+        if(actor&&cue.actorTarget){
+          actor.presentationTarget=cue.actorTarget;
+          actor.presentationUntil=cueDuration;
+        }
+        const receiver=cue.targetPlayerId?rigs.get(cue.targetPlayerId):undefined;
+        if(receiver&&cue.targetPlayerTarget){
+          receiver.presentationTarget=cue.targetPlayerTarget;
+          receiver.presentationUntil=cueDuration;
+          if(event.type==='SAVE'){receiver.action='SAVE';receiver.actionUntil=elapsed+1.55;}
+        }
+        if(cue.ballFlight){
+          activeBallFlight={
+            from:mapPitch(cue.ballFlight.from.x,cue.ballFlight.from.y),
+            to:mapPitch(cue.ballFlight.to.x,cue.ballFlight.to.y),
+            startedAt:elapsed,
+            duration:cue.ballFlight.durationMs/1000,
+            arc:cue.ballFlight.arc,
+          };
+        }
         if(event.type==='GOAL'){
           rigs.forEach(r=>{if(r.side===event.teamSide){r.action='CELEBRATE';r.actionUntil=elapsed+3.8;}});
         } else if(['PASS','TACKLE','SHOT','SAVE'].includes(event.type) && actor){
@@ -168,21 +192,30 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         rigs.set(st.playerId,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id:st.playerId,side,base:pos.clone(),phase:rigs.size*.71});
       });
       const targetBall=mapPitch(s.ballPos.x,s.ballPos.y);
-      ballVelocity.lerp(targetBall.clone().sub(ball.position),Math.min(1,dt*4));
-      ballTarget.lerp(targetBall,Math.min(1,dt*3.2));
-      const arc=Math.min(3.8,ballVelocity.length()*.11);
-      ball.position.set(ballTarget.x, .34+Math.sin(Math.min(1,ballVelocity.length()*.07)*Math.PI)*arc, ballTarget.z);
+      if(activeBallFlight){
+        const progress=Math.min(1,Math.max(0,(elapsed-activeBallFlight.startedAt)/activeBallFlight.duration));
+        const eased=progress*progress*(3-2*progress);
+        const flight=activeBallFlight;
+        ball.position.lerpVectors(flight.from,flight.to,eased);
+        ball.position.y=.34+Math.sin(progress*Math.PI)*flight.arc;
+        if(progress>=1){activeBallFlight=null;ballTarget.copy(targetBall);}
+      }else{
+        ballVelocity.lerp(targetBall.clone().sub(ball.position),Math.min(1,dt*4));
+        ballTarget.lerp(targetBall,Math.min(1,dt*3.2));
+        const arc=Math.min(3.8,ballVelocity.length()*.11);
+        ball.position.set(ballTarget.x, .34+Math.sin(Math.min(1,ballVelocity.length()*.07)*Math.PI)*arc, ballTarget.z);
+      }
       ball.rotation.x+=dt*4;ball.rotation.z+=dt*3;ballShadow.position.set(ball.position.x,.03,ball.position.z);ballShadow.scale.setScalar(Math.max(.5,1.25-ball.position.y*.13));
       rigs.forEach((rig,id)=>{
         const p=live.players[id],st=s.playerStates[id];if(!p||!st)return;
         rig.root.visible=st.onPitch&&!st.redCard;
         const formation=rig.side==='HOME'?homeFormation:awayFormation;
         const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
-        let tx=f.x,ty=f.y;if(rig.side==='AWAY'){tx=100-tx;ty=100-ty;}
-        const bx=s.ballPos.x,by=s.ballPos.y;
-        const rolePull=rig.side==='HOME'?(tx<55?.16:.34):(tx>45?.16:.34);
-        tx=THREE.MathUtils.lerp(tx,bx,rolePull);ty=THREE.MathUtils.lerp(ty,by,.18);
-        const target=mapPitch(tx,ty);rig.root.position.lerp(target,Math.min(1,dt*2.2));
+        const tactics=rig.side==='HOME'?s.homeTactics:s.awayTactics;
+        let targetPoint=getDynamicPlayerTarget(f,s.ballPos,rig.side,p.position,tactics);
+        if(rig.presentationTarget&&(rig.presentationUntil??0)>elapsed){targetPoint=rig.presentationTarget;}
+        else{rig.presentationTarget=undefined;rig.presentationUntil=undefined;}
+        const target=mapPitch(targetPoint.x,targetPoint.y);rig.root.position.lerp(target,Math.min(1,dt*(rig.presentationTarget?4.8:2.2)));
         const dx=ball.position.x-rig.root.position.x,dz=ball.position.z-rig.root.position.z;
         if(Math.hypot(dx,dz)>.15)rig.root.rotation.y=Math.atan2(dx,dz);
         const running= !live.reducedMotion && s.phase!=='HALF_TIME' && s.phase!=='FULL_TIME';

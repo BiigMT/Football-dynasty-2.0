@@ -13,6 +13,7 @@ import {
   Region,
 } from '../types/football';
 import { NATIONS_DATABASE } from '../data/nationsDatabase';
+import { applyOfficialPremierLeagueSquads } from '../data/applyOfficialSquads';
 
 interface ClubBlueprint {
   id: string;
@@ -992,6 +993,10 @@ export function buildWorldDatabase(): {
       squadPlayerIds: squad,
     };
   }
+
+  // Apply club identities after national-team selection so added reserve clones are not
+  // accidentally treated as extra international players.
+  applyOfficialPremierLeagueSquads(players);
 
   return { clubs, players, leagues, nationalTeams };
 }
