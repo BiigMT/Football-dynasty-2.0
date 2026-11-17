@@ -33,6 +33,8 @@ import { soundEngine } from '../engine/audio';
 import { ClubBadge } from './ClubBadge';
 import { MatchPitchCanvas } from './MatchPitchCanvas';
 import { Match3DCanvas } from './Match3DCanvas';
+import { ConsoleMatchday } from './ConsoleMatchday';
+import { PostMatchBroadcast } from './PostMatchBroadcast';
 
 interface MatchCenterProps {
   initialSession: MatchSession;
@@ -192,6 +194,14 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     setSubInId('');
   };
 
+  const handleConsoleSub = (outId: string, inId: string) => {
+    if (!outId || !inId || userSubsUsed >= 5) return;
+    soundEngine.playClick();
+    const next = makeMatchSubstitution(session, userSide, outId, inId);
+    setSession(next);
+    onPersistMatchState(next);
+  };
+
   const handleKeyMomentDecision = (choiceId: string) => {
     soundEngine.playKick(0.95);
     const next = resolveKeyMomentChoice(session, choiceId, clubs, players);
@@ -221,6 +231,35 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
     : goalIsHome
     ? 'HOME END IN FULL VOICE · FLAGS AND FISTS IN THE AIR'
     : 'AWAY END ERUPTS · THE HOME CROWD FALLS SILENT';
+
+  if (isLiveMatch) {
+    return <ConsoleMatchday
+      session={session}
+      homeClub={homeClub}
+      awayClub={awayClub}
+      players={players}
+      running={running}
+      speedMs={speedMs}
+      userSide={userSide}
+      subsUsed={userSubsUsed}
+      onPause={() => setRunning((value) => !value)}
+      onSpeed={setSpeedMs}
+      onMentality={(mentality) => updateUserTactics({ mentality })}
+      onShout={(talk) => handleTeamTalk(talk)}
+      onSubstitute={handleConsoleSub}
+    />;
+  }
+
+  if (session.phase === 'FULL_TIME') {
+    return <PostMatchBroadcast
+      session={session}
+      homeClub={homeClub}
+      awayClub={awayClub}
+      players={players}
+      onContinue={() => onFinishMatch(session)}
+      onReport={() => onPersistMatchState(session)}
+    />;
+  }
 
   return (
     <div className={`fd-realism-match bg-[#0B0F14] text-slate-100 ${isLiveMatch ? 'match-live-screen' : isHalfTime ? 'match-halftime-screen' : 'min-h-screen px-4 py-4 sm:px-6'}`} style={{ backgroundImage: "linear-gradient(rgba(7,12,18,.88), rgba(7,12,18,.96)), url('/media/game/matchday-training.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
