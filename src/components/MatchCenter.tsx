@@ -32,6 +32,7 @@ import {
 import { soundEngine } from '../engine/audio';
 import { ClubBadge } from './ClubBadge';
 import { MatchPitchCanvas } from './MatchPitchCanvas';
+import { Match3DCanvas } from './Match3DCanvas';
 
 interface MatchCenterProps {
   initialSession: MatchSession;
@@ -62,6 +63,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
   const [subInId, setSubInId] = useState<string>('');
   const [interviewDone, setInterviewDone] = useState<boolean>(false);
   const [quickToolsOpen, setQuickToolsOpen] = useState<boolean>(false);
+  const [matchView, setMatchView] = useState<'3D' | 'TACTICAL'>('3D');
 
   const homeClub = clubs[session.homeClubId];
   const awayClub = clubs[session.awayClubId];
@@ -435,13 +437,20 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         <div className={isLiveMatch ? 'match-live-grid' : isHalfTime ? 'match-halftime-grid' : 'grid grid-cols-1 lg:grid-cols-12 gap-4'}>
           {/* Left: 2D Tactical Pitch + Key Moment / Half-Time Console */}
           <div className={isLiveMatch ? 'match-live-pitch-column' : isHalfTime ? 'match-halftime-pitch-column' : 'lg:col-span-7 flex flex-col gap-4'}>
-            <MatchPitchCanvas
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[10px] font-black uppercase tracking-[.2em] text-cyan-300">Matchday camera</div>
+              <div className="flex rounded-lg border border-white/10 bg-[#101820] p-1">
+                <button type="button" onClick={() => setMatchView('3D')} className={`rounded-md px-3 py-2 text-[10px] font-black tracking-wider ${matchView === '3D' ? 'bg-cyan-400 text-slate-950' : 'text-slate-300'}`}>3D BROADCAST</button>
+                <button type="button" onClick={() => setMatchView('TACTICAL')} className={`rounded-md px-3 py-2 text-[10px] font-black tracking-wider ${matchView === 'TACTICAL' ? 'bg-cyan-400 text-slate-950' : 'text-slate-300'}`}>TACTICAL</button>
+              </div>
+            </div>
+            {matchView === '3D' ? <Match3DCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} /> : <MatchPitchCanvas
               session={session}
               homeClub={homeClub}
               awayClub={awayClub}
               players={players}
               lastGoalTimestamp={lastGoalTs}
-            />
+            />}
 
             {/* Become a Legend Key Moment Interactive Decision */}
             {session.pendingKeyMoment && (
