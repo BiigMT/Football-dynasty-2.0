@@ -4,7 +4,7 @@ import {
   PREMIER_LEAGUE_SQUAD_SOURCE,
   PREMIER_LEAGUE_SQUAD_SNAPSHOT,
 } from '../src/data/premierLeagueSquads2026';
-import { AFRICAN_CLUB_SQUADS_2026, AFRICAN_SQUAD_SOURCES } from '../src/data/africanClubSquads2026';
+import { AFRICAN_CLUB_SQUADS_2026, AFRICAN_SQUAD_EXPECTED_COUNTS, AFRICAN_SQUAD_SOURCES } from '../src/data/africanClubSquads2026';
 
 assert.match(PREMIER_LEAGUE_SQUAD_SOURCE,/^https:\/\//,'Squad source must be HTTPS');
 assert.match(PREMIER_LEAGUE_SQUAD_SNAPSHOT,/^2026-\d{2}-\d{2}$/,'Snapshot date must be explicit');
@@ -56,7 +56,10 @@ for(const squad of AFRICAN_CLUB_SQUADS_2026){
     }
   }
 }
-console.log('Validated '+africanIds.size+' African roster structures; source membership audit is still required.');
+assert.equal(AFRICAN_CLUB_SQUADS_2026.find(s=>s.clubId==='cairo_eagles')?.players.length,AFRICAN_SQUAD_EXPECTED_COUNTS.alAhly,'Al Ahly roster count must match the official squad page');
+assert.equal(AFRICAN_CLUB_SQUADS_2026.find(s=>s.clubId==='tunis_esperance')?.players.length,AFRICAN_SQUAD_EXPECTED_COUNTS.esperance,'Espérance roster count must match the official squad page');
+assert.equal(AFRICAN_CLUB_SQUADS_2026.find(s=>s.clubId==='enyimba_elephants')?.players.length,AFRICAN_SQUAD_EXPECTED_COUNTS.enyimba,'Enyimba roster count must match the official squad page');
+console.log('Validated '+africanIds.size+' African club rosters against manually checked official source counts.');
 
 import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/europeanClubSquads2026';
 import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
