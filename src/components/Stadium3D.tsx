@@ -75,7 +75,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     let homeFormationName=session.homeTactics.formation, awayFormationName=session.awayTactics.formation;
     let homeFormation=getFormationCoordinates(homeFormationName), awayFormation=getFormationCoordinates(awayFormationName);
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
-    let activeBallFlight:{from:THREE.Vector3;to:THREE.Vector3;startedAt:number;duration:number;arc:number}|null=null;
+    let activeBallFlight:{from:any;to:any;startedAt:number;duration:number;arc:number}|null=null;
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
     let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
     const processedEventIds=new Set<string>(session.events.map(event=>event.id));
