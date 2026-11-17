@@ -985,6 +985,7 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
 
 export const EUROPEAN_SQUAD_SOURCES = {
   snapshot: '2026-11-17',
+  bundesligaAllPlayers: 'https://www.bundesliga.com/en/bundesliga/player',
   parisSaintGermain: 'https://www.psg.fr/en/mens-football/squad/season/2026-2027',
   acMilan: 'https://www.acmilan.com/en/teams/men-first-team',
   vfbStuttgart: 'https://datencenter.dfb.de/en/competitions/12/seasons/2026-2027/teams/2076',
