@@ -42,7 +42,7 @@ The ball's target position is interpolated in the render loop. The existing simu
 
 ## Current player-position limitation
 
-`PlayerMatchState` currently contains `slotIndex`, stamina, rating and match actions, but no per-player normalized `x/y` coordinates. The renderer therefore builds initial positions from `getFormationCoordinates(formation)` and animates presentation movement toward the ball. This is deliberately not written back to the simulation. Authentic player tracking, passing lanes, tackles and shot trajectories need a future engine contract that emits player positions and discrete action trajectories.
+`PlayerMatchState` contains `slotIndex`, stamina, rating and match actions, but no per-player normalized `x/y` coordinates. The renderer therefore builds initial positions from `getFormationCoordinates(formation)` and animates presentation movement toward the ball. This is deliberately not written back to the simulation. The engine now emits discrete `PASS`, `TACKLE`, `SHOT`, `SAVE` and `GOAL` events; the renderer maps those events to pass/strike/tackle/dive/celebration poses. These are event-driven animation cues, not physics-authentic player tracking or measured ball trajectories. Full tracking and trajectory playback still need a future backward-compatible event payload.
 
 ## Camera and fallback
 
