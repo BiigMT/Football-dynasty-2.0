@@ -239,6 +239,10 @@ export function createManagerCareer(params: {
   difficulty?: GameDifficulty;
 }): CareerSave {
   const world = buildWorldDatabase();
+  // Manager Career uses the same four-division league pyramid as Player Career.
+  const pyramid = initializeFourTierPyramid(world.clubs, world.leagues);
+  world.clubs = pyramid.clubs;
+  world.leagues = pyramid.leagues;
   const userClub = world.clubs[params.clubId];
   const { cupFixtures, continentalFixtures } = buildSeasonCupAndContinental(
     world.clubs,
@@ -1741,20 +1745,18 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
     };
   });
 
-  // Player Career promotion / relegation: champions move up, bottom clubs move down.
-  if (save.mode === 'PLAYER') {
-    const pyramidMovement = applyPromotionRelegation(nextClubs, nextLeagues);
-    Object.assign(nextClubs, pyramidMovement.clubs);
-    Object.assign(nextLeagues, pyramidMovement.leagues);
-    pyramidMovement.movements.forEach((movement) => nextNews.unshift({
-      id: 'pyramid_' + nextSeason + '_' + movement.replace(/[^a-z0-9]/gi, '_'),
-      week: 1,
-      season: nextSeason,
-      category: 'ACADEMY',
-      headline: movement,
-      body: 'The new season begins with movement across the four-tier career pyramid.',
-    }));
-  }
+  // All four-tier careers promote champions and relegate bottom clubs at season end.
+  const pyramidMovement = applyPromotionRelegation(nextClubs, nextLeagues);
+  Object.assign(nextClubs, pyramidMovement.clubs);
+  Object.assign(nextLeagues, pyramidMovement.leagues);
+  pyramidMovement.movements.forEach((movement) => nextNews.unshift({
+    id: 'pyramid_' + nextSeason + '_' + movement.replace(/[^a-z0-9]/gi, '_'),
+    week: 1,
+    season: nextSeason,
+    category: 'ACADEMY',
+    headline: movement,
+    body: 'The new season begins with movement across the four-tier career pyramid.',
+  }));
 
   // Reset all league standings & fixtures
   Object.keys(nextLeagues).forEach((lid) => {
