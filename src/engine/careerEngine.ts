@@ -1253,7 +1253,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
         body: 'The club must recruit a replacement if it wants to retain this department benefit.',
       });
     });
-    const staffPayroll = Object.values(nextStaff).reduce((sum, member) => sum + (member?.weeklyWage ?? 0), 0);
+    const staffPayroll = Object.values(operations.staff).reduce((sum, member) => sum + (member?.weeklyWage ?? 0), 0);
     const sponsorActive = operations.sponsor && operations.sponsor.weeksRemaining > 1
       ? { ...operations.sponsor, weeksRemaining: operations.sponsor.weeksRemaining - 1 }
       : undefined;
@@ -1271,7 +1271,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
     const gateIncome = hasHomeMatch
       ? Math.round(operations.ticketPrice * nextSave.clubs[save.userClubId].stadiumCapacity * attendance)
       : 0;
-    const sponsorIncome = sponsorActive?.weeklyIncome ?? 0;
+    const sponsorIncome = operations.sponsor?.weeklyIncome ?? 0;
     const userClub = nextSave.clubs[save.userClubId];
     if (userClub) nextSave.clubs[save.userClubId] = {
       ...userClub,
