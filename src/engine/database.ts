@@ -13,6 +13,7 @@ import {
   Region,
 } from '../types/football';
 import { NATIONS_DATABASE } from '../data/nationsDatabase';
+import { applyOfficialPremierLeagueSquads } from '../data/applyOfficialSquads';
 
 interface ClubBlueprint {
   id: string;
@@ -893,6 +894,9 @@ export function buildWorldDatabase(): {
       fixtures: generateRoundRobinFixtures(lb.id, lb.name, clubIds),
     };
   }
+
+  // Real 2026/27 Premier League names and shirt numbers; game ratings remain simulated.
+  applyOfficialPremierLeagueSquads(players);
 
   for (const nt of NATIONAL_TEAM_BLUEPRINTS) {
     const matchingPlayers = Object.values(players)
