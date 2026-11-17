@@ -108,8 +108,8 @@
       "region": "South America",
       "name": "Categoría Primera A",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://rankings.citizenofnowhere.org/football/world-leagues?p-moves=43",
+      "status": "team-list-only"
     },
     {
       "id": "chi_primera",
@@ -117,8 +117,8 @@
       "region": "South America",
       "name": "Primera División de Chile",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://rankings.citizenofnowhere.org/football/world-leagues?p-moves=43",
+      "status": "team-list-only"
     },
     {
       "id": "uru_primera",
@@ -135,8 +135,8 @@
       "region": "Asia",
       "name": "Saudi Pro League",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://www.spl.com.sa/en/2026-27-summer-transfer-watch",
+      "status": "partial-source"
     },
     {
       "id": "jpn_j1",
@@ -153,8 +153,8 @@
       "region": "Asia",
       "name": "K League 1",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://www.kleague.com/news_view.do?category=notice&orderBy=seq&page=12&seq=95772&viewOption=album",
+      "status": "partial-source"
     },
     {
       "id": "ind_super",
@@ -162,8 +162,8 @@
       "region": "Asia",
       "name": "Indian Super League",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://www.indiansuperleague.com/features/new-faces-new-chapters-a-look-at-the-new-signings-ahead-of-mg-isl-202627",
+      "status": "partial-source"
     },
     {
       "id": "uae_pro",
@@ -171,8 +171,8 @@
       "region": "Asia",
       "name": "UAE Pro League",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://www.uaepl.ae/en/stats",
+      "status": "partial-source"
     },
     {
       "id": "qat_stars",
@@ -180,8 +180,8 @@
       "region": "Asia",
       "name": "Qatar Stars League",
       "season": "2026/27",
-      "squadSource": null,
-      "status": "needs-source-verification"
+      "squadSource": "https://www.qsl.qa/index.php/en/lusail-sc",
+      "status": "partial-source"
     }
   ]
 }
