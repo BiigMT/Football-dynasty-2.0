@@ -10,7 +10,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "start": "node server.js",
-    "validate:squads": "tsx scripts/validate-real-squads.ts"
+    "validate:squads": "tsx scripts/validate-real-squads.ts",
+    "validate:positioning": "tsx scripts/validate-match-positioning.ts"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",
