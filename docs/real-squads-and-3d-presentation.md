@@ -27,3 +27,34 @@
 - No match-screen layout, HUD, button, panel, overlay or navigation component is changed by this branch.
 - MatchCenter, ConsoleMatchday and PostMatchBroadcast are intentionally untouched.
 - The existing match screen remains the same; only the 3D renderer's internal animation is extended.
+
+
+## 3D movement and presentation physics (17 Nov 2026)
+
+- Player rigs now use acceleration and braking rather than direct positional interpolation.
+- Movement speed is scaled by the player's simulated speed attribute and current match stamina.
+- A soft separation force discourages overlapping player rigs while keeping all movement inside pitch bounds.
+- The presentation ball now uses target steering with inertia, ground friction, player-body contact deflection, small impact bounces and pitch-boundary rebounds; spin follows movement speed. Scripted event flights remain presentation cues.
+- These changes do not modify match outcomes, player attributes, save data or match-screen UI.
+- Automated steering, braking and separation checks run through npm run validate:physics in Android CI.
+
+
+## African club squad verification (17 Nov 2026)
+
+Three African first-team squads are now manually cross-checked against current official club roster pages: Al Ahly (34 players), Espérance Sportive de Tunis (32) and Enyimba FC (22), for 88 player entries. The CI validator checks their source URLs, club mappings, roster integrity and expected source-list counts. Shirt numbers are only imported where the official page publishes them.
+
+Sources:
+- Al Ahly: https://www.alahlyegypt.com/en/football/first-team
+- Espérance: https://est.org.tn/fr/equipe-premiere
+- Enyimba: https://enyimbafc.net/first-team/
+
+## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
+
+The importer now maps **all 44 in-game clubs across LaLiga, Serie A, Bundesliga and Ligue 1**, with **1,197 player entries**:
+- LaLiga (20/20): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla, Valencia, Real Sociedad, Real Betis, Celta, Espanyol, Getafe, Levante, Rayo Vallecano, Racing de Santander, RC Deportivo, Málaga, Villarreal, Osasuna, Deportivo Alavés and Elche CF.
+- Serie A (8/8): Juventus, Inter, AC Milan, Napoli, Roma, Atalanta, Lazio and Fiorentina.
+- Bundesliga (8/8): Bayern München, Borussia Dortmund, Leverkusen, RB Leipzig, Eintracht Frankfurt, Stuttgart, Freiburg and Borussia Mönchengladbach.
+- Ligue 1 (8/8): Paris Saint-Germain, Marseille, Monaco, Nice, Lens, Rennes, Olympique Lyonnais and LOSC Lille.
+
+The data stores source URLs and a 17 Nov 2026 snapshot date. Most entries come from official club first-team roster pages or official club squad-number releases. Alavés, Lyon and Lille use official UEFA squad registrations; those are verified competition-registration lists, not exhaustive domestic first-team rosters. Elche's 30 players are individually confirmed from official 2026/27 match reports and club signing announcements because an accessible complete roster page was unavailable. Shirt numbers are omitted where the official source does not publish them. Ratings, positions, nationality, DOB, contracts and attributes remain game-generated.
+
