@@ -41,12 +41,12 @@
 
 ## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
 
-The importer now includes **40 official first-team roster snapshots (1,059 player entries)** mapped to existing game club IDs:
-- LaLiga (18/20): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla, Valencia, Real Sociedad, Real Betis, Celta, Espanyol, Getafe, Levante, Rayo Vallecano, Racing de Santander, RC Deportivo, Málaga, Villarreal and Osasuna.
+The importer now includes **43 in-game club mappings and 1,167 verified player entries**:
+- LaLiga (19/20): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla, Valencia, Real Sociedad, Real Betis, Celta, Espanyol, Getafe, Levante, Rayo Vallecano, Racing de Santander, RC Deportivo, Málaga, Villarreal, Osasuna and Deportivo Alavés.
 - Serie A (8/8): Juventus, Inter, AC Milan, Napoli, Roma, Atalanta, Lazio and Fiorentina.
 - Bundesliga (8/8): Bayern München, Borussia Dortmund, Leverkusen, RB Leipzig, Eintracht Frankfurt, Stuttgart, Freiburg and Borussia Mönchengladbach.
-- Ligue 1 (6/8): Paris Saint-Germain, Marseille, Monaco, Nice, Lens and Rennes.
+- Ligue 1 (8/8): Paris Saint-Germain, Marseille, Monaco, Nice, Lens, Rennes, Olympique Lyonnais and LOSC Lille.
 
-Each dataset stores its source URL and snapshot date. Sources are official club roster pages, official competition squad pages or official club squad-number releases. Only player names and published shirt numbers are imported; conflicting or unpublished numbers are omitted rather than guessed. Gameplay ratings, positions, nationality, DOB, contracts and attributes remain simulation data.
+The data stores source URLs and a 17 Nov 2026 snapshot date. Most entries come from current club first-team roster pages or official club squad-number releases. Alavés, Lyon and Lille use official UEFA squad registrations; those are verified competition-registration lists and should not be represented as exhaustive domestic first-team rosters. Only player names and published shirt numbers are imported; conflicting or unpublished numbers are omitted rather than guessed. Ratings, positions, nationality, DOB, contracts and attributes remain game-generated.
 
-Four clubs remain unimported because a complete current official first-team roster could not be verified from an accessible source: Deportivo Alavés, Elche CF, Olympique Lyonnais and LOSC Lille. Do not fill those gaps with guessed names.
+Elche CF is the one remaining in-game club without a complete accessible official roster list. No names have been guessed to fill that gap.
