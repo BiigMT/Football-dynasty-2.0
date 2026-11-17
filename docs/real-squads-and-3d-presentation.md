@@ -8,6 +8,11 @@
 - The source confirms squad membership and shirt numbers only. Positions, nationality, date of birth, ratings, attributes, wages, contracts and market values remain game-generated until separately verified. They must not be presented as official real-world data.
 - Source: https://www.premierleague.com/en/news/4725682/all-20-premier-league-clubs-squad-numbers-for-202627-season (published 22 September 2026).
 
+## Squad management layout
+- Team Management now separates the seven matchday substitutes from the complete registered squad.
+- The full-squad view shows starters, bench and reserves with status, position, age, fitness and simulated OVR in a scrollable panel.
+- A reserve can be promoted into the XI or matchday bench without changing the save schema.
+
 ## 3D match presentation
 - Adds a presentation-only choreography layer driven by the existing match events and current formation/player state.
 - Pass events create a ball flight and move a nearby teammate into the receiving lane.
