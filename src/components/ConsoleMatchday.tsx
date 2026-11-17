@@ -25,7 +25,8 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const commentary=latest?.text??'Both teams are settling into their shape. The next opening could decide it.';
   const homePress=Math.max(0,Math.min(100,50+session.momentum/2));
   const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
-  return <main className="fixed inset-0 h-[100dvh] w-screen overflow-hidden bg-[#080e1a] text-white" style={{touchAction:'manipulation'}}>
+  return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>
+   <div className="relative h-[min(100dvh,56.25vw)] w-[min(100vw,177.78dvh)] overflow-hidden bg-[#080e1a]" style={{aspectRatio:'16 / 9'}}>
     <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/>}</div>
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050b16]/50 via-transparent to-[#050b16]/70"/>
     <header className="absolute left-3 top-3 z-20 flex max-w-[min(60vw,620px)] items-center gap-2 rounded-xl border border-white/15 bg-[#111c33]/90 px-3 py-2 shadow-2xl backdrop-blur-xl">
@@ -41,7 +42,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
       <button onClick={()=>setStatsOpen(v=>!v)} className="min-h-9 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">STATS</button>
     </div>
     <div className="absolute left-1/2 top-[68px] z-20 flex -translate-x-1/2 gap-1 rounded-full border border-white/15 bg-[#111c33]/80 p-1 backdrop-blur-xl">
-      {([{id:'TV',label:'TV BROADCAST'},{id:'TACTICAL',label:'2D TACTICAL'},{id:'DUGOUT',label:'DUGOUT CAM'}] as {id:StadiumCameraMode;label:string}[]).map(m=><button key={m.id} onClick={()=>setCamera(m.id)} className={`rounded-full px-3 py-2 text-[9px] font-black tracking-wide ${camera===m.id?'bg-cyan-300 text-[#06111d]':'text-slate-200'}`}>{m.label}</button>)}
+      {([{id:'TV',label:'TV BROADCAST'},{id:'2D',label:'2D TACTICAL'},{id:'DUGOUT',label:'DUGOUT CAM'}] as {id:StadiumCameraMode|'2D';label:string}[]).map(m=><button key={m.id} onClick={()=>setCamera(m.id)} className={`rounded-full px-3 py-2 text-[9px] font-black tracking-wide ${camera===m.id?'bg-cyan-300 text-[#06111d]':'text-slate-200'}`}>{m.label}</button>)}
     </div>
     <div className="pointer-events-none absolute bottom-[100px] left-1/2 z-20 w-[min(660px,72vw)] -translate-x-1/2 rounded-xl border border-white/10 bg-[rgba(8,14,26,.88)] px-3 py-2 shadow-xl backdrop-blur-xl">
       <div className="flex items-center justify-between gap-3"><div className="min-w-0 truncate text-[10px] font-semibold text-slate-100">{session.minute}' · {commentary}</div><span className="shrink-0 text-[9px] font-black text-cyan-300">LIVE</span></div>
@@ -69,5 +70,6 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
       <div className="mt-3 space-y-1.5">{userStates.map(st=>{const p=players[st.playerId];if(!p)return null;return <div key={st.playerId} className="flex items-center gap-2 rounded-lg bg-white/5 px-2 py-1.5"><span className="w-5 text-[9px] font-black text-cyan-300">{p.shirtNumber}</span><span className="min-w-0 flex-1 truncate text-[10px] font-semibold">{p.name}</span><span className="text-[9px] tabular-nums text-slate-300">{Math.round(st.stamina)}%</span><span className={`text-[9px] font-black ${st.rating>=7.5?'text-emerald-400':st.rating>=6.5?'text-cyan-300':'text-amber-300'}`}>{st.rating.toFixed(1)}</span></div>;})}</div>
       <button disabled={!outId||!inId||subsUsed>=5} onClick={handleSub} className="mt-3 min-h-10 w-full rounded-lg bg-[#ffc107] text-[10px] font-black text-[#17120a] disabled:opacity-40">CONFIRM SUBSTITUTION</button>
     </aside>}
+   </div>
   </main>;
 };
