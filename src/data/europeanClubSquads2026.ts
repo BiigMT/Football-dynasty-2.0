@@ -889,6 +889,98 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
       { name: 'Álvaro Rodríguez' }, { name: 'Rafa Mir' }, { name: 'André Da Silva' },
     ],
   },
+
+  {
+    clubId: 'ger_bundesliga_augs', clubName: 'FC Augsburg',
+    players: [
+      {name:'Finn Dahmen',shirtNumber:1},{name:'Nediljko Labrović',shirtNumber:22},{name:'Tom Wisbereit',shirtNumber:48},
+      {name:'Calvin Brackelmann',shirtNumber:2},{name:'Chrislain Matsima',shirtNumber:5},{name:'Jeffrey Gouweleeuw',shirtNumber:6},{name:'Youngwoo Seol',shirtNumber:7},{name:'Hennes Behrens',shirtNumber:16},{name:'Marius Wolf',shirtNumber:27},{name:'Juma Bah',shirtNumber:35},{name:'Noahkai Banks',shirtNumber:40},
+      {name:'Han-Noah Massengo',shirtNumber:4},{name:'Sima Suso',shirtNumber:8},{name:'Mert Kömür',shirtNumber:10},{name:'Yannik Keitel',shirtNumber:14},{name:'Tim Breithaupt',shirtNumber:18},{name:'Robin Fellhauer',shirtNumber:19},{name:'Alexis Claude-Maurice',shirtNumber:20},{name:'Arijon Ibrahimović',shirtNumber:21},{name:'Faik Sakar',shirtNumber:23},{name:'Anton Kade',shirtNumber:30},{name:'Fabian Rieder',shirtNumber:32},{name:'Tim Schnitzer',shirtNumber:37},{name:'Loris Husic',shirtNumber:38},{name:'Mahmut Küçükşahin',shirtNumber:42},
+      {name:'Rodrigo Ribeiro',shirtNumber:9},{name:'Michael Gregoritsch',shirtNumber:11},{name:'Steve Mounié',shirtNumber:15},{name:'Uchenna Ogundu',shirtNumber:39},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_mainz', clubName: '1. FSV Mainz 05',
+    players: [
+      {name:'Alexander Schwolow',shirtNumber:1},{name:'Robin Zentner',shirtNumber:27},{name:'Maximilian Kinzig',shirtNumber:40},
+      {name:'Phillipp Mwene',shirtNumber:2},{name:'Fabio Gruber',shirtNumber:3},{name:'Stefan Posch',shirtNumber:4},{name:'Eric Martel',shirtNumber:5},{name:'Stefan Bell',shirtNumber:16},{name:'Anthony Caci',shirtNumber:19},{name:'Danny da Costa',shirtNumber:21},{name:'Silvan Widmer',shirtNumber:30},{name:'Dominik Kohr',shirtNumber:31},{name:'Rael Nakuzola',shirtNumber:47},{name:'Kacper Potulski',shirtNumber:48},
+      {name:'Kaishu Sano',shirtNumber:6},{name:'Jae-Sung Lee',shirtNumber:7},{name:'Paul Nebel',shirtNumber:8},{name:'Nadiem Amiri',shirtNumber:10},{name:'Lennard Maloney',shirtNumber:15},{name:'Otto Ruoppi',shirtNumber:20},{name:'Sota Kawasaki',shirtNumber:24},
+      {name:'Phillip Tietz',shirtNumber:9},{name:'Ransford-Yeboah Königsdörffer',shirtNumber:11},{name:'Benedict Hollerbach',shirtNumber:17},{name:'Sheraldo Becker',shirtNumber:23},{name:'Silas Katompa Mvumpa',shirtNumber:26},{name:'Alynho Haidara',shirtNumber:39},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_union', clubName: '1. FC Union Berlin',
+    players: [
+      {name:'Frederik Rønnow',shirtNumber:1},{name:'Carl Klaus',shirtNumber:25},{name:'Matheo Raab',shirtNumber:31},{name:'Fritz Gagzow',shirtNumber:48},
+      {name:'Felix Uduokhai',shirtNumber:2},{name:'Andrik Markgraf',shirtNumber:3},{name:'Zeno van den Bosch',shirtNumber:4},{name:'Marvin Friedrich',shirtNumber:5},{name:'Leopold Querfeld',shirtNumber:14},{name:'Tom Rothe',shirtNumber:15},{name:'Derrick Köhn',shirtNumber:17},{name:'Josip Juranović',shirtNumber:18},{name:'Christopher Trimmel',shirtNumber:28},{name:'Stanley Nsoki',shirtNumber:34},
+      {name:'Aljoscha Kemlein',shirtNumber:6},{name:'Rani Khedira',shirtNumber:8},{name:'Woo-yeong Jeong',shirtNumber:11},{name:'András Schäfer',shirtNumber:13},{name:'Janik Haberer',shirtNumber:19},{name:'Michel Aebischer',shirtNumber:20},{name:'Tim Skarke',shirtNumber:21},{name:'Robert Skov',shirtNumber:24},{name:'Kastriot Imeri',shirtNumber:30},{name:'Duje Slišković',shirtNumber:43},{name:'Linus Güther',shirtNumber:49},
+      {name:'Oliver Burke',shirtNumber:7},{name:'Livan Burcu',shirtNumber:9},{name:'Andrej Ilić',shirtNumber:23},{name:'Marin Ljubičić',shirtNumber:27},{name:'Emmanuel Latte Lath',shirtNumber:29},{name:'Mekhi Gray',shirtNumber:32},{name:'Julien Friedrich',shirtNumber:38},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_hsv', clubName: 'Hamburger SV',
+    players: [
+      {name:'Daniel Heuer Fernandes',shirtNumber:1},{name:'Sander Tangvik',shirtNumber:12},{name:'Elias Lahti',shirtNumber:40},{name:'Fernando Dickes',shirtNumber:41},
+      {name:'David Møller Wolfe',shirtNumber:3},{name:'Zakaria El Ouahdi',shirtNumber:7},{name:'Warmed Omari',shirtNumber:17},{name:'Jordan Torunarigha',shirtNumber:23},{name:'Nicolás Capaldo',shirtNumber:24},{name:'Miro Muheim',shirtNumber:28},{name:'Sebastiaan Bornauw',shirtNumber:33},{name:'Louis Lemke',shirtNumber:37},{name:'Joel Agyekum',shirtNumber:39},{name:'Shafiq Nandja',shirtNumber:43},{name:'Jason Bissi-Mouelle',shirtNumber:48},
+      {name:'Bilal Nadir',shirtNumber:4},{name:'Martin Adeline',shirtNumber:5},{name:'Albert Sambi Lokonga',shirtNumber:6},{name:'Immanuël Pherai',shirtNumber:10},{name:'Albert Grønbæk',shirtNumber:11},{name:'Fábio Vieira',shirtNumber:20},{name:'Nicolai Remberg',shirtNumber:21},{name:'Kofi Amoako',shirtNumber:22},{name:'Kelvin Ojo',shirtNumber:46},
+      {name:'Terem Moffi',shirtNumber:9},{name:'Yussuf Poulsen',shirtNumber:15},{name:'Bakery Jatta',shirtNumber:18},{name:'Otto Stange',shirtNumber:19},{name:'Patson Daka',shirtNumber:27},{name:'Alexander Røssing-Lelesiit',shirtNumber:38},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_koln', clubName: '1. FC Köln',
+    players: [
+      {name:'Marvin Schwäbe',shirtNumber:1},{name:'Ron-Robert Zieler',shirtNumber:20},{name:'Martin James',shirtNumber:21},{name:'Matthias Köbbing',shirtNumber:44},
+      {name:'Joël Schmied',shirtNumber:2},{name:'Borna Sosa',shirtNumber:3},{name:'Timo Hübers',shirtNumber:4},{name:'Gideon Mensah',shirtNumber:14},{name:'Jahmai Simpson-Pusey',shirtNumber:22},{name:'Luka Lochoshvili',shirtNumber:24},{name:'Sebastian Sebulonsen',shirtNumber:28},{name:'Rav van den Berg',shirtNumber:33},{name:'Jonathan Friemel',shirtNumber:39},{name:'Assad Kotya Fofana',shirtNumber:46},
+      {name:'Tom Krauß',shirtNumber:5},{name:'Ellyes Skhiri',shirtNumber:6},{name:'Ísak Jóhannesson',shirtNumber:8},{name:'Saïd El Mala',shirtNumber:10},{name:'Reigan Heskey',shirtNumber:11},{name:'Alessio Castro-Montes',shirtNumber:17},{name:'Paul Okon-Engstler',shirtNumber:23},{name:'Jan Thielmann',shirtNumber:29},{name:'Gil Neves',shirtNumber:31},{name:'Fayssal Harchaoui',shirtNumber:34},{name:'Linton Maina',shirtNumber:37},
+      {name:'Luca Waldschmidt',shirtNumber:7},{name:'Ragnar Ache',shirtNumber:9},{name:'Imad Rondić',shirtNumber:15},{name:'Malek El Mala',shirtNumber:19},{name:'Thijs Dallinga',shirtNumber:27},{name:'Marius Bülter',shirtNumber:30},{name:'Mikey Moore',shirtNumber:47},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_werder', clubName: 'SV Werder Bremen',
+    players: [
+      {name:'Karl Hein',shirtNumber:1},{name:'Markus Kolke',shirtNumber:25},{name:'Alexander Schlager',shirtNumber:30},{name:'Stefan Smarkalev',shirtNumber:37},
+      {name:'Olivier Deman',shirtNumber:2},{name:'Oskar Wójcik',shirtNumber:3},{name:'Niklas Stark',shirtNumber:4},{name:'Amos Pieper',shirtNumber:5},{name:'Mitchell Weiser',shirtNumber:8},{name:'Arthur',shirtNumber:13},{name:'Moussa Ndiaye',shirtNumber:16},{name:'Felix Agu',shirtNumber:27},{name:'Marco Friedl',shirtNumber:32},{name:'Mick Schmetgens',shirtNumber:33},{name:'Luca Höcker',shirtNumber:35},{name:'Mats Heitmann',shirtNumber:36},{name:'Ramiz Hamouda',shirtNumber:40},
+      {name:'Jens Stage',shirtNumber:6},{name:'Senne Lynen',shirtNumber:14},{name:'Ludovit Reis',shirtNumber:15},{name:'Eren Dinkçi',shirtNumber:18},{name:'Chuki',shirtNumber:20},{name:'Dariusz Stalmach',shirtNumber:23},{name:'Skelly Alvero',shirtNumber:28},{name:'Darwin Soylu',shirtNumber:34},{name:'Arian Römers',shirtNumber:42},{name:'Youri Regeer',shirtNumber:44},
+      {name:'Keke Topp',shirtNumber:9},{name:'Niclas Füllkrug',shirtNumber:10},{name:'Justin Njinmah',shirtNumber:11},{name:'Marco Grüll',shirtNumber:17},{name:'Kenny Emmanuel Quetant',shirtNumber:19},{name:'Cedric Itten',shirtNumber:26},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_schalke', clubName: 'FC Schalke 04',
+    players: [
+      {name:'Loris Karius',shirtNumber:1},{name:'Kevin Müller',shirtNumber:22},{name:'Johannes Siebeking',shirtNumber:36},
+      {name:'Hasan Kuruçay',shirtNumber:4},{name:'Timo Becker',shirtNumber:5},{name:'Robin Gosens',shirtNumber:8},{name:'Adrian Gantenbein',shirtNumber:17},{name:'Nikola Katić',shirtNumber:25},{name:'Tomáš Kalas',shirtNumber:26},{name:'Anton Donkor',shirtNumber:30},{name:'Vitalie Becker',shirtNumber:33},{name:'Maximilian Wöber',shirtNumber:39},{name:'Mertcan Ayhan',shirtNumber:43},
+      {name:'Ron Schallenberg',shirtNumber:6},{name:'Satoshi Tanaka',shirtNumber:13},{name:'Janik Bachmann',shirtNumber:14},{name:'Dejan Ljubičić',shirtNumber:21},{name:'Soufiane El-Faouzi',shirtNumber:23},{name:'Adil Aouchiche',shirtNumber:24},{name:'Finn Porath',shirtNumber:27},{name:'Junior Dina Ebimbe',shirtNumber:29},{name:'Max Grüger',shirtNumber:37},{name:'Luca Vozar',shirtNumber:38},{name:'Edion Gashi',shirtNumber:40},
+      {name:'Hee Chan Hwang',shirtNumber:7},{name:'Moussa Sylla',shirtNumber:9},{name:'Edin Džeko',shirtNumber:10},{name:'Bryan Lasme',shirtNumber:11},{name:'Emil Højlund',shirtNumber:15},{name:'Kenan Karaman',shirtNumber:19},{name:'Junior Adamu',shirtNumber:20},{name:'Jean Paul Ndiaye',shirtNumber:35},{name:'Zaid Tchibara',shirtNumber:47},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_elversberg', clubName: 'SV Elversberg',
+    players: [
+      {name:'Frank Lehmann',shirtNumber:1},{name:'Elias Etringer',shirtNumber:12},{name:'Nicolas Kristof',shirtNumber:20},{name:'Tim Boss',shirtNumber:28},
+      {name:'Nicholas Mickelson',shirtNumber:2},{name:'Florian Le Joncour',shirtNumber:3},{name:'Luis Seifert',shirtNumber:4},{name:'Lukas Pinckert',shirtNumber:19},{name:'Lasse Günther',shirtNumber:21},{name:'Luca Sirch',shirtNumber:26},{name:'Jan Gyamerah',shirtNumber:30},{name:'Maximilian Rohr',shirtNumber:31},{name:'Felix Keidel',shirtNumber:43},
+      {name:'Amara Condé',shirtNumber:6},{name:'Maurice Krattenmacher',shirtNumber:7},{name:'Łukasz Poręba',shirtNumber:8},{name:'Noah Darvich',shirtNumber:10},{name:'Raïf Adam',shirtNumber:15},{name:'Frederik Schmahl',shirtNumber:17},{name:'Lukas Petkov',shirtNumber:25},{name:'Tom Zimmerschied',shirtNumber:29},{name:'Francis Onyeka',shirtNumber:40},
+      {name:'Noel Futkeu',shirtNumber:9},{name:'Luca Pfeiffer',shirtNumber:16},{name:'Luca Schnellbacher',shirtNumber:24},{name:'Cole Campbell',shirtNumber:39},{name:'David Mokwa',shirtNumber:42},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_paderborn', clubName: 'SC Paderborn 07',
+    players: [
+      {name:'Markus Schubert',shirtNumber:1},{name:'Nahuel Noll',shirtNumber:15},{name:'Florian Pruhs',shirtNumber:31},
+      {name:'Ruben Müller',shirtNumber:2},{name:'Jonah Sticker',shirtNumber:3},{name:'Nyamekye Awortwie-Grant',shirtNumber:4},{name:'Laurin Curda',shirtNumber:17},{name:'Felix Götze',shirtNumber:20},{name:'Jano ter Horst',shirtNumber:21},{name:'Niklas Mohr',shirtNumber:24},{name:'Tjark Scheller',shirtNumber:25},{name:'Clemens Lippmann',shirtNumber:29},{name:'Marcel Hoffmeier',shirtNumber:33},{name:'Tristan Zobel',shirtNumber:46},
+      {name:'Santiago Castaneda',shirtNumber:5},{name:'Tom Baack',shirtNumber:6},{name:'Oliver Batista Meier',shirtNumber:7},{name:'Luka Durić',shirtNumber:8},{name:'Mattes Hansen',shirtNumber:22},{name:'Raphael Obermair',shirtNumber:23},{name:'Sebastian Klaas',shirtNumber:26},{name:'Laurin Ulrich',shirtNumber:28},{name:'Gabriel Vidović',shirtNumber:40},{name:'Timur Gayret',shirtNumber:44},{name:'Vigo Wernet',shirtNumber:49},
+      {name:'Rayan Philippe',shirtNumber:9},{name:'Sven Michel',shirtNumber:11},{name:'Marvin Pieringer',shirtNumber:18},{name:'Albert Millgramm',shirtNumber:19},{name:'Steffen Tigges',shirtNumber:27},{name:'Stefano Marino',shirtNumber:30},{name:'Lasse Eickel',shirtNumber:32},{name:'Deniz Zeitler',shirtNumber:38},
+    ],
+  },
+  {
+    clubId: 'ger_bundesliga_hoffenheim', clubName: 'TSG Hoffenheim',
+    players: [
+      {name:'Oliver Baumann',shirtNumber:1},{name:'Lúkas Petersson',shirtNumber:36},{name:'Luca Philipp',shirtNumber:37},
+      {name:'Robin Hranáč',shirtNumber:2},{name:'Sean Dulic',shirtNumber:4},{name:'Ozan Kabak',shirtNumber:5},{name:'Bernardo',shirtNumber:13},{name:'Valentin Gendrey',shirtNumber:15},{name:'Albian Hajdari',shirtNumber:21},{name:'Koki Machida',shirtNumber:28},{name:'Natnael Abraha',shirtNumber:29},{name:'Vladimír Coufal',shirtNumber:34},{name:'Mats Rots',shirtNumber:39},{name:'Tristan Spranger',shirtNumber:40},
+      {name:'Leon Avdullahu',shirtNumber:7},{name:'Patrick Wimmer',shirtNumber:8},{name:'Luis Engelns',shirtNumber:16},{name:'Nathan De Cat',shirtNumber:17},{name:'Wouter Burger',shirtNumber:18},{name:'Bambasé Conté',shirtNumber:20},{name:'Alexander Prass',shirtNumber:22},{name:'Andrej Kramarić',shirtNumber:27},{name:'Cajetan Lenz',shirtNumber:32},{name:'Oskar Hencke',shirtNumber:41},{name:'Tiago Poller',shirtNumber:45},{name:'Valentin Lässig',shirtNumber:47},{name:'Klaus Gjasula',shirtNumber:52},{name:'Yasin Zor',shirtNumber:55},
+      {name:'Max Moerstedt',shirtNumber:9},{name:'Adam Hložek',shirtNumber:10},{name:'Fisnik Asllani',shirtNumber:11},{name:'Adam Daghim',shirtNumber:14},{name:'Tim Lemperle',shirtNumber:19},{name:'Jykese Fields',shirtNumber:46},{name:'Lion Wagenbach',shirtNumber:49},
+    ],
+  },
+
 ];
 
 export const EUROPEAN_SQUAD_SOURCES = {
