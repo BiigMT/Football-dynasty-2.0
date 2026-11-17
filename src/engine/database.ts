@@ -15,6 +15,7 @@ import {
 import { NATIONS_DATABASE } from '../data/nationsDatabase';
 import { applyOfficialPremierLeagueSquads, applyOfficialSquads } from '../data/applyOfficialSquads';
 import { AFRICAN_CLUB_SQUADS_2026 } from '../data/africanClubSquads2026';
+import { EUROPEAN_CLUB_SQUADS_2026 } from '../data/europeanClubSquads2026';
 
 interface ClubBlueprint {
   id: string;
@@ -999,6 +1000,7 @@ export function buildWorldDatabase(): {
   // accidentally treated as extra international players.
   applyOfficialPremierLeagueSquads(players);
   applyOfficialSquads(players,AFRICAN_CLUB_SQUADS_2026);
+  applyOfficialSquads(players,EUROPEAN_CLUB_SQUADS_2026);
 
   return { clubs, players, leagues, nationalTeams };
 }
