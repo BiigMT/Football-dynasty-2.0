@@ -4,6 +4,7 @@ import { promoteYouthProspect } from '../engine/careerEngine';
 import { calculateMarketValue, calculateOverall } from '../engine/database';
 import { PlayerAttributes } from '../types/football';
 import { ManagerPressConference } from './ManagerPressConference';
+import { ClubOperationsPanel } from './ClubOperationsPanel';
 
 interface Props {
   save: CareerSave;
@@ -153,7 +154,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">\n      <ClubOperationsPanel save={save} onUpdateSave={onUpdateSave} />
       <div className="relative min-h-[132px] overflow-hidden rounded-xl border border-cyan-400/20 bg-[#101923]">
         <img src="/media/game/training-ground.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
