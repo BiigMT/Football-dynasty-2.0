@@ -515,9 +515,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const formationSlots = getFormationSlots(club.tactics.formation);
 
   return (
-    <div className="fd-manager-skin fd-realism-manager min-h-screen flex flex-col" data-manager-skin="true">
+    <div className="fd-manager-skin fd-realism-manager h-[100dvh] min-h-0 overflow-hidden flex flex-col" data-manager-skin="true">
       {/* Sub-page Header */}
-      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2.5">
+      <header className="shrink-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
@@ -568,7 +568,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       </header>
 
       {/* Sub-page Navigation */}
-      <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
+      <nav className="shrink-0 bg-[#131A22] border-b border-white/10 px-2 sm:px-4 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
             { id: 'SQUAD', label: 'Squad & Tactics', icon: Users },
@@ -601,13 +601,13 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       </nav>
 
       {/* Main Content */}
-      <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
-        <div className="relative mb-5 min-h-[116px] sm:min-h-[150px] overflow-hidden rounded-xl border border-cyan-400/20 bg-[#101923]">
+      <main className="career-subpage-content flex-1 min-h-0 max-w-7xl w-full mx-auto px-2 sm:px-3 py-2 overflow-hidden flex flex-col">
+        <div className="relative mb-2 h-[54px] min-h-[54px] shrink-0 overflow-hidden rounded-lg border border-cyan-400/20 bg-[#101923]">
           <img src={tab === 'TRAINING' || tab === 'DEVELOPMENT' ? '/media/game/training-ground.jpg' : tab === 'TRANSFERS' || tab === 'CLUB' ? '/media/game/manager-tactics.jpg' : '/media/game/matchday-training.jpg'} alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
-          <div className="relative z-10 flex min-h-[116px] sm:min-h-[150px] flex-col justify-end p-4 sm:p-5">
-            <div className="text-[10px] font-bold uppercase tracking-[.24em] text-cyan-300">Football Dynasty · Manager Career</div>
-            <h2 className="mt-1 text-xl sm:text-2xl font-black text-white">{tab === 'TRANSFERS' ? 'Recruitment & negotiations' : tab === 'TRAINING' ? 'Training ground' : tab === 'COMPETITIONS' ? 'The football calendar' : tab === 'DEVELOPMENT' ? 'Academy & club development' : tab === 'CLUB' ? 'Club headquarters' : 'Manager dashboard'}</h2>
+          <div className="relative z-10 flex h-full min-h-0 flex-col justify-center px-3 py-1">
+            <div className="text-[8px] font-bold uppercase tracking-[.18em] text-cyan-300">Football Dynasty · Manager Career</div>
+            <h2 className="mt-0 text-base sm:text-lg font-black text-white leading-tight">{tab === 'TRANSFERS' ? 'Recruitment & negotiations' : tab === 'TRAINING' ? 'Training ground' : tab === 'COMPETITIONS' ? 'The football calendar' : tab === 'DEVELOPMENT' ? 'Academy & club development' : tab === 'CLUB' ? 'Club headquarters' : 'Manager dashboard'}</h2>
           </div>
         </div>
         {false && (
