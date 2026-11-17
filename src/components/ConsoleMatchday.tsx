@@ -7,7 +7,7 @@ interface Props {
   session: MatchSession; homeClub: Club; awayClub: Club; players: Record<string,Player>;
   running: boolean; speedMs: number; userSide: 'HOME'|'AWAY'; subsUsed: number;
   onPause:()=>void; onSpeed:(ms:number)=>void; onMentality:(value:Mentality|'COUNTER')=>void;
-  onShout:(value:'DEMAND_MORE'|'TACTICAL_FOCUS'|'ENCOURAGE')=>void;
+  onShout:(value:'DEMAND_MORE'|'HIGH_PRESS'|'TIGHTEN_UP')=>void;
   onSubstitute:(outId:string,inId:string)=>void;
 }
 const fmt=(v:number)=>Number.isInteger(v)?String(v):v.toFixed(2);
@@ -55,8 +55,8 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
       </div>
       <div className="flex items-center gap-1.5">
         <button onClick={()=>onShout('DEMAND_MORE')} className="min-h-10 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-2.5 text-[9px] font-black text-cyan-100">⚡ DEMAND MORE</button>
-        <button onClick={()=>onShout('TACTICAL_FOCUS')} className="min-h-10 rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 text-[9px] font-black text-amber-100">🔥 HIGH PRESS</button>
-        <button onClick={()=>onShout('ENCOURAGE')} className="min-h-10 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-2.5 text-[9px] font-black text-emerald-100">🛡 TIGHTEN UP</button>
+        <button onClick={()=>onShout('HIGH_PRESS')} className="min-h-10 rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 text-[9px] font-black text-amber-100">🔥 HIGH PRESS</button>
+        <button onClick={()=>onShout('TIGHTEN_UP')} className="min-h-10 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-2.5 text-[9px] font-black text-emerald-100">🛡 TIGHTEN UP</button>
       </div>
       <button onClick={()=>setSubsOpen(v=>!v)} className="min-h-11 shrink-0 rounded-xl bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">SQUAD / SUBS ({Math.max(0,5-subsUsed)} LEFT)</button>
     </footer>
