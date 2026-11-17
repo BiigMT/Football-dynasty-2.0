@@ -26,7 +26,7 @@ export const Match3DCanvas: React.FC<Props> = ({ session, homeClub, awayClub, pl
       return {x:canvas.width*.5+rx*canvas.width*.44/depth,y:canvas.height*.18+(z+ry*.22)*canvas.height*.74/depth,scale:1/depth};
     };
     const draw=(now:number)=>{
-      const dt=Math.min(.05,(now-last)/1000); last=now;
+      last=now;
       const s=state.current, W=canvas.width,H=canvas.height;
       ctx.clearRect(0,0,W,H);
       const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#101d2b');sky.addColorStop(.48,'#263b4b');sky.addColorStop(1,'#0b241a');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
@@ -47,7 +47,7 @@ export const Match3DCanvas: React.FC<Props> = ({ session, homeClub, awayClub, pl
       const dots:{x:number;y:number;z:number;color:string;shirt:string;name:string;radius:number}[]=[];
       const addTeam=(xi:string[],side:'HOME'|'AWAY',club:Club)=>{
         const formation=getFormationCoordinates(side==='HOME'?s.session.homeTactics.formation:s.session.awayTactics.formation);
-        xi.forEach((id,index)=>{const st=s.session.playerStates[id];if(st?.redCard)return;const f=formation[index]??{x:50,y:50};let x=(f.x-50)/50*.82,y=(f.y-50)/50*.78;if(side==='AWAY'){x=-x;y=-y;}const p=players[id];dots.push({x,y,z:.035,color:club.primaryColor,shirt:String(p?.shirtNumber??index+1),name:p?.name??'',radius:Math.max(5,10/(1+y*.18)),});});
+        xi.forEach((id,index)=>{const st=s.session.playerStates[id];if(st?.redCard)return;const f=formation[index]??{x:50,y:50};let x=(f.x-50)/50*.82,y=(f.y-50)/50*.78;if(side==='AWAY'){x=-x;y=-y;}const p=s.players[id];dots.push({x,y,z:.035,color:club.primaryColor,shirt:String(p?.shirtNumber??index+1),name:p?.name??'',radius:Math.max(5,10/(1+y*.18)),});});
       };
       addTeam(s.session.homeTactics.startingXI,'HOME',s.homeClub);addTeam(s.session.awayTactics.startingXI,'AWAY',s.awayClub);
       dots.sort((a,b)=>a.y-b.y);
