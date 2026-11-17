@@ -42,3 +42,78 @@ export function getPlayerSeparationOffset(
   if(length>.9){x=x/length*.9;z=z/length*.9;}
   return {x,z};
 }
+
+
+export interface BallPresentationState {
+  position: { x:number; y:number; z:number };
+  velocity: { x:number; y:number; z:number };
+}
+export interface BallPresentationStep extends BallPresentationState {
+  spin:number;
+  contacts:number;
+}
+
+/**
+ * Presentation-only ball dynamics. The authoritative match engine still owns
+ * the ball target and all outcomes; this adds momentum, ground friction,
+ * player-body contact and a small impact bounce between authoritative updates.
+ */
+export function advanceBallPresentation(
+  state:BallPresentationState,
+  target:{x:number;z:number},
+  players:PitchVector2[],
+  deltaSeconds:number,
+):BallPresentationStep {
+  const dt=Math.max(0,Math.min(.05,deltaSeconds));
+  let {x,y,z}=state.position;
+  let vx=state.velocity.x, vy=state.velocity.y, vz=state.velocity.z;
+  const dx=target.x-x,dz=target.z-z;
+  const distance=Math.hypot(dx,dz);
+  if(distance>.0001){
+    const brakingSpeed=Math.sqrt(Math.max(0,2*22*distance));
+    const desiredSpeed=Math.min(24,brakingSpeed);
+    const desiredX=dx/distance*desiredSpeed, desiredZ=dz/distance*desiredSpeed;
+    const blend=1-Math.exp(-22*dt/24);
+    vx+=(desiredX-vx)*blend;
+    vz+=(desiredZ-vz)*blend;
+  }else{
+    const friction=Math.exp(-4.8*dt);
+    vx*=friction; vz*=friction;
+  }
+  x+=vx*dt; z+=vz*dt;
+
+  let contacts=0;
+  for(const player of players){
+    let px=x-player.x,pz=z-player.z;
+    let separation=Math.hypot(px,pz);
+    const contactRadius=.62;
+    if(separation>=contactRadius)continue;
+    if(separation<.0001){px=1;pz=0;separation=1;}
+    const nx=px/separation,nz=pz/separation;
+    x=player.x+nx*contactRadius;
+    z=player.z+nz*contactRadius;
+    const normalSpeed=vx*nx+vz*nz;
+    if(normalSpeed<0){
+      const restitution=.34;
+      vx-=(1+restitution)*normalSpeed*nx;
+      vz-=(1+restitution)*normalSpeed*nz;
+      vy=Math.max(vy,Math.min(1.35,Math.abs(normalSpeed)*.12));
+    }
+    contacts++;
+  }
+
+  vy-=9.81*dt;
+  y+=vy*dt;
+  if(y<.34){
+    y=.34;
+    if(vy<0)vy=-vy*.28;
+    if(vy<.55)vy=0;
+  }
+  const speed=Math.hypot(vx,vz);
+  return {
+    position:{x,y,z},
+    velocity:{x,y:vy,z},
+    spin:speed,
+    contacts,
+  };
+}
