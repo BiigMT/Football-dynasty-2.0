@@ -15,7 +15,7 @@ interface Stadium3DProps {
   onFps?: (fps:number)=>void;
 }
 
-type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number };
+type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number; action?: 'PASS'|'TACKLE'|'SHOT'|'SAVE'|'CELEBRATE'; actionUntil?: number };
 const FIELD_W = 105;
 const FIELD_D = 68;
 const mapPitch = (x:number,y:number) => new THREE.Vector3(((x/100)-.5)*FIELD_W,0,((y/100)-.5)*FIELD_D);
@@ -74,6 +74,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
     let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
+    let lastActionEventId='';
     try{
       renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'low-power'});
       renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
@@ -137,6 +138,20 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const tick=(now:number)=>{
       raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;fpsFrames++;if(now-fpsWindow>=1000){liveRef.current.onFps?.(Math.round(fpsFrames*1000/(now-fpsWindow)));fpsFrames=0;fpsWindow=now;}
       const live=liveRef.current,s=live.session;
+      const latestEvent=s.events[s.events.length-1];
+      if(latestEvent && latestEvent.id!==lastActionEventId){
+        lastActionEventId=latestEvent.id;
+        const until=elapsed+1.55;
+        const actor=latestEvent.playerId?rigs.get(latestEvent.playerId):undefined;
+        if(latestEvent.type==='GOAL'){
+          rigs.forEach(r=>{if(r.side===latestEvent.teamSide){r.action='CELEBRATE';r.actionUntil=elapsed+3.8;}});
+        } else if(['PASS','TACKLE','SHOT','SAVE'].includes(latestEvent.type) && actor){
+          actor.action=latestEvent.type as Rig['action']; actor.actionUntil=until;
+        } else if(latestEvent.type==='SAVE'){
+          const keeper=Array.from(rigs.values()).find(r=>r.side===latestEvent.teamSide && live.players[r.id]?.position==='GK');
+          if(keeper){keeper.action='SAVE';keeper.actionUntil=until;}
+        }
+      }
       Object.values(s.playerStates).forEach(st=>{
         if(!st.onPitch||rigs.has(st.playerId))return;
         const p=live.players[st.playerId];if(!p)return;
@@ -169,9 +184,16 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         const dx=ball.position.x-rig.root.position.x,dz=ball.position.z-rig.root.position.z;
         if(Math.hypot(dx,dz)>.15)rig.root.rotation.y=Math.atan2(dx,dz);
         const running= !live.reducedMotion && s.phase!=='HALF_TIME' && s.phase!=='FULL_TIME';
+        const active=Boolean(rig.action && (rig.actionUntil??0)>elapsed);
+        if(!active){rig.action=undefined;rig.root.rotation.z=0;rig.root.position.y=0;}
         const stride=running?Math.sin(elapsed*8+rig.phase)*.48:0;
-        rig.legs[0].rotation.x=stride;rig.legs[1].rotation.x=-stride;
-        rig.arms[0].rotation.x=-stride*.55;rig.arms[1].rotation.x=stride*.55;
+        rig.legs[0].rotation.x=active&&rig.action==='SHOT'?-.95:active&&rig.action==='PASS'?-.62:active&&rig.action==='TACKLE'?-.85:stride;
+        rig.legs[1].rotation.x=active&&rig.action==='TACKLE'?.7:active&&rig.action==='SAVE'?-.35:-stride;
+        rig.arms[0].rotation.x=active&&rig.action==='CELEBRATE'?-2.25:active&&rig.action==='SAVE'?-.8:-stride*.55;
+        rig.arms[1].rotation.x=active&&rig.action==='CELEBRATE'?-2.25:active&&rig.action==='SAVE'?.8:stride*.55;
+        if(active&&rig.action==='SAVE'){rig.root.rotation.z=Math.sin(elapsed*10)*.48;rig.root.position.y=.12;}
+        else if(active&&rig.action==='TACKLE'){rig.root.rotation.z=.28;rig.root.position.y=-.12;}
+        else if(active&&rig.action==='CELEBRATE'){rig.root.position.y=Math.abs(Math.sin(elapsed*8+rig.phase))*.42;}
         rig.badge.visible=st.onPitch;rig.badge.position.y=3.55;
 
       });
