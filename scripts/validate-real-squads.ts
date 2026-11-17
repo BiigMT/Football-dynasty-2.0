@@ -57,3 +57,33 @@ for(const squad of AFRICAN_CLUB_SQUADS_2026){
   }
 }
 console.log('Validated '+africanIds.size+' source-verified African club squads.');
+
+import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/europeanClubSquads2026';
+import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
+
+assert.match(EUROPEAN_SQUAD_SOURCES.snapshot,/^2026-\\d{2}-\\d{2}$/,'European snapshot date must be explicit');
+for (const source of [EUROPEAN_SQUAD_SOURCES.parisSaintGermain, EUROPEAN_SQUAD_SOURCES.acMilan, EUROPEAN_SQUAD_SOURCES.vfbStuttgart]) {
+  assert.match(source,/^https:\\/\\//,'European squad source must be HTTPS');
+}
+const gameClubIds = new Set(LEAGUE_BLUEPRINTS.flatMap(league => league.clubs.map(club => club.id)));
+const europeanClubIds = new Set<string>();
+for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
+  assert.ok(gameClubIds.has(squad.clubId),'European roster must map to an existing in-game club: '+squad.clubId);
+  assert.ok(!europeanClubIds.has(squad.clubId),'Duplicate European club mapping: '+squad.clubId);
+  europeanClubIds.add(squad.clubId);
+  assert.ok(squad.players.length >= 18,squad.clubName+' needs a complete first-team roster');
+  const names = new Set<string>(), numbers = new Set<number>();
+  for (const player of squad.players) {
+    assert.ok(player.name.trim().length > 1,'European player name is required in '+squad.clubName);
+    const normalized = player.name.trim().toLocaleLowerCase();
+    assert.ok(!names.has(normalized),'Duplicate European player name '+player.name+' in '+squad.clubName);
+    names.add(normalized);
+    if (player.shirtNumber !== undefined) {
+      assert.ok(Number.isInteger(player.shirtNumber) && player.shirtNumber >= 1 && player.shirtNumber <= 99,'Invalid European shirt number for '+player.name);
+      assert.ok(!numbers.has(player.shirtNumber),'Duplicate European shirt number '+player.shirtNumber+' in '+squad.clubName);
+      numbers.add(player.shirtNumber);
+    }
+  }
+}
+assert.equal(europeanClubIds.size,3,'Expected the three currently source-verified European club mappings');
+console.log('Validated '+europeanClubIds.size+' European club mappings and '+EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0)+' players.');
