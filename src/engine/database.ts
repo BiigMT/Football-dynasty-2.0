@@ -895,9 +895,6 @@ export function buildWorldDatabase(): {
     };
   }
 
-  // Real 2026/27 Premier League names and shirt numbers; game ratings remain simulated.
-  applyOfficialPremierLeagueSquads(players);
-
   for (const nt of NATIONAL_TEAM_BLUEPRINTS) {
     const matchingPlayers = Object.values(players)
       .filter((p) => p.nationality === nt.name)
@@ -996,6 +993,10 @@ export function buildWorldDatabase(): {
       squadPlayerIds: squad,
     };
   }
+
+  // Apply club identities after national-team selection so added reserve clones are not
+  // accidentally treated as extra international players.
+  applyOfficialPremierLeagueSquads(players);
 
   return { clubs, players, leagues, nationalTeams };
 }
