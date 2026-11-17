@@ -1105,7 +1105,7 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
     clubId:'fra_ligue1_auxerre',clubName:'AJ Auxerre',
     players:[
       {name:'Paul Nardi',shirtNumber:1},{name:'Mamadou Diop',shirtNumber:23},{name:'Louis Mezerette',shirtNumber:37},
-      {name:'Francisco Sierralta',shirtNumber:4},{name:'Axel Tuanzebe',shirtNumber:4},{name:'Telli Siwe',shirtNumber:13},{name:'Christ Makosso',shirtNumber:15},{name:'Sinaly Diomandé',shirtNumber:20},{name:'Fredrik Oppegård',shirtNumber:22},{name:'Bryan Okoh',shirtNumber:24},{name:'Lamine Sy',shirtNumber:27},{name:'Marvin Senaya',shirtNumber:29},{name:'Rayan Mandengue',shirtNumber:32},{name:'Elikya Legros',shirtNumber:35},{name:'Alvin Petit Dol',shirtNumber:38},{name:'Mohamed Coulibaly',shirtNumber:43},{name:'Clément Akpa',shirtNumber:92},{name:'Sékou Fofana',shirtNumber:93},
+      {name:'Francisco Sierralta',shirtNumber:4},{name:'Axel Tuanzebe'},{name:'Telli Siwe',shirtNumber:13},{name:'Christ Makosso',shirtNumber:15},{name:'Sinaly Diomandé',shirtNumber:20},{name:'Fredrik Oppegård',shirtNumber:22},{name:'Bryan Okoh',shirtNumber:24},{name:'Lamine Sy',shirtNumber:27},{name:'Marvin Senaya',shirtNumber:29},{name:'Rayan Mandengue',shirtNumber:32},{name:'Elikya Legros',shirtNumber:35},{name:'Alvin Petit Dol',shirtNumber:38},{name:'Mohamed Coulibaly',shirtNumber:43},{name:'Clément Akpa',shirtNumber:92},{name:'Sékou Fofana',shirtNumber:93},
       {name:'Kévin Danois',shirtNumber:5},{name:'Assane Dioussé',shirtNumber:6},{name:'Naouirou Ahamada',shirtNumber:8},{name:'Pierre Ekwah',shirtNumber:17},{name:'Romain Faivre',shirtNumber:28},{name:'Lamfia Dioubaté',shirtNumber:34},{name:'Tidiane Devernois',shirtNumber:36},{name:'Yvan Zaddy',shirtNumber:41},{name:'Arthur Piedfort',shirtNumber:46},{name:'Aristide Zossou',shirtNumber:77},
       {name:'Rémy Labeau-Lascary',shirtNumber:3},{name:'Josué Casimir',shirtNumber:7},{name:'Cameron Archer',shirtNumber:9},{name:'Danny Namaso',shirtNumber:19},{name:'Ryan Rodin',shirtNumber:31},{name:'Mamoudou Cissokho',shirtNumber:44},{name:'Xiangxin Wei',shirtNumber:49},
     ],
@@ -1161,7 +1161,7 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
       {name:'Eirik Selvik',shirtNumber:1},{name:'Noah Poillion',shirtNumber:16},{name:'Mathys Patouillet',shirtNumber:30},{name:'Romain Cagnon',shirtNumber:49},
       {name:'Bradley Locko',shirtNumber:2},{name:'Gautier Lloris',shirtNumber:4},{name:'Brendan Chardonnet',shirtNumber:5},{name:'Jules Bourgault',shirtNumber:18},{name:'Luck Zogbé',shirtNumber:20},{name:'Evan Mailly',shirtNumber:34},{name:'Kenny Lala',shirtNumber:70},{name:'Romain Le Guen',shirtNumber:71},
       {name:'Mamadou Diambou',shirtNumber:6},{name:'Joseph Nonge',shirtNumber:7},{name:'Hugo Magnetti',shirtNumber:8},{name:'Joris Chotard',shirtNumber:13},{name:'Kamory Doumbia',shirtNumber:23},{name:'Lucas Tousart',shirtNumber:29},{name:'Hamidou Makalou',shirtNumber:33},
-      {name:'Romain Del Castillo'},{name:'Djylian N’Guessan'},{name:'Axel Camblan'},{name:'Pierre Mboup',shirtNumber:9},{name:'Giovani Versini',shirtNumber:10},{name:'Noah Edjouma',shirtNumber:11},{name:'Mama Baldé',shirtNumber:17},{name:'Ludovic Ajorque',shirtNumber:19},{name:'Ibrahim Kanté',shirtNumber:21},{name:'Matthieu Lainé',shirtNumber:32},{name:'Enzo Monchatre',shirtNumber:33},
+      {name:'Romain Del Castillo'},{name:'Djylian N’Guessan'},{name:'Axel Camblan'},{name:'Pierre Mboup',shirtNumber:9},{name:'Giovani Versini',shirtNumber:10},{name:'Noah Edjouma',shirtNumber:11},{name:'Mama Baldé',shirtNumber:17},{name:'Ludovic Ajorque',shirtNumber:19},{name:'Ibrahim Kanté',shirtNumber:21},{name:'Matthieu Lainé',shirtNumber:32},{name:'Enzo Monchatre'},
     ],
   },
   {
@@ -1169,7 +1169,7 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
     players:[
       {name:'Filip Jörgensen',shirtNumber:1},{name:'Miłosz Piekutowski',shirtNumber:12},{name:'Gabriel Kerckaert',shirtNumber:60},
       {name:'Andrew Omobamidele',shirtNumber:2},{name:'Ben Chilwell',shirtNumber:3},{name:'Jeyland Mitchell',shirtNumber:4},{name:'Abakar Sylla',shirtNumber:5},{name:'Ismaël Doukouré',shirtNumber:6},{name:'Genesis Antwi',shirtNumber:16},{name:'Mateo Del Blanco',shirtNumber:15},{name:'Guéla Doué',shirtNumber:22},{name:'Lucas Høgsberg',shirtNumber:24},{name:'Karim Coulibaly',shirtNumber:31},{name:'Yoann Becker',shirtNumber:43},
-      {name:'Maximilian Oyedele',shirtNumber:8},{name:'Giovanni Reyna',shirtNumber:10},{name:'Dário Essugo',shirtNumber:14},{name:'Diogo Sousa',shirtNumber:23},{name:'Omari Kellyman',shirtNumber:26},{name:'Tyrese Noubissie',shirtNumber:28},{name:'Samir El Mourabet',shirtNumber:29},{name:'Pape Demba Diop',shirtNumber:21},{name:'Benjamin Brantlind',shirtNumber:45},
+      {name:'Maximilian Oyedele',shirtNumber:8},{name:'Giovanni Reyna',shirtNumber:10},{name:'Dário Essugo'},{name:'Diogo Sousa',shirtNumber:23},{name:'Omari Kellyman',shirtNumber:26},{name:'Tyrese Noubissie',shirtNumber:28},{name:'Samir El Mourabet',shirtNumber:29},{name:'Pape Demba Diop',shirtNumber:21},{name:'Benjamin Brantlind',shirtNumber:45},
       {name:'Samuel Amo-Ameyaw',shirtNumber:7},{name:'Joaquín Panichelli',shirtNumber:9},{name:'Sebastian Nanasi',shirtNumber:11},{name:'Sékou Mara',shirtNumber:14},{name:'Fábio Baldé',shirtNumber:19},{name:'Martial Godo',shirtNumber:20},{name:'Jacobo Ortega',shirtNumber:30},{name:'Conrad Harder',shirtNumber:40},{name:'Gessime Yassine',shirtNumber:80},{name:'Yaya Diémé',shirtNumber:35},{name:'Deivid Washington',shirtNumber:42},
     ],
   },
@@ -1187,6 +1187,16 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
 
 export const EUROPEAN_SQUAD_SOURCES = {
   snapshot: '2026-11-17',
+  ligue1Angers: 'https://angers-sco.fr/equipe-pro/effectif/',
+  ligue1Auxerre: 'https://www.teamaja.fr/effectif/',
+  ligue1Troyes: 'https://www.estac.fr/equipe-premiere/effectif/',
+  ligue1LeHavre: 'https://www.uefa.com/nationalassociations/teams/52664--le-havre/squad/',
+  ligue1LeMans: 'https://www.lemansfc.fr/index.php?section=equipes-masculines',
+  ligue1Lorient: 'https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/',
+  ligue1ParisFC: 'https://parisfc.fr/pro-homme/joueurs-staff/',
+  ligue1Brest: 'https://www.uefa.com/nationalassociations/teams/2601306/squad/',
+  ligue1Strasbourg: 'https://ligue1.com/en/articles/l1_article_5713-',
+  ligue1Toulouse: 'https://www.toulousefc.com/equipes/equipe-professionnelle/effectif',
   serieABologna: 'https://www.legaseriea.it/team/bologna/squad',
   serieACagliari: 'https://www.legaseriea.it/team/cagliari/squad',
   serieAComo: 'https://www.legaseriea.it/team/como/squad',
