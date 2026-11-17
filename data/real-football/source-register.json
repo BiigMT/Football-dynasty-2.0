@@ -102,5 +102,5 @@
       "checkedDate"
     ]
   },
-  "note": "This is a source register, not an imported player database. Do not infer that roster data or photographs have already been imported."
+  "note": "The 2026/27 Premier League squad-number snapshot is imported for all 20 game clubs. The other four league entries are source registers only; their player rosters have not yet been imported. Real-world player positions, nationality, DOB and gameplay attributes must not be inferred from squad-number lists."
 }
