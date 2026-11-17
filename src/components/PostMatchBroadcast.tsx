@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Club, MatchSession, Player } from '../types/football';
 
 interface Props { session:MatchSession; homeClub:Club; awayClub:Club; players:Record<string,Player>; onContinue:()=>void; onReport?:()=>void; onReplay?:()=>void; boardTrustDelta?:number; xpGained?:number; }
 const ratingTone=(v:number)=>v>=8?'text-emerald-300 bg-emerald-400/15 border-emerald-300/30':v>=7?'text-cyan-200 bg-cyan-400/15 border-cyan-300/25':v>=6?'text-amber-200 bg-amber-400/15 border-amber-300/25':'text-rose-200 bg-rose-400/15 border-rose-300/25';
 const short=(name:string)=>name.trim().split(/\s+/).slice(-1)[0];
 export const PostMatchBroadcast:React.FC<Props>=({session,homeClub,awayClub,players,onContinue,onReport,onReplay,boardTrustDelta,xpGained})=>{
+ const [momentsOpen,setMomentsOpen]=useState(false);
  const ratings=useMemo(()=>Object.values(session.playerStates).filter(s=>s.clubId===session.homeClubId||s.clubId===session.awayClubId).sort((a,b)=>b.rating-a.rating),[session.playerStates,session.homeClubId,session.awayClubId]);
  const motm=ratings[0];const motmPlayer=motm?players[motm.playerId]:undefined;
  const scorers=session.events.filter(e=>e.type==='GOAL');
@@ -43,8 +44,9 @@ export const PostMatchBroadcast:React.FC<Props>=({session,homeClub,awayClub,play
    </article>
   </section>
   <footer className="flex h-12 shrink-0 items-center justify-between border-t border-white/10 bg-[#111c33]/95 px-3">
-   <div className="flex gap-2"><button onClick={onReport} className="min-h-9 rounded-lg border border-white/15 px-3 text-[9px] font-black text-slate-200">MATCH REPORT</button><button onClick={onReplay} className="min-h-9 rounded-lg border border-white/15 px-3 text-[9px] font-black text-slate-200">HIGHLIGHTS REPLAY</button></div>
+   <div className="flex gap-2"><button onClick={onReport} className="min-h-9 rounded-lg border border-white/15 px-3 text-[9px] font-black text-slate-200">MATCH REPORT</button><button onClick={onReplay??(()=>setMomentsOpen(true))} className="min-h-9 rounded-lg border border-white/15 px-3 text-[9px] font-black text-slate-200">KEY MOMENTS</button></div>
    <button onClick={onContinue} className="min-h-10 rounded-lg bg-[#ffc107] px-5 text-[10px] font-black tracking-wide text-[#17120a] shadow-[0_0_22px_rgba(255,193,7,.2)]">CONTINUE TO HUB ▶</button>
   </footer>
+  {momentsOpen&&<div className='absolute inset-0 z-40 grid place-items-center bg-black/70 p-6 backdrop-blur-sm'><section className='w-[min(520px,90%)] rounded-xl border border-white/15 bg-[#111c33] p-4 shadow-2xl'><div className='mb-3 flex items-center justify-between'><b className='text-xs font-black tracking-widest'>KEY MATCH MOMENTS</b><button onClick={()=>setMomentsOpen(false)} className='text-xs text-slate-400'>CLOSE ×</button></div><div className='max-h-[55%] space-y-2 overflow-auto'>{session.events.filter(e=>!['KICKOFF','HALF_TIME','FULL_TIME'].includes(e.type)).map(e=><div key={e.id} className='flex gap-3 rounded-lg bg-white/5 p-2 text-[10px]'><b className='w-8 shrink-0 font-mono text-cyan-300'>{e.minute}&apos;</b><span className='font-bold text-amber-200'>{e.type.replace('_',' ')}</span><span className='min-w-0 text-slate-300'>{e.text}</span></div>)}</div><p className='mt-3 text-[9px] text-slate-500'>Event timeline only. Full 3D replay playback is not yet available in the match engine.</p></section></div>}
  </div></main>;
 };
