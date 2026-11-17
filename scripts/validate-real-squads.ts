@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { applyOfficialSquads } from '../src/data/applyOfficialSquads';
+import type { Player } from '../src/types/football';
 import {
   PREMIER_LEAGUE_2026_SQUADS,
   PREMIER_LEAGUE_SQUAD_SOURCE,
@@ -103,3 +105,33 @@ assert.ok(ligue1ClubIds.every(id=>europeanClubIds.has(id)),'Every Ligue 1 in-gam
 assert.equal(EUROPEAN_CLUB_SQUADS_2026.filter(s=>s.clubId.startsWith('ger_bundesliga_')).length,18,'Bundesliga must cover all 18 clubs');
 assert.equal(EUROPEAN_CLUB_SQUADS_2026.find(s=>s.clubId==='esp_liga_elc')?.players.length,30,'Elche should include the 30 players individually confirmed from official match reports and signings');
 console.log('Validated '+europeanClubIds.size+' European club mappings and '+europeanPlayerCount+' players.');
+
+
+// Career import regression: real identities update without replacing player IDs
+// or overwriting a saved player's simulation/progression fields.
+const careerClub = PREMIER_LEAGUE_2026_SQUADS[0];
+const careerIdentity = careerClub.players.find(player => player.shirtNumber !== undefined)!;
+const preservedPlayer = {
+  id:'career_player_preserved',
+  name:'Generated Career Player',
+  clubId:careerClub.clubId,
+  shirtNumber:careerIdentity.shirtNumber!,
+  overall:78,
+  wage:12000,
+  seasonStats:{appearances:17,goals:6,assists:4},
+  careerHistory:[{season:2025,clubId:careerClub.clubId,appearances:17}],
+} as unknown as Player;
+const careerPlayerPool:Record<string,Player> = {[preservedPlayer.id]:preservedPlayer};
+applyOfficialSquads(careerPlayerPool,[{
+  clubId:careerClub.clubId,
+  clubName:careerClub.clubName,
+  players:[careerIdentity],
+}]);
+const updatedCareerPlayer=careerPlayerPool[preservedPlayer.id];
+assert.equal(updatedCareerPlayer.id,'career_player_preserved','Career player IDs must remain stable');
+assert.equal(updatedCareerPlayer.name,careerIdentity.name,'Career player identity should be updated from the verified roster');
+assert.equal(updatedCareerPlayer.overall,78,'Career player overall must be preserved');
+assert.equal(updatedCareerPlayer.wage,12000,'Career player wage must be preserved');
+assert.deepEqual(updatedCareerPlayer.seasonStats,preservedPlayer.seasonStats,'Career season statistics must be preserved');
+assert.deepEqual(updatedCareerPlayer.careerHistory,preservedPlayer.careerHistory,'Career history must be preserved');
+console.log('Validated real-player identity import preserves career IDs, ratings, wages and progression.');
