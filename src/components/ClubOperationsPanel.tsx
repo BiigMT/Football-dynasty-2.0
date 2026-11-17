@@ -75,28 +75,26 @@ export const ClubOperationsPanel: React.FC<Props> = ({ save, onUpdateSave }) => 
   };
 
   const signSponsor = (tier: 'LOCAL' | 'REGIONAL' | 'GLOBAL') => {
-    const factor = tier === 'LOCAL' ? 1 : tier === 'REGIONAL' ? 1.7 : 2.6;
-    const weeklyIncome = Math.round((club.reputation * 900 + club.finances.matchdayIncomePerHomeGame * 0.45) * factor);
+    if (ops.sponsor && ops.sponsor.weeksRemaining > 0) return;
+    const factor = tier === 'LOCAL' ? 0.7 : tier === 'REGIONAL' ? 1.1 : 1.6;
+    const weeklyIncome = Math.round((club.reputation * 450 + club.finances.matchdayIncomePerHomeGame * 0.18) * factor);
     const name = tier === 'LOCAL' ? 'Copperbelt Community Partners' : tier === 'REGIONAL' ? 'Continental Sports Group' : 'Dynasty Global Holdings';
     persist({ ...ops, sponsor: { name, weeklyIncome, weeksRemaining: 20 } }, club, 'New sponsorship secured', name + ' signs a 20-week deal worth ' + money(weeklyIncome) + ' per week. Staff payroll and club expenses are still payable.');
   };
 
   const setTicketPrice = (delta: number) => {
     const price = clamp(ops.ticketPrice + delta, 5, 60);
-    const moodDelta = delta > 0 ? -2 : delta < 0 ? 2 : 0;
+    if (price === ops.ticketPrice) return;
+    const moodDelta = delta > 0 ? -2 : 2;
     persist({ ...ops, ticketPrice: price, supporterMood: clamp(ops.supporterMood + moodDelta) }, club, 'Ticket pricing reviewed', 'The club sets match tickets at ' + money(price) + '. Supporter sentiment is now ' + clamp(ops.supporterMood + moodDelta) + '/100.');
   };
 
   const boardChoice = (choice: 'YOUTH' | 'UNITY' | 'RESULTS') => {
-    if (!manager) return;
-    const changes = choice === 'YOUTH' ? { board: 2, mood: 3, chemistry: 1, text: 'The board backs a long-term youth development strategy.' }
-      : choice === 'UNITY' ? { board: 1, mood: 5, chemistry: 3, text: 'The manager promises unity between the squad and supporters.' }
-      : { board: 3, mood: -3, chemistry: -1, text: 'The manager makes an ambitious promise to deliver immediate results.' };
-    persist({ ...ops, supporterMood: clamp(ops.supporterMood + changes.mood) },
-      { ...club, chemistry: clamp(club.chemistry + changes.chemistry) },
-      'Board meeting: ' + (choice === 'YOUTH' ? 'Youth pathway' : choice === 'UNITY' ? 'Club unity' : 'Results mandate'),
-      changes.text,
-      { ...manager, boardConfidence: clamp(manager.boardConfidence + changes.board) });
+    if (!manager || save.clubOperations?.boardCommitment) return;
+    const commitment = { type: choice, season: save.season, deadlineWeek: Math.min(38, save.currentWeek + (choice === 'UNITY' ? 6 : 8)) };
+    const descriptions = { YOUTH: 'Upgrade the youth academy by at least one level within eight weeks.', UNITY: 'Raise supporter mood to 75 or higher within six weeks.', RESULTS: 'Reach the board target position or better within eight weeks.' };
+    persist({ ...ops, boardCommitment: commitment }, club,
+      'Board commitment accepted', descriptions[choice]);
   };
 
   const fanEvent = (kind: 'FORUM' | 'COMMUNITY' | 'DERBY') => {
@@ -157,12 +155,12 @@ export const ClubOperationsPanel: React.FC<Props> = ({ save, onUpdateSave }) => 
 
     <section className="rounded-xl border border-white/10 bg-[#131A22] p-4">
       <h3 className="text-lg font-black text-white">3. Commercial deals & matchday revenue</h3>
-      <p className="text-xs text-slate-400">Sponsorship income is paid weekly for 20 weeks. Staff wages are deducted automatically.</p>
+      <p className="text-xs text-slate-400">One main sponsor at a time. Deals run for 20 weeks; new negotiations open after expiry.</p>
       <div className="mt-3 rounded-lg bg-[#0B0F14] p-3">
         {ops.sponsor ? <><div className="font-bold text-white">{ops.sponsor.name}</div><div className="mt-1 text-xs text-cyan-300">{money(ops.sponsor.weeklyIncome)}/week · {ops.sponsor.weeksRemaining} weeks remaining</div></>
           : <div className="text-xs text-slate-400">No active main sponsor.</div>}
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
-          {(['LOCAL','REGIONAL','GLOBAL'] as const).map(tier => <button key={tier} onClick={() => signSponsor(tier)} className="min-h-9 rounded bg-cyan-400 px-2 text-xs font-black text-slate-950">{tier} sponsor offer</button>)}
+          {(['LOCAL','REGIONAL','GLOBAL'] as const).map(tier => <button key={tier} disabled={!!ops.sponsor && ops.sponsor.weeksRemaining > 0} onClick={() => signSponsor(tier)} className="min-h-9 rounded bg-cyan-400 px-2 text-xs font-black text-slate-950 disabled:opacity-40">{tier} sponsor offer</button>)}
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-[#0B0F14] p-3"><div><div className="text-sm font-bold text-white">Ticket price</div><div className="text-xs text-slate-400">Current price: {money(ops.ticketPrice)} · Capacity: {club.stadiumCapacity.toLocaleString()}</div></div><div className="flex gap-2"><button onClick={() => setTicketPrice(-2)} className="rounded bg-white/10 px-3 py-2 text-xs text-white">− €2</button><button onClick={() => setTicketPrice(2)} className="rounded bg-white/10 px-3 py-2 text-xs text-white">+ €2</button></div></div>
@@ -171,11 +169,11 @@ export const ClubOperationsPanel: React.FC<Props> = ({ save, onUpdateSave }) => 
     <section className="rounded-xl border border-white/10 bg-[#131A22] p-4">
       <h3 className="text-lg font-black text-white">4. Boardroom & seasonal objectives</h3>
       <p className="text-xs text-slate-400">The board expects a finish near position {club.targetPosition}. Your current position is {position || 'unranked'}; board confidence is {manager?.boardConfidence ?? '—'}%.</p>
-      <div className="mt-3 grid gap-2 sm:grid-cols-3">
+      {ops.boardCommitment ? <div className="mt-3 rounded-lg border border-amber-400/30 bg-amber-400/5 p-3 text-xs text-amber-100">Active commitment: {ops.boardCommitment.type}. Deadline: week {ops.boardCommitment.deadlineWeek}. The board will assess the result automatically.</div> : <div className="mt-3 grid gap-2 sm:grid-cols-3">
         <button onClick={() => boardChoice('YOUTH')} className="rounded-lg bg-[#0B0F14] p-3 text-left text-xs text-white"><b className="block text-cyan-300">Invest in youth</b>Commit to developing academy players.</button>
         <button onClick={() => boardChoice('UNITY')} className="rounded-lg bg-[#0B0F14] p-3 text-left text-xs text-white"><b className="block text-cyan-300">Unite the club</b>Prioritise supporters and dressing-room unity.</button>
         <button onClick={() => boardChoice('RESULTS')} className="rounded-lg bg-[#0B0F14] p-3 text-left text-xs text-white"><b className="block text-cyan-300">Demand results</b>Make an ambitious promise to the board.</button>
-      </div>
+      </div>}
     </section>
 
     <section className="rounded-xl border border-white/10 bg-[#131A22] p-4">
