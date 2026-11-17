@@ -763,6 +763,43 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
       { name: 'Maciá' },
     ],
   },
+
+  {
+    clubId: 'ger_bundesliga_8', clubName: 'Borussia Mönchengladbach',
+    players: [
+      { name: 'Moritz Nicolas', shirtNumber: 1 }, { name: 'Tobias Sippel', shirtNumber: 21 },
+      { name: 'Jan Olschowsky', shirtNumber: 23 }, { name: 'Daniel Batz', shirtNumber: 33 },
+      { name: 'Fabio Chiarodia', shirtNumber: 2 }, { name: 'Kevin Diks', shirtNumber: 4 },
+      { name: 'Jan Leszczyński', shirtNumber: 5 }, { name: 'Daiki Hashioka', shirtNumber: 14 },
+      { name: 'David Herold', shirtNumber: 20 }, { name: 'Yukhym Konoplia', shirtNumber: 22 },
+      { name: 'Lukas Ullrich', shirtNumber: 26 }, { name: 'Joe Scally', shirtNumber: 29 },
+      { name: 'Kevin Stöger', shirtNumber: 7 }, { name: 'Enzo Leopold', shirtNumber: 8 },
+      { name: 'Franck Honorat', shirtNumber: 9 }, { name: 'Florian Neuhaus', shirtNumber: 10 },
+      { name: 'Philipp Sander', shirtNumber: 16 }, { name: 'Jens Castrop', shirtNumber: 17 },
+      { name: 'Robin Hack', shirtNumber: 25 }, { name: 'Fritz Fleck', shirtNumber: 27 },
+      { name: 'Mathieu Nguefack', shirtNumber: 34 }, { name: 'Wael Mohya', shirtNumber: 36 },
+      { name: 'Hugo Bolin', shirtNumber: 38 }, { name: 'Zento Uno', shirtNumber: 47 },
+      { name: 'Isac Lidberg', shirtNumber: 3 }, { name: 'Tim Kleindienst', shirtNumber: 11 },
+      { name: 'Shuto Machino', shirtNumber: 18 }, { name: 'Tomáš Čvančara', shirtNumber: 31 },
+    ],
+  },
+  {
+    clubId: 'esp_liga_osa', clubName: 'CA Osasuna',
+    players: [
+      { name: 'Sergio Herrera', shirtNumber: 1 }, { name: 'Aitor Fernández', shirtNumber: 13 },
+      { name: 'Jorge Herrando', shirtNumber: 5 }, { name: 'Diego Rico', shirtNumber: 15 },
+      { name: 'Valentin Rosier', shirtNumber: 19 }, { name: 'Enzo Boyomo', shirtNumber: 22 },
+      { name: 'Abel Bretones', shirtNumber: 23 }, { name: 'Alejandro Catena', shirtNumber: 24 },
+      { name: 'Iñigo Arguibide', shirtNumber: 27 }, { name: 'Rockson Yeboah', shirtNumber: 48 },
+      { name: 'Lucas Torró', shirtNumber: 6 }, { name: 'Jon Moncayola', shirtNumber: 7 },
+      { name: 'Iker Muñoz', shirtNumber: 8 }, { name: 'Aimar Oroz', shirtNumber: 10 },
+      { name: 'Rubén García', shirtNumber: 14 }, { name: 'Moi Gómez', shirtNumber: 16 },
+      { name: 'Del Castillo', shirtNumber: 20 }, { name: 'Mauro Echegoyen', shirtNumber: 26 },
+      { name: 'Asier Osambela', shirtNumber: 29 }, { name: 'Raúl García de Haro', shirtNumber: 9 },
+      { name: 'Kike Barja', shirtNumber: 11 }, { name: 'Ante Budimir', shirtNumber: 17 },
+      { name: 'Raúl Moro', shirtNumber: 18 }, { name: 'Jonathan Dubasin', shirtNumber: 21 },
+    ],
+  },
 ];
 
 export const EUROPEAN_SQUAD_SOURCES = {
