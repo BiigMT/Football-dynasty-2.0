@@ -466,7 +466,7 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
       { name: 'Henrick Do Marcolino', shirtNumber: 65 }, { name: 'Mahdi Camara', shirtNumber: 45 },
       { name: 'Ayanda Sishuba', shirtNumber: 90 }, { name: 'Issa Soumaré', shirtNumber: 22 },
       { name: 'Boulaye Dia', shirtNumber: 11 }, { name: 'Mousa Al-Tamari', shirtNumber: 9 },
-      { name: 'Estéban Lepaul', shirtNumber: 70 }, { name: 'Arnaud Nordin', shirtNumber: 35 },
+      { name: 'Estéban Lepaul', shirtNumber: 70 }, { name: 'Arnaud Nordin', shirtNumber: 70 },
       { name: 'Elias Quiñonez', shirtNumber: 35 }, { name: 'Eliezer Mayenda', shirtNumber: 12 },
     ],
   },
