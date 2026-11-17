@@ -38,10 +38,9 @@ export function getMatchPresentationCue(
     return { actorTarget, ballFlight: { from: origin, to, durationMs: 760, arc: 3.4 } };
   }
   if (event.type === 'SAVE') {
-    const keeperSide = event.teamSide === 'HOME' ? 'AWAY' : 'HOME';
-    const keeperFormation = keeperSide === 'HOME' ? homeFormation : awayFormation;
+    const keeperFormation = side === 'HOME' ? homeFormation : awayFormation;
     const keeper = keeperFormation[0] ?? { x: 6, y: 50 };
-    const target = { x: keeperSide === 'HOME' ? keeper.x : 100 - keeper.x, y: keeperSide === 'HOME' ? keeper.y : 100 - keeper.y };
+    const target = { x: side === 'HOME' ? keeper.x : 100 - keeper.x, y: side === 'HOME' ? keeper.y : 100 - keeper.y };
     return { actorTarget: target, ballFlight: { from: origin, to: { x: clamp(origin.x + attackDirection * 5), y: clamp(origin.y + lateral * .25) }, durationMs: 640, arc: .65 } };
   }
   if (event.type === 'TACKLE') {
