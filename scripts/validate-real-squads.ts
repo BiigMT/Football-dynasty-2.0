@@ -56,7 +56,7 @@ for(const squad of AFRICAN_CLUB_SQUADS_2026){
     }
   }
 }
-console.log('Validated '+africanIds.size+' source-verified African club squads.');
+console.log('Validated '+africanIds.size+' African roster structures; source membership audit is still required.');
 
 import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/europeanClubSquads2026';
 import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
