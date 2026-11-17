@@ -1075,13 +1075,13 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
   {
     clubId:'ita_serie_lec',clubName:'US Lecce',
     players:[
-      {name:'Christian Lupo',shirtNumber:12},{name:'Gabriel Alexandru Borbei',shirtNumber:32},{name:'Marco Bleve',shirtNumber:1},{name:'Plamen Valentin Penev',shirtNumber:33},
-      {name:'Ali Bina Dembelé',shirtNumber:2},{name:'Antonino Gallo',shirtNumber:25},{name:'Corrie Richard Ndaba',shirtNumber:3},{name:'Danilo Filipe De Melo Veiga',shirtNumber:17},{name:'Gaby Jean',shirtNumber:18},{name:'Jamil Siebert',shirtNumber:5},{name:'Kialonda Gaspar',shirtNumber:4},{name:'Marlon Nnamdi Ubani',shirtNumber:36},{name:'Tiago Gabriel Coelho Oliveira',shirtNumber:44},
-      {name:'Ivan Ilić',shirtNumber:20},{name:'Lassana Coulibaly',shirtNumber:29},{name:'Medon Berisha',shirtNumber:10},{name:'Mohamed Dramé',shirtNumber:77},{name:'Niko Kovač',shirtNumber:80},{name:'Olaf Gooitzen Paul Gorter',shirtNumber:6},
-      {name:'Konan Ignace Jocelyn N’Dri',shirtNumber:11},{name:'Kieron Tom Bowie',shirtNumber:9},{name:'Francesco Pio Esposito',shirtNumber:94},{name:'Walter Messias Junior',shirtNumber:10},{name:'Matteo Politano',shirtNumber:21},
+      {name:'Christian Lupo',shirtNumber:12},{name:'Gabriel Alexandru Borbei',shirtNumber:32},{name:'Marco Bleve',shirtNumber:1},{name:'Plamen Valentin Penev',shirtNumber:33},{name:'Wladimiro Falcone',shirtNumber:30},
+      {name:'Ali Bina Dembelé',shirtNumber:2},{name:'Antonino Gallo',shirtNumber:25},{name:'Corrie Richard Ndaba',shirtNumber:3},{name:'Danilo Filipe De Melo Veiga',shirtNumber:17},{name:'Elijah Monte Scott',shirtNumber:31},{name:'Gaby Jean',shirtNumber:18},{name:'Jamil Siebert',shirtNumber:5},{name:'Kialonda Gaspar',shirtNumber:4},{name:'Marlon Nnamdi Ubani',shirtNumber:36},{name:'Tiago Gabriel Coelho Oliveira',shirtNumber:44},
+      {name:'Ivan Ilić',shirtNumber:20},{name:'Lassana Coulibaly',shirtNumber:29},{name:'Medon Berisha',shirtNumber:10},{name:'Mohamed Dramé',shirtNumber:77},{name:'Niko Kovač',shirtNumber:80},{name:'Olaf Gooitzen Paul Gorter',shirtNumber:28},{name:'Omri Gandelman',shirtNumber:16},{name:'Oumar Jacky Ngom',shirtNumber:79},{name:'Sadik Fofana',shirtNumber:8},{name:'Santiago Daniel Pierotti',shirtNumber:50},{name:'Youssef Maleh',shirtNumber:14},
+      {name:'Amar Abdirahman Ahmed Fatah',shirtNumber:7},{name:'Divine Chidiebube Onyemachi',shirtNumber:27},{name:'Francisco Esteban Sánchez',shirtNumber:22},{name:'Hjalte Morel Lærke',shirtNumber:34},{name:'Joël Almada Monteiro',shirtNumber:99},{name:"Konan Ignace Jocelyn N'Dri",shirtNumber:11},{name:'Nikola Štulić',shirtNumber:9},{name:'Willem Davnis Louis Didier Geubbels',shirtNumber:69},
     ],
   },
-  {
+    {
     clubId:'ita_serie_ven',clubName:'Venezia FC',
     players:[
       {name:'Alessio Pozzi',shirtNumber:28},{name:'Filip Stanković',shirtNumber:1},{name:'Lorenzo Montipò',shirtNumber:96},{name:'Matteo Grandi',shirtNumber:23},
