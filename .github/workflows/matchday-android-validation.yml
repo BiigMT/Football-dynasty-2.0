@@ -34,6 +34,8 @@ jobs:
 
       - name: TypeScript validation
         run: npm run lint
+      - name: Validate official squad data
+        run: npm run validate:squads
 
       - name: Production web build
         run: npm run build
