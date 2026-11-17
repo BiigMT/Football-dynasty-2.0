@@ -85,5 +85,8 @@ for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
     }
   }
 }
-assert.equal(europeanClubIds.size,17,'Expected all currently source-verified European club mappings');
-console.log('Validated '+europeanClubIds.size+' European club mappings and '+EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0)+' players.');
+assert.equal(europeanClubIds.size,27,'Expected all currently source-verified European club mappings');
+c.assert??
+const europeanPlayerCount = EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0);
+assert.ok(europeanPlayerCount >= 700,'Expected a broad multi-league European roster snapshot');
+console.log('Validated '+europeanClubIds.size+' European club mappings and '+europeanPlayerCount+' players.');
