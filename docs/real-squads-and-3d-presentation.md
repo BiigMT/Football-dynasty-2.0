@@ -50,12 +50,11 @@ Sources:
 
 ## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
 
-The importer now includes **43 in-game club mappings and 1,167 verified player entries**:
-- LaLiga (19/20): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla, Valencia, Real Sociedad, Real Betis, Celta, Espanyol, Getafe, Levante, Rayo Vallecano, Racing de Santander, RC Deportivo, Málaga, Villarreal, Osasuna and Deportivo Alavés.
+The importer now maps **all 44 in-game clubs across LaLiga, Serie A, Bundesliga and Ligue 1**, with **1,197 player entries**:
+- LaLiga (20/20): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla, Valencia, Real Sociedad, Real Betis, Celta, Espanyol, Getafe, Levante, Rayo Vallecano, Racing de Santander, RC Deportivo, Málaga, Villarreal, Osasuna, Deportivo Alavés and Elche CF.
 - Serie A (8/8): Juventus, Inter, AC Milan, Napoli, Roma, Atalanta, Lazio and Fiorentina.
 - Bundesliga (8/8): Bayern München, Borussia Dortmund, Leverkusen, RB Leipzig, Eintracht Frankfurt, Stuttgart, Freiburg and Borussia Mönchengladbach.
 - Ligue 1 (8/8): Paris Saint-Germain, Marseille, Monaco, Nice, Lens, Rennes, Olympique Lyonnais and LOSC Lille.
 
-The data stores source URLs and a 17 Nov 2026 snapshot date. Most entries come from current club first-team roster pages or official club squad-number releases. Alavés, Lyon and Lille use official UEFA squad registrations; those are verified competition-registration lists and should not be represented as exhaustive domestic first-team rosters. Only player names and published shirt numbers are imported; conflicting or unpublished numbers are omitted rather than guessed. Ratings, positions, nationality, DOB, contracts and attributes remain game-generated.
+The data stores source URLs and a 17 Nov 2026 snapshot date. Most entries come from official club first-team roster pages or official club squad-number releases. Alavés, Lyon and Lille use official UEFA squad registrations; those are verified competition-registration lists, not exhaustive domestic first-team rosters. Elche's 30 players are individually confirmed from official 2026/27 match reports and club signing announcements because an accessible complete roster page was unavailable. Shirt numbers are omitted where the official source does not publish them. Ratings, positions, nationality, DOB, contracts and attributes remain game-generated.
 
-Elche CF is the one remaining in-game club without a complete accessible official roster list. No names have been guessed to fill that gap.
