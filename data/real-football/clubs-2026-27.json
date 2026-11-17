@@ -1,0 +1,487 @@
+{
+  "season": "2026/27",
+  "snapshotDate": "2026-11-17",
+  "status": "club catalogue only; player rosters are imported separately after source verification",
+  "clubs": [
+    {
+      "id": "premier-league-afc-bournemouth",
+      "name": "AFC Bournemouth",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-arsenal",
+      "name": "Arsenal",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-aston-villa",
+      "name": "Aston Villa",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-brentford",
+      "name": "Brentford",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-brighton-hove-albion",
+      "name": "Brighton & Hove Albion",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-chelsea",
+      "name": "Chelsea",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-coventry-city",
+      "name": "Coventry City",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-crystal-palace",
+      "name": "Crystal Palace",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-everton",
+      "name": "Everton",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-fulham",
+      "name": "Fulham",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-hull-city",
+      "name": "Hull City",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-ipswich-town",
+      "name": "Ipswich Town",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-leeds-united",
+      "name": "Leeds United",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-liverpool",
+      "name": "Liverpool",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-manchester-city",
+      "name": "Manchester City",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-manchester-united",
+      "name": "Manchester United",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-newcastle-united",
+      "name": "Newcastle United",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-nottingham-forest",
+      "name": "Nottingham Forest",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-sunderland",
+      "name": "Sunderland",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "premier-league-tottenham-hotspur",
+      "name": "Tottenham Hotspur",
+      "leagueId": "premier-league",
+      "leagueName": "Premier League",
+      "country": "England",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.premierleague.com/en/news/4365156",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-athletic-club",
+      "name": "Athletic Club",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-atletico-de-madrid",
+      "name": "Atlético de Madrid",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-ca-osasuna",
+      "name": "CA Osasuna",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-celta-vigo",
+      "name": "Celta Vigo",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-deportivo-alaves",
+      "name": "Deportivo Alavés",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-elche-cf",
+      "name": "Elche CF",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-fc-barcelona",
+      "name": "FC Barcelona",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-getafe-cf",
+      "name": "Getafe CF",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-levante-ud",
+      "name": "Levante UD",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-malaga-cf",
+      "name": "Málaga CF",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-racing-de-santander",
+      "name": "Racing de Santander",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-rayo-vallecano",
+      "name": "Rayo Vallecano",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-rc-deportivo",
+      "name": "RC Deportivo",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-rcd-espanyol",
+      "name": "RCD Espanyol",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-real-betis",
+      "name": "Real Betis",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-real-madrid",
+      "name": "Real Madrid",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-real-sociedad",
+      "name": "Real Sociedad",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-sevilla-fc",
+      "name": "Sevilla FC",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-valencia-cf",
+      "name": "Valencia CF",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    },
+    {
+      "id": "laliga-villarreal-cf",
+      "name": "Villarreal CF",
+      "leagueId": "laliga",
+      "leagueName": "LaLiga",
+      "country": "Spain",
+      "season": "2026/27",
+      "source": {
+        "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+        "checkedDate": "2026-11-17"
+      }
+    }
+  ]
+}
