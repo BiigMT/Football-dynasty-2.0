@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Club, MatchSession, Player } from '../types/football';
 import { getFormationCoordinates } from '../engine/matchEngine';
 import { getMatchPresentationCue } from '../engine/matchPresentation';
+import { getDynamicPlayerTarget } from '../engine/matchPositioning';
 
 export type StadiumCameraMode = 'TV' | 'TACTICAL' | 'DUGOUT';
 interface Stadium3DProps {
@@ -210,13 +211,11 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         rig.root.visible=st.onPitch&&!st.redCard;
         const formation=rig.side==='HOME'?homeFormation:awayFormation;
         const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
-        let tx=f.x,ty=f.y;if(rig.side==='AWAY'){tx=100-tx;ty=100-ty;}
-        const bx=s.ballPos.x,by=s.ballPos.y;
-        const rolePull=rig.side==='HOME'?(tx<55?.16:.34):(tx>45?.16:.34);
-        tx=THREE.MathUtils.lerp(tx,bx,rolePull);ty=THREE.MathUtils.lerp(ty,by,.18);
-        if(rig.presentationTarget&&(rig.presentationUntil??0)>elapsed){tx=rig.presentationTarget.x;ty=rig.presentationTarget.y;}
+        const tactics=rig.side==='HOME'?s.homeTactics:s.awayTactics;
+        let targetPoint=getDynamicPlayerTarget(f,s.ballPos,rig.side,p.position,tactics);
+        if(rig.presentationTarget&&(rig.presentationUntil??0)>elapsed){targetPoint=rig.presentationTarget;}
         else{rig.presentationTarget=undefined;rig.presentationUntil=undefined;}
-        const target=mapPitch(tx,ty);rig.root.position.lerp(target,Math.min(1,dt*(rig.presentationTarget?4.8:2.2)));
+        const target=mapPitch(targetPoint.x,targetPoint.y);rig.root.position.lerp(target,Math.min(1,dt*(rig.presentationTarget?4.8:2.2)));
         const dx=ball.position.x-rig.root.position.x,dz=ball.position.z-rig.root.position.z;
         if(Math.hypot(dx,dz)>.15)rig.root.rotation.y=Math.atan2(dx,dz);
         const running= !live.reducedMotion && s.phase!=='HALF_TIME' && s.phase!=='FULL_TIME';
