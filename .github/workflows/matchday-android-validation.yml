@@ -5,9 +5,7 @@ on:
     branches:
       - feature/complete-squads-deeper-3d-engine
       - feature/global-verified-squads-physics
-  pull_request:
-    branches:
-      - main
+  pull_request: {}
   workflow_dispatch:
 
 permissions:
