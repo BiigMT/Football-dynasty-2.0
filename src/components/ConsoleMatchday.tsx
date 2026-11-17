@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { Suspense, lazy, useMemo, useState } from 'react';
 import { Club, MatchSession, Mentality, Player } from '../types/football';
-import { Stadium3D, StadiumCameraMode } from './Stadium3D';
+import type { StadiumCameraMode } from './Stadium3D';
+const Stadium3D = lazy(() => import('./Stadium3D').then((module) => ({ default: module.Stadium3D })));
 import { MatchPitchCanvas } from './MatchPitchCanvas';
 
 interface Props {
@@ -27,7 +28,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
   return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>
    <div className="relative h-[min(100dvh,56.25vw)] w-[min(100vw,177.78dvh)] overflow-hidden bg-[#080e1a]" style={{aspectRatio:'16 / 9'}}>
-    <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/>}</div>
+    <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Suspense fallback={<div className="grid h-full place-items-center bg-[#080e1a] text-xs font-bold tracking-widest text-cyan-200">LOADING STADIUM ENGINE…</div>}><Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/></Suspense>}</div>
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050b16]/50 via-transparent to-[#050b16]/70"/>
     <header className="absolute left-3 top-3 z-20 flex max-w-[min(60vw,620px)] items-center gap-2 rounded-xl border border-white/15 bg-[#111c33]/90 px-3 py-2 shadow-2xl backdrop-blur-xl">
       <span className="rounded bg-white/10 px-2 py-1 text-[9px] font-black tracking-widest text-cyan-200">{session.competitionName.slice(0,12).toUpperCase()}</span>
