@@ -41,10 +41,10 @@
 
 ## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
 
-The importer now includes nine official first-team roster snapshots (242 player entries) mapped to existing game club IDs:
-- LaLiga: Real Madrid (`real_castilla`) and FC Barcelona (`catalunya_blau`)
-- Serie A: Juventus (`torino_zebre`), Inter (`milano_nerazzurri`) and AC Milan (`milano_rossoneri`)
-- Bundesliga: Bayern München (`ger_bundesliga_1`), Borussia Dortmund (`ger_bundesliga_2`) and VfB Stuttgart (`ger_bundesliga_6`)
-- Ligue 1: Paris Saint-Germain (`fra_ligue1_1`)
+The importer now includes 31 official first-team roster snapshots (828 player entries) mapped to existing game club IDs:
+- LaLiga (10): Real Madrid, FC Barcelona, Athletic Club, Atlético de Madrid, Sevilla FC, Valencia CF, Real Sociedad, Real Betis, RC Celta and RCD Espanyol.
+- Serie A (8): Juventus, Inter, AC Milan, SSC Napoli, AS Roma, Atalanta, Lazio and ACF Fiorentina.
+- Bundesliga (7): Bayern München, Borussia Dortmund, Bayer 04 Leverkusen, RB Leipzig, Eintracht Frankfurt, VfB Stuttgart and SC Freiburg.
+- Ligue 1 (6): Paris Saint-Germain, Olympique de Marseille, AS Monaco, OGC Nice, RC Lens and Stade Rennais.
 
-Sources are the respective official club pages and DFB competition roster. Only published player names and shirt numbers are imported; where the source lists conflicting shirt numbers, the shirt number is omitted rather than guessed. The remaining clubs in these four leagues are not yet covered, so this is a verified first tranche, not a claim of complete league coverage.
+Each dataset stores its source URL and snapshot date. Only player names and published shirt numbers are imported; conflicting or unpublished numbers are omitted rather than guessed. Gameplay ratings, positions, nationality, DOB, contracts and attributes remain simulation data. This is a substantial verified tranche, not full coverage yet: ten LaLiga clubs, one Bundesliga club and two Ligue 1 clubs still need complete current official roster snapshots.
