@@ -40,7 +40,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
       : ['CB', 'LB', 'RB', 'CDM'].includes(player.position) ? 'tackling'
       : 'passing';
     const attributes = { ...player.attributes };
-    attributes[focus] = Math.min(88, attributes[focus] + 1);
+    const academyLevel = save.clubOperations?.facilities.academy ?? 1;\n    const academyCoachBonus = save.clubOperations?.staff.HEAD_COACH?.rating >= 85 ? 1 : 0;\n    attributes[focus] = Math.min(88, attributes[focus] + 1 + (academyLevel >= 4 ? 1 : 0) + academyCoachBonus);
     const overall = calculateOverall(player.position, attributes);
     const potential = Math.max(overall, player.potential);
     onUpdateSave({
@@ -84,7 +84,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
     const gap = Math.max(0, player.potential - player.overall);
     const level = gap >= 18 ? 'Exceptional upside' : gap >= 10 ? 'Strong development potential' : gap >= 5 ? 'Room to improve' : 'Near current ceiling';
     // Reports estimate a range; the hidden database potential is not shown as certainty.
-    const scoutAccuracy = Math.max(55, Math.min(88, 48 + Math.round(club.reputation * 0.35)));
+    const scoutLevel = save.clubOperations?.facilities.scouting ?? 1;\n    const scoutRating = save.clubOperations?.staff.SCOUT?.rating ?? 60;\n    const scoutAccuracy = Math.max(55, Math.min(95, 48 + Math.round(club.reputation * 0.30) + (scoutLevel - 1) * 3 + Math.max(0, Math.floor((scoutRating - 60) / 10))));
     const uncertainty = Math.max(3, Math.round((100 - scoutAccuracy) / 4));
     const report = {
       id: 'scout_' + player.id + '_' + save.season + '_' + save.currentWeek,
