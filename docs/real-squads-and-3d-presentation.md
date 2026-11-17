@@ -39,6 +39,15 @@
 - Automated steering, braking and separation checks run through npm run validate:physics in Android CI.
 
 
+## African club squad verification (17 Nov 2026)
+
+Three African first-team squads are now manually cross-checked against current official club roster pages: Al Ahly (34 players), Espérance Sportive de Tunis (32) and Enyimba FC (22), for 88 player entries. The CI validator checks their source URLs, club mappings, roster integrity and expected source-list counts. Shirt numbers are only imported where the official page publishes them.
+
+Sources:
+- Al Ahly: https://www.alahlyegypt.com/en/football/first-team
+- Espérance: https://est.org.tn/fr/equipe-premiere
+- Enyimba: https://enyimbafc.net/first-team/
+
 ## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
 
 The importer now includes **43 in-game club mappings and 1,167 verified player entries**:
