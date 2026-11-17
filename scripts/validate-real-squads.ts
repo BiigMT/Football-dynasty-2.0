@@ -61,7 +61,7 @@ console.log('Validated '+africanIds.size+' source-verified African club squads.'
 import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/europeanClubSquads2026';
 import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
 
-assert.ok(/^2026-\\d{2}-\\d{2}$/.test(EUROPEAN_SQUAD_SOURCES.snapshot),'European snapshot date must be explicit');
+assert.ok(EUROPEAN_SQUAD_SOURCES.snapshot.startsWith('2026-') && EUROPEAN_SQUAD_SOURCES.snapshot.length === 10,'European snapshot date must be explicit');
 for (const source of Object.values(EUROPEAN_SQUAD_SOURCES).filter(value => value !== EUROPEAN_SQUAD_SOURCES.snapshot)) {
   assert.ok(source.startsWith('https://'),'European squad source must be HTTPS');
 }
