@@ -88,7 +88,8 @@ for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
     }
   }
 }
-assert.equal(europeanClubIds.size,43,'Expected all currently source-verified European club mappings');
+assert.equal(europeanClubIds.size,44,'Expected every in-game club across the four European leagues to have a verified roster mapping');
 const europeanPlayerCount = EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0);
-assert.ok(europeanPlayerCount >= 1100,'Expected a broad multi-league European roster snapshot');
+assert.ok(europeanPlayerCount >= 1190,'Expected 1,190+ verified European player entries');
+assert.equal(EUROPEAN_CLUB_SQUADS_2026.find(s=>s.clubId==='esp_liga_elc')?.players.length,30,'Elche should include the 30 players individually confirmed from official match reports and signings');
 console.log('Validated '+europeanClubIds.size+' European club mappings and '+europeanPlayerCount+' players.');
