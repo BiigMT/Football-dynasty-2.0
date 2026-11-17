@@ -85,5 +85,5 @@ for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
     }
   }
 }
-assert.equal(europeanClubIds.size,9,'Expected all currently source-verified European club mappings');
+assert.equal(europeanClubIds.size,17,'Expected all currently source-verified European club mappings');
 console.log('Validated '+europeanClubIds.size+' European club mappings and '+EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0)+' players.');
