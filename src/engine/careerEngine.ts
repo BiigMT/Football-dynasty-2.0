@@ -1295,7 +1295,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
       const ordered = sortStandings(standings);
       const leaguePosition = ordered.findIndex(row => row.clubId === save.userClubId) + 1;
       const academyLevel = operations.facilities.academy ?? 1;
-      const fulfilled = commitment.type === 'YOUTH' ? academyLevel > (save.clubOperations?.facilities.academy ?? 1)
+      const fulfilled = commitment.type === 'YOUTH' ? academyLevel >= (commitment.targetAcademyLevel ?? 99)
         : commitment.type === 'UNITY' ? operations.supporterMood >= 75
         : leaguePosition > 0 && leaguePosition <= (nextSave.clubs[save.userClubId]?.targetPosition ?? 1);
       if (nextSave.manager) nextSave.manager = { ...nextSave.manager, boardConfidence: Math.max(0, Math.min(100, nextSave.manager.boardConfidence + (fulfilled ? 5 : -7))) };
