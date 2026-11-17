@@ -62,7 +62,7 @@ import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/e
 import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
 
 assert.match(EUROPEAN_SQUAD_SOURCES.snapshot,/^2026-\\d{2}-\\d{2}$/,'European snapshot date must be explicit');
-for (const source of [EUROPEAN_SQUAD_SOURCES.parisSaintGermain, EUROPEAN_SQUAD_SOURCES.acMilan, EUROPEAN_SQUAD_SOURCES.vfbStuttgart]) {
+for (const source of Object.values(EUROPEAN_SQUAD_SOURCES).filter(value => value !== EUROPEAN_SQUAD_SOURCES.snapshot)) {
   assert.match(source,/^https:\\/\\//,'European squad source must be HTTPS');
 }
 const gameClubIds = new Set(LEAGUE_BLUEPRINTS.flatMap(league => league.clubs.map(club => club.id)));
@@ -85,5 +85,5 @@ for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
     }
   }
 }
-assert.equal(europeanClubIds.size,3,'Expected the three currently source-verified European club mappings');
+assert.equal(europeanClubIds.size,9,'Expected all currently source-verified European club mappings');
 console.log('Validated '+europeanClubIds.size+' European club mappings and '+EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0)+' players.');
