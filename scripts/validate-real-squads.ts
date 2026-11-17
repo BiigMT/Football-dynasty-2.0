@@ -91,7 +91,9 @@ for (const squad of EUROPEAN_CLUB_SQUADS_2026) {
 assert.equal(europeanClubIds.size,66,'Expected all LaLiga clubs, all Serie A clubs, all Bundesliga clubs and the existing Ligue 1 roster tranche');
 const europeanPlayerCount = EUROPEAN_CLUB_SQUADS_2026.reduce((n,s)=>n+s.players.length,0);
 assert.ok(europeanPlayerCount >= 1800,'Expected 1,800+ verified European player entries');
-assert.equal(EUROPEAN_CLUB_SQUADS_2026.filter(s=>s.clubId.startsWith('ita_serie_')).length,20,'Serie A must cover all 20 clubs');
+const serieAClubIds = LEAGUE_BLUEPRINTS.find(l=>l.id==='ita_serie')?.clubs.map(c=>c.id) ?? [];
+assert.equal(serieAClubIds.length,20,'Serie A game database must contain 20 clubs');
+assert.ok(serieAClubIds.every(id=>europeanClubIds.has(id)),'Every Serie A in-game club must have a verified roster mapping');
 assert.equal(EUROPEAN_CLUB_SQUADS_2026.filter(s=>s.clubId.startsWith('ger_bundesliga_')).length,18,'Bundesliga must cover all 18 clubs');
 assert.equal(EUROPEAN_CLUB_SQUADS_2026.find(s=>s.clubId==='esp_liga_elc')?.players.length,30,'Elche should include the 30 players individually confirmed from official match reports and signings');
 console.log('Validated '+europeanClubIds.size+' European club mappings and '+europeanPlayerCount+' players.');
