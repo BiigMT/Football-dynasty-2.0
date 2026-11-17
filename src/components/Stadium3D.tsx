@@ -74,7 +74,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
     let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
-    let lastActionEventId='';
+    const processedEventIds=new Set<string>(session.events.map(event=>event.id));
     try{
       renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'low-power'});
       renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
@@ -138,20 +138,16 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const tick=(now:number)=>{
       raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;fpsFrames++;if(now-fpsWindow>=1000){liveRef.current.onFps?.(Math.round(fpsFrames*1000/(now-fpsWindow)));fpsFrames=0;fpsWindow=now;}
       const live=liveRef.current,s=live.session;
-      const latestEvent=s.events[s.events.length-1];
-      if(latestEvent && latestEvent.id!==lastActionEventId){
-        lastActionEventId=latestEvent.id;
-        const until=elapsed+1.55;
-        const actor=latestEvent.playerId?rigs.get(latestEvent.playerId):undefined;
-        if(latestEvent.type==='GOAL'){
-          rigs.forEach(r=>{if(r.side===latestEvent.teamSide){r.action='CELEBRATE';r.actionUntil=elapsed+3.8;}});
-        } else if(['PASS','TACKLE','SHOT','SAVE'].includes(latestEvent.type) && actor){
-          actor.action=latestEvent.type as Rig['action']; actor.actionUntil=until;
-        } else if(latestEvent.type==='SAVE'){
-          const keeper=Array.from(rigs.values()).find(r=>r.side===latestEvent.teamSide && live.players[r.id]?.position==='GK');
-          if(keeper){keeper.action='SAVE';keeper.actionUntil=until;}
+      const freshEvents=s.events.filter(event=>!processedEventIds.has(event.id));
+      freshEvents.forEach(event=>{
+        processedEventIds.add(event.id);
+        const actor=event.playerId?rigs.get(event.playerId):undefined;
+        if(event.type==='GOAL'){
+          rigs.forEach(r=>{if(r.side===event.teamSide){r.action='CELEBRATE';r.actionUntil=elapsed+3.8;}});
+        } else if(['PASS','TACKLE','SHOT','SAVE'].includes(event.type) && actor){
+          actor.action=event.type as Rig['action']; actor.actionUntil=elapsed+1.55;
         }
-      }
+      });
       Object.values(s.playerStates).forEach(st=>{
         if(!st.onPitch||rigs.has(st.playerId))return;
         const p=live.players[st.playerId];if(!p)return;
