@@ -244,7 +244,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
       subsUsed={userSubsUsed}
       onPause={() => setRunning((value) => !value)}
       onSpeed={setSpeedMs}
-      onMentality={(mentality) => updateUserTactics({ mentality })}
+      onMentality={(mentality) => mentality === 'COUNTER' ? updateUserTactics({ mentality: 'BALANCED', passing: 'DIRECT_LONG', pressing: 'MID_PRESS' }) : updateUserTactics({ mentality })}
       onShout={(talk) => handleTeamTalk(talk)}
       onSubstitute={handleConsoleSub}
     />;
