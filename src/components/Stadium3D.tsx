@@ -136,6 +136,19 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const tick=(now:number)=>{
       raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;
       const live=liveRef.current,s=live.session;
+      Object.values(s.playerStates).forEach(st=>{
+        if(!st.onPitch||rigs.has(st.playerId))return;
+        const p=live.players[st.playerId];if(!p)return;
+        const side=st.side,club=side==='HOME'?live.homeClub:live.awayClub;
+        const colors=side==='HOME'?['#00a8e8','#f8fafc']:['#ffc107','#111827'];
+        const athlete=makeAthlete(colors[0],colors[1]);
+        const formation=getFormationCoordinates(side==='HOME'?s.homeTactics.formation:s.awayTactics.formation);
+        const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
+        const pos=mapPitch(side==='HOME'?f.x:100-f.x,side==='HOME'?f.y:100-f.y);
+        athlete.group.position.copy(pos);scene.add(athlete.group);
+        const badge=makePlayerBadge(p,st.stamina,p.shirtNumber,colors[0]);athlete.group.add(badge);
+        rigs.set(st.playerId,{root:athlete.group,legs:athlete.legs,arms:athlete.arms,badge,id:st.playerId,side,base:pos.clone(),phase:rigs.size*.71});
+      });
       const targetBall=mapPitch(s.ballPos.x,s.ballPos.y);
       ballVelocity.lerp(targetBall.clone().sub(ball.position),Math.min(1,dt*4));
       ballTarget.lerp(targetBall,Math.min(1,dt*3.2));
@@ -144,6 +157,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
       ball.rotation.x+=dt*4;ball.rotation.z+=dt*3;ballShadow.position.set(ball.position.x,.03,ball.position.z);ballShadow.scale.setScalar(Math.max(.5,1.25-ball.position.y*.13));
       rigs.forEach((rig,id)=>{
         const p=live.players[id],st=s.playerStates[id];if(!p||!st)return;
+        rig.root.visible=st.onPitch&&!st.redCard;
         const formation=getFormationCoordinates(rig.side==='HOME'?s.homeTactics.formation:s.awayTactics.formation);
         const f=formation[Math.max(0,Math.min(10,st.slotIndex))]??{x:50,y:50};
         let tx=f.x,ty=f.y;if(rig.side==='AWAY'){tx=100-tx;ty=100-ty;}
@@ -158,7 +172,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         rig.legs[0].rotation.x=stride;rig.legs[1].rotation.x=-stride;
         rig.arms[0].rotation.x=-stride*.55;rig.arms[1].rotation.x=stride*.55;
         rig.badge.visible=st.onPitch;rig.badge.position.y=3.55;
-        if(st.redCard)rig.root.visible=false;
+
       });
       const mode=live.cameraMode;
       if(mode==='TACTICAL'){cameraTarget.set(0,93,.01);lookTarget.set(0,0,0);camera.fov=48;}
