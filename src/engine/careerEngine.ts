@@ -1273,15 +1273,35 @@ export function advanceWeek(save: CareerSave): CareerSave {
       : 0;
     const sponsorIncome = operations.sponsor?.weeklyIncome ?? 0;
     const userClub = nextSave.clubs[save.userClubId];
+    const availableCash = Math.max(0, userClub?.finances.cashBalance ?? 0) + sponsorIncome + gateIncome;
+    const paidPayroll = Math.min(availableCash, staffPayroll);
     if (userClub) nextSave.clubs[save.userClubId] = {
       ...userClub,
       finances: {
         ...userClub.finances,
-        cashBalance: userClub.finances.cashBalance + sponsorIncome + gateIncome - staffPayroll,
+        cashBalance: Math.max(0, availableCash - paidPayroll),
         matchdayIncomePerHomeGame: hasHomeMatch ? gateIncome : userClub.finances.matchdayIncomePerHomeGame,
       },
     };
+    if (paidPayroll < staffPayroll) nextSave.news.unshift({
+      id: 'staff_wage_shortfall_' + nextWeek, week: nextWeek, season: save.season, category: 'BOARD',
+      headline: 'The club cannot meet its full staff payroll',
+      body: 'Available funds covered ' + paidPayroll.toLocaleString() + ' of ' + staffPayroll.toLocaleString() + ' in weekly staff wages. Improve cash flow before the next settlement.',
+    });
     nextSave.clubOperations = { ...operations, staff: nextStaff, sponsor: sponsorActive };
+    const commitment = operations.boardCommitment;
+    if (commitment && commitment.season === save.season && nextWeek >= commitment.deadlineWeek) {
+      const standings = nextSave.leagues[nextSave.clubs[save.userClubId]?.leagueId]?.standings ?? [];
+      const ordered = sortStandings(standings);
+      const leaguePosition = ordered.findIndex(row => row.clubId === save.userClubId) + 1;
+      const academyLevel = operations.facilities.academy ?? 1;
+      const fulfilled = commitment.type === 'YOUTH' ? academyLevel > (save.clubOperations?.facilities.academy ?? 1)
+        : commitment.type === 'UNITY' ? operations.supporterMood >= 75
+        : leaguePosition > 0 && leaguePosition <= (nextSave.clubs[save.userClubId]?.targetPosition ?? 1);
+      if (nextSave.manager) nextSave.manager = { ...nextSave.manager, boardConfidence: Math.max(0, Math.min(100, nextSave.manager.boardConfidence + (fulfilled ? 5 : -7))) };
+      nextSave.clubOperations = { ...nextSave.clubOperations, boardCommitment: undefined };
+      nextSave.news.unshift({ id: 'board_commitment_' + save.season + '_' + nextWeek, week: nextWeek, season: save.season, category: 'BOARD', headline: fulfilled ? 'Board commitment achieved' : 'Board commitment missed', body: fulfilled ? 'The manager delivered on the board promise. Confidence has improved.' : 'The promised target was not achieved before the deadline. Board confidence has fallen.' });
+    }
     if (sponsorIncome || staffPayroll || gateIncome) nextSave.news.unshift({
       id: 'club_finance_' + save.season + '_' + nextWeek,
       week: nextWeek, season: save.season, category: 'BOARD',
@@ -1309,6 +1329,9 @@ export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): Caree
   const headCoachBonus = ratingBonus('HEAD_COACH');
   const assistantBonus = ratingBonus('ASSISTANT');
   const fitnessCoachBonus = ratingBonus('FITNESS_COACH');
+  const attackingCoachBonus = ratingBonus('ATTACKING_COACH');
+  const defendingCoachBonus = ratingBonus('DEFENDING_COACH');
+  const goalkeeperCoachBonus = ratingBonus('GOALKEEPING_COACH');
 
   Object.values(nextPlayers)
     .filter((p) => p.clubId === save.userClubId)
@@ -1324,17 +1347,20 @@ export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): Caree
         sharpDelta = 1 + facilityBonus + assistantBonus;
       } else if (canGrow) {
         if (focus === 'ATTACKING') {
-          attrs.finishing = Math.min(98, attrs.finishing + 1);
-          attrs.shooting = Math.min(98, attrs.shooting + 1);
+          attrs.finishing = Math.min(98, attrs.finishing + 1 + attackingCoachBonus);
+          attrs.shooting = Math.min(98, attrs.shooting + 1 + attackingCoachBonus);
         } else if (focus === 'POSSESSION') {
           attrs.passing = Math.min(98, attrs.passing + 1);
           attrs.vision = Math.min(98, attrs.vision + 1);
         } else if (focus === 'DEFENDING') {
-          attrs.tackling = Math.min(98, attrs.tackling + 1);
-          attrs.marking = Math.min(98, attrs.marking + 1);
+          attrs.tackling = Math.min(98, attrs.tackling + 1 + defendingCoachBonus);
+          attrs.marking = Math.min(98, attrs.marking + 1 + defendingCoachBonus);
         } else if (focus === 'FITNESS') {
           attrs.stamina = Math.min(98, attrs.stamina + 1);
           attrs.speed = Math.min(98, attrs.speed + 1);
+        } else if (p.position === 'GK' && goalkeeperCoachBonus > 0) {
+          attrs.goalkeeping = Math.min(98, attrs.goalkeeping + goalkeeperCoachBonus);
+          attrs.reactions = Math.min(98, attrs.reactions + goalkeeperCoachBonus);
         } else {
           attrs.ballControl = Math.min(98, attrs.ballControl + 1);
         }
