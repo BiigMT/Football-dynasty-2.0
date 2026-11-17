@@ -37,6 +37,9 @@ jobs:
       - name: Validate official squad data
         run: npm run validate:squads
 
+      - name: Validate 3D player positioning
+        run: npm run validate:positioning
+
       - name: Production web build
         run: npm run build
 
