@@ -18,6 +18,8 @@
 - Pass events create a ball flight and move a nearby teammate into the receiving lane.
 - Shot events create a longer, higher ball flight toward the existing simulated shot endpoint.
 - Tackle and save events move the relevant player rig toward the action area; existing rig action animations remain in use.
+- Players now adjust their presentation positions as a connected block based on ball location, player role, pressing style and mentality. Away-side coordinates are mirrored correctly; goalkeepers and defenders retain tighter positional constraints.
+- `npm run validate:positioning` checks side mirroring, tactical intensity, keeper restraint and pitch bounds; this check is included in Android CI.
 - The choreography never changes the authoritative match simulation, score, player attributes, or save schema.
 - This is deeper event-driven 3D presentation, not yet a deterministic physics simulation or per-frame tactical AI.
 
