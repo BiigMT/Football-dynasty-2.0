@@ -64,7 +64,7 @@ function makeAthlete(color:string, trim:string) {
 
 export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,players,cameraMode='TV',reducedMotion=false,onFps}) => {
   const hostRef=useRef<HTMLDivElement|null>(null);
-  const liveRef=useRef({session,homeClub,awayClub,players,cameraMode,reducedMotion});
+  const liveRef=useRef({session,homeClub,awayClub,players,cameraMode,reducedMotion,onFps});
   useEffect(()=>{liveRef.current={session,homeClub,awayClub,players,cameraMode,reducedMotion,onFps};},[session,homeClub,awayClub,players,cameraMode,reducedMotion]);
 
   useEffect(()=>{
