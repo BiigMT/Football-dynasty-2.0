@@ -1095,6 +1095,18 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
 
 export const EUROPEAN_SQUAD_SOURCES = {
   snapshot: '2026-11-17',
+  serieABologna: 'https://www.legaseriea.it/team/bologna/squad',
+  serieACagliari: 'https://www.legaseriea.it/team/cagliari/squad',
+  serieAComo: 'https://www.legaseriea.it/team/como/squad',
+  serieAFrosinone: 'https://www.legaseriea.it/team/frosinone/squad',
+  serieAGenoa: 'https://en.legaseriea.it/team/genoa/squad',
+  serieAMonza: 'https://www.legaseriea.it/team/MONZA/squad',
+  serieAParma: 'https://www.legaseriea.it/team/parma/squad',
+  serieASassuolo: 'https://www.legaseriea.it/team/sassuolo/squad',
+  serieATorino: 'https://www.legaseriea.it/team/Torino/squad',
+  serieAUdinese: 'https://www.legaseriea.it/team/udinese/squad',
+  serieALecce: 'https://en.legaseriea.it/team/lecce/squad',
+  serieAVenezia: 'https://www.legaseriea.it/team/Venezia/squad',
   bundesligaAllPlayers: 'https://www.bundesliga.com/en/bundesliga/player',
   parisSaintGermain: 'https://www.psg.fr/en/mens-football/squad/season/2026-2027',
   acMilan: 'https://www.acmilan.com/en/teams/men-first-team',
