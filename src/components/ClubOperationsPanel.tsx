@@ -131,7 +131,7 @@ export const ClubOperationsPanel: React.FC<Props> = ({ save, onUpdateSave }) => 
           return <div key={role.id} className="rounded-lg bg-[#0B0F14] p-3">
             <div className="flex items-center justify-between gap-2"><div className="text-sm font-bold text-white">{role.label}</div><span className="text-xs font-black text-cyan-300">{member ? member.rating + ' OVR' : 'Available'}</span></div>
             <p className="mt-1 text-[11px] text-slate-400">{role.benefit}</p>
-            {member ? <div className="mt-2 flex justify-between text-xs text-slate-300"><span>{member.name}</span><span>{money(member.weeklyWage)}/wk · {member.contractWeeks} wks</span></div><button onClick={() => releaseStaff(role.id)} className="mt-2 rounded bg-rose-500/10 px-2 py-1 text-[10px] font-bold text-rose-300">Release staff member</button>
+            {member ? <><div className="mt-2 flex justify-between text-xs text-slate-300"><span>{member.name}</span><span>{money(member.weeklyWage)}/wk · {member.contractWeeks} wks</span></div><button onClick={() => releaseStaff(role.id)} className="mt-2 rounded bg-rose-500/10 px-2 py-1 text-[10px] font-bold text-rose-300">Release staff member</button></>
               : <button disabled={club.finances.cashBalance < wage * 3} onClick={() => hire(role.id)} className="mt-3 min-h-9 w-full rounded bg-cyan-400 px-3 text-xs font-black text-slate-950 disabled:opacity-40">Hire · {money(wage)}/wk + {money(wage*3)} signing</button>}
           </div>;
         })}
