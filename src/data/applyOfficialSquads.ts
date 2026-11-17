@@ -1,6 +1,9 @@
 import type { Player } from '../types/football';
 import { PREMIER_LEAGUE_2026_SQUADS } from './premierLeagueSquads2026';
 
+export interface OfficialSquadPlayer { name:string; shirtNumber:number; }
+export interface OfficialClubSquad { clubId:string; clubName:string; players:OfficialSquadPlayer[]; }
+
 const slug = (value:string) => value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
 /**
@@ -12,8 +15,8 @@ const slug = (value:string) => value.toLowerCase().normalize('NFKD').replace(/[\
  * Positions, nationality, DOB, ratings and contracts are intentionally not
  * overwritten because the squad-number source does not establish those facts.
  */
-export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):void {
-  for(const squad of PREMIER_LEAGUE_2026_SQUADS){
+export function applyOfficialSquads(players:Record<string,Player>, squads:readonly OfficialClubSquad[]):void {
+  for(const squad of squads){
     const existing=Object.values(players)
       .filter(p=>p.clubId===squad.clubId)
       .sort((a,b)=>a.shirtNumber-b.shirtNumber || a.id.localeCompare(b.id));
@@ -72,4 +75,9 @@ export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):
       };
     });
   }
+}
+
+/** Backwards-compatible entry point for the existing Premier League snapshot. */
+export function applyOfficialPremierLeagueSquads(players:Record<string,Player>):void {
+  applyOfficialSquads(players,PREMIER_LEAGUE_2026_SQUADS);
 }
