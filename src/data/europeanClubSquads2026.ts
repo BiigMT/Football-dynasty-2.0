@@ -912,5 +912,5 @@ export const EUROPEAN_SQUAD_SOURCES = {
   racing: 'https://www.realracingclub.es/jugadores',
   deportivo: 'https://www.rcdeportivo.es/es/noticias/listado-de-dorsales-del-depor-para-esta-temporada-2026-27',
   malaga: 'https://www.malagacf.com/en/malaga-club-de-futbol',
-  villarreal: 'https://villarrealcf.es/es/descarga-ya-la-foto-oficial-del-villarreal-26-27/
+  villarreal: 'https://villarrealcf.es/es/descarga-ya-la-foto-oficial-del-villarreal-26-27/',
 } as const;
