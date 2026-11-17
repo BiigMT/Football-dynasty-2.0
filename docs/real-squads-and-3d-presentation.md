@@ -1,7 +1,7 @@
  # Real squads and deeper 3D match presentation
 
 ## Real-world squad integration
-- Bundles the Premier League's official 2026/27 squad-number snapshot for all 20 clubs.
+- Bundles the Premier League's official 2026/27 squad-number snapshot for all 20 clubs (564 player entries).
 - New manager/player careers reconcile the real player names and shirt numbers into the generated player pool.
 - Existing generated player IDs are preserved; additional registered players use deterministic IDs derived from club and normalized player name.
 - Existing saves are not rewritten or migrated by this import.
