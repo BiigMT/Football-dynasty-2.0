@@ -45,9 +45,9 @@
       "clubs": 20,
       "rosterSources": [
         {
-          "name": "FootballSquads season index",
-          "url": "https://www.footballsquads.co.uk/",
-          "checked": "2026-11-15"
+          "name": "Lega Serie A official club squad pages (all 20 clubs)",
+          "url": "https://www.legaseriea.it/serie-a",
+          "checked": "2026-11-17"
         }
       ]
     },
@@ -107,5 +107,5 @@
       "checkedDate"
     ]
   },
-  "note": "Premier League squads are imported for all 20 clubs. Bundesliga squad names and shirt numbers are imported from the official all-player directory for all 18 clubs. Serie A and Ligue 1 are in progress; their source registers do not yet mean every club roster has been imported. Real-world player positions, nationality, DOB and gameplay attributes must not be inferred from squad-number lists."
+  "note": "Premier League squads are imported for all 20 clubs. Serie A player names and published shirt numbers are imported from official Lega Serie A club squad pages for all 20 clubs. Bundesliga roster names and shirt numbers are imported from the official all-player directory for all 18 clubs. Ligue 1 is in progress. Gameplay ratings, positions, nationality, DOB and attributes remain simulation data."
 }
