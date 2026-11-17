@@ -14,6 +14,7 @@ interface Props {
 const fmt=(v:number)=>Number.isInteger(v)?String(v):v.toFixed(2);
 export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players,running,speedMs,userSide,subsUsed,onPause,onSpeed,onMentality,onShout,onSubstitute})=>{
   const [camera,setCamera]=useState<StadiumCameraMode|'2D'>('TV');
+  const [fps,setFps]=useState(0);
   const [statsOpen,setStatsOpen]=useState(false);
   const [subsOpen,setSubsOpen]=useState(false);
   const [highlights,setHighlights]=useState(true);
@@ -28,10 +29,10 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
   return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>
    <div className="relative h-[min(100dvh,56.25vw)] w-[min(100vw,177.78dvh)] overflow-hidden bg-[#080e1a]" style={{aspectRatio:'16 / 9'}}>
-    <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Suspense fallback={<div className="grid h-full place-items-center bg-[#080e1a] text-xs font-bold tracking-widest text-cyan-200">LOADING STADIUM ENGINE…</div>}><Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/></Suspense>}</div>
+    <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Suspense fallback={<div className="grid h-full place-items-center bg-[#080e1a] text-xs font-bold tracking-widest text-cyan-200">LOADING STADIUM ENGINE…</div>}><Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera} onFps={setFps}/></Suspense>}</div>
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050b16]/50 via-transparent to-[#050b16]/70"/>
     <header className="absolute left-3 top-3 z-20 flex max-w-[min(60vw,620px)] items-center gap-2 rounded-xl border border-white/15 bg-[#111c33]/90 px-3 py-2 shadow-2xl backdrop-blur-xl">
-      <span className="rounded bg-white/10 px-2 py-1 text-[9px] font-black tracking-widest text-cyan-200">{session.competitionName.slice(0,12).toUpperCase()}</span>
+      <span className="rounded bg-white/10 px-2 py-1 text-[9px] font-black tracking-widest text-cyan-200">{session.competitionName.slice(0,12).toUpperCase()}</span><span className="font-mono text-[9px] text-emerald-300">{camera==='2D'?'2D':fps?fps+' FPS':'3D'}</span>
       <div className="flex items-center gap-2"><span className="text-[11px] font-black" style={{color:homeClub.primaryColor}}>{homeClub.shortName}</span><b className="font-mono text-xl tabular-nums">{session.homeStats.goals}–{session.awayStats.goals}</b><span className="text-[11px] font-black" style={{color:awayClub.primaryColor}}>{awayClub.shortName}</span></div>
       <span className="rounded bg-cyan-400/15 px-2 py-1 font-mono text-xs font-bold tabular-nums text-[#00e5ff]">{session.minute}'</span>
       {session.phase==='HALF_TIME'?<span className="text-[9px] font-black text-amber-300">HALF TIME</span>:null}
