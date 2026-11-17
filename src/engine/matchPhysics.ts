@@ -116,7 +116,7 @@ export function advanceBallPresentation(
   const speed=Math.hypot(vx,vz);
   return {
     position:{x,y,z},
-    velocity:{x,y:vy,z},
+    velocity:{x:vx,y:vy,z:vz},
     spin:speed,
     contacts,
   };
