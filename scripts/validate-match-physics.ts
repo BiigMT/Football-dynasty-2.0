@@ -35,5 +35,4 @@ const sideline=advanceBallPresentation(
   {position:{x:52.25,y:.34,z:0},velocity:{x:8,y:0,z:0}},
   {x:60,z:0},[],.05,
 );
-console.log('Ball boundary response:',sideline.position,sideline.velocity);
 assert.ok(sideline.position.x<=52.301&&sideline.velocity.x<0,'Ball should rebound inside the pitch boundary');
