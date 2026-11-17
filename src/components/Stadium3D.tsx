@@ -151,9 +151,15 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         processedEventIds.add(event.id);
         const cue=getMatchPresentationCue(event,s,live.players,homeFormation,awayFormation);
         const actor=event.playerId?rigs.get(event.playerId):undefined;
+        const cueDuration=elapsed+Math.max(1,(cue.ballFlight?.durationMs??900)/1000);
         if(actor&&cue.actorTarget){
           actor.presentationTarget=cue.actorTarget;
-          actor.presentationUntil=elapsed+Math.max(1,(cue.ballFlight?.durationMs??900)/1000);
+          actor.presentationUntil=cueDuration;
+        }
+        const receiver=cue.targetPlayerId?rigs.get(cue.targetPlayerId):undefined;
+        if(receiver&&cue.targetPlayerTarget){
+          receiver.presentationTarget=cue.targetPlayerTarget;
+          receiver.presentationUntil=cueDuration;
         }
         if(cue.ballFlight){
           activeBallFlight={
