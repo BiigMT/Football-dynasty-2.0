@@ -1,6 +1,6 @@
 {
   "season": "2026/27",
-  "snapshotDate": "2026-11-15",
+  "snapshotDate": "2026-11-17",
   "leagues": [
     {
       "id": "eng_prem",
@@ -76,9 +76,54 @@
       "clubs": 18,
       "rosterSources": [
         {
-          "name": "FootballSquads season index",
-          "url": "https://www.footballsquads.co.uk/",
-          "checked": "2026-11-15"
+          "name": "Angers SCO official first-team squad",
+          "url": "https://angers-sco.fr/equipe-pro/effectif/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "AJ Auxerre 2026/27 professional squad listing (independent TeamAJA source)",
+          "url": "https://www.teamaja.fr/effectif/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "ESTAC Troyes official first-team squad",
+          "url": "https://www.estac.fr/equipe-premiere/effectif/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "Le Havre AC UEFA squad registration",
+          "url": "https://www.uefa.com/nationalassociations/teams/52664--le-havre/squad/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "Le Mans FC official men's team roster",
+          "url": "https://www.lemansfc.fr/index.php?section=equipes-masculines",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "FC Lorient official 2026/27 professional squad",
+          "url": "https://www.fclorient.bzh/lequipe-professionnelle-2026-2027/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "Paris FC official men's first-team squad",
+          "url": "https://parisfc.fr/pro-homme/joueurs-staff/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "Stade Brestois UEFA squad registration",
+          "url": "https://www.uefa.com/nationalassociations/teams/2601306/squad/",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "RC Strasbourg 2026/27 squad and shirt-number cross-check (independent list; club announcements and Ligue 1 preview cross-referenced)",
+          "url": "https://www.pierre-strasbourg.com/racing",
+          "checked": "2026-11-17"
+        },
+        {
+          "name": "Toulouse FC official professional team roster",
+          "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+          "checked": "2026-11-17"
         }
       ]
     }
@@ -107,5 +152,5 @@
       "checkedDate"
     ]
   },
-  "note": "Premier League squads are imported for all 20 clubs. Serie A player names and published shirt numbers are imported from official Lega Serie A club squad pages for all 20 clubs. Bundesliga roster names and shirt numbers are imported from the official all-player directory for all 18 clubs. Ligue 1 is in progress. Gameplay ratings, positions, nationality, DOB and attributes remain simulation data."
+  "note": "The career database imports real-player identities and published shirt numbers into new careers for all 20 Premier League clubs, all 20 Serie A clubs, all 18 Bundesliga clubs, all 18 Ligue 1 clubs and the LaLiga roster tranche in this dataset (76 European club mappings / 2,181 entries total). Source quality varies by club: official club squad pages are preferred; UEFA registration lists are used for clubs where accessible; AJ Auxerre and RC Strasbourg use independent roster pages cross-checked with official club/league announcements. Shirt numbers are omitted when the cited source does not establish them or conflicting numbers appear. Player ratings, tactical positions, DOB, nationality, wages, contracts and attributes remain game-generated; no claims are made that these are official game ratings."
 }
