@@ -1,17 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import { Club, MatchSession, Mentality, Player } from '../types/football';
 import { Stadium3D, StadiumCameraMode } from './Stadium3D';
+import { MatchPitchCanvas } from './MatchPitchCanvas';
 
 interface Props {
   session: MatchSession; homeClub: Club; awayClub: Club; players: Record<string,Player>;
   running: boolean; speedMs: number; userSide: 'HOME'|'AWAY'; subsUsed: number;
-  onPause:()=>void; onSpeed:(ms:number)=>void; onMentality:(value:Mentality)=>void;
+  onPause:()=>void; onSpeed:(ms:number)=>void; onMentality:(value:Mentality|'COUNTER')=>void;
   onShout:(value:'DEMAND_MORE'|'TACTICAL_FOCUS'|'ENCOURAGE')=>void;
   onSubstitute:(outId:string,inId:string)=>void;
 }
 const fmt=(v:number)=>Number.isInteger(v)?String(v):v.toFixed(2);
 export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players,running,speedMs,userSide,subsUsed,onPause,onSpeed,onMentality,onShout,onSubstitute})=>{
-  const [camera,setCamera]=useState<StadiumCameraMode>('TV');
+  const [camera,setCamera]=useState<StadiumCameraMode|'2D'>('TV');
   const [statsOpen,setStatsOpen]=useState(false);
   const [subsOpen,setSubsOpen]=useState(false);
   const [highlights,setHighlights]=useState(true);
@@ -25,7 +26,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const homePress=Math.max(0,Math.min(100,50+session.momentum/2));
   const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
   return <main className="fixed inset-0 h-[100dvh] w-screen overflow-hidden bg-[#080e1a] text-white" style={{touchAction:'manipulation'}}>
-    <div className="absolute inset-0"><Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/></div>
+    <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/>}</div>
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050b16]/50 via-transparent to-[#050b16]/70"/>
     <header className="absolute left-3 top-3 z-20 flex max-w-[min(60vw,620px)] items-center gap-2 rounded-xl border border-white/15 bg-[#111c33]/90 px-3 py-2 shadow-2xl backdrop-blur-xl">
       <span className="rounded bg-white/10 px-2 py-1 text-[9px] font-black tracking-widest text-cyan-200">{session.competitionName.slice(0,12).toUpperCase()}</span>
@@ -34,7 +35,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
       {session.phase==='HALF_TIME'?<span className="text-[9px] font-black text-amber-300">HALF TIME</span>:null}
     </header>
     <div className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-xl border border-white/15 bg-[#111c33]/90 p-1.5 backdrop-blur-xl">
-      {[{label:'1x',ms:420},{label:'2x',ms:200},{label:'4x',ms:80}].map(s=><button key={s.label} onClick={()=>onSpeed(s.ms)} className={`min-h-9 min-w-9 rounded-lg px-2 text-[11px] font-black ${speedMs===s.ms?'bg-[#00e5ff] text-[#06111d]':'text-slate-300 hover:bg-white/10'}`}>{s.label}</button>)}
+      {[{label:'1x',ms:360},{label:'2x',ms:180},{label:'4x',ms:90}].map(s=><button key={s.label} onClick={()=>onSpeed(s.ms)} className={`min-h-9 min-w-9 rounded-lg px-2 text-[11px] font-black ${speedMs===s.ms?'bg-[#00e5ff] text-[#06111d]':'text-slate-300 hover:bg-white/10'}`}>{s.label}</button>)}
       <button onClick={onPause} className="min-h-9 rounded-lg bg-white/10 px-3 text-[10px] font-black">{running?'Ⅱ PAUSE':'▶ PLAY'}</button>
       <button onClick={()=>setHighlights(v=>!v)} className="min-h-9 rounded-lg border border-white/10 px-2 text-[9px] font-bold text-slate-200">{highlights?'KEY':'FULL'}</button>
       <button onClick={()=>setStatsOpen(v=>!v)} className="min-h-9 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">STATS</button>
@@ -49,7 +50,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
     </div>
     <footer className="absolute inset-x-3 bottom-3 z-20 flex min-h-[66px] items-center justify-between gap-2 rounded-2xl border border-white/15 bg-[#111c33]/92 px-3 py-2 shadow-2xl backdrop-blur-xl">
       <div className="flex min-w-0 items-center gap-1">
-        {([{label:'PARK',v:'DEFENSIVE'},{label:'COUNTER',v:'BALANCED'},{label:'BALANCED',v:'BALANCED'},{label:'ATTACK',v:'ATTACKING'},{label:'ALL OUT',v:'ALL_OUT'}] as {label:string;v:Mentality}[]).map((m,i)=><button key={m.label} onClick={()=>onMentality(m.v)} className={`min-h-10 rounded-lg px-2 text-[8px] font-black ${userTactics.mentality===m.v?'bg-cyan-300 text-[#07111d]':'bg-white/5 text-slate-300'}`}>{m.label}</button>)}
+        {([{label:'PARK',v:'DEFENSIVE'},{label:'COUNTER',v:'COUNTER'},{label:'BALANCED',v:'BALANCED'},{label:'ATTACK',v:'ATTACKING'},{label:'ALL OUT',v:'ALL_OUT'}] as {label:string;v:Mentality|'COUNTER'}[]).map((m,i)=><button key={m.label} onClick={()=>onMentality(m.v)} className={`min-h-10 rounded-lg px-2 text-[8px] font-black ${userTactics.mentality===m.v?'bg-cyan-300 text-[#07111d]':'bg-white/5 text-slate-300'}`}>{m.label}</button>)}
       </div>
       <div className="flex items-center gap-1.5">
         <button onClick={()=>onShout('DEMAND_MORE')} className="min-h-10 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-2.5 text-[9px] font-black text-cyan-100">⚡ DEMAND MORE</button>
