@@ -37,3 +37,14 @@
 - The presentation ball now accelerates toward authoritative simulation coordinates, brakes near its target and spins in proportion to movement speed. Scripted event flights remain presentation cues.
 - These changes do not modify match outcomes, player attributes, save data or match-screen UI.
 - Automated steering, braking and separation checks run through npm run validate:physics in Android CI.
+
+
+## European squad expansion (2026/27 snapshot checked 17 Nov 2026)
+
+The importer now includes nine official first-team roster snapshots (242 player entries) mapped to existing game club IDs:
+- LaLiga: Real Madrid (`real_castilla`) and FC Barcelona (`catalunya_blau`)
+- Serie A: Juventus (`torino_zebre`), Inter (`milano_nerazzurri`) and AC Milan (`milano_rossoneri`)
+- Bundesliga: Bayern München (`ger_bundesliga_1`), Borussia Dortmund (`ger_bundesliga_2`) and VfB Stuttgart (`ger_bundesliga_6`)
+- Ligue 1: Paris Saint-Germain (`fra_ligue1_1`)
+
+Sources are the respective official club pages and DFB competition roster. Only published player names and shirt numbers are imported; where the source lists conflicting shirt numbers, the shirt number is omitted rather than guessed. The remaining clubs in these four leagues are not yet covered, so this is a verified first tranche, not a claim of complete league coverage.
