@@ -12,6 +12,7 @@ interface Stadium3DProps {
   cameraMode?: StadiumCameraMode;
   onCameraModeChange?: (mode: StadiumCameraMode) => void;
   reducedMotion?: boolean;
+  onFps?: (fps:number)=>void;
 }
 
 type Rig = { root: any; legs: any[]; arms: any[]; badge: any; id: string; side: 'HOME'|'AWAY'; base: any; phase: number };
@@ -61,10 +62,10 @@ function makeAthlete(color:string, trim:string) {
   return {group,legs,arms};
 }
 
-export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,players,cameraMode='TV',reducedMotion=false}) => {
+export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,players,cameraMode='TV',reducedMotion=false,onFps}) => {
   const hostRef=useRef<HTMLDivElement|null>(null);
   const liveRef=useRef({session,homeClub,awayClub,players,cameraMode,reducedMotion});
-  useEffect(()=>{liveRef.current={session,homeClub,awayClub,players,cameraMode,reducedMotion};},[session,homeClub,awayClub,players,cameraMode,reducedMotion]);
+  useEffect(()=>{liveRef.current={session,homeClub,awayClub,players,cameraMode,reducedMotion,onFps};},[session,homeClub,awayClub,players,cameraMode,reducedMotion]);
 
   useEffect(()=>{
     const host=hostRef.current; if(!host)return;
@@ -72,7 +73,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const rigs=new Map<string,Rig>();
     let ball:any, ballShadow:any, lastBall=mapPitch(session.ballPos.x,session.ballPos.y), ballTarget=lastBall.clone(), ballVelocity=new THREE.Vector3();
     let cameraTarget=new THREE.Vector3(0,31,47), lookTarget=new THREE.Vector3(0,0,0);
-    let lastFrame=performance.now(), elapsed=0;
+    let lastFrame=performance.now(), elapsed=0, fpsFrames=0, fpsWindow=lastFrame;
     try{
       renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'low-power'});
       renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
@@ -134,7 +135,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
     const resize=()=>{if(!host||!renderer)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
     resizeObserver=new ResizeObserver(resize);resizeObserver.observe(host);
     const tick=(now:number)=>{
-      raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;
+      raf=requestAnimationFrame(tick);const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;elapsed+=dt;fpsFrames++;if(now-fpsWindow>=1000){liveRef.current.onFps?.(Math.round(fpsFrames*1000/(now-fpsWindow)));fpsFrames=0;fpsWindow=now;}
       const live=liveRef.current,s=live.session;
       Object.values(s.playerStates).forEach(st=>{
         if(!st.onPitch||rigs.has(st.playerId))return;
