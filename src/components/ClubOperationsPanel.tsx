@@ -91,7 +91,7 @@ export const ClubOperationsPanel: React.FC<Props> = ({ save, onUpdateSave }) => 
 
   const boardChoice = (choice: 'YOUTH' | 'UNITY' | 'RESULTS') => {
     if (!manager || save.clubOperations?.boardCommitment) return;
-    const commitment = { type: choice, season: save.season, deadlineWeek: Math.min(38, save.currentWeek + (choice === 'UNITY' ? 6 : 8)) };
+    const commitment = { type: choice, season: save.season, deadlineWeek: Math.min(38, save.currentWeek + (choice === 'UNITY' ? 6 : 8)), ...(choice === 'YOUTH' ? { targetAcademyLevel: Math.min(5, (facilities.academy ?? 1) + 1) } : {}) };
     const descriptions = { YOUTH: 'Upgrade the youth academy by at least one level within eight weeks.', UNITY: 'Raise supporter mood to 75 or higher within six weeks.', RESULTS: 'Reach the board target position or better within eight weeks.' };
     persist({ ...ops, boardCommitment: commitment }, club,
       'Board commitment accepted', descriptions[choice]);
