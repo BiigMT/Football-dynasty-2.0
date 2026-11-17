@@ -981,6 +981,116 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
     ],
   },
 
+
+  {
+    clubId:'ita_serie_bol',clubName:'Bologna FC',
+    players:[
+      {name:'Łukasz Skorupski',shirtNumber:1},{name:'Massimo Pessina',shirtNumber:25},{name:'Matteo Franceschelli',shirtNumber:82},{name:'Ukko Antti Einari Happonen',shirtNumber:72},
+      {name:'Abdel Rahim Alhassane Bonkano',shirtNumber:23},{name:'Arthur Nicolas Theate',shirtNumber:3},{name:'Eivind Fauske Helland',shirtNumber:5},{name:'Emil Alfons Holm',shirtNumber:2},{name:'Juan Miranda Gonzalez',shirtNumber:33},{name:'Lorenzo De Silvestri',shirtNumber:29},{name:'Martin Vitik',shirtNumber:41},{name:'Matteo Darmian',shirtNumber:36},{name:'Nadir Zortea',shirtNumber:20},{name:'Nicolò Casale',shirtNumber:16},{name:'Torbjørn Lysaker Heggem',shirtNumber:14},
+      {name:'Federico Bernardeschi',shirtNumber:10},{name:'Lewis Ferguson',shirtNumber:19},{name:'Luca Lo Monaco',shirtNumber:43},{name:'Marco Libra Alvarado',shirtNumber:18},{name:'Mikel Jesus Amondarain',shirtNumber:8},{name:'Nikola Moro',shirtNumber:6},{name:'Oussama El Azzouzi',shirtNumber:17},{name:'Tommaso Pobega',shirtNumber:4},
+      {name:'Artem Dovbyk',shirtNumber:9},{name:'Jay Ifeanyi-Junior Enem',shirtNumber:22},{name:'Jens Odgaard',shirtNumber:21},{name:'Nicolò Cambiaghi',shirtNumber:28},{name:'Riccardo Orsolini',shirtNumber:7},{name:'Roberto Piccoli',shirtNumber:91},{name:'Samuel Germain Mbangula Tshifunda',shirtNumber:11},
+    ],
+  },
+  {
+    clubId:'ita_serie_cag',clubName:'Cagliari Calcio',
+    players:[
+      {name:'Alen Sherri',shirtNumber:12},{name:'Boris Radunović',shirtNumber:23},{name:'Elia Caprile',shirtNumber:1},
+      {name:'Adam Obert',shirtNumber:33},{name:'Giuseppe Aurelio',shirtNumber:24},{name:'José Pedro Da Silva Figueiredo Freitas',shirtNumber:2},{name:'Juan Martin Rodríguez Camejo',shirtNumber:15},{name:'Marton Prettenhoffer',shirtNumber:37},{name:'Raphael Kofler',shirtNumber:22},{name:'Riyad Idrissi',shirtNumber:3},{name:'Yerry Fernando Mina Gonzalez',shirtNumber:26},{name:'Yukinari Sugawara',shirtNumber:28},
+      {name:'Ademide Oreoluwa Abdulganiyu Akarakiri',shirtNumber:30},{name:'Alessandro Deiola',shirtNumber:14},{name:'Alessandro Gianni Romano',shirtNumber:4},{name:'Harry Billy Winks',shirtNumber:6},{name:'Ivan Stoyanov Sulev',shirtNumber:32},{name:'Jacopo Fazzini',shirtNumber:10},{name:'Joseph Liteta',shirtNumber:27},{name:'Mattia Felici',shirtNumber:17},{name:'Ndary Michel Adopo',shirtNumber:8},{name:'Nicola Grandu',shirtNumber:36},{name:'Riccardo Ciervo',shirtNumber:20},{name:'Roberto Gagliardini',shirtNumber:21},{name:'Yanis Massolin',shirtNumber:79},
+      {name:'Alessandro Sugamele',shirtNumber:35},{name:'Alieu Fadera',shirtNumber:39},{name:'Daniel Maldini',shirtNumber:70},{name:'Kevin Carlos Omoruyi Benjamin',shirtNumber:9},{name:'M’Bala Nzola',shirtNumber:18},{name:'Paul Mendy',shirtNumber:31},{name:'Yael Fritz Junior Trepy',shirtNumber:19},
+    ],
+  },
+  {
+    clubId:'ita_serie_com',clubName:'Como 1907',
+    players:[
+      {name:'Jean Jules Michel Butez',shirtNumber:1},{name:'Mauro Vigorito',shirtNumber:22},{name:'Robert Sánchez Lynch',shirtNumber:97},
+      {name:'Alberto Dossena',shirtNumber:13},{name:'Alex Valle Gomez',shirtNumber:3},{name:'Cristiano De Paoli',shirtNumber:55},{name:'Edoardo Goldaniga',shirtNumber:18},{name:'Ivan Smolčić',shirtNumber:28},{name:'Jacobo Ramon Naveros',shirtNumber:4},{name:'Kaiki Bruno Da Silva',shirtNumber:16},{name:'Marc-Oliver Kempf',shirtNumber:2},{name:'Trevoh Tom Chalobah',shirtNumber:99},{name:'Willy Kambwala Ndengushi',shirtNumber:53},{name:'Yan Bueno Couto',shirtNumber:27},
+      {name:'Adrian Adriano Lahdo',shirtNumber:15},{name:'Lucas Da Cunha',shirtNumber:7},{name:'Luis Milla',shirtNumber:6},{name:'Martin Baturina',shirtNumber:20},{name:'Matteo Papaccioli',shirtNumber:54},{name:'Mattia Liberali',shirtNumber:30},{name:'Maxence Caqueret',shirtNumber:8},{name:'Maximo Perrone Rodriguez',shirtNumber:5},{name:'Nicolas Paz Martinez',shirtNumber:10},{name:'Riccardo Cassano',shirtNumber:49},{name:'Samuele Ricci',shirtNumber:21},
+      {name:'Anastasios Douvikas',shirtNumber:9},{name:'Assane Diao Diaoune',shirtNumber:11},{name:'Bioty Moise Kean',shirtNumber:90},{name:'Jarden Tutu Addai',shirtNumber:42},{name:'Jesus Rodriguez Caraballo',shirtNumber:17},{name:'Zebedee Kennedy',shirtNumber:58},
+    ],
+  },
+  {
+    clubId:'ita_serie_fro',clubName:'Frosinone Calcio',
+    players:[
+      {name:'Lorenzo Palmisani',shirtNumber:22},{name:'Matteo Pisseri',shirtNumber:12},{name:'Sebastiano Desplanches',shirtNumber:91},{name:'Tommaso Capanna',shirtNumber:54},
+      {name:'Aleksa Terzić',shirtNumber:71},{name:'Anthony Henri Oyono Omva Torque',shirtNumber:20},{name:'Enzo Gianni Tchato Mbiayi',shirtNumber:90},{name:'Gabriele Bracaglia',shirtNumber:79},{name:'Gabriele Calvani',shirtNumber:3},{name:'Giorgio Cittadini',shirtNumber:2},{name:'Ilario Monterisi',shirtNumber:30},{name:'Kevin John Ufuoma Akpoguma',shirtNumber:25},{name:'Omar Fayed Abdelwahab Elrakhawy',shirtNumber:74},{name:'Wisdom Amey',shirtNumber:5},
+      {name:'Ben Kone',shirtNumber:4},{name:'Alessio Zerbin',shirtNumber:24},{name:'Anouar El Azzouzi',shirtNumber:34},{name:'Florian Grillitsch',shirtNumber:27},{name:'Francesco Gelli',shirtNumber:96},{name:'Giacomo Calò',shirtNumber:14},{name:'Luis Hasa',shirtNumber:70},{name:'Matteo Cichella',shirtNumber:16},{name:'Patrizio Masini',shirtNumber:73},{name:'Romano Christian Schmid',shirtNumber:10},
+      {name:'Antonio Raimondo',shirtNumber:9},{name:'Farès Ghedjemis',shirtNumber:7},{name:'George Daniel Bîrligea',shirtNumber:11},{name:'Giorgi Kvernadze',shirtNumber:17},{name:'Seydou Fini',shirtNumber:40},{name:'Tomas Bobček',shirtNumber:89},
+    ],
+  },
+  {
+    clubId:'ita_serie_gen',clubName:'Genoa CFC',
+    players:[
+      {name:'Daniele Sommariva',shirtNumber:39},{name:'Franz Stolz',shirtNumber:99},{name:'Justin Bijlow',shirtNumber:1},
+      {name:'Alessandro Marcandalli',shirtNumber:27},{name:'Cody Callum Pierre Drameh',shirtNumber:16},{name:'David Puczka',shirtNumber:31},{name:'Johan Felipe Vasquez Ibarra',shirtNumber:22},{name:'Kingsley Osezele Ehizibue',shirtNumber:3},{name:'Leo Skiri Ostigard',shirtNumber:5},{name:'Lukas Klisys',shirtNumber:14},{name:'Mamedi Doucoure',shirtNumber:74},{name:'Marcelo Manuel Vaz',shirtNumber:85},{name:'Mario Mitaj',shirtNumber:2},{name:'Sebastian Villaume Otoa',shirtNumber:34},{name:'Stefano Sabelli',shirtNumber:20},
+      {name:'Alexsandro Amorim De Freitas',shirtNumber:4},{name:'Franz-Ethan Meichtry',shirtNumber:11},{name:'Gaël Luc Michel Lafont',shirtNumber:75},{name:'Hamed Traore',shirtNumber:25},{name:'Mikael Egill Ellertsson',shirtNumber:77},{name:'Mohameth Djibril Ibrahima Sow',shirtNumber:97},{name:'Morten Wetche Frendrup',shirtNumber:32},{name:'Samuel Wiafe',shirtNumber:71},
+      {name:'Elias Havel',shirtNumber:17},{name:'Lorenzo Colombo',shirtNumber:29},{name:'Lorenzo Venturino',shirtNumber:76},{name:'Milutin Osmajić',shirtNumber:18},{name:'Robson De Souza Junior',shirtNumber:21},{name:'Stephan El Shaarawy',shirtNumber:92},{name:'Tommaso Baldanzi',shirtNumber:8},{name:'Vitor Manuel Carvalho De Oliveira',shirtNumber:9},{name:'Walter Messias Junior',shirtNumber:10},{name:'Xheto Joi Nuredini',shirtNumber:19},
+    ],
+  },
+  {
+    clubId:'ita_serie_mon',clubName:'AC Monza',
+    players:[
+      {name:'Aleksandr Ballabio',shirtNumber:50},{name:'Aljaz Strajnar',shirtNumber:43},{name:'Ngagne Demba Thiam',shirtNumber:20},{name:'Noel Max Joachim Törnqvist',shirtNumber:1},
+      {name:'Adam Bakoune',shirtNumber:24},{name:'Andrea Carboni',shirtNumber:44},{name:'Jan Stanislaw Ziółkowski',shirtNumber:4},{name:'Kouadio Yvan Ezekiel Maye',shirtNumber:5},{name:'Lorenzo Lucchesi',shirtNumber:3},{name:'Nda Konan Bienvenu Ange Eddy Kouadio',shirtNumber:60},{name:'Ricardo Luis Chaby Mangas',shirtNumber:7},{name:'Saba Goglichidze',shirtNumber:2},{name:'Samuele Birindelli',shirtNumber:19},{name:'Valentin Antov',shirtNumber:6},
+      {name:'Ebenezer Ajodun Akinsanmiro',shirtNumber:14},{name:'Idrissa Touré',shirtNumber:27},{name:'Jay Steven Robinson',shirtNumber:46},{name:'Leonardo Colombo',shirtNumber:21},{name:'Manga Michel Quentin Foe Ondoa',shirtNumber:8},{name:'Mathis Mout',shirtNumber:80},{name:'Matteo Pessina',shirtNumber:32},{name:'Michael Folorunsho Ijiemuan',shirtNumber:90},{name:'Omari Nathan Forson',shirtNumber:11},
+      {name:'Andrea Colpani',shirtNumber:28},{name:'Cyril Jean Ngonge',shirtNumber:16},{name:'Dany Mota',shirtNumber:47},{name:'Gustavo Miguel Pereira De Sousa Varela',shirtNumber:9},{name:'Keita Balde Diao',shirtNumber:17},{name:'Kevin Maussi Martins',shirtNumber:70},{name:'Oscar Exequiel Zeballos',shirtNumber:22},{name:'Patrick Ciurria',shirtNumber:26},{name:'Patrick Cutrone',shirtNumber:10},
+    ],
+  },
+  {
+    clubId:'ita_serie_par',clubName:'Parma Calcio 1913',
+    players:[
+      {name:'Alessandro Mazzocchi',shirtNumber:75},{name:'Edoardo Corvi',shirtNumber:40},{name:'Giovanni Daffara',shirtNumber:30},{name:'Manuel Zambelli',shirtNumber:67},{name:'Simone Ghidotti',shirtNumber:22},
+      {name:'Abdoulaye Niakhate Ndiaye',shirtNumber:3},{name:'Diego Carlos Santos Silva',shirtNumber:34},{name:'Djibril Diallo',shirtNumber:70},{name:'Dominik Drobnic',shirtNumber:72},{name:'Emanuele Valeri',shirtNumber:14},{name:'Enrico Delprato',shirtNumber:15},{name:'Franco Ezequiel Carboni',shirtNumber:29},{name:'Karlo Pajsar',shirtNumber:71},{name:'Lautaro Rodrigo Valenti',shirtNumber:5},{name:'Mariano Emir Troilo',shirtNumber:37},{name:'Sascha Britschgi',shirtNumber:27},
+      {name:'Abdou-Salam Konaté',shirtNumber:47},{name:'Adrian Bernabe Garcia',shirtNumber:10},{name:'Benjamin Cremaschi',shirtNumber:8},{name:'Christian Nahuel Ordonez',shirtNumber:32},{name:'Giovanni Fabbian',shirtNumber:80},{name:'Hans Nicolussi Caviglia',shirtNumber:41},{name:'Lamine Mandela Keita',shirtNumber:16},{name:'Vincent Olivier Sierro',shirtNumber:4},
+      {name:'El Bilal Toure',shirtNumber:19},{name:'Jose David Romero',shirtNumber:9},{name:'Matija Frigan',shirtNumber:20},{name:'Nesta Elphege',shirtNumber:23},{name:'Ousmane Diallo Thiao',shirtNumber:7},{name:'Pontus Skule Erik Almqvist',shirtNumber:11},{name:'Simone Lontani',shirtNumber:76},{name:'Thomás De Martis De La Rosa',shirtNumber:25},
+    ],
+  },
+  {
+    clubId:'ita_serie_sas',clubName:'US Sassuolo Calcio',
+    players:[
+      {name:'Arijanet Anan Murić',shirtNumber:49},{name:'Giacomo Satalino',shirtNumber:12},{name:'Lorenzo Nyarko',shirtNumber:22},{name:'Stefano Turati',shirtNumber:80},
+      {name:'Cas Ruben Odenthal',shirtNumber:26},{name:'Duje Ćaleta-Car',shirtNumber:15},{name:'Edoardo Pieragnolo',shirtNumber:70},{name:'Fali Cande',shirtNumber:5},{name:'Fedde Leysen',shirtNumber:16},{name:'Ignace Fabienne Van Der Brempt',shirtNumber:20},{name:'Jay Noah Idzes',shirtNumber:21},{name:'Josh Thomas Doig',shirtNumber:3},{name:'Rafel Obrador Burguera',shirtNumber:33},{name:'Sebastian Walukiewicz',shirtNumber:6},{name:'Simone Cinquegrano',shirtNumber:46},{name:'Yeferson Paz Blandon',shirtNumber:27},
+      {name:'Andrea Ghion',shirtNumber:8},{name:'Daniel Boloca',shirtNumber:11},{name:'Darryl Georges Bakola',shirtNumber:50},{name:'Ibrahim Sulemana Kakari',shirtNumber:55},{name:'Ismaël Kenneth Koné',shirtNumber:90},{name:'Kristian Thorstvedt',shirtNumber:42},{name:'Luca Lipani',shirtNumber:35},{name:'Nemanja Matić',shirtNumber:18},{name:'Vasilije Adžić',shirtNumber:17},
+      {name:'Armand Gaetan Laurienté',shirtNumber:45},{name:'Benjamin Dominguez',shirtNumber:25},{name:'Cristian Volpato',shirtNumber:7},{name:'Domenico Berardi',shirtNumber:10},{name:'Gabriel Kulla',shirtNumber:14},{name:'Kieron Tom Bowie',shirtNumber:9},{name:'Laurs Osterby Skjellerup',shirtNumber:19},{name:'Nicholas Pierini',shirtNumber:77},{name:'Sebastiano Esposito',shirtNumber:94},
+    ],
+  },
+  {
+    clubId:'ita_serie_tor',clubName:'Torino FC',
+    players:[
+      {name:'Diego Mascardi',shirtNumber:26},{name:'Francesco Cereser',shirtNumber:97},{name:'Franco Israel Wibmer',shirtNumber:81},{name:'Lapo Siviero',shirtNumber:76},{name:'Lucas Estella Perri',shirtNumber:20},
+      {name:'Ardian Ismajli',shirtNumber:44},{name:'Cristiano Biraghi',shirtNumber:3},{name:'Eray Ervin Cömert',shirtNumber:5},{name:'Manuel Carrascosa Moreno',shirtNumber:63},{name:'Nathan Kenneth Patterson',shirtNumber:2},{name:'Niccolò Fortini',shirtNumber:29},{name:'Pietro Comuzzo',shirtNumber:15},{name:'Rafik Belghali',shirtNumber:45},{name:'Ricardo Ivan Rodriguez Araya',shirtNumber:13},{name:'Saul Basilio Coco Bassey Oubina',shirtNumber:23},
+      {name:'Alessio Cacciamani',shirtNumber:77},{name:'Andrea Ballanti',shirtNumber:94},{name:'Andrea Luongo',shirtNumber:79},{name:'Cesare Casadei',shirtNumber:22},{name:'Daniel Santos Bragança',shirtNumber:21},{name:'Emirhan Ilkhan',shirtNumber:6},
+      {name:'Che Zach Everton Adams',shirtNumber:19},{name:'Duvan Esteban Zapata Banguero',shirtNumber:91},{name:'Gaetano Pio Oristanio',shirtNumber:11},{name:'Giovanni Pablo Simeone Baldini',shirtNumber:18},{name:'Pietro Pellegri',shirtNumber:9},{name:'Sandro Kulenović',shirtNumber:17},{name:'Zakaria Aboukhlal',shirtNumber:7},
+    ],
+  },
+  {
+    clubId:'ita_serie_udi',clubName:'Udinese Calcio',
+    players:[
+      {name:'Bartosz Mateusz Mrozek',shirtNumber:41},{name:'Daniele Padelli',shirtNumber:93},{name:'Emil Maduka Okoye',shirtNumber:40},
+      {name:'Christian Kabasele',shirtNumber:27},{name:'David Alaba',shirtNumber:5},{name:'Enzo Jacques Rodolphe Ebosse',shirtNumber:77},{name:'Hassane Kamara',shirtNumber:11},{name:'James Bright Adusei Abankwah',shirtNumber:14},{name:'Juan David Arizala Micolta',shirtNumber:20},{name:'Matteo Palma',shirtNumber:16},{name:'Nicolò Bertola',shirtNumber:13},{name:'Oumar Mickael Solet Bomawoko',shirtNumber:28},
+      {name:'Giorgi Chakvetadze',shirtNumber:30},{name:'Jakub Piotrowski',shirtNumber:24},{name:'Jesper Karlström',shirtNumber:8},{name:'Jürgen Ekkelenkamp',shirtNumber:32},{name:'Lennon Miller',shirtNumber:38},{name:'Mergim Vojvoda',shirtNumber:23},{name:'Oier Zarraga Egana',shirtNumber:6},{name:'Sandi Lovrić',shirtNumber:4},
+      {name:'Giulio Vinciati',shirtNumber:45},{name:'Idrissa Gueye',shirtNumber:7},{name:'Keinan Vincent Joseph Davis',shirtNumber:9},{name:'Lazar Jovanović',shirtNumber:91},{name:'Nicolò Zaniolo',shirtNumber:10},{name:'Vakoun Issouf Bayo',shirtNumber:15},
+    ],
+  },
+  {
+    clubId:'ita_serie_lec',clubName:'US Lecce',
+    players:[
+      {name:'Christian Lupo',shirtNumber:12},{name:'Gabriel Alexandru Borbei',shirtNumber:32},{name:'Marco Bleve',shirtNumber:1},{name:'Plamen Valentin Penev',shirtNumber:33},
+      {name:'Ali Bina Dembelé',shirtNumber:2},{name:'Antonino Gallo',shirtNumber:25},{name:'Corrie Richard Ndaba',shirtNumber:3},{name:'Danilo Filipe De Melo Veiga',shirtNumber:17},{name:'Gaby Jean',shirtNumber:18},{name:'Jamil Siebert',shirtNumber:5},{name:'Kialonda Gaspar',shirtNumber:4},{name:'Marlon Nnamdi Ubani',shirtNumber:36},{name:'Tiago Gabriel Coelho Oliveira',shirtNumber:44},
+      {name:'Ivan Ilić',shirtNumber:20},{name:'Lassana Coulibaly',shirtNumber:29},{name:'Medon Berisha',shirtNumber:10},{name:'Mohamed Dramé',shirtNumber:77},{name:'Niko Kovač',shirtNumber:80},{name:'Olaf Gooitzen Paul Gorter',shirtNumber:6},
+      {name:'Konan Ignace Jocelyn N’Dri',shirtNumber:11},{name:'Kieron Tom Bowie',shirtNumber:9},{name:'Francesco Pio Esposito',shirtNumber:94},{name:'Walter Messias Junior',shirtNumber:10},{name:'Matteo Politano',shirtNumber:21},
+    ],
+  },
+  {
+    clubId:'ita_serie_ven',clubName:'Venezia FC',
+    players:[
+      {name:'Alessio Pozzi',shirtNumber:28},{name:'Filip Stanković',shirtNumber:1},{name:'Lorenzo Montipò',shirtNumber:96},{name:'Matteo Grandi',shirtNumber:23},
+      {name:'Alejandro Gomes Furtado',shirtNumber:95},{name:'Armel Bella Kotchap',shirtNumber:17},{name:'Bartol Franjić',shirtNumber:4},{name:'Joel Marcel Schingtienne',shirtNumber:3},{name:'Juan Guilherme Nunes Jesus',shirtNumber:15},{name:'Marin Sverko',shirtNumber:33},{name:'Matias Agustin Moreno',shirtNumber:2},{name:'Pasquale Mazzocchi',shirtNumber:70},{name:'Redouane Halhal',shirtNumber:25},{name:'Rufai Mohammed',shirtNumber:16},
+      {name:'Antoine Hainaut',shirtNumber:18},{name:'Enrique Perez Munoz',shirtNumber:71},{name:'Gianluca Cristiano Busio',shirtNumber:6},{name:'Joseph Alfred Duncan',shirtNumber:32},{name:'Kornel Gracjan Lisman',shirtNumber:56},{name:'Lorenzo Berardi',shirtNumber:36},{name:'Matteo Dagasso',shirtNumber:30},{name:'Mouhamed Lamine Fanne Dabo',shirtNumber:8},{name:'Richie Sagrado Sebastiao',shirtNumber:20},{name:'Ridgeciano Delano Haps',shirtNumber:5},{name:'Simon Solomon Junior Sohm',shirtNumber:19},{name:'Simone Panada',shirtNumber:55},{name:'Thierry Rendall Correia',shirtNumber:14},{name:'Thórir Jóhann Helgason',shirtNumber:21},{name:'Toma Basic',shirtNumber:26},
+      {name:'Akor Jerome Adams',shirtNumber:45},{name:'Albion Rrahmani',shirtNumber:7},{name:'Andrea Adorante',shirtNumber:9},{name:'Antonio Fernández Casino',shirtNumber:77},{name:'John Yeboah',shirtNumber:10},{name:'Lion Lauberbach',shirtNumber:29},
+    ],
+  },
+
 ];
 
 export const EUROPEAN_SQUAD_SOURCES = {
