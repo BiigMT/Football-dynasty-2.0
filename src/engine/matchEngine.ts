@@ -335,7 +335,7 @@ function pickWeightedPlayer(
 ): Player | null {
   const candidates = tactics.startingXI
     .map((id) => ({ p: players[id], st: states[id] }))
-    .filter((x) => x.p && x.st && x.st.onPitch && !x.st.redCard);
+    .filter((x) => x.p && x.st && x.st.onPitch && !x.st.redCard && !x.st.injured);
   if (!candidates.length) return null;
 
   const weighted = candidates.map((c) => {
@@ -563,7 +563,9 @@ export function makeMatchSubstitution(
   const tactics = side === 'HOME' ? { ...session.homeTactics } : { ...session.awayTactics };
   const idx = tactics.startingXI.indexOf(outPlayerId);
   const benchIdx = tactics.bench.indexOf(inPlayerId);
-  if (idx === -1 || benchIdx === -1) return session;
+  const outgoingState = session.playerStates[outPlayerId];
+  const incomingState = session.playerStates[inPlayerId];
+  if (idx === -1 || benchIdx === -1 || !outgoingState?.onPitch || outgoingState.redCard || !incomingState || incomingState.injured || incomingState.redCard) return session;
 
   const nextXI = [...tactics.startingXI];
   nextXI[idx] = inPlayerId;
@@ -1221,14 +1223,20 @@ export function simulateNextMinute(
       const isUserManaged = session.userClubSide === side && !session.userPlayerId;
       if (isUserManaged) continue; // Manager handles their own subs
       const subsUsed = side === 'HOME' ? updatedSession.homeSubsUsed : updatedSession.awaySubsUsed;
-      if (subsUsed >= 3) continue;
+      if (subsUsed >= 5) continue;
       const tactics = side === 'HOME' ? updatedSession.homeTactics : updatedSession.awayTactics;
       const tiredOut = tactics.startingXI
         .slice(1)
         .filter((pid) => pid !== session.userPlayerId && updatedSession.playerStates[pid]?.onPitch)
-        .sort((a, b) => (updatedSession.playerStates[a]?.stamina ?? 100) - (updatedSession.playerStates[b]?.stamina ?? 100))[0];
-      const freshIn = tactics.bench.find((pid) => !updatedSession.playerStates[pid]?.subbedOff && !updatedSession.playerStates[pid]?.onPitch);
-      if (tiredOut && freshIn && (updatedSession.playerStates[tiredOut]?.stamina ?? 100) < 62) {
+        .sort((a, b) => {
+          const aState = updatedSession.playerStates[a];
+          const bState = updatedSession.playerStates[b];
+          if (aState?.injured !== bState?.injured) return aState?.injured ? -1 : 1;
+          return (aState?.stamina ?? 100) - (bState?.stamina ?? 100);
+        })[0];
+      const freshIn = tactics.bench.find((pid) => !updatedSession.playerStates[pid]?.subbedOff && !updatedSession.playerStates[pid]?.onPitch && !updatedSession.playerStates[pid]?.injured && !updatedSession.playerStates[pid]?.redCard);
+      const outgoing = tiredOut ? updatedSession.playerStates[tiredOut] : undefined;
+      if (tiredOut && freshIn && (outgoing?.injured || (outgoing?.stamina ?? 100) < 62)) {
         updatedSession = makeMatchSubstitution(updatedSession, side, tiredOut, freshIn);
       }
     }
