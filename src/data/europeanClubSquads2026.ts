@@ -1091,6 +1091,98 @@ export const EUROPEAN_CLUB_SQUADS_2026: OfficialClubSquad[] = [
     ],
   },
 
+
+  {
+    clubId:'fra_ligue1_angers',clubName:'Angers SCO',
+    players:[
+      {name:'Anthony Lopes',shirtNumber:1},{name:'Oumar Pona',shirtNumber:40},{name:'Melvin Zinga',shirtNumber:16},
+      {name:'Carlens Arcus',shirtNumber:2},{name:'Emmanuel Biumla',shirtNumber:24},{name:'Ousmane Camara',shirtNumber:4},{name:'Joseph Kalulu',shirtNumber:17},{name:'Maël Gernigon',shirtNumber:34},{name:'Jordan Lefort',shirtNumber:21},{name:'Marius Louër',shirtNumber:20},{name:'Lilian Raolisoa',shirtNumber:27},
+      {name:'Haris Belkebla',shirtNumber:93},{name:'Yassin Belkhdim',shirtNumber:14},{name:'Jules Bouffandeau',shirtNumber:37},{name:'Bané Diatta',shirtNumber:36},{name:'Louis Mouton',shirtNumber:6},{name:'Branco van den Boomen',shirtNumber:8},
+      {name:'Jim Allevinah',shirtNumber:18},{name:'Anthony Bermont',shirtNumber:26},{name:'Mamadou Diallo',shirtNumber:35},{name:'Amine El Ouazzani',shirtNumber:19},{name:'Harouna Djibirin',shirtNumber:11},{name:'Prosper Peter',shirtNumber:9},{name:'Amine Sbaï',shirtNumber:10},{name:'Usman Simbakoli',shirtNumber:7},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_auxerre',clubName:'AJ Auxerre',
+    players:[
+      {name:'Paul Nardi',shirtNumber:1},{name:'Mamadou Diop',shirtNumber:23},{name:'Louis Mezerette',shirtNumber:37},
+      {name:'Francisco Sierralta',shirtNumber:4},{name:'Axel Tuanzebe',shirtNumber:4},{name:'Telli Siwe',shirtNumber:13},{name:'Christ Makosso',shirtNumber:15},{name:'Sinaly Diomandé',shirtNumber:20},{name:'Fredrik Oppegård',shirtNumber:22},{name:'Bryan Okoh',shirtNumber:24},{name:'Lamine Sy',shirtNumber:27},{name:'Marvin Senaya',shirtNumber:29},{name:'Rayan Mandengue',shirtNumber:32},{name:'Elikya Legros',shirtNumber:35},{name:'Alvin Petit Dol',shirtNumber:38},{name:'Mohamed Coulibaly',shirtNumber:43},{name:'Clément Akpa',shirtNumber:92},{name:'Sékou Fofana',shirtNumber:93},
+      {name:'Kévin Danois',shirtNumber:5},{name:'Assane Dioussé',shirtNumber:6},{name:'Naouirou Ahamada',shirtNumber:8},{name:'Pierre Ekwah',shirtNumber:17},{name:'Romain Faivre',shirtNumber:28},{name:'Lamfia Dioubaté',shirtNumber:34},{name:'Tidiane Devernois',shirtNumber:36},{name:'Yvan Zaddy',shirtNumber:41},{name:'Arthur Piedfort',shirtNumber:46},{name:'Aristide Zossou',shirtNumber:77},
+      {name:'Rémy Labeau-Lascary',shirtNumber:3},{name:'Josué Casimir',shirtNumber:7},{name:'Cameron Archer',shirtNumber:9},{name:'Danny Namaso',shirtNumber:19},{name:'Ryan Rodin',shirtNumber:31},{name:'Mamoudou Cissokho',shirtNumber:44},{name:'Xiangxin Wei',shirtNumber:49},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_troyes',clubName:'ESTAC Troyes',
+    players:[
+      {name:'Ludovic Zacharie Boucher',shirtNumber:1},{name:'Patrick Thomas Beach',shirtNumber:33},{name:'Hillel-Yored Amilcar Tony Konaté',shirtNumber:40},
+      {name:'Lucas Maronnier',shirtNumber:2},{name:'Anis Ouzenadji',shirtNumber:3},{name:'Michel Junior Diaz',shirtNumber:4},{name:'Paolo Gozzi Iweru',shirtNumber:5},{name:'Adrien-Mehdi Pierre Monfray',shirtNumber:6},{name:'Ismaël Ben Boura',shirtNumber:14},{name:'Noah Donkor Znamensky',shirtNumber:31},{name:'Yvann Titi',shirtNumber:44},
+      {name:'Mouhamed Diop',shirtNumber:8},{name:'Merwan Ifnaoui',shirtNumber:10},{name:'Iron David Bocaf Gomis',shirtNumber:11},{name:'Antoine Mille',shirtNumber:17},{name:'Hugo Fabrice Thierry Picard',shirtNumber:22},{name:'Alexandre Phliponeau',shirtNumber:26},{name:'Dermane Karim',shirtNumber:29},{name:'Roman Murcy',shirtNumber:35},{name:'Idrissa Soukouna',shirtNumber:36},
+      {name:'Kandet Diawara',shirtNumber:7},{name:'Jérémy Le Douaron',shirtNumber:9},{name:'Ibrahim Traoré',shirtNumber:19},{name:'Renaud Ripart',shirtNumber:20},{name:'Timothé Nkada',shirtNumber:23},{name:'Christ Batola',shirtNumber:37},{name:'Yacouba Koné',shirtNumber:39},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_lehavre',clubName:'Le Havre AC',
+    players:[
+      {name:'Paul Argney',shirtNumber:50},{name:'Lionel Mpasi',shirtNumber:77},{name:'Gauthier Gallon',shirtNumber:93},{name:'Mory Diaw',shirtNumber:99},
+      {name:'Ahmed Touba',shirtNumber:5},{name:'Elias Jelert',shirtNumber:12},{name:'Fodé Doucouré',shirtNumber:13},{name:'Ayumu Seko',shirtNumber:15},{name:'Yanis Zouaoui',shirtNumber:18},{name:'Vincent Sasso',shirtNumber:23},{name:'Souleymane Zagadou',shirtNumber:29},{name:'Timothée Pembélé',shirtNumber:32},{name:'Djibril Ouziad',shirtNumber:33},
+      {name:'Mathéo Bodmer',shirtNumber:21},{name:'Junior Mwanga',shirtNumber:6},{name:'Amir Richardson',shirtNumber:7},{name:'Rassoul Ndiaye',shirtNumber:14},{name:'Kaito Mizuta',shirtNumber:17},{name:'Guy Zohouri',shirtNumber:24},{name:'Simon Ebonog',shirtNumber:26},{name:'Mathis Bentoumi',shirtNumber:37},{name:'Ismail Bouneb',shirtNumber:44},{name:'Daren Mosengo',shirtNumber:78},{name:'Abdoulaye Touré',shirtNumber:94},
+      {name:'Josh Maja',shirtNumber:9},{name:'Felix Mambimbi',shirtNumber:10},{name:'Georgi Kyeremeh',shirtNumber:11},{name:'Joan Tincres',shirtNumber:19},{name:'Mbwana Ally Samatta',shirtNumber:25},{name:'Enzo Koffi',shirtNumber:27},{name:'Sota Nakamura',shirtNumber:30},{name:'Rayan Fofana',shirtNumber:38},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_lemans',clubName:'Le Mans FC',
+    players:[
+      {name:'Augustin Delbecque'},{name:'Ewan Hatfout'},{name:'Nicolas Kocik'},
+      {name:'Djibril Sidibé'},{name:'Harold Voyer'},{name:'Joao Almeida'},{name:'Lucas Buades'},{name:'Noa Boissé'},{name:'Raul Torrente'},{name:'Rayan Bamba'},{name:'Samuel Yohou'},{name:'Théo Eyoum'},{name:'Yasser Larouci'},
+      {name:'Adil Bourabaa'},{name:'Alexandre Lauray'},{name:'Daouda Traoré'},{name:'Edwin Quarshie'},{name:'Jean Vercruysse'},{name:'Lucas Bretelle'},{name:'Martin Rossignol'},
+      {name:'Antoine Rabillard'},{name:'Billal Brahimi'},{name:'Dame Gueye'},{name:'Enzo Vagner'},{name:'Erwan Colas'},{name:'Habib Diallo'},{name:'Louis Mafouta'},{name:'Lucas Calodat'},{name:'William Harhouz'},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_lorient',clubName:'FC Lorient',
+    players:[
+      {name:'Benjamin Leroy',shirtNumber:1},{name:'Bingourou Kamara',shirtNumber:21},{name:'Yvon Mvogo',shirtNumber:38},
+      {name:'Alec Georgen',shirtNumber:2},{name:'Montassar Talbi',shirtNumber:3},{name:'Formose Mendy',shirtNumber:5},{name:'Dembo Sylla',shirtNumber:20},{name:'Srdjan Kuzmic',shirtNumber:30},{name:'Nathaniel Adjei',shirtNumber:32},{name:'Arsène Kouassi',shirtNumber:43},{name:'Nosa Obaretin',shirtNumber:55},{name:'Panos Katseris',shirtNumber:77},{name:'Isaak Touré',shirtNumber:95},
+      {name:'Bandiougou Fadiga',shirtNumber:7},{name:'Noah Cadiou',shirtNumber:8},{name:'Isak Jensen',shirtNumber:10},{name:'Théo Le Bris',shirtNumber:11},{name:'Jean-Victor Makengo',shirtNumber:17},{name:'Daniel Semedo',shirtNumber:23},{name:'Gabin Bernardeau',shirtNumber:33},{name:'Arthur Avom Ebong',shirtNumber:62},{name:'Noah Mbamba',shirtNumber:72},
+      {name:'Mohamed Bamba',shirtNumber:9},{name:'Aiyegun Tosin',shirtNumber:15},{name:'Ibrahima Baldé',shirtNumber:18},{name:'Souleymane Faye',shirtNumber:19},{name:'Mamadou Koné',shirtNumber:42},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_parisfc',clubName:'Paris FC',
+    players:[
+      {name:'Kevin Trapp',shirtNumber:1},{name:'Obed Nkambadio',shirtNumber:16},{name:'Ibrahim Meïté',shirtNumber:50},
+      {name:'Thibault De Smet',shirtNumber:28},{name:'Otávio Ataíde da Silva',shirtNumber:6},{name:'Nhoa Sangui',shirtNumber:19},{name:'Moustapha Mbow',shirtNumber:5},{name:'Yoan Koré',shirtNumber:25},{name:'Samir Chergui',shirtNumber:31},{name:'Hamari Traoré',shirtNumber:14},{name:'Diego Coppola',shirtNumber:42},{name:'Emmanuel Mbemba',shirtNumber:3},
+      {name:'Vincent Marchetti',shirtNumber:4},{name:'Adama Camara',shirtNumber:17},{name:'Pierre Lees-Melou',shirtNumber:33},{name:'Maxime Lopez',shirtNumber:20},{name:'Ilan Kebbal',shirtNumber:10},{name:'Rudy Matondo',shirtNumber:23},{name:'Patrick Zabi',shirtNumber:8},
+      {name:'Jean-Philippe Krasso',shirtNumber:11},{name:'Omar Sissoko',shirtNumber:18},{name:'Jonathan Ikoné',shirtNumber:93},{name:'Moses Simon',shirtNumber:27},{name:'Luca Koleosho',shirtNumber:15},{name:'Lassine Sinayoko',shirtNumber:9},{name:'Pablo Pagis',shirtNumber:7},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_brest',clubName:'Stade Brestois 29',
+    players:[
+      {name:'Eirik Selvik',shirtNumber:1},{name:'Noah Poillion',shirtNumber:16},{name:'Mathys Patouillet',shirtNumber:30},{name:'Romain Cagnon',shirtNumber:49},
+      {name:'Bradley Locko',shirtNumber:2},{name:'Gautier Lloris',shirtNumber:4},{name:'Brendan Chardonnet',shirtNumber:5},{name:'Jules Bourgault',shirtNumber:18},{name:'Luck Zogbé',shirtNumber:20},{name:'Evan Mailly',shirtNumber:34},{name:'Kenny Lala',shirtNumber:70},{name:'Romain Le Guen',shirtNumber:71},
+      {name:'Mamadou Diambou',shirtNumber:6},{name:'Joseph Nonge',shirtNumber:7},{name:'Hugo Magnetti',shirtNumber:8},{name:'Joris Chotard',shirtNumber:13},{name:'Kamory Doumbia',shirtNumber:23},{name:'Lucas Tousart',shirtNumber:29},{name:'Hamidou Makalou',shirtNumber:33},
+      {name:'Romain Del Castillo'},{name:'Djylian N’Guessan'},{name:'Axel Camblan'},{name:'Pierre Mboup',shirtNumber:9},{name:'Giovani Versini',shirtNumber:10},{name:'Noah Edjouma',shirtNumber:11},{name:'Mama Baldé',shirtNumber:17},{name:'Ludovic Ajorque',shirtNumber:19},{name:'Ibrahim Kanté',shirtNumber:21},{name:'Matthieu Lainé',shirtNumber:32},{name:'Enzo Monchatre',shirtNumber:33},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_strasbourg',clubName:'RC Strasbourg Alsace',
+    players:[
+      {name:'Filip Jörgensen',shirtNumber:1},{name:'Miłosz Piekutowski',shirtNumber:12},{name:'Gabriel Kerckaert',shirtNumber:60},
+      {name:'Andrew Omobamidele',shirtNumber:2},{name:'Ben Chilwell',shirtNumber:3},{name:'Jeyland Mitchell',shirtNumber:4},{name:'Abakar Sylla',shirtNumber:5},{name:'Ismaël Doukouré',shirtNumber:6},{name:'Genesis Antwi',shirtNumber:16},{name:'Mateo Del Blanco',shirtNumber:15},{name:'Guéla Doué',shirtNumber:22},{name:'Lucas Høgsberg',shirtNumber:24},{name:'Karim Coulibaly',shirtNumber:31},{name:'Yoann Becker',shirtNumber:43},
+      {name:'Maximilian Oyedele',shirtNumber:8},{name:'Giovanni Reyna',shirtNumber:10},{name:'Dário Essugo',shirtNumber:14},{name:'Diogo Sousa',shirtNumber:23},{name:'Omari Kellyman',shirtNumber:26},{name:'Tyrese Noubissie',shirtNumber:28},{name:'Samir El Mourabet',shirtNumber:29},{name:'Pape Demba Diop',shirtNumber:21},{name:'Benjamin Brantlind',shirtNumber:45},
+      {name:'Samuel Amo-Ameyaw',shirtNumber:7},{name:'Joaquín Panichelli',shirtNumber:9},{name:'Sebastian Nanasi',shirtNumber:11},{name:'Sékou Mara',shirtNumber:14},{name:'Fábio Baldé',shirtNumber:19},{name:'Martial Godo',shirtNumber:20},{name:'Jacobo Ortega',shirtNumber:30},{name:'Conrad Harder',shirtNumber:40},{name:'Gessime Yassine',shirtNumber:80},{name:'Yaya Diémé',shirtNumber:35},{name:'Deivid Washington',shirtNumber:42},
+    ],
+  },
+  {
+    clubId:'fra_ligue1_toulouse',clubName:'Toulouse FC',
+    players:[
+      {name:'Guillaume Restes',shirtNumber:16},{name:'Mathys Niflore',shirtNumber:60},{name:'Naïme Saïd Mchindra',shirtNumber:30},{name:'Théo Collin',shirtNumber:1},
+      {name:'Christ Tapé',shirtNumber:12},{name:'David Odogu',shirtNumber:19},{name:'Frédéric Efuele Ngoyala',shirtNumber:25},{name:'Gaëtan Bakhouche',shirtNumber:44},{name:'Ismaïl Diallo',shirtNumber:94},{name:'Mark McKenzie',shirtNumber:3},{name:'Rasmus Nicolaisen',shirtNumber:2},{name:'Seny Koumbassa',shirtNumber:5},{name:'Thibaud-Dorian Garondo',shirtNumber:42},
+      {name:'Abu Francis',shirtNumber:17},{name:'Adam El Ouali',shirtNumber:38},{name:'Alexis Vossah',shirtNumber:6},{name:'Aron Dønnum',shirtNumber:15},{name:'Cristian Cásseres',shirtNumber:23},{name:'Darris Zema',shirtNumber:69},{name:'Mathis Amougou',shirtNumber:18},{name:'Niklas Schmidt',shirtNumber:31},{name:'Niko Sigur',shirtNumber:14},{name:'Rafik Messali',shirtNumber:22},{name:'Thomas Jørgensen',shirtNumber:8},
+      {name:'Aymen Amaaouch',shirtNumber:49},{name:'Casper Tengstedt',shirtNumber:20},{name:'Ilyas Azizi',shirtNumber:37},{name:'Jacen Russell-Rowe',shirtNumber:13},{name:'Julián Vignolo',shirtNumber:7},{name:'Santiago Hidalgo',shirtNumber:9},{name:'Sion Oppong',shirtNumber:11},{name:'William Dardake',shirtNumber:47},
+    ],
+  },
+
 ];
 
 export const EUROPEAN_SQUAD_SOURCES = {
