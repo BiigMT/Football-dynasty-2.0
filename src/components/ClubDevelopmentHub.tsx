@@ -56,7 +56,7 @@ export const ClubDevelopmentHub: React.FC<Props> = ({ save, onUpdateSave }) => {
         id: 'academy_training_' + player.id + '_' + save.season + '_' + save.currentWeek,
         week: save.currentWeek, season: save.season, category: 'ACADEMY' as const,
         headline: player.name + ' completes an academy development session',
-        body: player.name + ' improved ' + focus + ' by one point through focused coaching.',
+        body: player.name + ' improved ' + focus + ' through focused coaching and academy investment.',
       }, ...save.news].slice(0, 35),
     });
   };
