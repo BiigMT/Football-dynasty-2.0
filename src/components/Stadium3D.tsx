@@ -160,6 +160,7 @@ export const Stadium3D: React.FC<Stadium3DProps> = ({session,homeClub,awayClub,p
         if(receiver&&cue.targetPlayerTarget){
           receiver.presentationTarget=cue.targetPlayerTarget;
           receiver.presentationUntil=cueDuration;
+          if(event.type==='SAVE'){receiver.action='SAVE';receiver.actionUntil=elapsed+1.55;}
         }
         if(cue.ballFlight){
           activeBallFlight={
