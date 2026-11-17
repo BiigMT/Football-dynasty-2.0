@@ -25,7 +25,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
   const commentary=latest?.text??'Both teams are settling into their shape. The next opening could decide it.';
   const homePress=Math.max(0,Math.min(100,50+session.momentum/2));
   const handleSub=()=>{if(outId&&inId&&subsUsed<5){onSubstitute(outId,inId);setOutId('');setInId('');}};
-  return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>\n   <div className="relative h-[min(100dvh,56.25vw)] w-[min(100vw,177.78dvh)] overflow-hidden bg-[#080e1a]" style={{aspectRatio:'16 / 9'}}>
+  return <main className="fixed inset-0 grid h-[100dvh] w-screen place-items-center overflow-hidden bg-black text-white" style={{touchAction:'manipulation'}}>
    <div className="relative h-[min(100dvh,56.25vw)] w-[min(100vw,177.78dvh)] overflow-hidden bg-[#080e1a]" style={{aspectRatio:'16 / 9'}}>
     <div className="absolute inset-0">{camera==='2D'?<MatchPitchCanvas session={session} homeClub={homeClub} awayClub={awayClub} players={players} lastGoalTimestamp={0}/>:<Stadium3D session={session} homeClub={homeClub} awayClub={awayClub} players={players} cameraMode={camera}/>}</div>
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050b16]/50 via-transparent to-[#050b16]/70"/>
