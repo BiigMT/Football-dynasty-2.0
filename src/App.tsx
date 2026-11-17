@@ -32,7 +32,7 @@ export default function App() {
   const [showStudioIntro, setShowStudioIntro] = useState(true);
   const [orientation, setOrientation] = useState<GameOrientation | null>(() => {
     const saved = localStorage.getItem('fd-game-orientation');
-    return saved === 'portrait' || saved === 'landscape' ? saved : null;
+    return saved === 'landscape' ? 'landscape' : null;
   });
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [setupTarget, setSetupTarget] = useState<{ mode: CareerMode; slotId: string }>({
@@ -46,7 +46,8 @@ export default function App() {
 
   useEffect(() => { void refreshSlots(); }, []);
 
-  const chooseOrientation = async (next: GameOrientation) => {
+  const chooseOrientation = async (_requested: GameOrientation) => {
+    const next: GameOrientation = 'landscape';
     setOrientation(next);
     localStorage.setItem('fd-game-orientation', next);
     try {
