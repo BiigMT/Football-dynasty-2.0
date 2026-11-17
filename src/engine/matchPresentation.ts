@@ -53,7 +53,8 @@ export function getMatchPresentationCue(
     const keeperFormation = side === 'HOME' ? homeFormation : awayFormation;
     const keeper = keeperFormation[0] ?? { x: 6, y: 50 };
     const target = { x: side === 'HOME' ? keeper.x : 100 - keeper.x, y: side === 'HOME' ? keeper.y : 100 - keeper.y };
-    return { actorTarget: target, ballFlight: { from: origin, to: { x: clamp(origin.x + attackDirection * 5), y: clamp(origin.y + lateral * .25) }, durationMs: 640, arc: .65 } };
+    const keeperId = event.playerId ?? (side === 'HOME' ? session.homeTactics.startingXI[0] : session.awayTactics.startingXI[0]);
+    return { actorTarget: target, targetPlayerId: keeperId, targetPlayerTarget: target, ballFlight: { from: origin, to: { x: clamp(origin.x + attackDirection * 5), y: clamp(origin.y + lateral * .25) }, durationMs: 640, arc: .65 } };
   }
   if (event.type === 'TACKLE') {
     return { actorTarget: { x: clamp(origin.x - attackDirection * 1.5), y: clamp(origin.y + lateral * .35) } };
