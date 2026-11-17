@@ -43,7 +43,7 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
       {[{label:'1x',ms:360},{label:'2x',ms:180},{label:'4x',ms:90}].map(s=><button key={s.label} onClick={()=>onSpeed(s.ms)} className={`min-h-9 min-w-9 rounded-lg px-2 text-[11px] font-black ${speedMs===s.ms?'bg-[#00e5ff] text-[#06111d]':'text-slate-300 hover:bg-white/10'}`}>{s.label}</button>)}
       <button onClick={onPause} className="min-h-9 rounded-lg bg-white/10 px-3 text-[10px] font-black">{running?'Ⅱ PAUSE':'▶ PLAY'}</button>
       <button onClick={()=>setHighlights(v=>!v)} className="min-h-9 rounded-lg border border-white/10 px-2 text-[9px] font-bold text-slate-200">{highlights?'KEY':'FULL'}</button>
-      <button onClick={()=>setStatsOpen(v=>!v)} className="min-h-9 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">STATS</button>
+      <button onClick={()=>{setStatsOpen(v=>!v);setSubsOpen(false);setTacticsOpen(false);setShoutsOpen(false);}} className="min-h-9 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">STATS</button>
     </div>
     <div className="absolute left-1/2 top-[58px] z-20 flex -translate-x-1/2 gap-1 rounded-full border border-white/15 bg-[#111c33]/80 p-1 backdrop-blur-xl">
       {([{id:'TV',label:'TV BROADCAST'},{id:'2D',label:'2D TACTICAL'},{id:'DUGOUT',label:'DUGOUT CAM'}] as {id:StadiumCameraMode|'2D';label:string}[]).map(m=><button key={m.id} onClick={()=>setCamera(m.id)} className={`rounded-full px-3 py-2 text-[9px] font-black tracking-wide ${camera===m.id?'bg-cyan-300 text-[#06111d]':'text-slate-200'}`}>{m.label}</button>)}
@@ -55,10 +55,10 @@ export const ConsoleMatchday:React.FC<Props>=({session,homeClub,awayClub,players
     </div>
     <footer className="absolute inset-x-2 bottom-2 z-20 flex h-12 items-center justify-between gap-2 rounded-xl border border-white/15 bg-[#111c33]/95 px-2 py-1 shadow-2xl backdrop-blur-xl">
       <div className="flex items-center gap-1.5">
-        <button onClick={()=>{setTacticsOpen(v=>!v);setShoutsOpen(false);setSubsOpen(false);}} className={`h-8 rounded-lg px-3 text-[9px] font-black ${tacticsOpen?'bg-cyan-300 text-[#07111d]':'bg-white/10 text-slate-100'}`}>TACTICS</button>
-        <button onClick={()=>{setShoutsOpen(v=>!v);setTacticsOpen(false);setSubsOpen(false);}} className={`h-8 rounded-lg px-3 text-[9px] font-black ${shoutsOpen?'bg-amber-300 text-[#17120a]':'bg-white/10 text-slate-100'}`}>SHOUTS</button>
+        <button onClick={()=>{setTacticsOpen(v=>!v);setShoutsOpen(false);setSubsOpen(false);setStatsOpen(false);}} className={`h-8 rounded-lg px-3 text-[9px] font-black ${tacticsOpen?'bg-cyan-300 text-[#07111d]':'bg-white/10 text-slate-100'}`}>TACTICS</button>
+        <button onClick={()=>{setShoutsOpen(v=>!v);setTacticsOpen(false);setSubsOpen(false);setStatsOpen(false);}} className={`h-8 rounded-lg px-3 text-[9px] font-black ${shoutsOpen?'bg-amber-300 text-[#17120a]':'bg-white/10 text-slate-100'}`}>SHOUTS</button>
       </div>
-      <button onClick={()=>{setSubsOpen(v=>!v);setTacticsOpen(false);setShoutsOpen(false);}} className="h-8 shrink-0 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">SQUAD · {Math.max(0,5-subsUsed)} SUBS</button>
+      <button onClick={()=>{setSubsOpen(v=>!v);setTacticsOpen(false);setShoutsOpen(false);setStatsOpen(false);}} className="h-8 shrink-0 rounded-lg bg-[#ffc107] px-3 text-[9px] font-black text-[#17120a]">SQUAD · {Math.max(0,5-subsUsed)} SUBS</button>
     </footer>
     {tacticsOpen&&<aside className="absolute bottom-[60px] left-2 z-30 w-[min(360px,70vw)] rounded-xl border border-white/15 bg-[#111c33]/96 p-3 shadow-2xl backdrop-blur-xl">
       <div className="mb-2 text-[9px] font-black tracking-widest text-cyan-200">TEAM MENTALITY</div>
