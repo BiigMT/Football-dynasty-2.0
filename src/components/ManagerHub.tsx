@@ -536,6 +536,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               <span>Career Home</span>
             </button>
             <ClubBadge
+              clubId={club.id}
               shortName={club.shortName}
               primaryColor={club.primaryColor}
               secondaryColor={club.secondaryColor}
