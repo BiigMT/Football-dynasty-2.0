@@ -24,7 +24,7 @@ import { StudioIntro } from './components/StudioIntro';
 import { OrientationSelect, GameOrientation } from './components/OrientationSelect';
 import { CareerModeSelect } from './components/CareerModeSelect';
 
-type AppScreen = 'TITLE' | 'MODE_SELECT' | 'SETUP' | 'CAREER' | 'MATCH';
+type AppScreen = 'TITLE' | 'MODE_SELECT' | 'SETUP' | 'CAREER' | 'MATCH_READY' | 'MATCH';
 
 
 export default function App() {
@@ -103,7 +103,8 @@ export default function App() {
     }
     setActiveSave(loaded);
     if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
-      setScreen('MATCH');
+      // Never drop a loaded career straight into the 3D match. Require an explicit resume action.
+      setScreen('MATCH_READY');
     } else {
       setScreen('CAREER');
     }
@@ -359,6 +360,30 @@ export default function App() {
       onConfirmManager={handleConfirmManager}
       onConfirmLegend={handleConfirmLegend}
     />;
+  }
+
+  if (screen === 'MATCH_READY' && activeSave?.activeMatch) {
+    const allClubs = getMatchClubsMap(activeSave);
+    const session = activeSave.activeMatch;
+    const homeClub = allClubs[session.homeClubId];
+    const awayClub = allClubs[session.awayClubId];
+    return (
+      <div className="min-h-[100dvh] w-full bg-[#07111f] text-[#E8EDF5] flex flex-col items-center justify-center p-5">
+        <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-[#0D1B2A] p-6 sm:p-9 shadow-2xl">
+          <div className="text-center text-[10px] font-black tracking-[.28em] text-[#F6C21C]">FOOTBALL DYNASTY · MATCHDAY</div>
+          <h1 className="mt-3 text-center text-2xl sm:text-3xl font-black">Your match is waiting</h1>
+          <p className="mt-2 text-center text-sm text-slate-400">This career has an unfinished match. Review the match state, then choose when to return to the 3D pitch.</p>
+          <div className="mt-7 grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-xl border border-white/10 bg-[#07111f] p-5">
+            <div className="text-center min-w-0"><div className="font-black text-lg sm:text-2xl truncate">{homeClub?.name ?? 'Home team'}</div><div className="mt-1 text-xs text-slate-400">HOME</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-4xl font-black tabular-nums">{session.homeStats.goals} – {session.awayStats.goals}</div><div className="mt-1 text-[10px] font-bold tracking-widest text-[#F6C21C]">{session.minute}' · {session.phase.replace('_',' ')}</div></div>
+            <div className="text-center min-w-0"><div className="font-black text-lg sm:text-2xl truncate">{awayClub?.name ?? 'Away team'}</div><div className="mt-1 text-xs text-slate-400">AWAY</div></div>
+          </div>
+          <div className="mt-4 text-center text-xs text-slate-400">{session.competitionName}</div>
+          <button type="button" onClick={() => setScreen('MATCH')} className="mt-7 min-h-[54px] w-full rounded-lg bg-[#F6C21C] px-5 text-sm font-black tracking-[.18em] text-[#111827]">RESUME MATCH</button>
+          <button type="button" onClick={() => setScreen('TITLE')} className="mt-3 min-h-[42px] w-full rounded-lg border border-white/15 bg-white/5 px-5 text-xs font-bold text-slate-300">RETURN TO TITLE SCREEN</button>
+        </div>
+      </div>
+    );
   }
 
   if (screen === 'MATCH' && activeSave && activeSave.activeMatch) {
