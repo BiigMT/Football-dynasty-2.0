@@ -71,6 +71,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const [tab, setTab] = useState<ManagerSection>('DASHBOARD');
   const [selectedSlotIdx, setSelectedSlotIdx] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [marketPage, setMarketPage] = useState(0);
   const [posFilter, setPosFilter] = useState<Position | 'ALL'>('ALL');
   const [negTarget, setNegTarget] = useState<Player | null>(null);
   const [negotiationStage, setNegotiationStage] = useState<'ARRIVAL' | 'CLUB' | 'CONTRACT' | 'SIGNED'>('ARRIVAL');
@@ -107,6 +108,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       .sort((a, b) => b.overall - a.overall)
       .slice(0, 36);
   }, [save.players, club.id, posFilter, searchTerm]);
+
+  const visibleMarketPlayers = marketPlayers.slice(marketPage * 6, marketPage * 6 + 6);
+  const marketPageCount = Math.max(1, Math.ceil(marketPlayers.length / 6));
 
   const handleForwardTime = () => {
     soundEngine.playClick();
@@ -515,9 +519,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const formationSlots = getFormationSlots(club.tactics.formation);
 
   return (
-    <div className="fd-manager-skin fd-realism-manager min-h-screen flex flex-col" data-manager-skin="true">
+    <div className="fd-manager-skin fd-realism-manager h-[100dvh] min-h-0 overflow-hidden flex flex-col" data-manager-skin="true">
       {/* Sub-page Header */}
-      <header className="sticky top-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2.5">
+      <header className="shrink-0 z-30 bg-[#0E141B]/95 border-b border-cyan-500/35 px-3 sm:px-5 py-2">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
@@ -568,7 +572,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       </header>
 
       {/* Sub-page Navigation */}
-      <nav className="bg-[#131A22] border-b border-white/10 px-4 sm:px-6 overflow-x-auto">
+      <nav className="shrink-0 bg-[#131A22] border-b border-white/10 px-2 sm:px-4 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex items-center gap-1">
           {[
             { id: 'SQUAD', label: 'Squad & Tactics', icon: Users },
@@ -601,13 +605,13 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       </nav>
 
       {/* Main Content */}
-      <main className="career-subpage-content flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 py-4 sm:py-5">
-        <div className="relative mb-5 min-h-[116px] sm:min-h-[150px] overflow-hidden rounded-xl border border-cyan-400/20 bg-[#101923]">
+      <main className="career-subpage-content flex-1 min-h-0 max-w-7xl w-full mx-auto px-2 sm:px-3 py-2 overflow-hidden flex flex-col">
+        <div className="relative mb-2 h-[54px] min-h-[54px] shrink-0 overflow-hidden rounded-lg border border-cyan-400/20 bg-[#101923]">
           <img src={tab === 'TRAINING' || tab === 'DEVELOPMENT' ? '/media/game/training-ground.jpg' : tab === 'TRANSFERS' || tab === 'CLUB' ? '/media/game/manager-tactics.jpg' : '/media/game/matchday-training.jpg'} alt="" className="absolute inset-0 h-full w-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071019] via-[#071019]/75 to-transparent" />
-          <div className="relative z-10 flex min-h-[116px] sm:min-h-[150px] flex-col justify-end p-4 sm:p-5">
-            <div className="text-[10px] font-bold uppercase tracking-[.24em] text-cyan-300">Football Dynasty · Manager Career</div>
-            <h2 className="mt-1 text-xl sm:text-2xl font-black text-white">{tab === 'TRANSFERS' ? 'Recruitment & negotiations' : tab === 'TRAINING' ? 'Training ground' : tab === 'COMPETITIONS' ? 'The football calendar' : tab === 'DEVELOPMENT' ? 'Academy & club development' : tab === 'CLUB' ? 'Club headquarters' : 'Manager dashboard'}</h2>
+          <div className="relative z-10 flex h-full min-h-0 flex-col justify-center px-3 py-1">
+            <div className="text-[8px] font-bold uppercase tracking-[.18em] text-cyan-300">Football Dynasty · Manager Career</div>
+            <h2 className="mt-0 text-base sm:text-lg font-black text-white leading-tight">{tab === 'TRANSFERS' ? 'Recruitment & negotiations' : tab === 'TRAINING' ? 'Training ground' : tab === 'COMPETITIONS' ? 'The football calendar' : tab === 'DEVELOPMENT' ? 'Academy & club development' : tab === 'CLUB' ? 'Club headquarters' : 'Manager dashboard'}</h2>
           </div>
         </div>
         {false && (
@@ -755,8 +759,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         )}
 
         {tab === 'TRANSFERS' && (
-          <div className="flex flex-col gap-5">
-          <div className={`rounded-xl border p-3 flex flex-wrap items-center justify-between gap-2 ${save.transferWindowOpen ? 'border-amber-400/40 bg-amber-500/10' : 'border-white/10 bg-[#131A22]'}`}>
+          <div className="manager-transfer-screen flex min-h-0 flex-col gap-2 overflow-hidden">
+          <div className={`shrink-0 rounded-xl border p-2 flex flex-wrap items-center justify-between gap-2 ${save.transferWindowOpen ? 'border-amber-400/40 bg-amber-500/10' : 'border-white/10 bg-[#131A22]'}`}>
             <div>
               <div className="text-xs font-black uppercase tracking-wider text-amber-300">Transfer Deadline Watch</div>
               <div className="mt-1 text-xs text-slate-300">
@@ -815,14 +819,14 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => { setSearchTerm(e.target.value); setMarketPage(0); }}
                     placeholder="Search global players..."
                     className="min-h-[42px] w-full pl-9 pr-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white focus:border-cyan-400 focus:outline-none"
                   />
                 </div>
                 <select
                   value={posFilter}
-                  onChange={(e) => setPosFilter(e.target.value as Position | 'ALL')}
+                  onChange={(e) => { setPosFilter(e.target.value as Position | 'ALL'); setMarketPage(0); }}
                   className="min-h-[42px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white"
                 >
                   <option value="ALL">All Positions</option>
@@ -839,8 +843,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {marketPlayers.map((p) => {
+            <div className="manager-market-grid grid min-h-0 flex-1 grid-cols-2 lg:grid-cols-3 gap-2 overflow-hidden">
+              {visibleMarketPlayers.map((p) => {
                 const pClub = save.clubs[p.clubId];
                 return (
                   <div key={p.id} className="rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col justify-between gap-3">
@@ -883,14 +887,18 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                 );
               })}
             </div>
+            <div className="flex shrink-0 items-center justify-between gap-2 px-1 text-[10px] text-slate-400">
+              <span>Showing {marketPlayers.length ? marketPage * 6 + 1 : 0}–{Math.min(marketPlayers.length, marketPage * 6 + 6)} of {marketPlayers.length} players</span>
+              <div className="flex items-center gap-2"><button type="button" disabled={marketPage === 0} onClick={() => setMarketPage(p => Math.max(0, p - 1))} className="rounded border border-white/15 px-3 py-1.5 disabled:opacity-30">Previous</button><span>{marketPage + 1}/{marketPageCount}</span><button type="button" disabled={marketPage + 1 >= marketPageCount} onClick={() => setMarketPage(p => Math.min(marketPageCount - 1, p + 1))} className="rounded border border-white/15 px-3 py-1.5 disabled:opacity-30">Next</button></div>
+            </div>
 
             {negTarget && <TransferNegotiationView save={save} player={negTarget} onUpdateSave={onUpdateSave} managerName={manager.name} onClose={() => setNegTarget(null)} />}
           </div>
         )}
 
         {tab === 'TRAINING' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4">
+          <div className="manager-training-screen grid min-h-0 grid-cols-2 gap-2 overflow-hidden">
+            <div className="min-h-0 rounded-xl bg-[#131A22] border border-white/10 p-3 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-white">Weekly Team Training</h3>
                 <span className="text-xs text-slate-400">
@@ -927,7 +935,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               </div>
             </div>
 
-            <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4">
+            <div className="min-h-0 rounded-xl bg-[#131A22] border border-white/10 p-3 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-white">Youth Academy Pipeline</h3>
@@ -945,7 +953,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                   <span>Promote Prospect</span>
                 </button>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="grid min-h-0 grid-cols-2 content-start gap-1 overflow-hidden">
                 {squad
                   .filter((p) => p.age <= 20 || p.isYouth)
                   .map((yp) => (
@@ -1089,7 +1097,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         {tab === 'DEVELOPMENT' && <ClubDevelopmentHub save={save} onUpdateSave={onUpdateSave} />}
 
         {tab === 'SETTINGS' && (
-          <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-6 flex flex-col gap-4">
+          <div className="max-w-lg mx-auto rounded-xl bg-[#131A22] border border-white/10 p-4 flex flex-col gap-3">
             <h3 className="text-xl font-bold text-white">Career Settings</h3>
             <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B]">
               <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
