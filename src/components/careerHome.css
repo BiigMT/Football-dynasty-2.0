@@ -1895,8 +1895,3 @@
     gap: 10px !important;
   }
 }
-
-/* Squad & tactics page: full-size pitch and a separately scrollable player list. */
-@media (orientation: landscape) {
-  .fd-manager-skin + .team-management-screen {}
-}
