@@ -277,6 +277,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
           <div className="flex items-center gap-3 min-w-0">
             <ClubBadge
               shortName={homeClub.shortName}
+              clubId={homeClub.id}
+              clubName={homeClub.name}
               primaryColor={homeClub.primaryColor}
               secondaryColor={homeClub.secondaryColor}
               size={40}
@@ -320,6 +322,8 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
             </div>
             <ClubBadge
               shortName={awayClub.shortName}
+              clubId={awayClub.id}
+              clubName={awayClub.name}
               primaryColor={awayClub.primaryColor}
               secondaryColor={awayClub.secondaryColor}
               size={40}

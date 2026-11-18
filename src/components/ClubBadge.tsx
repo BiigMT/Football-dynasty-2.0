@@ -1,10 +1,13 @@
 import React from 'react';
+import { useGameMediaImage } from '../lib/gameMedia';
 
 interface ClubBadgeProps {
   shortName: string;
   primaryColor: string;
   secondaryColor: string;
   country?: string;
+  clubId?: string;
+  clubName?: string;
   size?: number;
   className?: string;
 }
@@ -35,7 +38,8 @@ export const KitPreview: React.FC<{ primaryColor: string; secondaryColor: string
   </svg>
 );
 
-export const ClubBadge: React.FC<ClubBadgeProps> = ({ shortName, primaryColor, secondaryColor, country, size = 36, className = '' }) => {
+export const ClubBadge: React.FC<ClubBadgeProps> = ({ shortName, primaryColor, secondaryColor, country, clubId, clubName, size = 36, className = '' }) => {
+  const remoteImage = useGameMediaImage('club', clubId, clubName);
   const textColor = ['#F8FAFC', '#FACC15', '#EAB308', '#FDE047'].includes(primaryColor.toUpperCase()) ? '#0F172A' : '#FFFFFF';
   const crestId = `crest-${shortName.replace(/[^a-z0-9]/gi, '')}-${size}`;
   return (
@@ -63,7 +67,8 @@ export const ClubBadge: React.FC<ClubBadgeProps> = ({ shortName, primaryColor, s
         <path d="M18 29 L21 26 L24 28 L27 25 L30 29 L27 33 L22 33Z" fill="none" stroke="#FFFFFF" strokeWidth="1.15" strokeLinejoin="round" />
         <text x="24" y="43" textAnchor="middle" fill={textColor} fontSize="6.2" fontWeight="900" fontFamily="Arial, sans-serif">{shortName.slice(0, 3).toUpperCase()}</text>
       </svg>
-      {country && <span className="absolute -right-1 -top-1 rounded-full bg-slate-950 border border-white/30 flex items-center justify-center" style={{ width: Math.max(15, size * .43), height: Math.max(15, size * .43), fontSize: Math.max(9, size * .28) }}>{FLAG_EMOJI[country] ?? '🌍'}</span>}
+      {remoteImage && <img src={remoteImage} alt={clubName ? `${clubName} crest` : `${shortName} crest`} loading="lazy" decoding="async" className="absolute inset-0 z-[1] h-full w-full object-contain" />}
+      {country && <span className="z-10 absolute -right-1 -top-1 rounded-full bg-slate-950 border border-white/30 flex items-center justify-center" style={{ width: Math.max(15, size * .43), height: Math.max(15, size * .43), fontSize: Math.max(9, size * .28) }}>{FLAG_EMOJI[country] ?? '🌍'}</span>}
     </span>
   );
 };
