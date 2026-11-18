@@ -724,6 +724,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <PlayerPortrait
+                          playerId={p.id}
                           appearance={p.appearance}
                           jerseyPrimary={club.primaryColor}
                           jerseySecondary={club.secondaryColor}
