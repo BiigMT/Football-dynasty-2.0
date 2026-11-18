@@ -509,6 +509,26 @@ export interface NewsItem {
   body: string;
 }
 
+export type ClubStaffRole = 'HEAD_COACH' | 'ASSISTANT' | 'ATTACKING_COACH' | 'DEFENDING_COACH' | 'FITNESS_COACH' | 'GOALKEEPING_COACH' | 'SCOUT' | 'PHYSIO';
+
+export interface ClubStaffMember {
+  id: string;
+  role: ClubStaffRole;
+  name: string;
+  rating: number;
+  weeklyWage: number;
+  contractWeeks: number;
+}
+
+export interface ClubOperations {
+  staff: Partial<Record<ClubStaffRole, ClubStaffMember>>;
+  facilities: { training: number; medical: number; academy: number; scouting: number; stadium: number };
+  sponsor?: { name: string; weeklyIncome: number; weeksRemaining: number };
+  boardCommitment?: { type: 'YOUTH' | 'UNITY' | 'RESULTS'; season: number; deadlineWeek: number; targetAcademyLevel?: number };
+  ticketPrice: number;
+  supporterMood: number;
+}
+
 export interface CareerSave {
   slotId: string;
   mode: CareerMode;
@@ -539,4 +559,5 @@ export interface CareerSave {
   scoutingReports?: ScoutingReport[];
   playerRelationships?: Record<string, number>;
   squadChemistryLinks?: Record<string, number>;
+  clubOperations?: ClubOperations;
 }
