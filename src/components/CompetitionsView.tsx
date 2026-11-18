@@ -107,6 +107,8 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
                           <div className="flex items-center gap-2.5">
                             <ClubBadge
                               shortName={club.shortName}
+                              clubId={club.id}
+                              clubName={club.name}
                               primaryColor={club.primaryColor}
                               secondaryColor={club.secondaryColor}
                               country={club.country}
