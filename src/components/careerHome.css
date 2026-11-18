@@ -1805,3 +1805,93 @@
   }
   .fd-manager-skin .manager-training-screen button { min-height: 34px !important; }
 }
+
+
+/* Readable landscape workspaces: content may grow and scroll instead of being clipped. */
+@media (orientation: landscape) {
+  .fd-manager-skin.fd-realism-manager {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+  .fd-manager-skin .career-subpage-content {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    padding: 12px 14px !important;
+  }
+  .fd-manager-skin .career-subpage-content > :not(.relative) {
+    min-height: auto !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
+  }
+  .fd-manager-skin .career-subpage-content .overflow-y-auto,
+  .fd-manager-skin .career-subpage-content .overflow-auto {
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+  }
+  .fd-manager-skin .manager-transfer-screen {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    min-height: max-content !important;
+  }
+  .fd-manager-skin .manager-transfer-screen > .rounded-xl {
+    max-height: none !important;
+    padding: 14px !important;
+    overflow: visible !important;
+  }
+  .fd-manager-skin .manager-transfer-screen .manager-market-grid {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
+    grid-template-rows: auto !important;
+    grid-auto-rows: minmax(170px, auto) !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+  .fd-manager-skin .manager-transfer-screen .manager-market-grid > div {
+    min-height: 170px !important;
+    padding: 12px !important;
+    gap: 10px !important;
+    overflow: visible !important;
+  }
+  .fd-manager-skin .manager-transfer-screen .manager-market-grid img {
+    max-height: 72px !important;
+  }
+  .fd-manager-skin .manager-transfer-screen input,
+  .fd-manager-skin .manager-transfer-screen select {
+    min-height: 40px !important;
+  }
+  .fd-manager-skin .manager-training-screen {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    grid-auto-rows: auto !important;
+    gap: 14px !important;
+    overflow: visible !important;
+  }
+  .fd-manager-skin .manager-training-screen > div {
+    min-height: 180px !important;
+    padding: 14px !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+  .fd-manager-skin .manager-training-screen h3 {
+    font-size: 16px !important;
+  }
+  .fd-manager-skin .career-subpage-content > div.grid {
+    min-height: max-content !important;
+    overflow: visible !important;
+    gap: 12px !important;
+  }
+  .fd-manager-skin .career-subpage-content > div.grid > div {
+    min-height: 160px !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 14px !important;
+    gap: 10px !important;
+  }
+}
