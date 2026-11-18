@@ -536,6 +536,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
               <span>Career Home</span>
             </button>
             <ClubBadge
+              clubId={club.id}
               shortName={club.shortName}
               primaryColor={club.primaryColor}
               secondaryColor={club.secondaryColor}
@@ -724,6 +725,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <PlayerPortrait
+                          playerId={p.id}
                           appearance={p.appearance}
                           jerseyPrimary={club.primaryColor}
                           jerseySecondary={club.secondaryColor}

@@ -276,6 +276,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({
         <header className={`rounded-xl bg-[#131A22] border border-white/10 flex flex-wrap items-center justify-between ${isLiveMatch ? 'match-live-scoreboard' : isHalfTime ? 'match-halftime-scoreboard' : 'p-4 gap-4'}`}>
           <div className="flex items-center gap-3 min-w-0">
             <ClubBadge
+              clubId={homeClub.id}
               shortName={homeClub.shortName}
               primaryColor={homeClub.primaryColor}
               secondaryColor={homeClub.secondaryColor}

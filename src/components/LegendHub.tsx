@@ -242,6 +242,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         <div className="max-w-xl w-full rounded-xl bg-[#131A22] border border-amber-400/50 p-6 flex flex-col gap-5 text-center">
           <div className="mx-auto">
             <PlayerPortrait
+              playerId={player.id}
               appearance={player.appearance}
               jerseyPrimary={club.primaryColor}
               jerseySecondary={club.secondaryColor}
