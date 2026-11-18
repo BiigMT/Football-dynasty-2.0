@@ -106,6 +106,7 @@ export const CompetitionsView: React.FC<CompetitionsViewProps> = ({ save }) => {
                         <td className="py-2.5 px-3 font-sans">
                           <div className="flex items-center gap-2.5">
                             <ClubBadge
+                              clubId={club.id}
                               shortName={club.shortName}
                               primaryColor={club.primaryColor}
                               secondaryColor={club.secondaryColor}
