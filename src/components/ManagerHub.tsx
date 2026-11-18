@@ -94,8 +94,6 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     [save.players, club.id]
   );
 
-  const visibleMarketPlayers = marketPlayers.slice(marketPage * 6, marketPage * 6 + 6);
-  const marketPageCount = Math.max(1, Math.ceil(marketPlayers.length / 6));
   const transferDeadlineWeek = save.currentWeek <= 4 ? 4 : save.currentWeek <= 11 ? 11 : null;
   const transferWeeksRemaining = transferDeadlineWeek === null ? null : Math.max(0, transferDeadlineWeek - save.currentWeek);
   const nextFixture = getNextUserFixture(save);
@@ -110,6 +108,9 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       .sort((a, b) => b.overall - a.overall)
       .slice(0, 36);
   }, [save.players, club.id, posFilter, searchTerm]);
+
+  const visibleMarketPlayers = marketPlayers.slice(marketPage * 6, marketPage * 6 + 6);
+  const marketPageCount = Math.max(1, Math.ceil(marketPlayers.length / 6));
 
   const handleForwardTime = () => {
     soundEngine.playClick();
