@@ -18,8 +18,8 @@ function notify() { listeners.forEach((listener) => listener()); }
 
 export function loadGameMedia(): Promise<void> {
   if (loadPromise) return loadPromise;
-  const url = (import.meta.env.VITE_SUPABASE_URL ?? '').replace(/\/$/, '');
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY ?? '';
+  const url = (import.meta.env.VITE_SUPABASE_URL || 'https://vdpnmhqvnjskevlikqax.supabase.co').replace(/\/$/, '');
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_w6FuTEPQNVJdSZYKqv9Low_r20RsxlR';
   if (!url || !key) return Promise.resolve();
   loadPromise = fetch(`${url}/rest/v1/game_media?select=entity_type,entity_id,storage_path`, {
     headers: { apikey: key, Authorization: `Bearer ${key}` },
