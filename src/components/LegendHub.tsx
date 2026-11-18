@@ -243,6 +243,8 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           <div className="mx-auto">
             <PlayerPortrait
               appearance={player.appearance}
+              playerId={player.id}
+              playerName={player.name}
               jerseyPrimary={club.primaryColor}
               jerseySecondary={club.secondaryColor}
               size={96}
@@ -350,7 +352,9 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <div className="fd-player-crest" style={{ background: club.primaryColor }}>
               <span>{club.shortName.slice(0, 3).toUpperCase()}</span>
             </div>
-            <PlayerPortrait appearance={player.appearance} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={58} className="fd-player-headshot" />
+            <PlayerPortrait appearance={player.appearance}
+              playerId={player.id}
+              playerName={player.name} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={58} className="fd-player-headshot" />
             <div className="fd-player-headcopy">
               <div className="fd-player-kicker">FOOTBALL DYNASTY · BECOME A LEGEND</div>
               <h1>{player.name}</h1>
@@ -389,7 +393,9 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <span className="fd-player-pill fd-player-gold">PLAYER SPOTLIGHT</span>
             </div>
             <div className="fd-player-portrait-stage">
-              <PlayerPortrait appearance={player.appearance} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={210} className="fd-player-feature-portrait" />
+              <PlayerPortrait appearance={player.appearance}
+              playerId={player.id}
+              playerName={player.name} jerseyPrimary={club.primaryColor} jerseySecondary={club.secondaryColor} shirtNumber={player.shirtNumber} size={210} className="fd-player-feature-portrait" />
               <div className="fd-player-rating"><strong>{player.overall}</strong><span>OVR</span><em>POT {player.potential}</em></div>
             </div>
             <div className="fd-player-showcase-copy">
@@ -471,6 +477,8 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             </button>
             <PlayerPortrait
               appearance={player.appearance}
+              playerId={player.id}
+              playerName={player.name}
               jerseyPrimary={club.primaryColor}
               jerseySecondary={club.secondaryColor}
               size={40}
@@ -549,6 +557,8 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <div className="flex items-center gap-4">
                 <PlayerPortrait
                   appearance={player.appearance}
+              playerId={player.id}
+              playerName={player.name}
                   jerseyPrimary={club.primaryColor}
                   jerseySecondary={club.secondaryColor}
                   size={72}
