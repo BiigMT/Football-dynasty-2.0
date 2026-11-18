@@ -109,7 +109,9 @@ Deno.serve(async (req) => {
       const height = Number(info?.height ?? 0);
       const ratio = height > 0 ? width / height : 0;
       const portraitShape = entityType !== "player" || (ratio >= 0.55 && ratio <= 1.35 && height >= 240);
-      const nameMatch = matchesNamedEntity(entityName, title, description);
+      const nameMatch = entityType === "player"
+        ? normalize(title).includes(normalize(entityName))
+        : matchesNamedEntity(entityName, title, description);
       const score = (normalize(title).includes(normalize(entityName)) ? 100 : 0) -
         (entityType === "player" ? Math.abs(ratio - 0.82) * 10 : 0);
       return { page, info, license, author, licenseUrl, description, title, portraitShape, nameMatch, score };
