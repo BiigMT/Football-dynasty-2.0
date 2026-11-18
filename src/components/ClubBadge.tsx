@@ -68,7 +68,7 @@ export const ClubBadge: React.FC<ClubBadgeProps> = ({ shortName, primaryColor, s
         <text x="24" y="43" textAnchor="middle" fill={textColor} fontSize="6.2" fontWeight="900" fontFamily="Arial, sans-serif">{shortName.slice(0, 3).toUpperCase()}</text>
       </svg>
       {remoteImage && <img src={remoteImage} alt={clubName ? `${clubName} crest` : `${shortName} crest`} loading="lazy" decoding="async" className="absolute inset-0 z-[1] h-full w-full object-contain" />}
-      {country && <span className="z-10" className="absolute -right-1 -top-1 rounded-full bg-slate-950 border border-white/30 flex items-center justify-center" style={{ width: Math.max(15, size * .43), height: Math.max(15, size * .43), fontSize: Math.max(9, size * .28) }}>{FLAG_EMOJI[country] ?? '🌍'}</span>}
+      {country && <span className="z-10 absolute -right-1 -top-1 rounded-full bg-slate-950 border border-white/30 flex items-center justify-center" style={{ width: Math.max(15, size * .43), height: Math.max(15, size * .43), fontSize: Math.max(9, size * .28) }}>{FLAG_EMOJI[country] ?? '🌍'}</span>}
     </span>
   );
 };
