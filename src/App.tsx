@@ -102,29 +102,44 @@ export default function App() {
 
   const handleLoadCareer = async (slotId: string) => {
     soundEngine.playClick();
-    let loaded = await loadCareer(slotId);
-    if (!loaded) return;
-    // Upgrade older Player Career saves without disturbing a match already in progress.
-    const hasPyramid = Object.keys(loaded.leagues).some((id) => /_tier_[1-4]$/.test(id));
-    if (loaded.mode === 'PLAYER' && !hasPyramid && !loaded.activeMatch) {
-      const pyramid = initializeFourTierPyramid(loaded.clubs, loaded.leagues);
-      loaded = { ...loaded, clubs: pyramid.clubs, leagues: pyramid.leagues, updatedAt: Date.now() };
-      await saveCareer(loaded);
-      await refreshSlots();
-    }
-    setActiveSave(loaded);
-    if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
-      // Never drop a loaded career straight into the 3D match. Require an explicit resume action.
-      setScreen('MATCH_READY');
-    } else {
-      setScreen('CAREER');
+    try {
+      let loaded = await loadCareer(slotId);
+      if (!loaded) {
+        window.alert('This save slot is empty or its data could not be validated.');
+        await refreshSlots();
+        return;
+      }
+      // Upgrade older Player Career saves without disturbing a match already in progress.
+      const hasPyramid = Object.keys(loaded.leagues).some((id) => /_tier_[1-4]$/.test(id));
+      if (loaded.mode === 'PLAYER' && !hasPyramid && !loaded.activeMatch) {
+        const pyramid = initializeFourTierPyramid(loaded.clubs, loaded.leagues);
+        loaded = { ...loaded, clubs: pyramid.clubs, leagues: pyramid.leagues, updatedAt: Date.now() };
+        await saveCareer(loaded);
+        await refreshSlots();
+      }
+      setActiveSave(loaded);
+      if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
+        // Never drop a loaded career straight into the 3D match. Require an explicit resume action.
+        setScreen('MATCH_READY');
+      } else {
+        setScreen('CAREER');
+      }
+    } catch (error) {
+      console.error('Career could not be loaded:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not load this career. Your save has not been deleted.');
+      await refreshSlots().catch((refreshError) => console.warn('Could not refresh save slots.', refreshError));
     }
   };
 
   const handleDeleteSlot = async (slotId: string) => {
     soundEngine.playClick();
-    await deleteCareer(slotId);
-    await refreshSlots();
+    try {
+      await deleteCareer(slotId);
+      await refreshSlots();
+    } catch (error) {
+      console.error('Career deletion failed:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not delete this save. It has been left intact.');
+    }
   };
 
   const handleConfirmManager = async (data: {
