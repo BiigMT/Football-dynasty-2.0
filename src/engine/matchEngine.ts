@@ -468,6 +468,7 @@ function updateUserObjectives(session: MatchSession): void {
 }
 
 export function startMatchKickoff(session: MatchSession): MatchSession {
+  if (session.phase !== 'PRE_MATCH') return session;
   const next: MatchSession = {
     ...session,
     phase: 'FIRST_HALF',
@@ -512,6 +513,7 @@ export function applyTeamTalk(
   talkType: 'ENCOURAGE' | 'DEMAND_MORE' | 'TACTICAL_FOCUS' | 'PRAISE',
   players: Record<string, Player>
 ): MatchSession {
+  if (session.phase !== 'HALF_TIME' || session.teamTalkApplied) return session;
   const side = session.userClubSide ?? 'HOME';
   const nextStates = { ...session.playerStates };
 
