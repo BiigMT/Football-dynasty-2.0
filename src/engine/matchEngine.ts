@@ -827,8 +827,6 @@ export function simulateNextMinute(
   const awayIsUser = session.userClubSide === 'AWAY' && !session.userPlayerId;
   const homeTrailing = session.homeStats.goals < session.awayStats.goals;
   const awayTrailing = session.awayStats.goals < session.homeStats.goals;
-  const homeLeadingByOne = session.homeStats.goals - session.awayStats.goals === 1;
-  const awayLeadingByOne = session.awayStats.goals - session.homeStats.goals === 1;
   let homeTactics = session.homeTactics;
   let awayTactics = session.awayTactics;
   const tacticalEvents: MatchEvent[] = [];
