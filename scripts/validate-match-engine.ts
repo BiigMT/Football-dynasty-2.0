@@ -81,6 +81,7 @@ assert.equal(subSession.homeSubsUsed, 1);
 assert.equal(subSession.playerStates[firstOut].onPitch, false);
 assert.equal(subSession.playerStates[firstOut].subbedOff, true);
 assert.equal(subSession.playerStates[firstIn].onPitch, true);
+assert.equal(subSession.playerStates[firstIn].started, false, 'Substitutes must not be counted as match starters');
 assert.ok(subSession.homeTactics.startingXI.includes(firstIn));
 assert.ok(subSession.homeTactics.bench.includes(firstOut));
 const afterFirstSub = subSession;
@@ -173,6 +174,10 @@ const fullMatch = withSeed(20261120, () => {
   assert.ok(guard < 120, 'A match must reach full-time within its safety bound');
   assert.equal(session.phase, 'FULL_TIME');
   assert.equal(session.minute, 90);
+  assert.equal(session.playerStates[home.tactics.startingXI[0]].minutesPlayed, 90, 'An uninterrupted goalkeeper should record all 90 minutes');
+  for (const state of Object.values(session.playerStates)) {
+    assert.ok((state.minutesPlayed ?? 0) >= 0 && (state.minutesPlayed ?? 0) <= 90, 'Individual minutes must remain within the match duration');
+  }
   assert.ok(session.events.some((event) => event.type === 'HALF_TIME'));
   assert.ok(session.events.some((event) => event.type === 'FULL_TIME'));
   assert.ok(session.events.filter((event) => event.type === 'KICKOFF').length >= 2);
