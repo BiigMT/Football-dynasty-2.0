@@ -86,7 +86,9 @@ export default function App() {
   const handleStartNewCareer = (mode: CareerMode, slotId: string) => {
     soundEngine.playClick();
     setSetupTarget({ mode, slotId });
-    setScreen('MODE_SELECT');
+    // The title screen already asks the player to choose Manager or Player Career.
+    // Go straight to that mode's setup instead of showing the duplicate mode selector.
+    setScreen('SETUP');
   };
 
   const handleLoadCareer = async (slotId: string) => {
