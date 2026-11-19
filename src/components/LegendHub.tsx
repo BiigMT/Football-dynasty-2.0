@@ -381,6 +381,11 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           <button type="button" onClick={() => setTab('SETTINGS')}><span>07</span> SYSTEM</button>
         </nav>
 
+        <div className="fd-player-matchbar">
+          <div><small>{nextFixture ? 'NEXT FIXTURE READY' : 'CAREER PROGRESSION'}</small><strong>{nextFixture ? 'Your next match is waiting' : leagueFinished ? 'Season completed' : 'Continue your career'}</strong></div>
+          <button type="button" className="fd-player-matchbar-cta" onClick={handleForwardTime}>{nextFixture ? '⚽ KICK OFF MATCH' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
+        </div>
+
         <main className="fd-player-layout">
           <section className="fd-player-showcase">
             <img className="fd-player-showcase-bg" src="/media/game/player-preparation.jpg" alt="" />
