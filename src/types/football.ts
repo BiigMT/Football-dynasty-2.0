@@ -411,6 +411,43 @@ export type IndividualDrill =
   | 'STAMINA_STRENGTH'
   | 'GOALKEEPING';
 
+export type ManagerPhilosophy = 'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced';
+
+export interface WorldManagerProfile {
+  id: string;
+  name: string;
+  nationality: string;
+  age: number;
+  reputation: number;
+  philosophy: ManagerPhilosophy;
+  clubId: string;
+  confidence: number;
+  weeksAtClub: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  lastPlayed: number;
+  lastPoints: number;
+}
+
+export interface WorldEvent {
+  id: string;
+  season: number;
+  week: number;
+  type: 'MANAGER_APPOINTED' | 'MANAGER_DISMISSED' | 'BOARD_WARNING';
+  clubId: string;
+  managerId: string;
+  headline: string;
+  body: string;
+}
+
+export interface LivingWorldState {
+  managersByClub: Record<string, WorldManagerProfile>;
+  history: WorldEvent[];
+  lastProcessedSeason: number;
+  lastProcessedWeek: number;
+}
+
 export interface ManagerProfile {
   name: string;
   nationality: string;
@@ -560,4 +597,5 @@ export interface CareerSave {
   playerRelationships?: Record<string, number>;
   squadChemistryLinks?: Record<string, number>;
   clubOperations?: ClubOperations;
+  worldState?: LivingWorldState;
 }
