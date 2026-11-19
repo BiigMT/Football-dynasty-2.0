@@ -61,7 +61,7 @@ export function applyMatchFixingConsequence(
   };
   const nextLegend: LegendProfile = {
     ...legend,
-    managerTrust: Math.max(15, legend.managerTrust - 18),
+    managerTrust: legend.managerTrust,
     matchFixing: { ...fixing, status: 'UNDER_INVESTIGATION', suspicion: 72, lastFixtureId: fixtureId },
     phoneNotifications: [{
       id: `fixing_investigation_${fixtureId}`,
