@@ -574,9 +574,16 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
   let nextCont = [...save.continentalFixtures];
   let nextIntl = save.internationalTournament ? { ...save.internationalTournament } : undefined;
   const nextNews = [...save.news];
+  const baseWorldState = save.worldState ?? createInitialLivingWorld(
+    save.clubs,
+    save.leagues,
+    save.mode === 'MANAGER' ? save.userClubId : undefined,
+    save.season,
+    save.currentWeek,
+  );
   const generatedWorldEvents: WorldEvent[] = [];
   const recordWorldEvent = (event: WorldEvent, category: NewsItem['category']) => {
-    if (save.worldState?.history.some((existing) => existing.id === event.id)) return;
+    if (baseWorldState.history.some((existing) => existing.id === event.id) || generatedWorldEvents.some((existing) => existing.id === event.id)) return;
     generatedWorldEvents.push(event);
     nextNews.unshift({
       id: event.id,
@@ -672,7 +679,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
         week: save.currentWeek,
         type: 'PLAYER_MILESTONE',
         clubId: p.clubId,
-        managerId: save.worldState?.managersByClub[p.clubId]?.id ?? '',
+        managerId: baseWorldState.managersByClub[p.clubId]?.id ?? '',
         playerId: p.id,
         headline: `${p.name} reaches ${milestone.value} ${milestone.label}`,
         body: `${p.name} has reached ${milestone.value} ${milestone.label} for ${nextClubs[p.clubId]?.name ?? 'the club'} this season.`,
@@ -734,7 +741,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       week: save.currentWeek,
       type: 'MATCH_UPSET',
       clubId: winningClub.id,
-      managerId: save.worldState?.managersByClub[winningClub.id]?.id ?? '',
+      managerId: baseWorldState.managersByClub[winningClub.id]?.id ?? '',
       relatedClubId: losingClub.id,
       headline: `Shock result: ${winningClub.name} stun ${losingClub.name}`,
       body: `${winningClub.name} produced a major upset against the higher-reputation ${losingClub.name}, changing the mood around both clubs.`,
@@ -915,9 +922,10 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     cupFixtures: nextCup,
     continentalFixtures: nextCont,
     internationalTournament: nextIntl,
-    worldState: save.worldState
-      ? { ...save.worldState, history: [...save.worldState.history, ...generatedWorldEvents].slice(-500) }
-      : save.worldState,
+    worldState: {
+      ...baseWorldState,
+      history: [...baseWorldState.history, ...generatedWorldEvents].slice(-500),
+    },
     manager: nextManager,
     legend: nextLegend,
     activeMatch: undefined,
