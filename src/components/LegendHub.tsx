@@ -383,7 +383,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         <div className="fd-player-matchbar">
           <div><small>{nextFixture ? 'NEXT FIXTURE READY' : 'CAREER PROGRESSION'}</small><strong>{nextFixture ? 'Your next match is waiting' : leagueFinished ? 'Season completed' : 'Continue your career'}</strong></div>
-          <button type="button" className="fd-player-matchbar-cta" onClick={handleForwardTime}>{nextFixture ? '⚽ KICK OFF MATCH' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
+          <button type="button" className="fd-player-matchbar-cta" onClick={handleForwardTime}>{nextFixture ? '⚽ OPEN MATCHDAY' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
         </div>
 
         <main className="fd-player-layout">
@@ -454,13 +454,24 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               {nextFixture && <div className="rounded-lg border border-cyan-400/20 bg-cyan-400/5 p-2"><div className="text-[9px] text-cyan-300 font-bold uppercase">Next opponent scouting</div><div className="text-[11px] text-white font-bold mt-1">{save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'}</div><div className="text-[10px] text-slate-400 mt-0.5">{save.clubs[rivalClubId]?.tactics.formation ?? 'Formation data'} · {save.clubs[rivalClubId]?.tactics.mentality ?? 'Tactical plan'} · {isStarter ? 'You are currently selected' : isBench ? 'You are currently on the bench' : 'You are outside the matchday XI'}</div></div>}
               <div className="text-[9px] text-slate-500">AI managers adapt to scorelines and match momentum. AI clubs rotate tired players; training and match performances shape your growth and future selection.</div>
             </section>
+            <section className="fd-player-panel fd-player-news-panel">
+              <div className="fd-player-panel-title"><div><small>AROUND THE CLUB & THE FOOTBALL WORLD</small><h3>LATEST NEWS</h3></div><span>{save.news.length} STORIES</span></div>
+              <div className="space-y-2">
+                {save.news.slice(0, 4).map((item) => <article key={item.id} className="rounded-lg border border-white/10 bg-[#0b1118] px-3 py-2">
+                  <div className="flex items-center justify-between gap-2"><span className="text-[9px] font-black uppercase tracking-wider text-cyan-300">{String(item.category).replace(/_/g, ' ')}</span><span className="text-[9px] text-slate-500">S{item.season} · W{item.week}</span></div>
+                  <h4 className="mt-1 text-xs font-bold leading-snug text-white">{item.headline}</h4>
+                  <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{item.body}</p>
+                </article>)}
+                {!save.news.length && <p className="fd-player-empty">Your career news will appear here as matches, transfers and club events unfold.</p>}
+              </div>
+            </section>
             <section className="fd-player-panel fd-player-table">
-              <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
+              <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 5</span></div>
               <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
               {tableRows.slice(0, 5).map((row) => <div className={`fd-player-table-row${row.me ? ' is-user' : ''}`} key={row.club}><span>{row.pos}</span><span><i style={{ background: row.color || '#789' }} />{row.club}</span><span>{row.p}</span><span>{row.gd > 0 ? '+' : ''}{row.gd}</span><b>{row.pts}</b></div>)}
             </section>
             <section className="fd-player-panel fd-player-fixtures">
-              <div className="fd-player-panel-title"><div><small>THE ROAD AHEAD</small><h3>UPCOMING FIXTURES</h3></div><span>5 WEEKS</span></div>
+              <div className="fd-player-panel-title"><div><small>CAREER CALENDAR · SEASON {save.season}</small><h3>UPCOMING SCHEDULE</h3></div><span>5 EVENTS</span></div>
               <div className="fd-player-fixture-list">
                 {upcomingFixtures.map((fixture) => {
                   const home = fixture.homeClubId === club.id;
