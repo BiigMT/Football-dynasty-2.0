@@ -40,7 +40,7 @@ function matchesNamedEntity(name: string, title: string, description: string): b
   return tokens.length > 0 && tokens.every((token) => haystack.includes(token));
 }
 function isCCBYSA40(licenseName: string, licenseUrl: string): boolean {
-  const name = licenseName.trim().toLowerCase().replace(/\\s+/g, " ");
+  const name = licenseName.trim().toLowerCase().replace(/\s+/g, " ");
   const url = licenseUrl.trim().replace(/\\/+$/, "").toLowerCase();
   const exactName = name === "cc by-sa 4.0" ||
     name === "creative commons attribution-sharealike 4.0 international" ||
