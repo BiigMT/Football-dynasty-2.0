@@ -88,15 +88,18 @@ function buildSeasonCupAndContinental(
     1
   );
 
+  const eligibleLeagues = Object.values(leagues).filter((league) => league.region === userLeague.region);
   const topClubs: string[] = [];
-  Object.values(leagues).forEach((l) => {
-    const sorted = [...l.clubIds].sort((a, b) => clubs[b].reputation - clubs[a].reputation);
-    topClubs.push(sorted[0], sorted[1]);
+  eligibleLeagues.forEach((league) => {
+    const sorted = [...league.clubIds].sort((a, b) => (clubs[b]?.reputation ?? 0) - (clubs[a]?.reputation ?? 0));
+    topClubs.push(...sorted.slice(0, 2));
   });
-  const eight = topClubs.slice(0, 8);
+  const eight = [...new Set(topClubs)].slice(0, 8);
+  const continentalName = userLeague.region === 'AFRICA' ? 'CAF Champions League' : 'Dynasty Champions Cup';
+  const continentalId = userLeague.region === 'AFRICA' ? 'caf_champions_league' : 'dynasty_continental';
   const continentalFixtures = generateCupRound(
-    'dynasty_continental',
-    'Dynasty Champions Cup',
+    continentalId,
+    continentalName,
     'CONTINENTAL',
     eight,
     7,
@@ -486,6 +489,7 @@ export function createLegendCareer(params: {
       skillPoints: 0,
     },
     clubs: world.clubs,
+    worldManagers: initializeWorldManagers(world.clubs),
     players: world.players,
     leagues: world.leagues,
     nationalTeams: world.nationalTeams,
@@ -978,12 +982,13 @@ export function advanceWeek(save: CareerSave): CareerSave {
   const contAdv = advanceKnockoutIfReady(
     nextSave.continentalFixtures,
     'dynasty_continental',
-    'Dynasty Champions Cup',
+    nextSave.continentalFixtures[0]?.competitionName ?? 'Dynasty Champions Cup',
     'CONTINENTAL',
     save.currentWeek + 4
   );
   nextSave.continentalFixtures = contAdv.fixtures;
-  if (contAdv.championId && !nextSave.news.some((n) => n.headline.includes('Champions Cup') && n.season === save.season)) {
+  const continentalCompetitionName = nextSave.continentalFixtures[0]?.competitionName ?? 'Dynasty Champions Cup';
+  if (contAdv.championId && !nextSave.news.some((n) => n.headline.includes(continentalCompetitionName) && n.season === save.season)) {
     const champ = nextSave.clubs[contAdv.championId];
     if (champ) {
       nextSave.news.unshift({
@@ -991,14 +996,14 @@ export function advanceWeek(save: CareerSave): CareerSave {
         week: save.currentWeek,
         season: save.season,
         category: 'AWARD',
-        headline: `${champ.name} crowned Dynasty Champions Cup winners!`,
-        body: `${champ.name} conquered the continental elite in a thrilling final.`,
+        headline: `${champ.name} crowned ${continentalCompetitionName} winners!`,
+        body: `${champ.name} conquered the continental competition in a thrilling final.`,
       });
       if (nextSave.manager && champ.id === nextSave.userClubId) {
-        nextSave.manager.trophies.push(`Season ${save.season} Dynasty Champions Cup`);
+        nextSave.manager.trophies.push(`Season ${save.season} ${continentalCompetitionName}`);
       }
       if (nextSave.legend && champ.id === nextSave.userClubId) {
-        nextSave.legend.trophies.push(`Season ${save.season} Dynasty Champions Cup`);
+        nextSave.legend.trophies.push(`Season ${save.season} ${continentalCompetitionName}`);
       }
     }
   }
