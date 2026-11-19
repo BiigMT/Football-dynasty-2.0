@@ -510,6 +510,125 @@ export function advanceLivingWorld(save: CareerSave, nextWeek: number): CareerSa
   processClubFinances(save, clubs, managersByClub, history, generatedNews, nextWeek);
   processManagerMarket(save, clubs, managersByClub, history, generatedNews, nextWeek);
 
+  // AI transfer market: one deterministic AI-to-AI deal at most per week while the window is open.
+  const players = { ...save.players };
+  if (save.transferWindowOpen && nextWeek % 2 === 0) {
+    const buyers = Object.values(clubs).filter((candidate) =>
+      candidate.id !== save.userClubId && candidate.finances.transferBudget > 250_000
+    ).sort((a, b) => stableHash(`${a.id}:${save.season}:${nextWeek}`) - stableHash(`${b.id}:${save.season}:${nextWeek}`));
+    const sellers = Object.values(players).filter((player) =>
+      player.clubId !== save.userClubId && player.clubId !== 'free_agent' &&
+      !player.isYouth && player.age <= 32 && player.contractYears > 0
+    ).sort((a, b) => (a.morale - b.morale) || (a.overall - b.overall));
+    const buyer = buyers.find((candidate) => candidate.finances.transferBudget >= 500_000);
+    const target = sellers.find((player) => {
+      const owner = clubs[player.clubId];
+      return owner && owner.id !== buyer?.id && (player.morale <= 58 || player.overall >= (buyer?.reputation ?? 0) + 8);
+    });
+    if (buyer && target) {
+      const seller = clubs[target.clubId];
+      const fee = Math.min(buyer.finances.transferBudget, Math.max(150_000, Math.round(target.marketValue * (target.morale <= 35 ? 0.72 : 0.94))));
+      if (seller && buyer.id !== seller.id && fee >= 100_000) {
+        players[target.id] = { ...target, clubId: buyer.id, morale: clamp(target.morale + 9, 1, 100), transferRequest: false };
+        clubs[buyer.id] = { ...buyer, finances: { ...buyer.finances, transferBudget: buyer.finances.transferBudget - fee, cashBalance: buyer.finances.cashBalance - fee } };
+        clubs[seller.id] = { ...seller, finances: { ...seller.finances, transferBudget: seller.finances.transferBudget + Math.round(fee * 0.72), cashBalance: seller.finances.cashBalance + fee } };
+        const event: WorldEvent = {
+          id: `world_${save.season}_${nextWeek}_ai_transfer_${target.id}`,
+          season: save.season, week: nextWeek, type: 'AI_TRANSFER', clubId: buyer.id,
+          managerId: managersByClub[buyer.id]?.id ?? 'board',
+          headline: `${buyer.name} sign ${target.name} from ${seller.name}`,
+          body: `The clubs agreed a €${fee.toLocaleString()} transfer for the ${target.position}. ${buyer.name} strengthen their squad ahead of the next run of fixtures.`,
+        };
+        history.push(event);
+        generatedNews.push({ id: event.id, week: nextWeek, season: save.season, category: 'TRANSFER', headline: event.headline, body: event.body });
+      }
+    }
+  }
+
+  // Playing-time pressure affects morale and can create a persistent transfer request.
+  Object.values(players).forEach((player) => {
+    if (player.clubId === save.userClubId || player.clubId === 'free_agent' || player.isYouth) return;
+    const appearancesExpected = Math.max(1, Math.floor((nextWeek / 38) * 8));
+    const played = player.seasonStats.appearances;
+    const nextMorale = clamp(player.morale + (played < appearancesExpected ? -2 : played >= appearancesExpected + 2 ? 1 : 0), 1, 100);
+    const request = nextMorale <= 24;
+    if (request && !player.transferRequest) {
+      const event: WorldEvent = {
+        id: `world_${save.season}_${nextWeek}_unrest_${player.id}`,
+        season: save.season, week: nextWeek, type: 'PLAYER_UNREST', clubId: player.clubId,
+        managerId: managersByClub[player.clubId]?.id ?? 'board',
+        headline: `${player.name} unhappy with playing time`,
+        body: `${player.name} is concerned about their role and is considering a move away unless their situation improves.`,
+      };
+      history.push(event);
+      generatedNews.push({ id: event.id, week: nextWeek, season: save.season, category: 'TRANSFER', headline: event.headline, body: event.body });
+    }
+    if (nextMorale !== player.morale || request !== Boolean(player.transferRequest)) {
+      players[player.id] = { ...player, morale: nextMorale, transferRequest: request };
+    }
+  });
+
+  // Ambitious AI managers can move between clubs; the outgoing coaches exchange jobs.
+  if (nextWeek % 6 === 0) {
+    const profiles = Object.values(managersByClub);
+    const mover = profiles.find((profile) => {
+      const currentClub = clubs[profile.clubId];
+      return currentClub && profile.confidence >= 82 && profiles.some((other) => {
+        const destination = clubs[other.clubId];
+        return other.id !== profile.id && destination && other.confidence <= 40 &&
+          destination.reputation >= currentClub.reputation + 15 && destination.id !== save.userClubId;
+      });
+    });
+    if (mover) {
+      const currentClub = clubs[mover.clubId];
+      const destinationManager = profiles.find((other) => {
+        const destination = clubs[other.clubId];
+        return other.id !== mover.id && destination && other.confidence <= 40 &&
+          destination.reputation >= (currentClub?.reputation ?? 0) + 15 && destination.id !== save.userClubId;
+      });
+      const destinationClub = destinationManager ? clubs[destinationManager.clubId] : undefined;
+      if (currentClub && destinationClub && destinationManager) {
+        managersByClub[currentClub.id] = { ...destinationManager, clubId: currentClub.id, confidence: 62, weeksAtClub: 0 };
+        managersByClub[destinationClub.id] = { ...mover, clubId: destinationClub.id, confidence: 68, weeksAtClub: 0 };
+        clubs[currentClub.id] = applyManagerTactics(currentClub, destinationManager.philosophy);
+        clubs[destinationClub.id] = applyManagerTactics(destinationClub, mover.philosophy);
+        [currentClub, destinationClub].forEach((team) => {
+          const incoming = managersByClub[team.id];
+          const event: WorldEvent = {
+            id: `world_${save.season}_${nextWeek}_manager_move_${team.id}`,
+            season: save.season, week: nextWeek, type: 'MANAGER_MOVED', clubId: team.id, managerId: incoming.id,
+            headline: `${incoming.name} takes charge at ${team.name}`,
+            body: `A managerial switch reshapes the dugout as ${incoming.name} arrives with a ${incoming.philosophy.toLowerCase()} approach.`,
+          };
+          history.push(event);
+          generatedNews.push({ id: event.id, week: nextWeek, season: save.season, category: 'BOARD', headline: event.headline, body: event.body });
+        });
+      }
+    }
+  }
+
+  // Weekly operating costs and matchday revenue create meaningful board/finance pressure.
+  Object.values(clubs).forEach((team) => {
+    const homeMatch = Object.values(save.leagues).some((competition) =>
+      competition.fixtures.some((fixture) => fixture.played && fixture.week === nextWeek && fixture.homeClubId === team.id)
+    );
+    const revenue = (team.finances.sponsorAnnualIncome / 52) + (homeMatch ? team.finances.matchdayIncomePerHomeGame : 0);
+    const cashBalance = team.finances.cashBalance + revenue - team.finances.weeklyWageBill;
+    const transferBudget = cashBalance < 0 ? Math.max(0, Math.min(team.finances.transferBudget, Math.round(cashBalance * -0.08))) : team.finances.transferBudget;
+    clubs[team.id] = { ...team, finances: { ...team.finances, cashBalance, transferBudget } };
+    if (cashBalance < -Math.max(500_000, team.finances.weeklyWageBill * 8) && nextWeek % 4 === 0) {
+      const event: WorldEvent = {
+        id: `world_${save.season}_${nextWeek}_finance_${team.id}`,
+        season: save.season, week: nextWeek, type: 'FINANCIAL_WARNING', clubId: team.id,
+        managerId: managersByClub[team.id]?.id ?? 'board',
+        headline: `${team.name} face growing financial pressure`,
+        body: `Operating costs are outpacing available income. The board may need to reduce spending or sell players.`,
+      };
+      history.push(event);
+      generatedNews.push({ id: event.id, week: nextWeek, season: save.season, category: 'BOARD', headline: event.headline, body: event.body });
+    }
+  });
+
   const worldState: LivingWorldState = {
     managersByClub,
     history: [...initialState.history, ...history].slice(-500),
