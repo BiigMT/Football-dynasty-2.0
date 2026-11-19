@@ -173,6 +173,8 @@ export function createMatchSession(params: {
         clubId,
         side,
         slotIndex: idx,
+        minutesPlayed: 0,
+        started: true,
         onPitch: true,
         subbedOff: false,
         stamina: Math.max(60, p.fitness),
@@ -197,6 +199,8 @@ export function createMatchSession(params: {
         clubId,
         side,
         slotIndex: -1,
+        minutesPlayed: 0,
+        started: false,
         onPitch: false,
         subbedOff: false,
         stamina: Math.max(70, p.fitness),
@@ -961,6 +965,7 @@ export function simulateNextMinute(
     nextStates[pid] = {
       ...st,
       stamina: Math.max(12, Number((st.stamina - drain).toFixed(1))),
+      minutesPlayed: (st.minutesPlayed ?? 0) + 1,
     };
   });
 
