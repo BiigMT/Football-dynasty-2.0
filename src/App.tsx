@@ -84,6 +84,11 @@ export default function App() {
   };
 
   const handleStartNewCareer = (mode: CareerMode, slotId: string) => {
+    const targetSlot = slots.find((slot) => slot.slotId === slotId);
+    if (!targetSlot || !targetSlot.empty) {
+      window.alert('That save slot is unavailable. Open Career Saves and free an empty slot before starting a new career.');
+      return;
+    }
     soundEngine.playClick();
     setSetupTarget({ mode, slotId });
     // The title screen already asks the player to choose Manager or Player Career.
