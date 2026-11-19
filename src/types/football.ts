@@ -316,6 +316,10 @@ export interface PlayerMatchState {
   clubId: string;
   side: 'HOME' | 'AWAY';
   slotIndex: number;
+  /** Actual match minutes accumulated; optional for compatibility with older active saves. */
+  minutesPlayed?: number;
+  /** True only when named in the starting XI, not when introduced as a substitute. */
+  started?: boolean;
   onPitch: boolean;
   subbedOff: boolean;
   stamina: number;
