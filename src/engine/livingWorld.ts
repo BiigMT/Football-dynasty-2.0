@@ -123,6 +123,235 @@ function applyManagerTactics(club: Club, philosophy: ManagerPhilosophy): Club {
   };
 }
 
+
+function recordWorldEvent(
+  events: WorldEvent[],
+  news: CareerSave['news'],
+  event: WorldEvent,
+  category: CareerSave['news'][number]['category'],
+): void {
+  events.push(event);
+  news.push({
+    id: event.id,
+    week: event.week,
+    season: event.season,
+    category,
+    headline: event.headline,
+    body: event.body,
+  });
+}
+
+function moveSquadPlayer(
+  clubs: Record<string, Club>,
+  players: CareerSave['players'],
+  playerId: string,
+  buyerId: string,
+  fee: number,
+): void {
+  const player = players[playerId];
+  const seller = clubs[player?.clubId];
+  const buyer = clubs[buyerId];
+  if (!player || !seller || !buyer || seller.id === buyer.id) return;
+  const nextSeller = {
+    ...seller,
+    tactics: {
+      ...seller.tactics,
+      startingXI: seller.tactics.startingXI.filter((id) => id !== playerId),
+      bench: seller.tactics.bench.filter((id) => id !== playerId),
+    },
+    finances: {
+      ...seller.finances,
+      transferBudget: seller.finances.transferBudget + fee,
+      cashBalance: seller.finances.cashBalance + fee,
+      weeklyWageBill: Math.max(0, seller.finances.weeklyWageBill - player.weeklyWage),
+    },
+  };
+  const nextBuyer = {
+    ...buyer,
+    tactics: {
+      ...buyer.tactics,
+      bench: buyer.tactics.bench.includes(playerId) ? buyer.tactics.bench : [...buyer.tactics.bench, playerId].slice(0, 7),
+    },
+    finances: {
+      ...buyer.finances,
+      transferBudget: Math.max(0, buyer.finances.transferBudget - fee),
+      cashBalance: buyer.finances.cashBalance - fee,
+      weeklyWageBill: buyer.finances.weeklyWageBill + player.weeklyWage,
+    },
+  };
+  if (nextSeller.tactics.startingXI.length < 11) {
+    const replacementId = nextSeller.tactics.bench[0] || Object.values(players).find((p) => p.clubId === seller.id && p.id !== playerId)?.id;
+    if (replacementId) {
+      nextSeller.tactics.startingXI.push(replacementId);
+      nextSeller.tactics.bench = nextSeller.tactics.bench.filter((id) => id !== replacementId);
+    }
+  }
+  clubs[seller.id] = nextSeller;
+  clubs[buyer.id] = nextBuyer;
+  players[playerId] = { ...player, clubId: buyerId, morale: clamp(player.morale + 8, 1, 100), transferRequestPending: false };
+}
+
+function processAITransferMarket(
+  save: CareerSave,
+  clubs: Record<string, Club>,
+  players: CareerSave['players'],
+  managersByClub: Record<string, WorldManagerProfile>,
+  events: WorldEvent[],
+  news: CareerSave['news'],
+  week: number,
+): void {
+  // AI clubs only act at the opening and deadline weeks of the two transfer windows.
+  if (![1, 4, 11].includes(week)) return;
+  const buyers = Object.values(clubs)
+    .filter((club) => !(save.mode === 'MANAGER' && club.id === save.userClubId))
+    .sort((a, b) => a.id.localeCompare(b.id));
+  for (const buyer of buyers) {
+    const buyerSquad = Object.values(players).filter((player) => player.clubId === buyer.id);
+    if (buyerSquad.length >= 28 || buyer.finances.transferBudget < 250000) continue;
+    const counts = new Map<string, number>();
+    buyerSquad.forEach((player) => counts.set(player.position, (counts.get(player.position) ?? 0) + 1));
+    const neededPosition = (['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST'] as const)
+      .sort((a, b) => (counts.get(a) ?? 0) - (counts.get(b) ?? 0))[0];
+    const target = Object.values(players)
+      .filter((player) => player.clubId !== buyer.id && player.clubId !== 'free_agent')
+      .filter((player) => player.position === neededPosition && player.age <= 29 && player.overall >= 58)
+      .filter((player) => {
+        const seller = clubs[player.clubId];
+        if (!seller || (save.mode === 'MANAGER' && seller.id === save.userClubId)) return false;
+        const sellerSquad = Object.values(players).filter((p) => p.clubId === seller.id);
+        return sellerSquad.length > 20 || player.transferRequestPending === true;
+      })
+      .filter((player) => player.marketValue <= buyer.finances.transferBudget * 0.42)
+      .sort((a, b) => Number(b.transferRequestPending) - Number(a.transferRequestPending) || b.overall - a.overall || a.id.localeCompare(b.id))[0];
+    if (!target) continue;
+    const seller = clubs[target.clubId];
+    if (!seller) continue;
+    const fee = Math.min(buyer.finances.transferBudget, Math.max(100000, Math.round(target.marketValue * (target.transferRequestPending ? 0.82 : 1.08))));
+    moveSquadPlayer(clubs, players, target.id, buyer.id, fee);
+    const event: WorldEvent = {
+      id: `world_${save.season}_${week}_transfer_${target.id}_${buyer.id}`,
+      season: save.season, week, type: 'AI_TRANSFER', clubId: buyer.id,
+      managerId: managersByClub[buyer.id]?.id ?? '', playerId: target.id, relatedClubId: seller.id,
+      headline: `${buyer.name} sign ${target.name} from ${seller.name}`,
+      body: `The deal is worth €${(fee / 1000000).toFixed(2)}M as ${buyer.name} strengthen their squad ahead of the next run of fixtures.`,
+    };
+    recordWorldEvent(events, news, event, 'TRANSFER');
+    break; // Keep the transfer market active without flooding a single matchweek.
+  }
+}
+
+function processPlayerMorale(
+  save: CareerSave,
+  players: CareerSave['players'],
+  events: WorldEvent[],
+  news: CareerSave['news'],
+  week: number,
+): void {
+  if (week % 4 !== 0) return;
+  Object.values(players).forEach((player) => {
+    if (player.clubId === 'free_agent' || player.id === save.legend?.playerId) return;
+    const appearances = player.seasonStats.appearances;
+    const expectedStarts = Math.max(1, Math.floor(week * 0.42));
+    const role = player.squadRole ?? 'ROTATION';
+    const expected = role === 'CRUCIAL' || role === 'IMPORTANT' ? expectedStarts : role === 'PROSPECT' ? 1 : Math.ceil(expectedStarts * 0.45);
+    const delta = appearances < expected - 2 ? -3 : appearances >= expected ? 2 : -1;
+    const morale = clamp(player.morale + delta, 1, 100);
+    const unrest = morale <= 24 && !player.transferRequestPending;
+    players[player.id] = { ...player, morale, transferRequestPending: unrest ? true : player.transferRequestPending };
+    if (unrest) {
+      const event: WorldEvent = {
+        id: `world_${save.season}_${week}_unrest_${player.id}`,
+        season: save.season, week, type: 'PLAYER_UNREST', clubId: player.clubId,
+        managerId: '', playerId: player.id,
+        headline: `${player.name} unhappy with their role at ${save.clubs[player.clubId]?.name ?? 'the club'}`,
+        body: `Limited first-team opportunities have affected the player's morale. The player has asked the club to consider a move.`,
+      };
+      recordWorldEvent(events, news, event, 'TRANSFER');
+    }
+  });
+}
+
+function processClubFinances(
+  save: CareerSave,
+  clubs: Record<string, Club>,
+  managersByClub: Record<string, WorldManagerProfile>,
+  events: WorldEvent[],
+  news: CareerSave['news'],
+  week: number,
+): void {
+  Object.values(clubs).forEach((club) => {
+    const weeklyIncome = club.finances.sponsorAnnualIncome / 52 + club.finances.matchdayIncomePerHomeGame * 0.35;
+    const weeklyOperatingCost = club.finances.weeklyWageBill * 0.9;
+    const cashBalance = club.finances.cashBalance + weeklyIncome - weeklyOperatingCost;
+    const underPressure = cashBalance < 0 || club.finances.weeklyWageBill > club.finances.wageBudgetWeekly * 1.15;
+    clubs[club.id] = {
+      ...club,
+      finances: {
+        ...club.finances,
+        cashBalance,
+        transferBudget: underPressure ? Math.max(0, Math.min(club.finances.transferBudget, Math.max(0, cashBalance * 0.12))) : club.finances.transferBudget,
+      },
+    };
+    const manager = managersByClub[club.id];
+    if (manager && underPressure) {
+      managersByClub[club.id] = { ...manager, confidence: clamp(manager.confidence - 1, 0, 100) };
+      if (week % 4 === 0) {
+        const event: WorldEvent = {
+          id: `world_${save.season}_${week}_finance_${club.id}`,
+          season: save.season, week, type: 'FINANCIAL_PRESSURE', clubId: club.id,
+          managerId: manager.id,
+          headline: `${club.name} board reviews spending amid financial pressure`,
+          body: `Rising wage commitments and operating costs have forced the board to review the club's transfer budget.`,
+        };
+        recordWorldEvent(events, news, event, 'BOARD');
+      }
+    }
+  });
+}
+
+function processManagerMarket(
+  save: CareerSave,
+  clubs: Record<string, Club>,
+  managersByClub: Record<string, WorldManagerProfile>,
+  events: WorldEvent[],
+  news: CareerSave['news'],
+  week: number,
+): void {
+  if (week % 6 !== 0) return;
+  const candidates = Object.values(managersByClub)
+    .filter((manager) => manager.confidence >= 82 && !(save.mode === 'MANAGER' && manager.clubId === save.userClubId))
+    .sort((a, b) => b.reputation - a.reputation || a.id.localeCompare(b.id));
+  for (const candidate of candidates) {
+    const source = clubs[candidate.clubId];
+    if (!source) continue;
+    const destination = Object.values(clubs)
+      .filter((club) => club.id !== source.id && !(save.mode === 'MANAGER' && club.id === save.userClubId))
+      .filter((club) => club.reputation >= source.reputation + 12)
+      .filter((club) => (managersByClub[club.id]?.confidence ?? 100) <= 32)
+      .sort((a, b) => b.reputation - a.reputation || a.id.localeCompare(b.id))[0];
+    if (!destination) continue;
+    const outgoing = managersByClub[destination.id];
+    if (!outgoing) continue;
+    managersByClub[destination.id] = { ...candidate, clubId: destination.id, confidence: 68, weeksAtClub: 0, lastPlayed: 0, lastPoints: 0 };
+    const replacement = createManager(source, save.season, week, candidate.weeksAtClub + 1, candidate.name);
+    const sourceRow = save.leagues[source.leagueId]?.standings.find((row) => row.clubId === source.id);
+    replacement.lastPlayed = sourceRow?.played ?? 0;
+    replacement.lastPoints = sourceRow?.points ?? 0;
+    managersByClub[source.id] = replacement;
+    const event: WorldEvent = {
+      id: `world_${save.season}_${week}_manager_move_${candidate.id}`,
+      season: save.season, week, type: 'MANAGER_MOVED', clubId: destination.id,
+      managerId: candidate.id, relatedClubId: source.id,
+      headline: `${candidate.name} leaves ${source.name} for ${destination.name}`,
+      body: `The ambitious appointment sees ${candidate.name} take charge at ${destination.name}; ${source.name} have moved quickly to appoint ${replacement.name}.`,
+    };
+    recordWorldEvent(events, news, event, 'BOARD');
+    clubs[destination.id] = applyManagerTactics(destination, candidate.philosophy);
+    clubs[source.id] = applyManagerTactics(source, replacement.philosophy);
+    break;
+  }
+}
+
 export function advanceLivingWorld(save: CareerSave, nextWeek: number): CareerSave {
   const isManagerCareer = save.mode === 'MANAGER';
   const initialState = save.worldState ?? createInitialLivingWorld(
@@ -274,6 +503,13 @@ export function advanceLivingWorld(save: CareerSave, nextWeek: number): CareerSa
     }
   });
 
+  // World simulation layers: AI recruitment, player morale, club finances and manager movement.
+  processAITransferMarket(save, clubs, save.players, managersByClub, history, generatedNews, nextWeek);
+  const players = { ...save.players };
+  processPlayerMorale(save, players, history, generatedNews, nextWeek);
+  processClubFinances(save, clubs, managersByClub, history, generatedNews, nextWeek);
+  processManagerMarket(save, clubs, managersByClub, history, generatedNews, nextWeek);
+
   const worldState: LivingWorldState = {
     managersByClub,
     history: [...initialState.history, ...history].slice(-500),
@@ -284,6 +520,7 @@ export function advanceLivingWorld(save: CareerSave, nextWeek: number): CareerSa
   return {
     ...save,
     clubs,
+    players,
     worldState,
     news: [...generatedNews.reverse(), ...save.news]
       .filter((item, index, all) => all.findIndex((candidate) => candidate.id === item.id) === index)
