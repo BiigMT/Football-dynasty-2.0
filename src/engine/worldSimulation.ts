@@ -98,7 +98,7 @@ export function simulateWorldManagers(save: CareerSave, week: number): CareerSav
     const underPressure = table.played >= 6 && table.position >= Math.min(totalTeams, target + 4);
     const overperforming = table.played >= 6 && table.position <= Math.max(1, target - 2);
     const cash = club.finances.cashBalance;
-    const confidenceDelta = table.played < 4 ? 0 : overperforming ? 2 : underPressure ? -3 : -1;
+    const confidenceDelta = table.played < 4 ? 0 : overperforming ? 2 : underPressure ? -3 : 0;
     const confidence = Math.max(0, Math.min(100,
       current.boardConfidence + confidenceDelta + (cash > 0 ? 0 : -1)
     ));
