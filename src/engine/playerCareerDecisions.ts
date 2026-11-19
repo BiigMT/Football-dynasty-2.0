@@ -39,7 +39,6 @@ export function resolveManagerConversation(save: CareerSave, conversation: Manag
     legend: {
       ...save.legend,
       managerTrust: Math.max(0, Math.min(100, save.legend.managerTrust + trustDelta[conversation])),
-      loanRequestPending: conversation === 'REQUEST_TRANSFER' ? save.legend.loanRequestPending : save.legend.loanRequestPending,
       phoneNotifications: notifications,
     },
   };
