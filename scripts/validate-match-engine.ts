@@ -199,9 +199,10 @@ const fullMatch = withSeed(20261120, () => {
   assert.ok(guard < 120, 'A match must reach full-time within its safety bound');
   assert.equal(session.phase, 'FULL_TIME');
   assert.equal(session.minute, 90);
-  assert.equal(session.playerStates[home.tactics.startingXI[0]].minutesPlayed, 90, 'An uninterrupted goalkeeper should record all 90 minutes');
+  const expectedMinutes = 90 + session.addedTimeFirstHalf + session.addedTimeSecondHalf;
+  assert.equal(session.playerStates[home.tactics.startingXI[0]].minutesPlayed, expectedMinutes, 'An uninterrupted goalkeeper should record regulation and stoppage time');
   for (const state of Object.values(session.playerStates)) {
-    assert.ok((state.minutesPlayed ?? 0) >= 0 && (state.minutesPlayed ?? 0) <= 90, 'Individual minutes must remain within the match duration');
+    assert.ok((state.minutesPlayed ?? 0) >= 0 && (state.minutesPlayed ?? 0) <= expectedMinutes, 'Individual minutes must remain within the match duration');
   }
   assert.ok(session.events.some((event) => event.type === 'HALF_TIME'));
   assert.ok(session.events.some((event) => event.type === 'FULL_TIME'));
