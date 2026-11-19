@@ -437,6 +437,23 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               </div>
               <p className="fd-player-empty">{positionLeader?.id === player.id ? 'You are currently the highest-rated option in your position.' : positionLeader ? positionLeader.name + ' leads the position group. Close the ' + Math.max(0, positionLeader.overall - player.overall) + '-point OVR gap to challenge.' : 'Position depth updates with the squad.'}</p>
             </section>
+            <section className="fd-player-panel fd-player-attributes">
+              <div className="fd-player-panel-title"><div><small>REAL-TIME CAREER SYSTEMS</small><h3>PLAYER CONDITION & MATCH INTELLIGENCE</h3></div><span className="text-emerald-300">LIVE</span></div>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: 'FITNESS', value: player.fitness, detail: 'Rotation & workload' },
+                  { label: 'FORM', value: player.form, detail: 'Recent performances' },
+                  { label: 'SHARPNESS', value: player.sharpness, detail: 'Match readiness' },
+                  { label: 'CONFIDENCE', value: player.confidence, detail: 'Player development' },
+                ].map((metric) => <div key={metric.label} className="rounded-lg bg-[#0b1118] border border-white/10 p-2"><div className="flex items-center justify-between gap-2"><span className="text-[9px] text-slate-400 font-bold">{metric.label}</span><b className="text-xs text-white">{Math.round(metric.value)}</b></div><div className="h-1.5 rounded-full bg-white/10 mt-2 overflow-hidden"><i className="block h-full rounded-full bg-emerald-400" style={{ width: Math.max(0, Math.min(100, metric.value)) + '%' }} /></div><div className="text-[9px] text-slate-500 mt-1">{metric.detail}</div></div>)}
+              </div>
+              <div className="rounded-lg bg-[#0b1118] border border-white/10 p-2">
+                <div className="flex items-center justify-between gap-2"><span className="text-[9px] text-slate-400 font-bold">MANAGER TRUST</span><b className="text-xs text-amber-300">{legend.managerTrust}/100</b></div>
+                <div className="text-[10px] text-slate-400 mt-1">Development target: {player.overall}/{player.potential} OVR · {legend.skillPoints ?? 0} skill points available</div>
+              </div>
+              {nextFixture && <div className="rounded-lg border border-cyan-400/20 bg-cyan-400/5 p-2"><div className="text-[9px] text-cyan-300 font-bold uppercase">Next opponent scouting</div><div className="text-[11px] text-white font-bold mt-1">{save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'}</div><div className="text-[10px] text-slate-400 mt-0.5">{save.clubs[rivalClubId]?.tactics.formation ?? 'Formation data'} · {save.clubs[rivalClubId]?.tactics.mentality ?? 'Tactical plan'} · {isStarter ? 'You are currently selected' : isBench ? 'You are currently on the bench' : 'You are outside the matchday XI'}</div></div>}
+              <div className="text-[9px] text-slate-500">AI managers adapt to scorelines and match momentum. AI clubs rotate tired players; training and match performances shape your growth and future selection.</div>
+            </section>
             <section className="fd-player-panel fd-player-table">
               <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
               <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
@@ -649,9 +666,10 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 </>
               ) : (
                 <div className="text-xs text-slate-300">
-                  {matchFixing?.status === 'ACCEPTED' ? <><strong className="text-rose-300">Offer accepted.</strong> The payment is in your balance. If you play the next fixture, your performance will be deliberately compromised and an investigation may follow.</> :
-                   matchFixing?.status === 'UNDER_INVESTIGATION' ? <><strong className="text-rose-300">Under investigation.</strong> Club officials are reviewing the suspicious performance. Suspicion: {matchFixing.suspicion}/100.</> :
-                   matchFixing?.status === 'REPORTED' ? <><strong className="text-emerald-300">Reported to the club.</strong> Your manager has been informed and the approach has been closed.</> :
+                  {!matchFixing ? <><strong className="text-slate-200">No private approaches.</strong> {nextFixture ? 'A new message is waiting above.' : 'Your agent will keep an eye on your interests when the next fixture is scheduled.'}</> :
+                   matchFixing.status === 'ACCEPTED' ? <><strong className="text-rose-300">Offer accepted.</strong> The payment is in your balance. If you play the next fixture, your performance will be deliberately compromised and an investigation may follow.</> :
+                   matchFixing.status === 'UNDER_INVESTIGATION' ? <><strong className="text-rose-300">Under investigation.</strong> Club officials are reviewing the suspicious performance. Suspicion: {matchFixing.suspicion}/100.</> :
+                   matchFixing.status === 'REPORTED' ? <><strong className="text-emerald-300">Reported to the club.</strong> Your manager has been informed and the approach has been closed.</> :
                    <><strong className="text-emerald-300">Offer rejected.</strong> You kept your career clear of the arrangement.</>}
                 </div>
               )}
