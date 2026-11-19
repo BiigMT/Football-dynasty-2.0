@@ -11,8 +11,8 @@ const save = createManagerCareer({
   clubId: 'man_sky',
 });
 const allClubs = Object.values(save.clubs);
-const lowRep = [...allClubs].sort((a, b) => a.reputation - b.reputation)[0];
-const highRep = [...allClubs].sort((a, b) => b.reputation - a.reputation)[0];
+const lowRep = { ...[...allClubs].sort((a, b) => a.reputation - b.reputation)[0], reputation: 40 };
+const highRep = { ...[...allClubs].sort((a, b) => b.reputation - a.reputation)[0], reputation: 95 };
 assert.ok(highRep.reputation - lowRep.reputation >= 10, 'Test league needs a meaningful reputation gap');
 
 const fixture: Fixture = {
@@ -31,7 +31,7 @@ const fixture: Fixture = {
 const testSave = {
   ...save,
   players: { ...save.players },
-  clubs: { ...save.clubs },
+  clubs: { ...save.clubs, [lowRep.id]: lowRep, [highRep.id]: highRep },
   cupFixtures: [fixture, ...save.cupFixtures],
 };
 const session = createMatchSession({
