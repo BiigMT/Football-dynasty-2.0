@@ -504,8 +504,8 @@ export function advanceLivingWorld(save: CareerSave, nextWeek: number): CareerSa
   });
 
   // World simulation layers: AI recruitment, player morale, club finances and manager movement.
-  processAITransferMarket(save, clubs, save.players, managersByClub, history, generatedNews, nextWeek);
   const players = { ...save.players };
+  processAITransferMarket(save, clubs, players, managersByClub, history, generatedNews, nextWeek);
   processPlayerMorale(save, players, history, generatedNews, nextWeek);
   processClubFinances(save, clubs, managersByClub, history, generatedNews, nextWeek);
   processManagerMarket(save, clubs, managersByClub, history, generatedNews, nextWeek);
