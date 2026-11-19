@@ -661,7 +661,7 @@ export function resolveKeyMomentChoice(
   const successProb = Math.max(0.22, Math.min(0.88, 0.52 + (attrVal - choice.difficulty) * 0.014 + (staminaMod + confMod) * 0.01));
   const succeeded = Math.random() < successProb;
 
-  const events = [...session.events];
+  const events = [...session.events, ...tacticalEvents];
   const half: 1 | 2 = session.minute <= 45 ? 1 : 2;
   let nextBall = { ...session.ballPos };
 
@@ -822,6 +822,61 @@ export function simulateNextMinute(
 
   const nextMin = session.minute + 1;
   const half: 1 | 2 = session.phase === 'FIRST_HALF' ? 1 : 2;
+  // Player Career clubs are still AI-managed; only Manager Career gives the user direct tactical control.
+  const homeIsUser = session.userClubSide === 'HOME' && !session.userPlayerId;
+  const awayIsUser = session.userClubSide === 'AWAY' && !session.userPlayerId;
+  const homeTrailing = session.homeStats.goals < session.awayStats.goals;
+  const awayTrailing = session.awayStats.goals < session.homeStats.goals;
+  const homeLeadingByOne = session.homeStats.goals - session.awayStats.goals === 1;
+  const awayLeadingByOne = session.awayStats.goals - session.homeStats.goals === 1;
+  let homeTactics = session.homeTactics;
+  let awayTactics = session.awayTactics;
+  const tacticalEvents: MatchEvent[] = [];
+
+  const adaptAiTactics = (side: 'HOME' | 'AWAY') => {
+    const isHome = side === 'HOME';
+    const isUserManaged = isHome ? homeIsUser : awayIsUser;
+    if (isUserManaged) return;
+    const current = isHome ? homeTactics : awayTactics;
+    const goalsFor = isHome ? session.homeStats.goals : session.awayStats.goals;
+    const goalsAgainst = isHome ? session.awayStats.goals : session.homeStats.goals;
+    const possession = isHome ? session.homeStats.possession : session.awayStats.possession;
+    let next = current;
+    let reason = '';
+
+    if (nextMin >= 62 && goalsFor < goalsAgainst) {
+      const mentality = nextMin >= 80 ? 'ALL_OUT' : 'ATTACKING';
+      if (current.mentality !== mentality || current.pressing !== 'GEGENPRESS') {
+        next = { ...current, mentality, pressing: 'GEGENPRESS', tempo: Math.min(100, current.tempo + 12), passing: nextMin >= 80 ? 'DIRECT_LONG' : current.passing };
+        reason = nextMin >= 80 ? 'Going all-out to rescue the result' : 'Increasing attacking pressure while chasing the game';
+      }
+    } else if (nextMin >= 76 && goalsFor - goalsAgainst === 1) {
+      if (current.mentality !== 'DEFENSIVE' || current.pressing !== 'LOW_BLOCK') {
+        next = { ...current, mentality: 'DEFENSIVE', pressing: 'LOW_BLOCK', tempo: Math.max(25, current.tempo - 8) };
+        reason = 'Protecting a narrow lead with a more compact shape';
+      }
+    } else if (nextMin >= 58 && possession < 42 && current.pressing !== 'GEGENPRESS') {
+      next = { ...current, pressing: 'GEGENPRESS', tempo: Math.min(100, current.tempo + 5) };
+      reason = 'Raising the press to regain midfield control';
+    }
+
+    if (next !== current) {
+      if (isHome) homeTactics = next;
+      else awayTactics = next;
+      tacticalEvents.push({
+        id: `ev_tactics_${side.toLowerCase()}_${nextMin}`,
+        minute: nextMin,
+        half,
+        type: 'TACTICAL_CHANGE',
+        teamSide: side,
+        clubId: isHome ? session.homeClubId : session.awayClubId,
+        text: `${isHome ? 'Home' : 'Away'} AI manager: ${reason}.`,
+      });
+    }
+  };
+
+  adaptAiTactics('HOME');
+  adaptAiTactics('AWAY');
 
   // Check Half-Time Transition
   if (session.phase === 'FIRST_HALF' && nextMin > 45 + session.addedTimeFirstHalf) {
@@ -883,7 +938,7 @@ export function simulateNextMinute(
   const homeClub = clubs[session.homeClubId];
   const awayClub = clubs[session.awayClubId];
   let homeRatings = computeSectorRatings(
-    session.homeTactics,
+    homeTactics,
     session.playerStates,
     players,
     homeClub?.chemistry ?? 75,
@@ -891,7 +946,7 @@ export function simulateNextMinute(
     session.weather
   );
   let awayRatings = computeSectorRatings(
-    session.awayTactics,
+    awayTactics,
     session.playerStates,
     players,
     awayClub?.chemistry ?? 75,
@@ -919,10 +974,6 @@ export function simulateNextMinute(
     defense: ratings.defense * defending,
     gk: ratings.gk,
   });
-  const homeIsUser = session.userClubSide === 'HOME';
-  const awayIsUser = session.userClubSide === 'AWAY';
-  const homeTrailing = session.homeStats.goals < session.awayStats.goals;
-  const awayTrailing = session.awayStats.goals < session.homeStats.goals;
   const homeLeading = session.homeStats.goals > session.awayStats.goals;
   const awayLeading = session.awayStats.goals > session.homeStats.goals;
   if (nextMin >= 62 && !homeIsUser && homeTrailing) {
@@ -971,8 +1022,8 @@ export function simulateNextMinute(
 
   // Possession calculation & passes
   const midDiff = homeRatings.midfield - awayRatings.midfield;
-  const homeStyleMod = session.homeTactics.passing === 'SHORT_TIKI_TAKA' ? 4 : session.homeTactics.passing === 'DIRECT_LONG' ? -4 : 0;
-  const awayStyleMod = session.awayTactics.passing === 'SHORT_TIKI_TAKA' ? 4 : session.awayTactics.passing === 'DIRECT_LONG' ? -4 : 0;
+  const homeStyleMod = homeTactics.passing === 'SHORT_TIKI_TAKA' ? 4 : homeTactics.passing === 'DIRECT_LONG' ? -4 : 0;
+  const awayStyleMod = awayTactics.passing === 'SHORT_TIKI_TAKA' ? 4 : awayTactics.passing === 'DIRECT_LONG' ? -4 : 0;
   const homePossShare = Math.max(28, Math.min(72, 50 + midDiff * 0.8 + homeStyleMod - awayStyleMod));
   homeStats.possession = Math.round(homeStats.possession * 0.92 + homePossShare * 0.08);
   awayStats.possession = 100 - homeStats.possession;
@@ -982,8 +1033,8 @@ export function simulateNextMinute(
   const defSide: 'HOME' | 'AWAY' = homeHasBall ? 'AWAY' : 'HOME';
   const atkStats = atkSide === 'HOME' ? homeStats : awayStats;
   const defStats = atkSide === 'HOME' ? awayStats : homeStats;
-  const atkTactics = atkSide === 'HOME' ? session.homeTactics : session.awayTactics;
-  const defTactics = atkSide === 'HOME' ? session.awayTactics : session.homeTactics;
+  const atkTactics = atkSide === 'HOME' ? homeTactics : awayTactics;
+  const defTactics = atkSide === 'HOME' ? awayTactics : homeTactics;
   const atkRatings = atkSide === 'HOME' ? homeRatings : awayRatings;
   const defRatings = atkSide === 'HOME' ? awayRatings : homeRatings;
   const atkClubName = atkSide === 'HOME' ? homeClub?.shortName ?? 'HOM' : awayClub?.shortName ?? 'AWY';
@@ -1254,6 +1305,8 @@ export function simulateNextMinute(
   let updatedSession: MatchSession = {
     ...session,
     minute: nextMin,
+    homeTactics,
+    awayTactics,
     homeStats,
     awayStats,
     playerStates: nextStates,
