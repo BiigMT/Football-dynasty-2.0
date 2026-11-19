@@ -148,9 +148,11 @@ while (!playerSession.pendingKeyMoment && promptGuard < 22) {
 assert.ok(playerSession.pendingKeyMoment, 'Player Career should create its first interactive key moment');
 const goalChoice = playerSession.pendingKeyMoment!.choices.find((choice) => choice.successOutcome === 'GOAL');
 assert.ok(goalChoice, 'Striker key moment should offer a goal attempt');
+const teamGoalsBeforeKeyMoment = playerSession.homeStats.goals;
+const playerGoalsBeforeKeyMoment = playerSession.playerStates[strikerId].goals;
 playerSession = withSeed(1, () => resolveKeyMomentChoice(playerSession, goalChoice!.id, world.clubs, world.players));
-assert.equal(playerSession.homeStats.goals, 1, 'A successful key-moment finish must update the team score');
-assert.equal(playerSession.playerStates[strikerId].goals, 1, 'A successful key-moment finish must update the player line');
+assert.equal(playerSession.homeStats.goals, teamGoalsBeforeKeyMoment + 1, 'A successful key-moment finish must add one to the existing team score');
+assert.equal(playerSession.playerStates[strikerId].goals, playerGoalsBeforeKeyMoment + 1, 'A successful key-moment finish must add one to the player line');
 assert.equal(
   playerSession.userObjectives.find((objective) => objective.type === 'GOAL_OR_ASSIST')?.completed,
   true,
