@@ -790,20 +790,8 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     const uPlayer = nextPlayers[session.userPlayerId];
     if (userSt && uPlayer) {
       const completedObjs = session.userObjectives.filter((o) => o.completed).length;
-      const fixingConsequence = nextLegend.matchFixing?.status === 'ACCEPTED'
-        ? applyMatchFixingConsequence(nextLegend, uPlayer, session.fixtureId)
-        : undefined;
-      if (fixingConsequence) {
-        nextLegend = fixingConsequence.legend;
-        nextPlayers[uPlayer.id] = fixingConsequence.player;
-        nextNews.unshift({
-          id: `news_fixing_${session.fixtureId}_${uPlayer.id}`,
-          week: save.currentWeek, season: save.season, category: 'BOARD',
-          headline: 'Club launches integrity investigation',
-          body: `Officials are reviewing an unusual performance by ${uPlayer.name}. The player has been placed under internal investigation.`,
-        });
-      }
-      const trustDelta = fixingConsequence ? -18 : userSt.rating >= 7.5 ? 6 : userSt.rating >= 6.7 ? 2 : -4;
+      const fixingAccepted = nextLegend.matchFixing?.status === 'ACCEPTED' && (userSt.minutesPlayed ?? 0) > 0;
+      const trustDelta = fixingAccepted ? -18 : userSt.rating >= 7.5 ? 6 : userSt.rating >= 6.7 ? 2 : -4;
       const nextTrust = Math.max(15, Math.min(100, nextLegend.managerTrust + trustDelta + completedObjs));
 
       // Attribute XP progression from match rating
@@ -833,6 +821,19 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
         confidence: Math.max(30, Math.min(99, uPlayer.confidence + (userSt.rating >= 7.0 ? 4 : -2))),
         marketValue: calculateMarketValue(nextOvr, uPlayer.age, uPlayer.potential),
       };
+      const fixingConsequence = fixingAccepted
+        ? applyMatchFixingConsequence(nextLegend, nextPlayers[uPlayer.id], session.fixtureId)
+        : undefined;
+      if (fixingConsequence) {
+        nextLegend = fixingConsequence.legend;
+        nextPlayers[uPlayer.id] = fixingConsequence.player;
+        nextNews.unshift({
+          id: `news_fixing_${session.fixtureId}_${uPlayer.id}`,
+          week: save.currentWeek, season: save.season, category: 'BOARD',
+          headline: 'Club launches integrity investigation',
+          body: `Officials are reviewing an unusual performance by ${uPlayer.name}. The player has been placed under internal investigation.`,
+        });
+      }
 
       const squadRole =
         nextTrust >= 88
