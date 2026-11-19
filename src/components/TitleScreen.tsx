@@ -35,7 +35,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   const [showAccount, setShowAccount] = useState(false);
   const savedSlots = slots.filter((slot) => !slot.empty);
   const latestSaved = [...savedSlots].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))[0];
-  const firstEmptySlot = slots.find((slot) => slot.empty)?.slotId ?? 'slot_1';
+  const firstEmptySlot = slots.find((slot) => slot.empty)?.slotId;
+  const allSlotsFull = slots.length > 0 && !firstEmptySlot;
 
   const closeOverlays = () => {
     setShowSaves(false);
@@ -113,8 +114,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 <h2 className="text-3xl font-black uppercase leading-[.9] tracking-[-.025em] text-white drop-shadow-md sm:text-[2.65rem]">Manager Career</h2>
                 <p className="mt-3 max-w-sm text-xs leading-relaxed text-white/80 sm:text-sm">Build your squad. Set your tactics. Win the trophies that define your club.</p>
               </div>
-              <button type="button" onClick={() => onStartNewCareer('MANAGER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C] bg-[#F6C21C] px-5 text-xs font-black tracking-[.14em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b] transition hover:brightness-110 active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
-                NEW MANAGER CAREER <ChevronRight size={16}/>
+              <button type="button" onClick={() => allSlotsFull ? setShowSaves(true) : firstEmptySlot && onStartNewCareer('MANAGER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C] bg-[#F6C21C] px-5 text-xs font-black tracking-[.14em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b] transition hover:brightness-110 active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
+                {allSlotsFull ? 'MANAGE SAVE SLOTS' : 'NEW MANAGER CAREER'} <ChevronRight size={16}/>
               </button>
             </div>
           </article>
@@ -129,8 +130,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 <h2 className="text-3xl font-black uppercase leading-none tracking-tight text-white sm:text-4xl">Player Career</h2>
                 <p className="mt-3 max-w-sm text-xs leading-relaxed text-white/80 sm:text-sm">Create your footballer. Earn your place. Chase the Ballon d'Or.</p>
               </div>
-              <button type="button" onClick={() => onStartNewCareer('PLAYER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C]/70 bg-[#13386C] px-5 text-xs font-black tracking-[.14em] text-white shadow-[0_4px_0_#0D1B2A] transition hover:bg-[#235BA8] active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
-                NEW PLAYER CAREER <ChevronRight size={16}/>
+              <button type="button" onClick={() => allSlotsFull ? setShowSaves(true) : firstEmptySlot && onStartNewCareer('PLAYER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C]/70 bg-[#13386C] px-5 text-xs font-black tracking-[.14em] text-white shadow-[0_4px_0_#0D1B2A] transition hover:bg-[#235BA8] active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
+                {allSlotsFull ? 'MANAGE SAVE SLOTS' : 'NEW PLAYER CAREER'} <ChevronRight size={16}/>
               </button>
             </div>
           </article>
