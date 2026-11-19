@@ -373,7 +373,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
           <button className={tab === 'DASHBOARD' ? 'is-active' : ''} aria-current={tab === 'DASHBOARD' ? 'page' : undefined} type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
-          <button type="button" onClick={() => { setPhoneMode('SOCIAL'); setTab('PHONE'); }}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('PHONE')}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('TRAINING')}><span>03</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>04</span> MY PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>05</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
