@@ -153,6 +153,31 @@ assert.equal(
   'A goal must complete the goal-or-assist objective',
 );
 
+// AI tactical adaptation reacts to the scoreline and protects human manager control.
+const chasing = {
+  ...startMatchKickoff(makeSession()),
+  phase: 'SECOND_HALF' as const,
+  minute: 61,
+  userClubSide: 'HOME' as const,
+  homeStats: { ...preMatch.homeStats, goals: 1 },
+  awayStats: { ...preMatch.awayStats, goals: 0 },
+};
+const chasingResult = withSeed(44, () => simulateNextMinute(chasing, world.clubs, world.players).session);
+assert.equal(chasingResult.awayTactics.mentality, 'ATTACKING', 'AI should become more aggressive when trailing after 62 minutes');
+assert.equal(chasingResult.awayTactics.pressing, 'GEGENPRESS');
+assert.ok(chasingResult.events.some((event) => event.type === 'TACTICAL_CHANGE' && event.teamSide === 'AWAY'));
+
+const protecting = {
+  ...startMatchKickoff(makeSession()),
+  phase: 'SECOND_HALF' as const,
+  minute: 75,
+  userClubSide: 'AWAY' as const,
+  homeStats: { ...preMatch.homeStats, goals: 1 },
+};
+const protectingResult = withSeed(45, () => simulateNextMinute(protecting, world.clubs, world.players).session);
+assert.equal(protectingResult.homeTactics.mentality, 'DEFENSIVE', 'AI should protect a one-goal lead late in the match');
+assert.equal(protectingResult.homeTactics.pressing, 'LOW_BLOCK');
+
 // Deterministic complete match: both halves, final whistle, valid stats and bounded stamina.
 const fullMatch = withSeed(20261120, () => {
   let session = startMatchKickoff(createMatchSession({
