@@ -214,8 +214,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   return (
-    <div className={mode === 'PLAYER' ? "fd-player-creation-screen min-h-screen py-5 px-3 sm:px-5" : "min-h-screen bg-[#0D1B2A] text-slate-100 px-3 py-4 sm:px-6 sm:py-5"}>
-      <form onSubmit={handleSubmit} className={mode === 'MANAGER' ? "mx-auto flex w-full max-w-[1440px] flex-col gap-4" : "max-w-5xl mx-auto flex flex-col gap-6"}>
+    <div className={mode === 'PLAYER' ? "fd-player-creation-screen min-h-screen py-5 px-3 sm:px-5" : "min-h-screen bg-[#0D1B2A] text-slate-100 px-3 py-4 sm:px-6 sm:py-5 lg:px-8"}>
+      <form onSubmit={handleSubmit} className={mode === 'MANAGER' ? "mx-auto flex w-full max-w-[1560px] flex-col gap-4" : "max-w-5xl mx-auto flex flex-col gap-6"}>
         {/* Header */}
         <div className={mode === 'MANAGER' ? "flex items-center justify-between border-b border-[#4777AE]/50 pb-3" : "flex items-center justify-between border-b border-white/10 pb-4"}>
           <button
@@ -239,7 +239,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
         {mode === 'PLAYER' && <div className="fd-player-creation-steps" aria-label="Player creation steps">{([{step:1,label:'IDENTITY'},{step:2,label:'ORIGIN'},{step:3,label:'INTERNATIONAL'}] as const).map(item=><button key={item.step} type="button" aria-current={creationStep===item.step?'step':undefined} className={creationStep===item.step?'is-active':creationStep>item.step?'is-complete':''} onClick={()=>{if(item.step<creationStep||item.step===2&&creationStep===1) setCreationStep(item.step);}}><b>0{item.step}</b><span>{item.label}</span></button>)}</div>}
         <div className={mode === 'MANAGER' ? "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start" : "grid grid-cols-1 lg:grid-cols-12 gap-6"}>
           {/* Left Column: Profile & Customization */}
-          <div className={mode === 'MANAGER' ? "lg:col-span-4 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5"} style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
+          <div className={mode === 'MANAGER' ? "lg:col-span-4 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5"} style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
             {mode === 'MANAGER' ? (
               <>
                 <div className="flex items-center justify-between border-b border-white/10 pb-3"><div><div className="text-[9px] font-black tracking-[.22em] text-[#F6C21C]">YOUR TOUCHLINE IDENTITY</div><h2 className="mt-1 text-lg font-black uppercase text-white">Manager Profile</h2></div><span className="rounded border border-[#F6C21C]/30 bg-[#F6C21C]/10 px-2 py-1 text-[9px] font-black tracking-wider text-[#F6C21C]">01 / 02</span></div>
@@ -474,7 +474,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
           </div>
 
           {/* Right Column: World League & Club Selection */}
-          <div className={mode === 'MANAGER' ? "lg:col-span-8 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4"} style={mode === 'PLAYER' && creationStep !== 2 ? {display:'none'} : undefined}>
+          <div className={mode === 'MANAGER' ? "lg:col-span-8 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4"} style={mode === 'PLAYER' && creationStep !== 2 ? {display:'none'} : undefined}>
             <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-3"><div><div className="text-[9px] font-black tracking-[.22em] text-[#F6C21C]">CHOOSE YOUR DESTINATION</div><h2 className="mt-1 text-lg font-black uppercase text-white">Select Region, League & Club</h2></div><span className="text-[10px] font-bold tracking-wider text-slate-400">{activeLeague.clubs.length} CLUBS AVAILABLE</span></div>
 
             {/* Region Tabs */}
@@ -497,13 +497,13 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
             {/* League Selector */}
             {regionLeagues.length > 1 && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {regionLeagues.map((lg) => (
                   <button
                     key={lg.id}
                     type="button"
                     onClick={() => handleLeagueChange(lg.id)}
-                    className={`min-h-[40px] flex-1 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
+                    className={`min-h-[40px] flex-1 basis-[150px] px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                       activeLeague.id === lg.id
                         ? 'border-[#F6C21C] bg-[#F6C21C]/10 text-[#F6C21C]'
                         : 'border-white/10 bg-[#0B0F14] text-slate-400 hover:text-white'
@@ -517,8 +517,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
             {mode === 'MANAGER' ? (
               <>
-              <div className="flex flex-wrap items-center justify-between gap-2"><div className="text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Club directory</div><input value={clubSearch} onChange={(e) => setClubSearch(e.target.value)} placeholder="Search this league..." className="min-h-[36px] w-full max-w-[260px] rounded border border-white/15 bg-[#0B1725] px-3 text-xs text-white outline-none focus:border-[#F6C21C]" /></div>
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 max-h-[430px] overflow-y-auto pr-1">
+              <div className="flex flex-wrap items-center justify-between gap-2"><div><div className="text-[10px] font-black uppercase tracking-[.18em] text-slate-300">Club directory</div><div className="mt-1 text-[10px] text-slate-500">{activeLeague.name} · {activeLeague.clubs.length} clubs · Select one to view its details</div></div><input value={clubSearch} onChange={(e) => setClubSearch(e.target.value)} placeholder="Search clubs..." aria-label="Search clubs in selected league" className="min-h-[40px] w-full max-w-[280px] rounded border border-white/15 bg-[#0B1725] px-3 text-xs text-white outline-none transition focus:border-[#F6C21C]" /></div>
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 max-h-[min(54vh,560px)] min-h-[180px] overflow-y-auto overscroll-contain pr-1">
                 {activeLeague.clubs.filter((c) => c.name.toLowerCase().includes(clubSearch.toLowerCase()) || c.shortName.toLowerCase().includes(clubSearch.toLowerCase())).map((c) => {
                   const active = c.id === selectedClub.id;
                   return (
@@ -529,6 +529,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                     </button>
                   );
                 })}
+                {activeLeague.clubs.filter((c) => c.name.toLowerCase().includes(clubSearch.toLowerCase()) || c.shortName.toLowerCase().includes(clubSearch.toLowerCase())).length === 0 && <div className="col-span-full rounded border border-dashed border-white/15 bg-[#0B1725] px-4 py-8 text-center"><div className="text-sm font-bold text-white">No clubs found</div><p className="mt-1 text-xs text-slate-400">Try another club name or clear your search.</p><button type="button" onClick={() => setClubSearch('')} className="mt-3 text-xs font-bold text-[#F6C21C] underline">Clear search</button></div>}
               </div>
               </>
             ) : (
