@@ -161,6 +161,7 @@ const chasing = {
   userClubSide: 'HOME' as const,
   homeStats: { ...preMatch.homeStats, goals: 1 },
   awayStats: { ...preMatch.awayStats, goals: 0 },
+  awayTactics: { ...preMatch.awayTactics, mentality: 'BALANCED' as const, pressing: 'MID_PRESS' as const },
 };
 const chasingResult = withSeed(44, () => simulateNextMinute(chasing, world.clubs, world.players).session);
 assert.equal(chasingResult.awayTactics.mentality, 'ATTACKING', 'AI should become more aggressive when trailing after 62 minutes');
@@ -173,6 +174,7 @@ const protecting = {
   minute: 75,
   userClubSide: 'AWAY' as const,
   homeStats: { ...preMatch.homeStats, goals: 1 },
+  homeTactics: { ...preMatch.homeTactics, mentality: 'ATTACKING' as const, pressing: 'GEGENPRESS' as const },
 };
 const protectingResult = withSeed(45, () => simulateNextMinute(protecting, world.clubs, world.players).session);
 assert.equal(protectingResult.homeTactics.mentality, 'DEFENSIVE', 'AI should protect a one-goal lead late in the match');
