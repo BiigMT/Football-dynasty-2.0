@@ -17,7 +17,8 @@
     "validate:match-engine": "tsx scripts/validate-match-engine.ts",
     "validate:squad-rotation": "tsx scripts/validate-squad-rotation.ts",
     "validate:player-development": "tsx scripts/validate-player-development.ts",
-    "validate:match-consequences": "tsx scripts/validate-match-consequences.ts"
+    "validate:match-consequences": "tsx scripts/validate-match-consequences.ts",
+    "validate:player-life": "tsx scripts/validate-player-life.ts"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",
