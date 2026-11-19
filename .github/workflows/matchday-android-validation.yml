@@ -49,6 +49,9 @@ jobs:
       - name: Validate player development
         run: npm run validate:player-development
 
+      - name: Validate match consequences in Living World
+        run: npm run validate:match-consequences
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
