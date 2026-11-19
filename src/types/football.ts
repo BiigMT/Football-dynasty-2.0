@@ -112,6 +112,7 @@ export interface Player {
   sharpness: number; // 1-100
   fitness: number; // 1-100
   morale: number; // 1-100
+  transferRequest?: boolean; // AI/player unrest flag
   confidence: number; // 1-100
   reputation: number; // 1-100
   marketValue: number; // in EUR
