@@ -65,6 +65,9 @@ assert.equal(Object.values(preMatch.playerStates).filter((state) => state.side =
 assert.equal(preMatch.homeStats.goals, 0);
 assert.equal(preMatch.awayStats.goals, 0);
 assert.equal(startMatchKickoff(preMatch).phase, 'FIRST_HALF');
+const kickedOff = startMatchKickoff(preMatch);
+assert.equal(startMatchKickoff(kickedOff), kickedOff, 'Kickoff must not reset an active match');
+assert.equal(applyTeamTalk(kickedOff, 'ENCOURAGE', world.players), kickedOff, 'Team talks are only legal at half-time');
 assert.equal(simulateNextMinute(preMatch, world.clubs, world.players).session, preMatch, 'Pre-match simulation must be a no-op');
 
 // A substitution cannot happen before kickoff.
@@ -118,6 +121,7 @@ const talked = applyTeamTalk(halfTimeSession, 'ENCOURAGE', world.players);
 assert.ok(talked.playerStates[halfTimeIn].stamina >= halfTimeSession.playerStates[halfTimeIn].stamina);
 assert.equal(talked.playerStates[away.tactics.startingXI[0]].stamina, halfTimeSession.playerStates[away.tactics.startingXI[0]].stamina);
 assert.equal(resumeSecondHalf(talked).phase, 'SECOND_HALF');
+assert.equal(applyTeamTalk(talked, 'PRAISE', world.players), talked, 'Only one team talk may be applied at the interval');
 
 // Player objectives must not be awarded before the final whistle; key moments must update stats/objectives.
 const keeperId = home.tactics.startingXI[0];
