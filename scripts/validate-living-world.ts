@@ -119,4 +119,42 @@ const retry = advanceLivingWorld(advanced, 7);
 assert.deepEqual(retry.worldState, advanced.worldState);
 assert.equal(retry.news.length, advanced.news.length);
 
-console.log('Living Football World validation passed: career setup, AI manager coverage, dismissal, appointment, tactics, news and idempotent weekly processing.');
+
+const worldClubs = {
+  alpha: { ...clubs.alpha, reputation: 60, finances: { ...clubs.alpha.finances, transferBudget: 1000000, cashBalance: 1000, wageBudgetWeekly: 1000, weeklyWageBill: 50000 } },
+  beta: { ...clubs.beta, reputation: 90 },
+};
+const targetPlayer = {
+  id: 'ai_target', name: 'AI Target', clubId: 'beta', position: 'GK', age: 22,
+  overall: 72, potential: 80, marketValue: 100000, weeklyWage: 1000,
+  morale: 50, transferRequestPending: true, seasonStats: { appearances: 0, starts: 0, minutes: 0, goals: 0, assists: 0, cleanSheets: 0, yellowCards: 0, redCards: 0, averageRating: 0, ratingCount: 0, motm: 0 },
+} as unknown as CareerSave['players'][string];
+const unhappyPlayer = {
+  ...targetPlayer, id: 'ai_unhappy', name: 'Unhappy Prospect', clubId: 'alpha',
+  position: 'ST', morale: 27, transferRequestPending: false, squadRole: 'IMPORTANT',
+} as unknown as CareerSave['players'][string];
+const extendedSave = {
+  ...save,
+  clubs: worldClubs,
+  players: { ai_target: targetPlayer, ai_unhappy: unhappyPlayer },
+  worldState: {
+    ...playerCareerState,
+    managersByClub: {
+      alpha: { ...playerCareerState.managersByClub.alpha, confidence: 90 },
+      beta: { ...playerCareerState.managersByClub.beta, confidence: 20 },
+    },
+  },
+} as unknown as CareerSave;
+const transferWeek = advanceLivingWorld(extendedSave, 4);
+assert.equal(transferWeek.players.ai_target.clubId, 'alpha');
+assert.ok(transferWeek.worldState?.history.some((event) => event.type === 'AI_TRANSFER'));
+assert.equal(transferWeek.players.ai_unhappy.transferRequestPending, true);
+assert.ok(transferWeek.worldState?.history.some((event) => event.type === 'PLAYER_UNREST'));
+
+const managerMarketWeek = advanceLivingWorld(extendedSave, 6);
+assert.notEqual(managerMarketWeek.worldState?.managersByClub.beta.id, playerCareerState.managersByClub.beta.id);
+assert.ok(managerMarketWeek.worldState?.history.some((event) => event.type === 'MANAGER_MOVED'));
+assert.ok(managerMarketWeek.clubs.alpha.finances.cashBalance !== worldClubs.alpha.finances.cashBalance);
+assert.ok(managerMarketWeek.worldState?.history.length > 0);
+
+console.log('Living Football World validation passed: career setup, AI manager coverage, dismissal, appointment, tactics, AI transfers, player unrest, manager movement, finances, news and idempotent processing.');
