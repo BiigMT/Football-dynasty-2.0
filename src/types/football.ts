@@ -529,6 +529,18 @@ export interface ClubOperations {
   supporterMood: number;
 }
 
+export interface WorldManagerState {
+  managerId: string;
+  name: string;
+  age: number;
+  philosophy: 'Possession' | 'Gegenpress' | 'Counter-Attack' | 'Balanced';
+  reputation: number;
+  boardConfidence: number;
+  weeksInCharge: number;
+  appointments: number;
+  lastChangeWeek: number;
+}
+
 export interface CareerSave {
   slotId: string;
   mode: CareerMode;
@@ -544,6 +556,7 @@ export interface CareerSave {
   manager?: ManagerProfile;
   legend?: LegendProfile;
   clubs: Record<string, Club>;
+  worldManagers?: Record<string, WorldManagerState>;
   players: Record<string, Player>;
   leagues: Record<string, League>;
   nationalTeams: Record<string, NationalTeam>;
