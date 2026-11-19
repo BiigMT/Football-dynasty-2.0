@@ -34,6 +34,7 @@ import { resolveMatchFixingChoice } from '../engine/playerLife';
 import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
+import { PlayerPhone } from './PlayerPhone';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -83,17 +84,11 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 }) => {
   const [tab, setTab] = useState<LegendSection>('DASHBOARD');
   const [contractNotice, setContractNotice] = useState('');
-  const [phoneMode, setPhoneMode] = useState<'SOCIAL' | 'MESSAGES'>('SOCIAL');
+  
   const [negotiatingOfferId, setNegotiatingOfferId] = useState<string | null>(null);
   useEffect(() => {
-    const orientation = save.playerOrientation ?? 'LANDSCAPE';
-    if (orientation === 'AUTO') {
-      void ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => undefined);
-      return () => { void ScreenOrientation.unlock().catch(() => undefined); };
-    }
-    void ScreenOrientation.lock({ orientation: orientation.toLowerCase() as 'landscape' | 'portrait' }).catch(() => undefined);
-    return () => { void ScreenOrientation.unlock().catch(() => undefined); };
-  }, [save.playerOrientation]);
+    void ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => undefined);
+  }, []);
   const legend = save.legend!;
   const player = save.players[legend.playerId];
   const club = save.clubs[save.userClubId];
@@ -378,13 +373,18 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
           <button className={tab === 'DASHBOARD' ? 'is-active' : ''} aria-current={tab === 'DASHBOARD' ? 'page' : undefined} type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
-          <button type="button" onClick={() => { setPhoneMode('SOCIAL'); setTab('PHONE'); }}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('PHONE')}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('TRAINING')}><span>03</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>04</span> MY PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>05</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('LEGACY')}><span>06</span> AWARDS & INTL</button>
           <button type="button" onClick={() => setTab('SETTINGS')}><span>07</span> SYSTEM</button>
         </nav>
+
+        <div className="fd-player-matchbar">
+          <div><small>{nextFixture ? 'NEXT FIXTURE READY' : 'CAREER PROGRESSION'}</small><strong>{nextFixture ? 'Your next match is waiting' : leagueFinished ? 'Season completed' : 'Continue your career'}</strong></div>
+          <button type="button" className="fd-player-matchbar-cta" onClick={handleForwardTime}>{nextFixture ? '⚽ OPEN MATCHDAY' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
+        </div>
 
         <main className="fd-player-layout">
           <section className="fd-player-showcase">
@@ -454,13 +454,24 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               {nextFixture && <div className="rounded-lg border border-cyan-400/20 bg-cyan-400/5 p-2"><div className="text-[9px] text-cyan-300 font-bold uppercase">Next opponent scouting</div><div className="text-[11px] text-white font-bold mt-1">{save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'}</div><div className="text-[10px] text-slate-400 mt-0.5">{save.clubs[rivalClubId]?.tactics.formation ?? 'Formation data'} · {save.clubs[rivalClubId]?.tactics.mentality ?? 'Tactical plan'} · {isStarter ? 'You are currently selected' : isBench ? 'You are currently on the bench' : 'You are outside the matchday XI'}</div></div>}
               <div className="text-[9px] text-slate-500">AI managers adapt to scorelines and match momentum. AI clubs rotate tired players; training and match performances shape your growth and future selection.</div>
             </section>
+            <section className="fd-player-panel fd-player-news-panel">
+              <div className="fd-player-panel-title"><div><small>AROUND THE CLUB & THE FOOTBALL WORLD</small><h3>LATEST NEWS</h3></div><span>{save.news.length} STORIES</span></div>
+              <div className="space-y-2">
+                {save.news.slice(0, 4).map((item) => <article key={item.id} className="rounded-lg border border-white/10 bg-[#0b1118] px-3 py-2">
+                  <div className="flex items-center justify-between gap-2"><span className="text-[9px] font-black uppercase tracking-wider text-cyan-300">{String(item.category).replace(/_/g, ' ')}</span><span className="text-[9px] text-slate-500">S{item.season} · W{item.week}</span></div>
+                  <h4 className="mt-1 text-xs font-bold leading-snug text-white">{item.headline}</h4>
+                  <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{item.body}</p>
+                </article>)}
+                {!save.news.length && <p className="fd-player-empty">Your career news will appear here as matches, transfers and club events unfold.</p>}
+              </div>
+            </section>
             <section className="fd-player-panel fd-player-table">
-              <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 4</span></div>
+              <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 5</span></div>
               <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
               {tableRows.slice(0, 5).map((row) => <div className={`fd-player-table-row${row.me ? ' is-user' : ''}`} key={row.club}><span>{row.pos}</span><span><i style={{ background: row.color || '#789' }} />{row.club}</span><span>{row.p}</span><span>{row.gd > 0 ? '+' : ''}{row.gd}</span><b>{row.pts}</b></div>)}
             </section>
             <section className="fd-player-panel fd-player-fixtures">
-              <div className="fd-player-panel-title"><div><small>THE ROAD AHEAD</small><h3>UPCOMING FIXTURES</h3></div><span>5 WEEKS</span></div>
+              <div className="fd-player-panel-title"><div><small>CAREER CALENDAR · SEASON {save.season}</small><h3>UPCOMING SCHEDULE</h3></div><span>5 EVENTS</span></div>
               <div className="fd-player-fixture-list">
                 {upcomingFixtures.map((fixture) => {
                   const home = fixture.homeClubId === club.id;
@@ -632,102 +643,13 @@ export const LegendHub: React.FC<LegendHubProps> = ({
         )}
 
         {tab === 'PHONE' && (
-          <section className="rounded-2xl border border-amber-400/25 bg-[#111923] p-3 sm:p-4 flex flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-9 rounded-lg border-2 border-slate-500 bg-gradient-to-b from-slate-700 to-[#05080c] p-1 shadow-lg"><div className="h-full rounded bg-[#152a36] flex items-center justify-center"><Smartphone className="h-5 w-5 text-amber-300" /></div></div>
-                <div><div className="text-xs uppercase tracking-[.2em] text-amber-400 font-bold">Player phone</div><h2 className="text-lg font-black text-white">Your life off the pitch</h2><p className="text-[11px] text-slate-400">Messages, teammates and your public profile</p></div>
-              </div>
-              <div className="flex items-center gap-3"><div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div><button type="button" onClick={() => setTab('DASHBOARD')} className="min-h-[36px] rounded-lg border border-white/15 px-3 text-[10px] font-bold text-slate-200">BACK TO CENTRAL</button></div>
-            </div>
-            <div className="rounded-xl border border-amber-400/25 bg-[#0b1118] p-3 flex flex-col gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div><div className="text-[10px] font-black uppercase tracking-[.18em] text-amber-300">Private message · Career decision</div><div className="text-sm font-bold text-white mt-1">An offer you should think twice about</div></div>
-                <div className="rounded-lg bg-[#172332] px-3 py-2 text-right"><div className="text-[9px] text-slate-400">PERSONAL BALANCE</div><div className="text-sm font-black text-emerald-300">€{(legend.personalBalance ?? 0).toLocaleString()}</div></div>
-              </div>
-              {!matchFixing && nextFixture ? (
-                <>
-                  <p className="text-xs leading-relaxed text-slate-300">A stranger claiming to have links to {save.clubs[rivalClubId]?.name ?? 'your next opponent'} has contacted you. They offer <strong className="text-emerald-300">€35,000 in-game</strong> if you deliberately underperform in the upcoming match. This is a fictional career storyline; accepting carries serious sporting and career risks.</p>
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REJECT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-white/15 px-3 text-[11px] font-bold text-slate-200">Reject offer</button>
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REPORT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-3 text-[11px] font-bold text-emerald-200">Report to club</button>
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'CONSULT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-cyan-400/40 bg-cyan-400/10 px-3 text-[11px] font-bold text-cyan-200">Ask my agent</button>
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'ACCEPT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-rose-400/40 bg-rose-400/10 px-3 text-[11px] font-bold text-rose-200">Accept €35,000</button>
-                  </div>
-                </>
-              ) : matchFixing?.status === 'CONSULTED' ? (
-                <>
-                  <p className="text-xs text-slate-300">Your agent is clear: the short-term money is not worth risking your career. You still make the final decision.</p>
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REJECT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-emerald-400/40 px-3 text-[11px] font-bold text-emerald-200">Walk away</button>
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REPORT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-cyan-400/40 px-3 text-[11px] font-bold text-cyan-200">Report it</button>
-                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'ACCEPT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-rose-400/40 px-3 text-[11px] font-bold text-rose-200">Take the money</button>
-                  </div>
-                </>
-              ) : (
-                <div className="text-xs text-slate-300">
-                  {!matchFixing ? <><strong className="text-slate-200">No private approaches.</strong> {nextFixture ? 'A new message is waiting above.' : 'Your agent will keep an eye on your interests when the next fixture is scheduled.'}</> :
-                   matchFixing.status === 'ACCEPTED' ? <><strong className="text-rose-300">Offer accepted.</strong> The payment is in your balance. If you play the next fixture, your performance will be deliberately compromised and an investigation may follow.</> :
-                   matchFixing.status === 'UNDER_INVESTIGATION' ? <><strong className="text-rose-300">Under investigation.</strong> Club officials are reviewing the suspicious performance. Suspicion: {matchFixing.suspicion}/100.</> :
-                   matchFixing.status === 'REPORTED' ? <><strong className="text-emerald-300">Reported to the club.</strong> Your manager has been informed and the approach has been closed.</> :
-                   <><strong className="text-emerald-300">Offer rejected.</strong> You kept your career clear of the arrangement.</>}
-                </div>
-              )}
-            </div>
-            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#080d13]">
-              <img src={phoneMode === 'SOCIAL' ? "/media/game/phone-stadium.jpg" : "/media/game/phone-match.jpg"} alt="Football stadium and matchday atmosphere" loading="lazy" className="h-28 sm:h-36 w-full object-cover opacity-85" />
-              <div className="px-3 py-2 flex items-center justify-between gap-2"><span className="text-[10px] uppercase tracking-widest font-bold text-amber-300">Matchday life</span><span className="text-[10px] text-slate-400">Your football world, wherever you are</span></div>
-            </div>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-              <button type="button" onClick={() => setPhoneMode('SOCIAL')} className={`min-h-[68px] rounded-xl border p-2 flex flex-col items-center justify-center gap-1 ${phoneMode === 'SOCIAL' ? 'border-amber-400 bg-amber-400/15 text-amber-200' : 'border-white/10 bg-[#0b1118] text-slate-300'}`}><Heart className="h-5 w-5" /><span className="text-[10px] font-bold">Social</span></button>
-              <button type="button" onClick={() => setPhoneMode('MESSAGES')} className={`min-h-[68px] rounded-xl border p-2 flex flex-col items-center justify-center gap-1 ${phoneMode === 'MESSAGES' ? 'border-amber-400 bg-amber-400/15 text-amber-200' : 'border-white/10 bg-[#0b1118] text-slate-300'}`}><MessageCircle className="h-5 w-5" /><span className="text-[10px] font-bold">Messages</span></button>
-              <button type="button" onClick={() => { soundEngine.playClick(); setTab('COMPETITIONS'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Trophy className="h-5 w-5 text-amber-300" /><span className="text-[10px] font-bold">Fixtures</span></button>
-              <button type="button" onClick={() => { soundEngine.playClick(); setTab('AGENT'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><ArrowLeftRight className="h-5 w-5 text-cyan-300" /><span className="text-[10px] font-bold">Agent</span></button>
-              <button type="button" onClick={() => { soundEngine.playClick(); setTab('TRAINING'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Dumbbell className="h-5 w-5 text-emerald-300" /><span className="text-[10px] font-bold">Training</span></button>
-              <button type="button" onClick={() => { soundEngine.playClick(); setTab('MANAGER'); }} className="min-h-[68px] rounded-xl border border-white/10 bg-[#0b1118] p-2 flex flex-col items-center justify-center gap-1 text-slate-300"><Users className="h-5 w-5 text-violet-300" /><span className="text-[10px] font-bold">Manager</span></button>
-            </div>
-            {phoneMode === 'SOCIAL' ? (
-              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-3">
-              <div className="rounded-xl border border-rose-400/25 bg-[#0b1118] p-3 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2"><div className="h-9 w-9 rounded-full bg-rose-500/15 flex items-center justify-center text-lg">⚔️</div><div><div className="text-xs font-bold text-rose-300">Rival watch</div><div className="text-[11px] text-slate-300">{rivalPlayer && nextFixture ? `${rivalPlayer.name} · ${save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'} · ${rivalPlayer.overall} OVR` : 'Your next opponent will appear here before matchday'}</div><div className="text-[10px] text-slate-500">Rivalry record: {legend.rivalryWins ?? 0} wins · {legend.rivalryLosses ?? 0} losses</div></div></div>
-                {rivalPlayer && nextFixture && <button type="button" disabled={Boolean(legend.rivalryPending)} onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: { ...legend, rivalryPlayerId: rivalPlayer.id, rivalryPending: true }, news: [{ id: 'rival_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' accepts a personal rivalry challenge', body: player.name + ' has challenged ' + rivalPlayer.name + ' to settle who performs best in the upcoming match.' }, ...save.news].slice(0, 35) }); }} className="min-h-[38px] rounded-lg bg-rose-500/15 border border-rose-400/40 px-3 text-[11px] font-bold text-rose-200 disabled:opacity-60">{legend.rivalryPending && legend.rivalryPlayerId === rivalPlayer.id ? 'Challenge accepted' : 'Challenge rival'}</button>}
-              </div>
-                <div className="rounded-xl border border-white/10 bg-[#0b1118] p-3 flex flex-col gap-3">
-                  <div><div className="text-sm font-bold text-white">Share an update</div><div className="text-[11px] text-slate-400">Your posts can lift your profile and attract attention</div></div>
-                  {[
-                    {caption:'Back on the training ground. Every session counts. 💪',label:'Post training update'},
-                    {caption:'Proud to wear these colours. Time to give everything for the badge. 🏟️',label:'Show love for the club'},
-                    {caption:'Big ambitions, one match at a time. The work never stops. ⚽',label:'Share your ambition'},
-                  ].map((post) => <button key={post.label} type="button" onClick={() => { soundEngine.playClick(); const likes = Math.max(12, Math.round(player.reputation * 2 + player.overall * 1.4)); onUpdateSave({ ...save, legend: { ...legend, socialPosts: [{ id: 'post_' + Date.now(), caption: post.caption, likes, week: save.currentWeek, season: save.season, comments: ['Alex M.: Big things coming for you! 🔥', 'FootballDaily: Keep delivering on the pitch! ⚽'] }, ...socialPosts].slice(0, 20), phoneFollowers: (legend.phoneFollowers ?? 1250) + Math.max(3, Math.round(likes * 0.08)) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 1), reputation: Math.min(100, player.reputation + 1) } } }); }} className="min-h-[48px] rounded-lg border border-white/10 bg-[#141f2b] hover:border-amber-400/60 px-3 py-2 text-left"><span className="block text-xs font-semibold text-amber-200">{post.label}</span><span className="block text-[10px] text-slate-400 mt-0.5">{post.caption}</span></button>)}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Your timeline</div>
-                  {socialPosts.length === 0 ? <div className="rounded-xl border border-dashed border-white/15 p-5 text-center text-xs text-slate-500">No posts yet. Share your first update to start building your profile.</div> : socialPosts.map((post) => <article key={post.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3"><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-white">{player.name}</span><span className="text-[10px] text-slate-500">S{post.season} · W{post.week}</span></div><p className="text-xs text-slate-200 mt-2">{post.caption}</p><div className="flex items-center gap-1.5 mt-3 text-[11px] text-rose-300"><Heart className="h-3.5 w-3.5 fill-current" /> {post.likes.toLocaleString()} likes</div>{post.comments?.length ? <div className="mt-2 border-t border-white/10 pt-2 space-y-1">{post.comments.map((comment, index) => <p key={index} className="text-[10px] text-slate-400">{comment}</p>)}</div> : null}</article>)}
-                  <div className="rounded-xl border border-amber-400/20 bg-[#0b1118] p-3"><div className="flex items-center justify-between mb-2"><div className="text-xs font-bold uppercase tracking-wider text-amber-300">Phone notifications</div><span className="text-[9px] text-slate-500">{(legend.phoneNotifications ?? []).length} updates</span></div>{(legend.phoneNotifications ?? []).length === 0 ? <p className="text-[11px] text-slate-500">Your matchday reactions and personal updates will appear here.</p> : <div className="space-y-2">{(legend.phoneNotifications ?? []).slice(0, 4).map((notice) => <div key={notice.id} className="rounded-lg bg-[#141f2b] p-2"><div className="text-[11px] font-bold text-white">{notice.title}</div><div className="text-[10px] text-slate-400 mt-0.5">{notice.body}</div></div>)}</div>}</div>{save.news.slice(0, 6).map((item) => <article key={item.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3"><div className="text-[10px] uppercase text-cyan-300 font-bold">{item.category === 'TRANSFER' ? 'Transfer news' : item.category === 'BOARD' ? 'Club announcement' : 'Football news'}</div><div className="text-xs text-white font-semibold mt-1">{item.headline}</div><div className="text-[11px] text-slate-400 mt-1">{item.body}</div></article>)}
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {teammates.length === 0 ? <div className="rounded-xl bg-[#0b1118] p-4 text-xs text-slate-400">Your teammate inbox will appear when you join a squad.</div> : teammates.map((mate, index) => {
-                  const starter = [
-                    `Good session today. We should link up more in training.`,
-                    `How are you feeling about the next match? We need everyone switched on.`,
-                    `Keep working like that and you'll be a big player for this club.`,
-                    `Fancy staying after training for a few extra drills?`,
-                  ][index];
-                  const thread = phoneMessages.filter((message) => message.teammateId === mate.id);
-                  const lastMessage = thread[thread.length - 1];
-                  return <article key={mate.id} className="rounded-xl border border-white/10 bg-[#0b1118] p-3 flex flex-col gap-2">
-                    <div className="flex items-center gap-2"><div className="h-9 w-9 rounded-full bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-xs font-black text-amber-300">{mate.name.split(' ').map((part) => part[0]).slice(0,2).join('')}</div><div className="min-w-0"><div className="text-xs font-bold text-white truncate">{mate.name}</div><div className="text-[10px] text-slate-500">{mate.position} · {mate.overall} OVR</div></div><span className="ml-auto text-[9px] text-emerald-400">TEAMMATE</span></div>
-                    <div className="rounded-lg bg-[#151f2a] p-2 text-[11px] text-slate-300">{lastMessage ? lastMessage.text : starter}</div>
-                    <div className="grid grid-cols-1 gap-1.5">
-                      {['Let’s keep pushing together.','I’m focused. Let’s win the next one.','Thanks, that means a lot.'].map((reply) => <button key={reply} type="button" onClick={() => { soundEngine.playClick(); const inbox = phoneMessages.length ? phoneMessages : teammates.map((teammate, idx) => ({ id: 'starter_' + teammate.id, teammateId: teammate.id, teammateName: teammate.name, from: 'TEAMMATE' as const, text: [`Good session today. We should link up more in training.`,`How are you feeling about the next match? We need everyone switched on.`,`Keep working like that and you'll be a big player for this club.`,`Fancy staying after training for a few extra drills?`][idx], week: save.currentWeek, season: save.season })); const nextInbox = [...inbox, { id: 'reply_' + Date.now(), teammateId: mate.id, teammateName: mate.name, from: 'PLAYER' as const, text: reply, week: save.currentWeek, season: save.season }, { id: 'answer_' + (Date.now()+1), teammateId: mate.id, teammateName: mate.name, from: 'TEAMMATE' as const, text: index === 1 ? 'That’s the spirit. Let’s make it happen on matchday.' : 'Respect. We’re stronger when we push each other.', week: save.currentWeek, season: save.season }]; onUpdateSave({ ...save, legend: { ...legend, phoneMessages: nextInbox.slice(-60) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 1) } }, clubs: { ...save.clubs, [club.id]: { ...club, chemistry: Math.min(100, club.chemistry + 1) } } }); }} className="min-h-[34px] rounded-md border border-white/10 px-2 py-1.5 text-left text-[10px] text-amber-200 hover:bg-amber-400/10">{reply}</button>)}
-                    </div>
-                  </article>;
-                })}
-              </div>
-            )}
-          </section>
+          <PlayerPhone
+            save={save}
+            onUpdateSave={onUpdateSave}
+            onBack={() => setTab('DASHBOARD')}
+            onOpenTransfers={() => setTab('AGENT')}
+            onOpenMatch={() => nextFixture ? onLaunchMatch(nextFixture) : setTab('COMPETITIONS')}
+          />
         )}
 
         {tab === 'TRAINING' && (
@@ -975,9 +897,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             </section>
             <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
               <div><b className="text-sm text-slate-100">Device orientation</b><p className="text-[11px] text-slate-500 mt-1">Lock the phone display for Player Career. Auto restores system rotation.</p></div>
-              <div className="grid grid-cols-3 gap-2 mt-3">
-                {([{id:'AUTO',label:'AUTO'},{id:'LANDSCAPE',label:'LANDSCAPE'},{id:'PORTRAIT',label:'PORTRAIT'}] as const).map(value => <button key={value.id} type="button" aria-pressed={(save.playerOrientation ?? 'AUTO') === value.id} onClick={() => onUpdateSave({ ...save, playerOrientation: value.id })} className={`min-h-[40px] rounded-lg border text-[10px] font-bold ${(save.playerOrientation ?? 'AUTO') === value.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{value.label}</button>)}
-              </div>
+              <div className="mt-3 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold text-emerald-700">LANDSCAPE ONLY · Locked for gameplay</div>
             </section>
             <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
               <div><b className="text-sm text-slate-100">Career layout</b><p className="text-[11px] text-slate-500 mt-1">Choose how wide the Player Career screens should appear.</p></div>
@@ -987,9 +907,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             </section>
             <section className="rounded-lg bg-[#0E141B] border border-white/10 p-3.5">
               <div><b className="text-sm text-slate-100">Screen orientation</b><p className="text-[11px] text-slate-500 mt-1">Saved on this device and applied when the platform supports rotation locking.</p></div>
-              <div className="grid grid-cols-2 gap-2 mt-3">
-                {([{id:'landscape',label:'LANDSCAPE'},{id:'portrait',label:'PORTRAIT'}] as const).map(item => <button key={item.id} type="button" aria-pressed={orientation === item.id} onClick={() => onOrientationChange(item.id)} className={`min-h-[40px] rounded-lg border text-xs font-bold ${orientation === item.id ? 'bg-[#dcecff] border-[#235BA8] text-[#13386C]' : 'bg-white/5 border-white/10 text-slate-300'}`}>{item.label}</button>)}
-              </div>
+              <div className="mt-3 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold text-emerald-700">LANDSCAPE ONLY · Portrait mode is disabled</div>
             </section>
             <div className="flex items-center justify-between p-3.5 rounded-lg bg-[#0E141B] border border-white/10">
               <span className="text-sm text-slate-200">Match Audio & Crowd FX</span>
