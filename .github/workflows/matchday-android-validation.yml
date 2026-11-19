@@ -52,6 +52,9 @@ jobs:
       - name: Validate match consequences in Living World
         run: npm run validate:match-consequences
 
+      - name: Validate Player Career phone and integrity storyline
+        run: npm run validate:player-life
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
