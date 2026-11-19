@@ -406,7 +406,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               <div className="fd-player-condition">
                 <span>FORM <b>{player.form}</b></span><span>MORALE <b>{player.morale}</b></span><span>FITNESS <b>{player.fitness}</b></span><span>TRUST <b>{legend.managerTrust}</b></span>
               </div>
-              <button className="fd-player-match-cta" type="button" onClick={handleForwardTime}>{nextFixture ? 'ENTER MATCHDAY' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
+              <button className="fd-player-match-cta" type="button" onClick={handleForwardTime}>{nextFixture ? 'KICK OFF MATCH' : leagueFinished ? 'START NEXT SEASON' : 'ADVANCE CAREER'} <span>→</span></button>
             </div>
           </section>
 
