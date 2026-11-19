@@ -108,6 +108,7 @@ export interface Player {
   potential: number;
   potentialRange?: [number, number]; // hidden/scouted academy ceiling range
   scoutingProgress?: number; // 0-100, narrows potentialRange as reports and minutes accumulate
+  developmentProgress?: number; // 0-100 training progress toward the next attribute improvement
   form: number; // 1-100
   sharpness: number; // 1-100
   fitness: number; // 1-100
