@@ -165,6 +165,7 @@ const MANAGER_MENU: MenuItem[] = [
   { key: 'transfers', title: 'TRANSFER MARKET', sub: 'Recruitment', icon: '🤝' },
   { key: 'office', title: 'MANAGER OFFICE', sub: 'Club & Finance', icon: '💼' },
   { key: 'competitions', title: 'COMPETITIONS', sub: 'League & Cups', icon: '🏆' },
+  { key: 'clubs', title: 'CLUB DIRECTORY', sub: 'Explore Every Team', icon: '🏟' },
   { key: 'settings', title: 'SYSTEM', sub: 'Game Settings', icon: '⚙' },
 ];
 

@@ -32,6 +32,7 @@ import {
 import { quickSimulateFullMatch } from './matchEngine';
 import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyramid } from './careerPyramid';
 import { findNation } from '../data/nationsDatabase';
+import { advanceLivingWorld, createInitialLivingWorld } from './livingWorld';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -296,6 +297,7 @@ export function createManagerCareer(params: {
     clubs: world.clubs,
     players: world.players,
     leagues: world.leagues,
+    worldState: createInitialLivingWorld(world.clubs, world.leagues, params.clubId, 1, 0),
     nationalTeams: world.nationalTeams,
     cupFixtures,
     continentalFixtures,
@@ -486,6 +488,7 @@ export function createLegendCareer(params: {
     clubs: world.clubs,
     players: world.players,
     leagues: world.leagues,
+    worldState: createInitialLivingWorld(world.clubs, world.leagues, undefined, 1, 0),
     nationalTeams: world.nationalTeams,
     cupFixtures,
     continentalFixtures,
@@ -1339,12 +1342,16 @@ export function advanceWeek(save: CareerSave): CareerSave {
     });
   }
 
-  return {
+  const progressedSave: CareerSave = {
     ...nextSave,
     currentWeek: nextWeek,
     transferWindowOpen,
     weekTrained: false,
-    news: nextSave.news.slice(0, 35),
+  };
+  const worldProgressedSave = advanceLivingWorld(progressedSave, nextWeek);
+  return {
+    ...worldProgressedSave,
+    news: worldProgressedSave.news.slice(0, 35),
   };
 }
 
@@ -1926,6 +1933,17 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
     internationalTournament,
     manager: nextManager,
     legend: nextLegend,
+    worldState: save.worldState ? {
+      ...save.worldState,
+      managersByClub: Object.fromEntries(
+        Object.entries(save.worldState.managersByClub).map(([clubId, manager]) => [
+          clubId,
+          { ...manager, lastPlayed: 0, lastPoints: 0 },
+        ])
+      ),
+      lastProcessedSeason: nextSeason,
+      lastProcessedWeek: 0,
+    } : undefined,
     weekTrained: false,
     news: nextNews.slice(0, 35),
   };

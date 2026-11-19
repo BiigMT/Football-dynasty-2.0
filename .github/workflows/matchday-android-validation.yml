@@ -36,6 +36,9 @@ jobs:
       - name: Validate official squad data
         run: npm run validate:squads
 
+      - name: Validate Living Football World simulation
+        run: npm run validate:living-world
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
