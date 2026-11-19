@@ -51,7 +51,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_38%,rgba(35,91,168,0.30),transparent_62%)]" />
       </div>
 
-      <header className="relative z-10 mx-auto flex min-h-[58px] w-full max-w-[1500px] items-center justify-between gap-3 border-b border-[#4777AE]/30 px-4 py-2 sm:px-7">
+      <header className="relative z-10 mx-auto flex min-h-[64px] w-full max-w-[1500px] items-center justify-between gap-3 border-b border-[#4777AE]/40 bg-[#0D1B2A]/35 px-4 py-2.5 sm:px-7">
         <div className="flex min-w-0 items-center gap-3">
           <div className="grid h-9 w-9 shrink-0 place-items-center border border-[#F6C21C]/60 bg-[#10243A] text-[#F6C21C]">
             <Shield size={19} />
@@ -75,16 +75,16 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-1 flex-col justify-center gap-4 px-4 py-4 sm:gap-5 sm:px-7 sm:py-5">
+      <main className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-1 flex-col justify-center gap-5 px-4 py-5 sm:gap-6 sm:px-7 sm:py-6">
         <section className="flex flex-wrap items-end justify-between gap-3">
           <div className="max-w-3xl">
-            <div className="mb-2 flex items-center gap-2 text-[9px] font-black tracking-[.28em] text-[#F6C21C]">
+            <div className="mb-3 flex items-center gap-2 text-[9px] font-black tracking-[.3em] text-[#F6C21C]">
               <span className="h-px w-7 bg-[#F6C21C]" /> THE NEXT ERA OF FOOTBALL
             </div>
-            <h1 className="text-[clamp(2.6rem,6.5vw,5.4rem)] font-black uppercase leading-[.82] tracking-[-.045em] text-white">
+            <h1 className="text-[clamp(2.8rem,7vw,5.8rem)] font-black uppercase leading-[.8] tracking-[-.05em] text-white drop-shadow-[0_5px_24px_rgba(0,0,0,.35)]">
               FOOTBALL <span className="text-[#F6C21C]">DYNASTY</span>
             </h1>
-            <p className="mt-3 max-w-xl text-xs leading-relaxed text-[#D6E0ED]/80 sm:text-sm">
+            <p className="mt-4 max-w-xl border-l-2 border-[#F6C21C]/70 pl-3 text-xs leading-relaxed text-[#D6E0ED]/85 sm:text-sm">
               Build your empire from the touchline or make your name on the pitch. Your legacy starts here.
             </p>
           </div>
@@ -103,23 +103,23 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </section>
 
         <section aria-label="Choose career mode" className="grid min-h-0 grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
-          <article className="group relative isolate flex min-h-[255px] overflow-hidden border border-[#4777AE]/60 bg-[#10243A]/90 shadow-[0_16px_36px_rgba(0,0,0,.3)] sm:min-h-[285px] landscape:min-h-[300px]">
+          <article className="group relative isolate flex min-h-[255px] overflow-hidden border border-[#4777AE]/65 bg-[#10243A]/90 shadow-[0_18px_42px_rgba(0,0,0,.38)] transition duration-300 hover:-translate-y-1 hover:border-[#F6C21C]/75 hover:shadow-[0_22px_48px_rgba(0,0,0,.48)] sm:min-h-[285px] landscape:min-h-[300px]">
             <img src={managerEmblem} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-55 transition duration-700 group-hover:scale-[1.025] group-hover:opacity-65" />
-            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/75 to-[#13386C]/30" />
+            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/78 to-[#13386C]/42" />
             <div className="absolute inset-y-0 left-0 w-1 bg-[#F6C21C]" />
-            <div className="flex w-full flex-col justify-between gap-4 p-5 sm:p-6">
+            <div className="flex w-full flex-col justify-between gap-5 p-5 sm:p-7">
               <div className="max-w-[470px]">
                 <div className="mb-2 flex items-center gap-2 text-[10px] font-black tracking-[.2em] text-[#F6C21C]"><Shield size={14}/> MASTER LEAGUE</div>
-                <h2 className="text-3xl font-black uppercase leading-none tracking-tight text-white sm:text-4xl">Manager Career</h2>
+                <h2 className="text-3xl font-black uppercase leading-[.9] tracking-[-.025em] text-white drop-shadow-md sm:text-[2.65rem]">Manager Career</h2>
                 <p className="mt-3 max-w-sm text-xs leading-relaxed text-white/80 sm:text-sm">Build your squad. Set your tactics. Win the trophies that define your club.</p>
               </div>
-              <button type="button" onClick={() => onStartNewCareer('MANAGER', firstEmptySlot)} className="flex min-h-11 w-full items-center justify-center gap-2 border border-[#F6C21C] bg-[#F6C21C] px-5 text-xs font-black tracking-[.13em] text-[#0D1B2A] transition hover:brightness-110 sm:w-fit sm:min-w-[220px]">
+              <button type="button" onClick={() => onStartNewCareer('MANAGER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C] bg-[#F6C21C] px-5 text-xs font-black tracking-[.14em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b] transition hover:brightness-110 active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
                 NEW MANAGER CAREER <ChevronRight size={16}/>
               </button>
             </div>
           </article>
 
-          <article className="group relative isolate flex min-h-[255px] overflow-hidden border border-[#4777AE]/60 bg-[#10243A]/90 shadow-[0_16px_36px_rgba(0,0,0,.3)] sm:min-h-[285px] landscape:min-h-[300px]">
+          <article className="group relative isolate flex min-h-[255px] overflow-hidden border border-[#4777AE]/65 bg-[#10243A]/90 shadow-[0_18px_42px_rgba(0,0,0,.38)] transition duration-300 hover:-translate-y-1 hover:border-[#F6C21C]/75 hover:shadow-[0_22px_48px_rgba(0,0,0,.48)] sm:min-h-[285px] landscape:min-h-[300px]">
             <img src={legendEmblem} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-55 transition duration-700 group-hover:scale-[1.025] group-hover:opacity-65" />
             <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0D1B2A]/95 via-[#0D1B2A]/75 to-[#13386C]/30" />
             <div className="absolute inset-y-0 left-0 w-1 bg-[#235BA8]" />
@@ -129,7 +129,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 <h2 className="text-3xl font-black uppercase leading-none tracking-tight text-white sm:text-4xl">Player Career</h2>
                 <p className="mt-3 max-w-sm text-xs leading-relaxed text-white/80 sm:text-sm">Create your footballer. Earn your place. Chase the Ballon d'Or.</p>
               </div>
-              <button type="button" onClick={() => onStartNewCareer('PLAYER', firstEmptySlot)} className="flex min-h-11 w-full items-center justify-center gap-2 border border-[#F6C21C]/70 bg-[#13386C] px-5 text-xs font-black tracking-[.13em] text-white transition hover:bg-[#235BA8] sm:w-fit sm:min-w-[220px]">
+              <button type="button" onClick={() => onStartNewCareer('PLAYER', firstEmptySlot)} className="flex min-h-12 w-full items-center justify-center gap-2 border border-[#F6C21C]/70 bg-[#13386C] px-5 text-xs font-black tracking-[.14em] text-white shadow-[0_4px_0_#0D1B2A] transition hover:bg-[#235BA8] active:translate-y-0.5 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit sm:min-w-[230px]">
                 NEW PLAYER CAREER <ChevronRight size={16}/>
               </button>
             </div>
