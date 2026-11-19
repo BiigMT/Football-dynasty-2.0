@@ -378,7 +378,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
           <button className={tab === 'DASHBOARD' ? 'is-active' : ''} aria-current={tab === 'DASHBOARD' ? 'page' : undefined} type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
-          <button className={tab === 'PHONE' ? 'is-active' : ''} aria-current={tab === 'PHONE' ? 'page' : undefined} type="button" onClick={() => { setPhoneMode('SOCIAL'); setTab('PHONE'); }}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
+          <button type="button" onClick={() => { setPhoneMode('SOCIAL'); setTab('PHONE'); }}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('TRAINING')}><span>03</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>04</span> MY PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>05</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
@@ -621,7 +621,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 <div className="h-12 w-9 rounded-lg border-2 border-slate-500 bg-gradient-to-b from-slate-700 to-[#05080c] p-1 shadow-lg"><div className="h-full rounded bg-[#152a36] flex items-center justify-center"><Smartphone className="h-5 w-5 text-amber-300" /></div></div>
                 <div><div className="text-xs uppercase tracking-[.2em] text-amber-400 font-bold">Player phone</div><h2 className="text-lg font-black text-white">Your life off the pitch</h2><p className="text-[11px] text-slate-400">Messages, teammates and your public profile</p></div>
               </div>
-              <div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div>
+              <div className="flex items-center gap-3"><div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div><button type="button" onClick={() => setTab('DASHBOARD')} className="min-h-[36px] rounded-lg border border-white/15 px-3 text-[10px] font-bold text-slate-200">BACK TO CENTRAL</button></div>
             </div>
             <div className="rounded-xl border border-amber-400/25 bg-[#0b1118] p-3 flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
