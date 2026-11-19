@@ -214,36 +214,36 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
   };
 
   return (
-    <div className={mode === 'PLAYER' ? "fd-player-creation-screen min-h-screen py-5 px-3 sm:px-5" : "min-h-screen bg-[#0B0F14] text-slate-100 py-6 px-4 sm:px-6"}>
-      <form onSubmit={handleSubmit} className="max-w-5xl mx-auto flex flex-col gap-6">
+    <div className={mode === 'PLAYER' ? "fd-player-creation-screen min-h-screen py-5 px-3 sm:px-5" : "min-h-screen bg-[#0D1B2A] text-slate-100 px-3 py-4 sm:px-6 sm:py-5 lg:px-8"}>
+      <form onSubmit={handleSubmit} className={mode === 'MANAGER' ? "mx-auto flex w-full max-w-[1560px] flex-col gap-4" : "mx-auto flex w-full max-w-[1560px] flex-col gap-4"}>
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className={mode === 'MANAGER' ? "flex items-center justify-between border-b border-[#4777AE]/50 pb-3" : "flex items-center justify-between border-b border-[#4777AE]/50 pb-3"}>
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-[44px] px-3 py-2 rounded-lg bg-[#131A22] border border-white/10 text-slate-300 hover:text-white flex items-center gap-2 text-sm cursor-pointer"
+            className={mode === 'MANAGER' ? "min-h-[42px] px-4 rounded border border-[#4777AE]/60 bg-[#10243A] text-[#E8EDF5] hover:border-[#F6C21C]/70 hover:text-white flex items-center gap-2 text-xs font-bold tracking-wide cursor-pointer" : "min-h-[42px] px-4 rounded border border-[#4777AE]/60 bg-[#10243A] text-[#E8EDF5] hover:border-[#F6C21C]/70 hover:text-white flex items-center gap-2 text-xs font-bold tracking-wide cursor-pointer"}
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
           </button>
           <div className="text-right">
-            <div className={`text-xs font-medium ${mode === 'MANAGER' ? 'text-cyan-400' : 'text-amber-400'}`}>
+            <div className={`text-[10px] font-black uppercase tracking-[.24em] ${mode === 'MANAGER' ? 'text-[#F6C21C]' : 'text-amber-400'}`}>
               {mode === 'MANAGER' ? 'Master League Setup' : 'Become a Legend Creator'}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-white">
+            <h1 className={mode === 'MANAGER' ? "mt-1 text-xl font-black uppercase tracking-wide text-white sm:text-2xl" : "mt-1 text-xl font-black uppercase tracking-wide text-white sm:text-2xl"}>
               {mode === 'MANAGER' ? 'Create Manager & Select Club' : 'Create Your Footballer'}
             </h1>
           </div>
         </div>
 
         {mode === 'PLAYER' && <div className="fd-player-creation-steps" aria-label="Player creation steps">{([{step:1,label:'IDENTITY'},{step:2,label:'ORIGIN'},{step:3,label:'INTERNATIONAL'}] as const).map(item=><button key={item.step} type="button" aria-current={creationStep===item.step?'step':undefined} className={creationStep===item.step?'is-active':creationStep>item.step?'is-complete':''} onClick={()=>{if(item.step<creationStep||item.step===2&&creationStep===1) setCreationStep(item.step);}}><b>0{item.step}</b><span>{item.label}</span></button>)}</div>}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className={mode === 'MANAGER' ? "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start" : "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start"}>
           {/* Left Column: Profile & Customization */}
-          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-5" style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
+          <div className={mode === 'MANAGER' ? "lg:col-span-4 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-5 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]"} style={mode === 'PLAYER' && creationStep !== 1 ? {display:'none'} : undefined}>
             {mode === 'MANAGER' ? (
               <>
-                <h2 className="text-xl font-bold text-white">Manager Profile</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3"><div><div className="text-[9px] font-black tracking-[.22em] text-[#F6C21C]">YOUR TOUCHLINE IDENTITY</div><h2 className="mt-1 text-lg font-black uppercase text-white">Manager Profile</h2></div><span className="rounded border border-[#F6C21C]/30 bg-[#F6C21C]/10 px-2 py-1 text-[9px] font-black tracking-wider text-[#F6C21C]">01 / 02</span></div>
+                <div className={mode === 'MANAGER' ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 sm:grid-cols-2 gap-4"}>
                   <label className="flex flex-col gap-1.5 text-xs text-slate-400">
                     <span>Manager Name</span>
                     <input
@@ -252,33 +252,34 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                       onChange={(e) => setManagerName(e.target.value)}
                       maxLength={28}
                       required
-                      className="min-h-[44px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none"
+                      className="min-h-[42px] px-3 rounded border border-white/15 bg-[#0B1725] text-sm text-white outline-none transition focus:border-[#F6C21C]"
                     />
                   </label>
                   <label className="flex flex-col gap-1.5 text-xs text-slate-400">
-                    <span>Nationality</span>
+                    <span className="font-semibold uppercase tracking-wider text-slate-400">Nationality</span>
                     <div className="flex flex-col gap-2">
-                      <input value={nationQuery} onChange={(e) => setNationQuery(e.target.value)} placeholder="Search 79 nations..." className="min-h-[38px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white" />
-                      <select value={nationConfederation} onChange={(e) => setNationConfederation(e.target.value)} className="min-h-[36px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-xs text-white"><option value="ALL">All confederations</option>{CONFEDERATIONS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
-                      <select value={nationality} onChange={(e) => setNationality(e.target.value)} className="min-h-[44px] px-3 rounded-lg bg-[#0B0F14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none">
+                      <input value={nationQuery} onChange={(e) => setNationQuery(e.target.value)} placeholder="Search 79 nations..." className="min-h-[38px] px-3 rounded border border-white/15 bg-[#0B1725] text-sm text-white outline-none focus:border-[#F6C21C]" />
+                      <select value={nationConfederation} onChange={(e) => setNationConfederation(e.target.value)} className="min-h-[36px] px-3 rounded border border-white/15 bg-[#0B1725] text-xs text-white outline-none focus:border-[#F6C21C]"><option value="ALL">All confederations</option>{CONFEDERATIONS.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+                      <select value={nationality} onChange={(e) => setNationality(e.target.value)} className="min-h-[42px] px-3 rounded border border-white/15 bg-[#0B1725] text-sm text-white outline-none focus:border-[#F6C21C]">
                         {NATIONS_DATABASE.filter((n) => (nationConfederation === 'ALL' || n.confederation === nationConfederation) && n.name.toLowerCase().includes(nationQuery.toLowerCase())).map((n) => <option key={n.code} value={n.name}>{n.name} · {n.confederation} · U21 {n.u21OvrRequired} / Senior {n.seniorOvrRequired}</option>)}
                       </select>
                     </div>
                   </label>
                 </div>
+                {selectedNation && <div className="flex items-center justify-between rounded border border-[#4777AE]/40 bg-[#0B1725] px-3 py-2.5"><div className="flex items-center gap-2"><span dangerouslySetInnerHTML={{__html:getNationFlagSvg(selectedNation.code,30)}}/><div><b className="block text-xs text-white">{selectedNation.name}</b><span className="text-[10px] text-slate-400">{selectedNation.confederation} · National pathway</span></div></div><div className="text-right"><b className="block text-xs text-[#F6C21C]">U21 {selectedNation.u21OvrRequired}</b><span className="text-[9px] text-slate-400">Senior {selectedNation.seniorOvrRequired}</span></div></div>}
 
                 <div>
-                  <span className="block text-xs text-slate-400 mb-2">Career Difficulty</span>
+                  <span className="mb-2 block text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Career Difficulty</span>
                   <div className="grid grid-cols-3 gap-2">
                     {([{ id: 'EASY', label: 'Easy', detail: 'More forgiving' }, { id: 'NORMAL', label: 'Normal', detail: 'Balanced challenge' }, { id: 'HARD', label: 'Hard', detail: 'Strict & demanding' }] as const).map((level) => (
-                      <button key={level.id} type="button" onClick={() => setDifficulty(level.id)} className={`rounded-lg border px-2 py-3 text-left ${difficulty === level.id ? 'border-cyan-400 bg-cyan-500/15 text-cyan-200' : 'border-white/10 bg-[#0B0F14] text-slate-300'}`}>
+                      <button key={level.id} type="button" onClick={() => setDifficulty(level.id)} className={`min-h-[68px] rounded border px-2 py-2.5 text-left transition ${difficulty === level.id ? 'border-[#F6C21C] bg-[#F6C21C]/10 text-white shadow-[inset_0_0_0_1px_rgba(246,194,28,.12)]' : 'border-white/10 bg-[#0B1725] text-slate-300 hover:border-white/25'}`}>
                         <strong className="block text-sm">{level.label}</strong><span className="text-[10px] text-slate-400">{level.detail}</span>
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-400 mb-2">Tactical Philosophy</span>
+                  <span className="mb-2 block text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Tactical Philosophy</span>
                   <div className="grid grid-cols-2 gap-2.5">
                     {(['Gegenpress', 'Possession', 'Counter-Attack', 'Balanced'] as const).map((p) => (
                       <button
@@ -287,8 +288,8 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                         onClick={() => setPhilosophy(p)}
                         className={`min-h-[44px] px-3 py-2 rounded-lg border text-sm font-medium transition-colors cursor-pointer ${
                           philosophy === p
-                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
-                            : 'bg-[#0B0F14] border-white/10 text-slate-300 hover:border-white/25'
+                            ? 'bg-[#235BA8]/45 border-[#F6C21C] text-[#F6C21C]'
+                            : 'bg-[#0B1725] border-white/10 text-slate-300 hover:border-white/25'
                         }`}
                       >
                         {p}
@@ -469,12 +470,12 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                 </div>
               </>
             )}
-            {mode === 'PLAYER' && <button type="button" onClick={() => setCreationStep(2)} className="min-h-[46px] rounded-lg bg-[#235BA8] text-white text-sm font-bold">CONTINUE TO ORIGIN PATHWAY →</button>}
+            {mode === 'PLAYER' && <button type="button" onClick={() => setCreationStep(2)} className="min-h-[46px] rounded bg-[#F6C21C] px-5 text-xs font-black uppercase tracking-[.12em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b]">CONTINUE TO ORIGIN PATHWAY →</button>}
           </div>
 
           {/* Right Column: World League & Club Selection */}
-          <div className="lg:col-span-6 rounded-xl bg-[#131A22] border border-white/10 p-5 flex flex-col gap-4" style={mode === 'PLAYER' && creationStep !== 2 ? {display:'none'} : undefined}>
-            <h2 className="text-xl font-bold text-white">Select Region, League & Club</h2>
+          <div className={mode === 'MANAGER' ? "lg:col-span-8 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]" : "lg:col-span-7 rounded-md border border-[#4777AE]/55 bg-[#10243A] p-4 lg:p-5 flex flex-col gap-4 shadow-[0_12px_30px_rgba(0,0,0,.22)]"} style={mode === 'PLAYER' && creationStep !== 2 ? {display:'none'} : undefined}>
+            <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-3"><div><div className="text-[9px] font-black tracking-[.22em] text-[#F6C21C]">CHOOSE YOUR DESTINATION</div><h2 className="mt-1 text-lg font-black uppercase text-white">Select Region, League & Club</h2></div><span className="text-[10px] font-bold tracking-wider text-slate-400">{activeLeague.clubs.length} CLUBS AVAILABLE</span></div>
 
             {/* Region Tabs */}
             <div className="flex flex-wrap gap-1.5 bg-[#0B0F14] p-1 rounded-lg">
@@ -485,7 +486,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                   onClick={() => handleRegionChange(r.id)}
                   className={`min-h-[40px] flex-1 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
                     selectedRegion === r.id
-                      ? 'bg-cyan-500 text-slate-950'
+                      ? 'bg-[#F6C21C] text-[#0D1B2A] shadow-[0_2px_0_#b88e0b]'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -496,15 +497,15 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
 
             {/* League Selector */}
             {regionLeagues.length > 1 && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {regionLeagues.map((lg) => (
                   <button
                     key={lg.id}
                     type="button"
                     onClick={() => handleLeagueChange(lg.id)}
-                    className={`min-h-[40px] flex-1 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
+                    className={`min-h-[40px] flex-1 basis-[150px] px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                       activeLeague.id === lg.id
-                        ? 'border-cyan-400 bg-cyan-500/15 text-cyan-300'
+                        ? 'border-[#F6C21C] bg-[#F6C21C]/10 text-[#F6C21C]'
                         : 'border-white/10 bg-[#0B0F14] text-slate-400 hover:text-white'
                     }`}
                   >
@@ -515,18 +516,22 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
             )}
 
             {mode === 'MANAGER' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
-                {activeLeague.clubs.map((c) => {
+              <>
+              <div className="flex flex-wrap items-center justify-between gap-2"><div><div className="text-[10px] font-black uppercase tracking-[.18em] text-slate-300">Club directory</div><div className="mt-1 text-[10px] text-slate-500">{activeLeague.name} · {activeLeague.clubs.length} clubs · Select one to view its details</div></div><input value={clubSearch} onChange={(e) => setClubSearch(e.target.value)} placeholder="Search clubs..." aria-label="Search clubs in selected league" className="min-h-[40px] w-full max-w-[280px] rounded border border-white/15 bg-[#0B1725] px-3 text-xs text-white outline-none transition focus:border-[#F6C21C]" /></div>
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 max-h-[min(54vh,560px)] min-h-[180px] overflow-y-auto overscroll-contain pr-1">
+                {activeLeague.clubs.filter((c) => c.name.toLowerCase().includes(clubSearch.toLowerCase()) || c.shortName.toLowerCase().includes(clubSearch.toLowerCase())).map((c) => {
                   const active = c.id === selectedClub.id;
                   return (
-                    <button key={c.id} type="button" onClick={() => setSelectedClubId(c.id)} className={`min-h-[64px] p-3 rounded-lg border text-left transition-colors flex items-center gap-3 cursor-pointer ${active ? 'bg-cyan-500/15 border-cyan-400' : 'bg-[#0B0F14] border-white/10 hover:border-white/25'}`}>
+                    <button key={c.id} type="button" onClick={() => setSelectedClubId(c.id)} className={`min-h-[76px] rounded border p-3 text-left transition-all flex items-center gap-3 cursor-pointer ${active ? 'bg-[#235BA8]/35 border-[#F6C21C] shadow-[inset_0_0_0_1px_rgba(246,194,28,.14)]' : 'bg-[#0B1725] border-white/10 hover:border-[#4777AE]'}`}>
                       <ClubBadge shortName={c.shortName} primaryColor={c.primaryColor} secondaryColor={c.secondaryColor} size={38} />
                       <div className="min-w-0 flex-1"><div className="text-sm font-semibold text-white truncate">{c.name}</div><div className="text-xs text-slate-400 font-mono-num">{c.country} · Rep {c.reputation} · {c.formation}</div></div>
-                      {active && <Check className="w-4 h-4 shrink-0 text-cyan-400" />}
+                      {active && <Check className="w-4 h-4 shrink-0 text-[#F6C21C]" />}
                     </button>
                   );
                 })}
+                {activeLeague.clubs.filter((c) => c.name.toLowerCase().includes(clubSearch.toLowerCase()) || c.shortName.toLowerCase().includes(clubSearch.toLowerCase())).length === 0 && <div className="col-span-full rounded border border-dashed border-white/15 bg-[#0B1725] px-4 py-8 text-center"><div className="text-sm font-bold text-white">No clubs found</div><p className="mt-1 text-xs text-slate-400">Try another club name or clear your search.</p><button type="button" onClick={() => setClubSearch('')} className="mt-3 text-xs font-bold text-[#F6C21C] underline">Clear search</button></div>}
               </div>
+              </>
             ) : (
               <div className="flex flex-col gap-4">
                 <div className="fd-origin-pathways">
@@ -544,18 +549,30 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                 ) : originPathway === 'DOMESTIC' ? (
                   <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-emerald-300">Domestic academy pathway</div><p className="mt-1 text-xs text-slate-300">A home-country start for {selectedNation?.name??nationality}. Your regional league is selected where a domestic club is available.</p><div className="mt-3 flex flex-wrap gap-2">{(selectedNation?.localAcademies??[]).map(name=><span key={name} className="rounded-lg border border-emerald-300/20 bg-white/70 px-3 py-2 text-xs font-bold text-[#13386C]">{name}</span>)}</div><div className="mt-3 flex items-center gap-3"><ClubBadge shortName={selectedClub.shortName} primaryColor={selectedClub.primaryColor} secondaryColor={selectedClub.secondaryColor} size={44}/><div><b className="text-white">{selectedClub.name}</b><p className="text-xs text-slate-400">{selectedClub.country} · {activeLeague.name} · Youth entry</p></div></div></div>
                 ) : (
-                  <div className="rounded-xl border border-blue-300/30 bg-blue-500/5 p-4"><div className="text-xs font-black uppercase tracking-wider text-blue-200">Global starter club directory</div><input value={clubSearch} onChange={e=>setClubSearch(e.target.value)} placeholder="Search clubs worldwide..." className="mt-3 min-h-[40px] w-full rounded-lg px-3 text-sm"/><div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[320px] overflow-y-auto">{LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name,leagueTier:l.tier}))).filter(team=>team.leagueTier>=2&&team.leagueTier<=4&&(team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase()))).slice(0,80).map(team=>{const depth=careerWorld?Object.values(careerWorld.players).filter(p=>p.clubId===team.id&&(p.position===position||p.secondaryPositions?.includes(position))).sort((a,b)=>b.overall-a.overall):[];return <button key={team.id} type="button" onClick={()=>selectGlobalClub(team.id)} className={selectedClub.id===team.id?'fd-global-club is-selected':'fd-global-club'}><ClubBadge shortName={team.shortName} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} size={32}/><span><b>{team.name}</b><small>{team.country} · Tier {team.leagueTier} · {team.leagueName}</small><small>{position} depth: {depth.length} player(s) · best OVR {depth[0]?.overall ?? '—'}</small></span><small>REP {team.reputation}</small></button>})}</div><p className="mt-2 text-[10px] text-slate-400">Position depth is calculated from the offline club roster for your selected role. You still begin as a youth prospect.</p></div>
+                  <div className="rounded border border-[#4777AE]/45 bg-[#0B1725] p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div><div className="text-[10px] font-black uppercase tracking-[.18em] text-[#F6C21C]">Global starter club directory</div><p className="mt-1 text-[10px] text-slate-400">Tier 2–4 clubs · {LEAGUE_BLUEPRINTS.reduce((total,l)=>total+l.clubs.filter(team=>l.tier>=2&&l.tier<=4).length,0)} available destinations</p></div>
+                      <span className="text-[10px] font-bold text-slate-400">{position} · POSITION MATCH</span>
+                    </div>
+                    <input value={clubSearch} onChange={e=>setClubSearch(e.target.value)} placeholder="Search clubs or countries worldwide..." aria-label="Search global starter clubs by club or country" className="mt-3 min-h-[42px] w-full max-w-[440px] rounded border border-white/15 bg-[#0B1725] px-3 text-sm text-white outline-none transition focus:border-[#F6C21C]"/>
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 max-h-[min(54vh,560px)] min-h-[180px] overflow-y-auto overscroll-contain pr-1">
+                      {LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name,leagueTier:l.tier}))).filter(team=>team.leagueTier>=2&&team.leagueTier<=4&&(team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase()))).slice(0,80).map(team=>{const depth=careerWorld?Object.values(careerWorld.players).filter(p=>p.clubId===team.id&&(p.position===position||p.secondaryPositions?.includes(position))).sort((a,b)=>b.overall-a.overall):[];return <button key={team.id} type="button" onClick={()=>selectGlobalClub(team.id)} className={selectedClub.id===team.id?'fd-global-club is-selected':'fd-global-club'}><ClubBadge shortName={team.shortName} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} size={38}/><span><b>{team.name}</b><small>{team.country} · Tier {team.leagueTier} · {team.leagueName}</small><small>{position} depth: {depth.length} player(s) · best OVR {depth[0]?.overall ?? '—'}</small></span><small>REP {team.reputation}</small></button>})}
+                      {LEAGUE_BLUEPRINTS.flatMap(l=>l.clubs.map(team=>({...team,leagueName:l.name,leagueTier:l.tier}))).filter(team=>team.leagueTier>=2&&team.leagueTier<=4&&(team.name.toLowerCase().includes(clubSearch.toLowerCase())||team.country.toLowerCase().includes(clubSearch.toLowerCase()))).length===0&&<div className="col-span-full rounded border border-dashed border-white/15 px-4 py-8 text-center"><b className="text-sm text-white">No clubs found</b><p className="mt-1 text-xs text-slate-400">Try another club or country name.</p><button type="button" onClick={()=>setClubSearch('')} className="mt-3 text-xs font-bold text-[#F6C21C] underline">Clear search</button></div>}
+                    </div>
+                    <p className="mt-2 text-[10px] text-slate-400">Position depth is calculated from the offline club roster for your selected role. You still begin as a youth prospect.</p>
+                  </div>
                 )}
               </div>
             )}
 
-            <button type="button" onClick={() => setShowClubPresentation(true)} className="min-h-[40px] w-full rounded border border-[#F6C21C]/50 bg-[#13386C]/40 text-[#F6C21C] text-xs font-bold tracking-wider">VIEW CLUB PRESENTATION · 22-MAN SQUAD</button>
+            {mode === 'MANAGER' && <div className="rounded border border-[#F6C21C]/35 bg-[#0B1725] p-3"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><ClubBadge shortName={selectedClub.shortName} primaryColor={selectedClub.primaryColor} secondaryColor={selectedClub.secondaryColor} size={48}/><div className="min-w-0"><div className="text-[9px] font-black tracking-[.2em] text-[#F6C21C]">YOUR CLUB</div><div className="truncate text-base font-black text-white">{selectedClub.name}</div><div className="text-[10px] text-slate-400">{selectedClub.country} · {activeLeague.name}</div></div></div><div className="flex items-center gap-4 text-right"><div><b className="block text-sm text-white">{selectedClub.reputation}</b><span className="text-[9px] text-slate-400">REPUTATION</span></div><div><b className="block text-sm text-white">{selectedClub.formation}</b><span className="text-[9px] text-slate-400">FORMATION</span></div><button type="button" onClick={() => setShowClubPresentation(true)} className="min-h-[38px] rounded border border-[#4777AE] px-3 text-[10px] font-black tracking-wider text-[#E8EDF5] hover:border-[#F6C21C] hover:text-[#F6C21C]">SQUAD & STADIUM</button></div></div></div>}
+            {mode === 'PLAYER' && <button type="button" onClick={() => setShowClubPresentation(true)} className="min-h-[40px] w-full rounded border border-[#F6C21C]/50 bg-[#13386C]/40 text-[#F6C21C] text-xs font-bold tracking-wider">VIEW CLUB PRESENTATION · 22-MAN SQUAD</button>}
 
             <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between gap-4">
               <div className="text-xs text-slate-400">
                 Selected: <span className="text-white font-semibold">{mode === 'MANAGER' ? selectedClub.name : originPathway === 'TRIAL' ? academyOffer.name : selectedClub.name}</span>
               </div>
-              {mode === 'MANAGER' ? <button type="submit" className="min-h-[46px] px-6 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm">Sign Contract & Start</button> : <button type="button" disabled={originPathway === 'TRIAL' && !trialComplete} onClick={() => setCreationStep(3)} className="min-h-[46px] px-6 py-2.5 rounded-lg bg-[#235BA8] hover:bg-[#13386C] text-white font-bold text-sm disabled:opacity-40">CONTINUE TO INTERNATIONAL →</button>}
+              {mode === 'MANAGER' ? <button type="submit" className="min-h-[48px] rounded bg-[#F6C21C] px-6 py-2.5 text-xs font-black uppercase tracking-[.12em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b] transition hover:brightness-110 active:translate-y-0.5 active:shadow-none">Sign Contract & Start</button> : <button type="button" disabled={originPathway === 'TRIAL' && !trialComplete} onClick={() => setCreationStep(3)} className="min-h-[46px] rounded bg-[#F6C21C] px-6 py-2.5 text-xs font-black uppercase tracking-[.12em] text-[#0D1B2A] shadow-[0_4px_0_#b88e0b] disabled:opacity-40">CONTINUE TO INTERNATIONAL →</button>}
             </div>
           </div>
         </div>
