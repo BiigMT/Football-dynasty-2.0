@@ -39,12 +39,13 @@ function matchesNamedEntity(name: string, title: string, description: string): b
   const tokens = wanted.split(" ").filter((token) => token.length > 1);
   return tokens.length > 0 && tokens.every((token) => haystack.includes(token));
 }
-function isReusableLicense(value: string): boolean {
-  const license = value.trim().toLowerCase();
-  if (license.includes("-nc") || license.includes("-nd")) return false;
-  return license === "cc0" || license.startsWith("cc0 ") ||
-    license === "public domain" || license.startsWith("public domain ") ||
-    /^cc by(?:-sa)?(?:\s|$)/.test(license);
+function isCCBYSA40(licenseName: string, licenseUrl: string): boolean {
+  const name = licenseName.trim().toLowerCase().replace(/\\s+/g, " ");
+  const url = licenseUrl.trim().replace(/\\/+$/, "").toLowerCase();
+  const exactName = name === "cc by-sa 4.0" ||
+    name === "creative commons attribution-sharealike 4.0 international" ||
+    name === "creative commons attribution-share alike 4.0 international";
+  return exactName && url === "https://creativecommons.org/licenses/by-sa/4.0";
 }
 
 Deno.serve(async (req) => {
@@ -71,7 +72,7 @@ Deno.serve(async (req) => {
       .select("entity_type,entity_id,storage_path,alt_text,source_url,license_name,license_url,author_name,attribution,source_page_url")
       .eq("entity_type", entityType).eq("entity_id", entityId).maybeSingle();
     if (cacheError) throw cacheError;
-    if (cached) {
+    if (cached && isCCBYSA40(cached.license_name ?? "", cached.license_url ?? "")) {
       const bucket = entityType === "player" ? "player-photos" : "club-photos";
       const { data } = supabase.storage.from(bucket).getPublicUrl(cached.storage_path);
       return json({ status: "cached", ...cached, image_url: data.publicUrl });
@@ -100,7 +101,7 @@ Deno.serve(async (req) => {
     const candidates = pages.map((page) => {
       const info = page.imageinfo?.[0];
       const meta = info?.extmetadata ?? {};
-      const license = clean(meta.LicenseShortName?.value, 100);
+      const license = clean(meta.LicenseShortName?.value, 150);
       const author = clean(meta.Artist?.value?.replace(/<[^>]*>/g, ""), 200);
       const licenseUrl = clean(meta.LicenseUrl?.value, 500);
       const description = clean(meta.ImageDescription?.value?.replace(/<[^>]*>/g, ""), 500);
@@ -116,13 +117,13 @@ Deno.serve(async (req) => {
         (entityType === "player" ? Math.abs(ratio - 0.82) * 10 : 0);
       return { page, info, license, author, licenseUrl, description, title, portraitShape, nameMatch, score };
     }).filter((item) =>
-      item.info?.thumburl && item.licenseUrl && isReusableLicense(item.license) &&
+      item.info?.thumburl && isCCBYSA40(item.license, item.licenseUrl) &&
       item.nameMatch && item.portraitShape
     ).sort((a, b) => b.score - a.score);
 
     if (!candidates.length) return json({
       status: "not_found",
-      message: "No licensed image with a matching player or club name was found. A generic football photo will not be used as a portrait.",
+      message: "No matching photograph under the exact CC BY-SA 4.0 licence was found. Other licence versions and generic football photos are not accepted.",
     });
 
     const chosen = candidates[0];
