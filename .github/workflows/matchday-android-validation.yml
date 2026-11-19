@@ -43,6 +43,9 @@ jobs:
       - name: Validate football match engine
         run: npm run validate:match-engine
 
+      - name: Validate AI squad rotation
+        run: npm run validate:squad-rotation
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
