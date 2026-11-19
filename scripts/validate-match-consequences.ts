@@ -10,17 +10,16 @@ const save = createManagerCareer({
   philosophy: 'Balanced',
   clubId: 'man_sky',
 });
-const league = save.leagues[save.clubs[save.userClubId].leagueId];
-const leagueClubs = league.clubIds.map((id) => save.clubs[id]).filter(Boolean);
-const lowRep = [...leagueClubs].sort((a, b) => a.reputation - b.reputation)[0];
-const highRep = [...leagueClubs].sort((a, b) => b.reputation - a.reputation)[0];
+const allClubs = Object.values(save.clubs);
+const lowRep = [...allClubs].sort((a, b) => a.reputation - b.reputation)[0];
+const highRep = [...allClubs].sort((a, b) => b.reputation - a.reputation)[0];
 assert.ok(highRep.reputation - lowRep.reputation >= 10, 'Test league needs a meaningful reputation gap');
 
 const fixture: Fixture = {
   id: 'world_consequence_upset_test',
-  competitionId: league.id,
-  competitionName: league.name,
-  competitionType: 'LEAGUE',
+  competitionId: 'validation_domestic_cup',
+  competitionName: 'Validation Domestic Cup',
+  competitionType: 'DOMESTIC_CUP',
   round: 1,
   week: save.currentWeek,
   homeClubId: lowRep.id,
@@ -33,10 +32,7 @@ const testSave = {
   ...save,
   players: { ...save.players },
   clubs: { ...save.clubs },
-  leagues: {
-    ...save.leagues,
-    [league.id]: { ...league, fixtures: [fixture, ...league.fixtures] },
-  },
+  cupFixtures: [fixture, ...save.cupFixtures],
 };
 const session = createMatchSession({
   fixture,
