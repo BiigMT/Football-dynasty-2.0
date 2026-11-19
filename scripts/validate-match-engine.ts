@@ -9,7 +9,7 @@ import {
   simulateNextMinute,
   startMatchKickoff,
 } from '../src/engine/matchEngine';
-import type { Fixture } from '../src/types/football';
+import type { Fixture, MatchSession } from '../src/types/football';
 
 function withSeed<T>(seed: number, run: () => T): T {
   const originalRandom = Math.random;
@@ -108,7 +108,7 @@ assert.equal(
 assert.equal(subSession.awaySubsUsed, 0, 'Home substitutions must not affect the away allowance');
 
 // Half-time substitutions are legal and team-talk changes only the managed side.
-let halfTimeSession = { ...startMatchKickoff(preMatch), phase: 'HALF_TIME' as const, minute: 45 };
+let halfTimeSession: MatchSession = { ...startMatchKickoff(preMatch), phase: 'HALF_TIME', minute: 45 };
 const halfTimeOut = home.tactics.startingXI[1];
 const halfTimeIn = home.tactics.bench[0];
 halfTimeSession = makeMatchSubstitution(halfTimeSession, 'HOME', halfTimeOut, halfTimeIn);
