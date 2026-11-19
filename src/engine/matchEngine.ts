@@ -661,7 +661,7 @@ export function resolveKeyMomentChoice(
   const successProb = Math.max(0.22, Math.min(0.88, 0.52 + (attrVal - choice.difficulty) * 0.014 + (staminaMod + confMod) * 0.01));
   const succeeded = Math.random() < successProb;
 
-  const events = [...session.events, ...tacticalEvents];
+  const events = [...session.events];
   const half: 1 | 2 = session.minute <= 45 ? 1 : 2;
   let nextBall = { ...session.ballPos };
 
