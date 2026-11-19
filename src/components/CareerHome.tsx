@@ -240,6 +240,11 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
               <span className="fd-tag">{n.tag || 'CLUB NEWS'}</span>
               <h2>{n.headline}</h2>
               <p>{n.body}</p>
+              {p.forwardTitle === 'PLAY MATCHDAY' && (
+                <button type="button" className="fd-kickoff-cta" onClick={p.onForward}>
+                  ⚽ KICK OFF MATCH
+                </button>
+              )}
               <button type="button" className="fd-ghost" onClick={() => p.onNavigate('office')}>READ STORY →</button>
             </div>
             <div className="fd-dots">
