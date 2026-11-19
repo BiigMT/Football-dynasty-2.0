@@ -88,16 +88,16 @@ export function AccountPanel() {
   };
 
   return (
-    <section className="w-full max-w-sm rounded-xl border border-cyan-400/20 bg-[#101923]/95 p-4 text-slate-100 shadow-xl">
+    <section className="w-full max-w-sm rounded-xl border border-[#4777AE]/45 bg-[#10243A]/95 p-4 text-slate-100 shadow-xl">
       {user ? (
         <div className="flex flex-col gap-3">
           <div>
-            <p className="text-xs uppercase tracking-wider text-cyan-300">Football Dynasty account</p>
+            <p className="text-xs uppercase tracking-wider text-[#F6C21C]">Football Dynasty account</p>
             <p className="mt-1 break-all text-sm font-semibold">{user.email}</p>
             <p className="mt-1 text-xs text-slate-400">Your saves stay on this device and can sync to your account.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" disabled={busy} onClick={runSync} className="min-h-10 rounded-lg bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">
+            <button type="button" disabled={busy} onClick={runSync} className="min-h-10 rounded-lg bg-[#F6C21C] px-4 py-2 text-sm font-bold text-[#0D1B2A] disabled:opacity-50">
               {busy ? 'Please wait…' : 'Sync career saves'}
             </button>
             <button type="button" disabled={busy} onClick={runSignOut} className="min-h-10 rounded-lg border border-white/15 px-4 py-2 text-sm text-slate-200 disabled:opacity-50">
@@ -108,19 +108,19 @@ export function AccountPanel() {
       ) : (
         <form onSubmit={(event) => { event.preventDefault(); void runAuth('signin'); }} className="flex flex-col gap-3">
           <div>
-            <p className="text-xs uppercase tracking-wider text-cyan-300">Cloud account</p>
+            <p className="text-xs uppercase tracking-wider text-[#F6C21C]">Cloud account</p>
             <p className="mt-1 text-sm text-slate-300">Sign in to sync Manager and Player Career saves across devices.</p>
           </div>
           <label className="flex flex-col gap-1 text-xs text-slate-300">
             Email
-            <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="min-h-11 rounded-lg border border-white/15 bg-slate-950 px-3 text-sm text-white outline-none focus:border-cyan-400" />
+            <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="min-h-11 rounded-lg border border-white/15 bg-slate-950 px-3 text-sm text-white outline-none focus:border-[#F6C21C]" />
           </label>
           <label className="flex flex-col gap-1 text-xs text-slate-300">
             Password
-            <input type="password" autoComplete="current-password" minLength={6} required value={password} onChange={(event) => setPassword(event.target.value)} className="min-h-11 rounded-lg border border-white/15 bg-slate-950 px-3 text-sm text-white outline-none focus:border-cyan-400" />
+            <input type="password" autoComplete="current-password" minLength={6} required value={password} onChange={(event) => setPassword(event.target.value)} className="min-h-11 rounded-lg border border-white/15 bg-slate-950 px-3 text-sm text-white outline-none focus:border-[#F6C21C]" />
           </label>
           <div className="flex flex-wrap gap-2">
-            <button type="submit" disabled={busy} className="min-h-10 rounded-lg bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">
+            <button type="submit" disabled={busy} className="min-h-10 rounded-lg bg-[#F6C21C] px-4 py-2 text-sm font-bold text-[#0D1B2A] disabled:opacity-50">
               {busy ? 'Please wait…' : 'Sign in'}
             </button>
             <button type="button" disabled={busy || !email.trim() || password.length < 6} onClick={() => void runAuth('signup')} className="min-h-10 rounded-lg border border-white/15 px-4 py-2 text-sm text-slate-200 disabled:opacity-50">
@@ -129,7 +129,7 @@ export function AccountPanel() {
           </div>
         </form>
       )}
-      {message && <p role="status" className="mt-3 text-xs leading-relaxed text-cyan-100">{message}</p>}
+      {message && <p role="status" className="mt-3 text-xs leading-relaxed text-[#F6C21C]">{message}</p>}
     </section>
   );
 }
