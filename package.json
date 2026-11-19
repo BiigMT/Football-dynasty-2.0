@@ -13,7 +13,8 @@
     "validate:squads": "tsx scripts/validate-real-squads.ts",
     "validate:positioning": "tsx scripts/validate-match-positioning.ts",
     "validate:physics": "tsx scripts/validate-match-physics.ts",
-    "validate:living-world": "tsx scripts/validate-living-world.ts"
+    "validate:living-world": "tsx scripts/validate-living-world.ts",
+    "validate:match-engine": "tsx scripts/validate-match-engine.ts"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",
