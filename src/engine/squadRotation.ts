@@ -59,7 +59,11 @@ export function selectAiMatchdaySquad(club: Club, players: Record<string, Player
     .map((player) => player.id);
   const captainId = startingXI.includes(club.tactics.captainId)
     ? club.tactics.captainId
-    : startingXI[0];
+    : startingXI
+        .map((id) => players[id])
+        .filter((player) => player && player.position !== 'GK')
+        .sort((a, b) => selectionScore(b, currentStarters) - selectionScore(a, currentStarters) || a.id.localeCompare(b.id))[0]?.id
+      ?? startingXI[0];
 
   return {
     ...club,
