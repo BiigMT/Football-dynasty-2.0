@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
 
-export type GameOrientation = 'landscape' | 'portrait';
+export type GameOrientation = 'landscape';
 interface OrientationSelectProps { initialValue?: GameOrientation | null; onConfirm: (orientation: GameOrientation) => void; }
 
 export const OrientationSelect: React.FC<OrientationSelectProps> = ({ initialValue = 'landscape', onConfirm }) => {
-  const [selected, setSelected] = useState<GameOrientation>(initialValue ?? 'landscape');
+  const [selected] = useState<GameOrientation>('landscape');
   return <main className="fd-orientation-screen">
-    <header className="fd-orientation-header"><span className="fd-kicker">FOOTBALL DYNASTY · SYSTEM SETTINGS</span><h1>DISPLAY &amp; ORIENTATION SETUP</h1><p>Choose your preferred matchday presentation</p></header>
-    <section className="fd-orientation-options">
-      <button type="button" aria-pressed={selected === 'landscape'} onClick={() => setSelected('landscape')} className={`fd-orientation-card ${selected === 'landscape' ? 'selected' : ''}`}>
-        <span className="fd-choice-label">OPTION A <b>RECOMMENDED</b></span><div className="fd-phone landscape"><div className="fd-phone-top">FOOTBALL DYNASTY</div><div className="fd-phone-columns"><i/><i/><i/><i/></div><div className="fd-phone-bottom"/></div>
-        <strong>LANDSCAPE MODE</strong><span>Console Broadcast View</span><small>Wider tactical hub · Full match presentation</small>
-      </button>
-      <button type="button" aria-pressed={selected === 'portrait'} onClick={() => setSelected('portrait')} className={`fd-orientation-card ${selected === 'portrait' ? 'selected' : ''}`}>
-        <span className="fd-choice-label">OPTION B</span><div className="fd-phone portrait"><div className="fd-phone-top">FD</div><div className="fd-phone-columns"><i/><i/><i/></div><div className="fd-phone-bottom"/></div>
-        <strong>PORTRAIT MODE</strong><span>Mobile · One-Handed View</span><small>Vertical navigation · Compact mobile layout</small>
-      </button>
-    </section>
-    <footer className="fd-orientation-footer"><p>Your choice is saved on this device. You can change it later in Settings.</p><button type="button" onClick={() => onConfirm(selected)}>CONFIRM &amp; CONTINUE <span>›</span></button></footer>
+    <header className="fd-orientation-header"><span className="fd-kicker">FOOTBALL DYNASTY · SYSTEM SETTINGS</span><h1>DISPLAY &amp; ORIENTATION SETUP</h1><p>Landscape is the only supported gameplay orientation</p></header>
+    <section className="fd-orientation-options"><div className="fd-orientation-card selected"><span className="fd-choice-label">REQUIRED MODE</span><div className="fd-phone landscape"><div className="fd-phone-top">FOOTBALL DYNASTY</div><div className="fd-phone-columns"><i/><i/><i/><i/></div><div className="fd-phone-bottom"/></div><strong>LANDSCAPE ONLY</strong><span>Console Broadcast View</span><small>Football Dynasty is designed for landscape gameplay.</small></div></section>
+    <footer className="fd-orientation-footer"><p>Your device will be locked to landscape where supported.</p><button type="button" onClick={() => onConfirm(selected)}>CONTINUE IN LANDSCAPE <span>›</span></button></footer>
     <style>{`
       .fd-orientation-screen{box-sizing:border-box;position:fixed;inset:0;min-height:100dvh;width:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,28px);padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:radial-gradient(ellipse at 50% 0%,#235ba8 0%,#13386c 48%,#08182c 100%);color:#e8edf5;font-family:'Barlow Condensed',sans-serif}
       .fd-orientation-header{text-align:center;background:#e8edf5;color:#13386c;width:min(100%,920px);padding:12px 18px;border-top:4px solid #f6c21c;box-shadow:0 12px 32px #0004}
