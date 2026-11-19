@@ -88,7 +88,7 @@ function buildSeasonCupAndContinental(
     1
   );
 
-  const eligibleLeagues = Object.values(leagues).filter((league) => league.region === userLeague.region);
+  const eligibleLeagues = Object.values(leagues).filter((league) => league.region === userLeague.region && league.tier === 1);
   const topClubs: string[] = [];
   eligibleLeagues.forEach((league) => {
     const sorted = [...league.clubIds].sort((a, b) => (clubs[b]?.reputation ?? 0) - (clubs[a]?.reputation ?? 0));
@@ -981,7 +981,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
 
   const contAdv = advanceKnockoutIfReady(
     nextSave.continentalFixtures,
-    'dynasty_continental',
+    nextSave.continentalFixtures[0]?.competitionId ?? 'dynasty_continental',
     nextSave.continentalFixtures[0]?.competitionName ?? 'Dynasty Champions Cup',
     'CONTINENTAL',
     save.currentWeek + 4
