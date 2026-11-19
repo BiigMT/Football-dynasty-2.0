@@ -9,7 +9,7 @@ const baseLegend = {
 const basePlayer = {
   id: 'p1', morale: 70, confidence: 70, reputation: 55,
   seasonStats: { averageRating: 6.8 },
-} as Player;
+} as unknown as Player;
 
 const consulted = resolveMatchFixingChoice(baseLegend, 'CONSULT', 4, 1, 'rival');
 if (consulted.matchFixing?.status !== 'CONSULTED') throw new Error('Agent consultation did not persist');
