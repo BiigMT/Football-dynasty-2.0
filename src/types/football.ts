@@ -520,6 +520,17 @@ export interface PlayerPhoneNotification {
   season: number;
 }
 
+export interface PlayerMatchFixingState {
+  status: 'PENDING' | 'REJECTED' | 'REPORTED' | 'CONSULTED' | 'ACCEPTED' | 'UNDER_INVESTIGATION';
+  offerId: string;
+  offeredWeek: number;
+  offeredSeason: number;
+  opponentClubId?: string;
+  amount: number;
+  suspicion: number;
+  lastFixtureId?: string;
+}
+
 export interface LegendProfile {
   playerId: string;
   managerTrust: number; // 0-100
@@ -539,6 +550,8 @@ export interface LegendProfile {
   socialPosts?: PlayerSocialPost[];
   phoneFollowers?: number;
   phoneNotifications?: PlayerPhoneNotification[];
+  personalBalance?: number;
+  matchFixing?: PlayerMatchFixingState;
   loanRequestPending?: boolean;
   rivalryPlayerId?: string;
   rivalryPending?: boolean;
