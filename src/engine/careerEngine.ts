@@ -19,6 +19,7 @@ import {
   TrainingFocus,
   TransferDealType,
   TransferOffer,
+  WorldEvent,
 } from '../types/football';
 import {
   buildWorldDatabase,
@@ -573,6 +574,19 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
   let nextCont = [...save.continentalFixtures];
   let nextIntl = save.internationalTournament ? { ...save.internationalTournament } : undefined;
   const nextNews = [...save.news];
+  const generatedWorldEvents: WorldEvent[] = [];
+  const recordWorldEvent = (event: WorldEvent, category: NewsItem['category']) => {
+    if (save.worldState?.history.some((existing) => existing.id === event.id)) return;
+    generatedWorldEvents.push(event);
+    nextNews.unshift({
+      id: event.id,
+      week: event.week,
+      season: event.season,
+      category,
+      headline: event.headline,
+      body: event.body,
+    });
+  };
 
   const homeGoals = session.homeStats.goals;
   const awayGoals = session.awayStats.goals;
@@ -625,7 +639,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       seasonStats: {
         ...p.seasonStats,
         appearances: p.seasonStats.appearances + 1,
-        starts: st.started ?? (st.slotIndex >= 0 && !st.subbedOff) ? p.seasonStats.starts + 1 : p.seasonStats.starts,
+        starts: (st.started ?? (st.slotIndex >= 0 && !st.subbedOff)) ? p.seasonStats.starts + 1 : p.seasonStats.starts,
         minutes: p.seasonStats.minutes + minutesPlayed,
         goals: p.seasonStats.goals + st.goals,
         assists: p.seasonStats.assists + st.assists,
@@ -639,6 +653,31 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       internationalCaps: session.isInternational ? p.internationalCaps + 1 : p.internationalCaps,
       internationalGoals: session.isInternational ? p.internationalGoals + st.goals : p.internationalGoals,
     };
+
+    const updatedPlayer = nextPlayers[p.id];
+    const goalMilestone = Math.floor(updatedPlayer.seasonStats.goals / 10) * 10;
+    const appearanceMilestone = Math.floor(updatedPlayer.seasonStats.appearances / 25) * 25;
+    const assistMilestone = Math.floor(updatedPlayer.seasonStats.assists / 10) * 10;
+    const milestone = goalMilestone > 0 && goalMilestone > Math.floor(p.seasonStats.goals / 10) * 10
+      ? { kind: 'goals', value: goalMilestone, label: 'goals' }
+      : appearanceMilestone > 0 && appearanceMilestone > Math.floor(p.seasonStats.appearances / 25) * 25
+      ? { kind: 'appearances', value: appearanceMilestone, label: 'first-team appearances' }
+      : assistMilestone > 0 && assistMilestone > Math.floor(p.seasonStats.assists / 10) * 10
+      ? { kind: 'assists', value: assistMilestone, label: 'assists' }
+      : undefined;
+    if (milestone) {
+      recordWorldEvent({
+        id: `world_${save.season}_${save.currentWeek}_${session.fixtureId}_milestone_${p.id}_${milestone.kind}_${milestone.value}`,
+        season: save.season,
+        week: save.currentWeek,
+        type: 'PLAYER_MILESTONE',
+        clubId: p.clubId,
+        managerId: save.worldState?.managersByClub[p.clubId]?.id ?? '',
+        playerId: p.id,
+        headline: `${p.name} reaches ${milestone.value} ${milestone.label}`,
+        body: `${p.name} has reached ${milestone.value} ${milestone.label} for ${nextClubs[p.clubId]?.name ?? 'the club'} this season.`,
+      }, 'AWARD');
+    }
   });
 
   // Update League fixture & standings
@@ -682,6 +721,24 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     nextIntl.fixtures = nextIntl.fixtures.map((f) =>
       f.id === session.fixtureId ? { ...f, played: true, homeGoals, awayGoals, winnerId } : f
     );
+  }
+
+  // A lower-reputation winner creates a persistent Living World upset story.
+  const winningClub = winnerId ? nextClubs[winnerId] : undefined;
+  const losingClub = winnerId === session.homeClubId ? nextClubs[session.awayClubId]
+    : winnerId === session.awayClubId ? nextClubs[session.homeClubId] : undefined;
+  if (winningClub && losingClub && losingClub.reputation - winningClub.reputation >= 10) {
+    recordWorldEvent({
+      id: `world_${save.season}_${save.currentWeek}_${session.fixtureId}_upset`,
+      season: save.season,
+      week: save.currentWeek,
+      type: 'MATCH_UPSET',
+      clubId: winningClub.id,
+      managerId: save.worldState?.managersByClub[winningClub.id]?.id ?? '',
+      relatedClubId: losingClub.id,
+      headline: `Shock result: ${winningClub.name} stun ${losingClub.name}`,
+      body: `${winningClub.name} produced a major upset against the higher-reputation ${losingClub.name}, changing the mood around both clubs.`,
+    }, 'MATCH');
   }
 
   // Club Matchday Finances
@@ -858,6 +915,9 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     cupFixtures: nextCup,
     continentalFixtures: nextCont,
     internationalTournament: nextIntl,
+    worldState: save.worldState
+      ? { ...save.worldState, history: [...save.worldState.history, ...generatedWorldEvents].slice(-500) }
+      : save.worldState,
     manager: nextManager,
     legend: nextLegend,
     activeMatch: undefined,
