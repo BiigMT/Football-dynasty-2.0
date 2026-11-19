@@ -587,7 +587,8 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
   Object.values(session.playerStates).forEach((st) => {
     const p = nextPlayers[st.playerId];
     if (!p) return;
-    const played = st.onPitch || st.subbedOff;
+    const minutesPlayed = st.minutesPlayed ?? (st.slotIndex >= 0 ? 82 : 24);
+    const played = minutesPlayed > 0 || st.onPitch || st.subbedOff;
     if (!played) return;
 
     const prevCount = p.seasonStats.ratingCount;
@@ -623,8 +624,8 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       seasonStats: {
         ...p.seasonStats,
         appearances: p.seasonStats.appearances + 1,
-        starts: st.slotIndex >= 0 ? p.seasonStats.starts + 1 : p.seasonStats.starts,
-        minutes: p.seasonStats.minutes + (st.slotIndex >= 0 ? 82 : 24),
+        starts: st.started ?? (st.slotIndex >= 0 && !st.subbedOff) ? p.seasonStats.starts + 1 : p.seasonStats.starts,
+        minutes: p.seasonStats.minutes + minutesPlayed,
         goals: p.seasonStats.goals + st.goals,
         assists: p.seasonStats.assists + st.assists,
         cleanSheets: p.seasonStats.cleanSheets + cleanSheet,
