@@ -17,11 +17,15 @@ assert.equal(selected.tactics.startingXI.length, 11);
 assert.equal(new Set(selected.tactics.startingXI).size, 11, 'Starting XI must not contain duplicate players');
 assert.ok(!selected.tactics.startingXI.includes(injuredId), 'Injured players must not be selected');
 assert.ok(!selected.tactics.startingXI.includes(suspendedId), 'Suspended players must not be selected');
-assert.equal(selected.tactics.bench.length, 7, 'The AI should select a seven-player bench');
-assert.equal(new Set([...selected.tactics.startingXI, ...selected.tactics.bench]).size, 18, 'XI and bench must be disjoint');
+assert.equal(selected.tactics.bench.length, 5, 'Unavailable players must reduce the available bench size');
+assert.equal(new Set([...selected.tactics.startingXI, ...selected.tactics.bench]).size, 16, 'XI and bench must be disjoint');
 assert.ok(selected.tactics.startingXI.every((id) => players[id]?.clubId === club.id));
 assert.ok(selected.tactics.bench.every((id) => players[id]?.clubId === club.id));
 assert.ok(selected.tactics.startingXI.includes(selected.tactics.captainId), 'Captain must be in the selected XI');
+
+const fullStrength = selectAiMatchdaySquad(club, world.players);
+assert.equal(fullStrength.tactics.bench.length, 7, 'A full-strength squad should have a seven-player bench');
+assert.equal(new Set([...fullStrength.tactics.startingXI, ...fullStrength.tactics.bench]).size, 18);
 
 const repeated = selectAiMatchdaySquad(club, players);
 assert.deepEqual(repeated.tactics.startingXI, selected.tactics.startingXI, 'Selection must be deterministic');
