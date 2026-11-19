@@ -37,7 +37,7 @@ function isCareerSave(value: unknown, expectedSlotId: string): value is CareerSa
   if (!isRecord(value)) return false;
   if (value.slotId !== expectedSlotId || !SAVE_SLOTS.includes(value.slotId)) return false;
   if (value.mode !== 'MANAGER' && value.mode !== 'PLAYER') return false;
-  if (!Number.isFinite(value.createdAt) || !Number.isFinite(value.updatedAt)) return false;
+  if (!Number.isFinite(value.createdAt) || (value.updatedAt !== undefined && !Number.isFinite(value.updatedAt))) return false;
   if (!Number.isInteger(value.season) || value.season < 1) return false;
   if (!Number.isInteger(value.currentWeek) || value.currentWeek < 1) return false;
   if (typeof value.userClubId !== 'string' || !value.userClubId) return false;
