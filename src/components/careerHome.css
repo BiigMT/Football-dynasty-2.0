@@ -1212,6 +1212,14 @@
   border:1px solid #F6C21C !important; border-radius:1px; padding:5px 10px;
   color:#F6C21C; font-size:10px; font-weight:900;
 }
+.fd-root[data-mode="manager"] .fd-kickoff-cta {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  min-height:38px; margin:8px 8px 0 0; padding:8px 16px;
+  border:1px solid #ffe17a; border-radius:2px; background:#F6C21C;
+  color:#10233d; font-size:11px; font-weight:1000; letter-spacing:1px;
+  box-shadow:0 3px 12px #0008; cursor:pointer;
+}
+.fd-root[data-mode="manager"] .fd-kickoff-cta:active { transform:translateY(1px); }
 .fd-root[data-mode="manager"] .fd-dots { z-index:5; top:13px; left:14px; right:auto; }
 .fd-root[data-mode="manager"] .fd-dots button {
   width:9px; height:9px; padding:0; border:1px solid #fff;
