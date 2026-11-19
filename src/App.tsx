@@ -30,10 +30,7 @@ type AppScreen = 'TITLE' | 'MODE_SELECT' | 'SETUP' | 'CAREER' | 'MATCH_READY' | 
 export default function App() {
   const [screen, setScreen] = useState<AppScreen>('TITLE');
   const [showStudioIntro, setShowStudioIntro] = useState(true);
-  const [orientation, setOrientation] = useState<GameOrientation | null>(() => {
-    const saved = localStorage.getItem('fd-game-orientation');
-    return saved === 'portrait' || saved === 'landscape' ? saved : null;
-  });
+  const [orientation, setOrientation] = useState<GameOrientation>('landscape');
   const [slots, setSlots] = useState<SaveSlotSummary[]>([]);
   const [setupTarget, setSetupTarget] = useState<{ mode: CareerMode; slotId: string }>({
     mode: 'MANAGER',
@@ -46,11 +43,12 @@ export default function App() {
 
   useEffect(() => { void refreshSlots(); }, []);
 
-  const chooseOrientation = async (next: GameOrientation) => {
+  const chooseOrientation = async (_next: GameOrientation) => {
+    const next: GameOrientation = 'landscape';
     setOrientation(next);
     localStorage.setItem('fd-game-orientation', next);
     try {
-      await ScreenOrientation.lock({ orientation: next });
+      await ScreenOrientation.lock({ orientation: 'landscape' });
     } catch (error) {
       // Browsers that do not support orientation locking still keep the saved preference.
       console.info('Orientation lock is unavailable on this device.', error);
@@ -58,9 +56,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!orientation) return;
-    ScreenOrientation.lock({ orientation }).catch(() => undefined);
-  }, [orientation]);
+    localStorage.setItem('fd-game-orientation', 'landscape');
+    ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => undefined);
+  }, []);
 
   const handleToggleMute = () => {
     const nextMuted = soundEngine.toggleMute();
@@ -359,7 +357,7 @@ export default function App() {
         onLoadCareer={handleLoadCareer}
         onDeleteSlot={handleDeleteSlot}
         orientation={orientation}
-        onChangeOrientation={() => setOrientation(null)}
+        onChangeOrientation={() => void chooseOrientation('landscape')}
       />
     );
   }
