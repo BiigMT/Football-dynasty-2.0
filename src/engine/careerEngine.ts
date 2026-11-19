@@ -238,7 +238,22 @@ export function createManagerCareer(params: {
   clubId: string;
   difficulty?: GameDifficulty;
 }): CareerSave {
+  const managerName = params.managerName.trim();
+  if (!managerName) throw new Error('Enter a manager name before starting your career.');
+  if (!findNation(params.nationality)) throw new Error('Select a valid manager nationality.');
+  if (!['Possession', 'Gegenpress', 'Counter-Attack', 'Balanced'].includes(params.philosophy)) {
+    throw new Error('Select a valid tactical philosophy.');
+  }
+  if (params.difficulty && !['EASY', 'NORMAL', 'HARD'].includes(params.difficulty)) {
+    throw new Error('Select a valid career difficulty.');
+  }
+
   const world = buildWorldDatabase();
+  const selectedClub = world.clubs[params.clubId];
+  const selectedLeague = selectedClub ? world.leagues[selectedClub.leagueId] : undefined;
+  if (!selectedClub || !selectedLeague || !selectedLeague.clubIds.includes(params.clubId)) {
+    throw new Error('The selected club does not belong to a valid league. Please choose another club.');
+  }
   // Manager Career uses the same four-division league pyramid as Player Career.
   const pyramid = initializeFourTierPyramid(world.clubs, world.leagues);
   world.clubs = pyramid.clubs;
@@ -264,7 +279,7 @@ export function createManagerCareer(params: {
     transferWindowOpen: true,
     userClubId: params.clubId,
     manager: {
-      name: params.managerName,
+      name: managerName,
       nationality: params.nationality,
       age: 38,
       philosophy: params.philosophy,
@@ -292,7 +307,7 @@ export function createManagerCareer(params: {
         week: 1,
         season: 1,
         category: 'BOARD',
-        headline: `${params.managerName} unveiled at ${userClub.name}`,
+        headline: `${managerName} unveiled at ${userClub.name}`,
         body: `Board expects: ${userClub.boardExpectation}. Summer transfer window is open for business.`,
       },
     ],
@@ -318,8 +333,22 @@ export function createLegendCareer(params: {
   difficulty?: GameDifficulty;
   trialRating?: number;
 }): CareerSave {
+  const playerName = params.playerName.trim();
+  if (!playerName) throw new Error('Enter a player name before starting your career.');
+  if (!findNation(params.nationality)) throw new Error('Select a valid player nationality.');
+  if (!['EASY', 'NORMAL', 'HARD'].includes(params.difficulty ?? 'NORMAL')) {
+    throw new Error('Select a valid career difficulty.');
+  }
+  if (!Number.isInteger(params.age) || params.age < 15 || params.age > 40) {
+    throw new Error('Player age must be between 15 and 40.');
+  }
+  if (!Number.isInteger(params.shirtNumber) || params.shirtNumber < 1 || params.shirtNumber > 99) {
+    throw new Error('Choose a shirt number between 1 and 99.');
+  }
+
   const world = buildWorldDatabase();
   const requestedClub = world.clubs[params.clubId];
+  if (!requestedClub) throw new Error('The selected club could not be found. Please choose another club.');
   const trialRating = params.trialRating ?? 78;
   const academyClub = getAcademyStartingClub(world.clubs, world.leagues, params.clubId) ?? requestedClub;
   const pyramid = initializeFourTierPyramid(world.clubs, world.leagues);
