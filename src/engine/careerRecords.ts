@@ -25,7 +25,7 @@ export function getCareerRecords(player: Player): CareerRecord[] {
     { label: 'Career appearances', value: appearances, detail: 'Competitive first-team matches' },
     { label: 'Career goals', value: goals, detail: 'All recorded seasons plus current season' },
     { label: 'Career assists', value: assists, detail: 'All recorded seasons plus current season' },
-    { label: 'Honours', value: trophies + (player.seasonStats.trophies?.length ?? 0), detail: 'Recorded team trophies' },
+    { label: 'Honours', value: trophies, detail: 'Recorded team trophies' },
     { label: 'Best season rating', value: Math.max(currentRating, bestSeason?.averageRating ?? 0), detail: bestSeason ? `Best recorded: Season ${bestSeason.season}` : 'Current season form' },
   ];
 }
