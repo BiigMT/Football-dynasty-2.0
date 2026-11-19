@@ -46,6 +46,9 @@ jobs:
       - name: Validate AI squad rotation
         run: npm run validate:squad-rotation
 
+      - name: Validate player development
+        run: npm run validate:player-development
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
