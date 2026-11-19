@@ -127,6 +127,7 @@ export interface Player {
   injuryType?: string;
   loanParentClubId?: string;
   loanWeeksRemaining?: number;
+  transferRequestPending?: boolean;
   suspendedMatches: number;
   scouted: boolean;
   seasonStats: PlayerSeasonStats;
@@ -434,9 +435,11 @@ export interface WorldEvent {
   id: string;
   season: number;
   week: number;
-  type: 'MANAGER_APPOINTED' | 'MANAGER_DISMISSED' | 'BOARD_WARNING';
+  type: 'MANAGER_APPOINTED' | 'MANAGER_DISMISSED' | 'BOARD_WARNING' | 'MANAGER_MOVED' | 'AI_TRANSFER' | 'PLAYER_UNREST' | 'FINANCIAL_PRESSURE';
   clubId: string;
   managerId: string;
+  playerId?: string;
+  relatedClubId?: string;
   headline: string;
   body: string;
 }
