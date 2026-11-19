@@ -165,6 +165,12 @@ export async function deleteCareer(slotId: string): Promise<void> {
     throw new Error('Invalid career save slot.');
   }
 
+  // On devices without IndexedDB, localStorage is the only supported save store.
+  if (typeof indexedDB === 'undefined') {
+    localStorage.removeItem(`${STORAGE_KEY_PREFIX}${slotId}`);
+    return;
+  }
+
   // Do not remove the fallback copy unless the primary store confirms deletion.
   const db = await openSaveDatabase();
   try {
