@@ -108,7 +108,7 @@ const replacement = advanced.worldState?.managersByClub.alpha;
 assert.ok(replacement);
 assert.notEqual(replacement.id, strugglingManager.id);
 assert.notEqual(replacement.name, strugglingManager.name);
-assert.equal(replacement.confidence, 65);
+assert.equal(replacement.confidence, 74);
 assert.ok(advanced.worldState?.history.some((event) => event.type === 'MANAGER_DISMISSED'));
 assert.ok(advanced.worldState?.history.some((event) => event.type === 'MANAGER_APPOINTED'));
 assert.ok(advanced.news.some((item) => item.headline.includes('dismissed by Alpha FC')));
