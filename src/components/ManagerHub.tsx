@@ -131,6 +131,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     else if (key === 'transfers') setTab('TRANSFERS');
     else if (key === 'office' || key === 'news') setTab('CLUB');
     else if (key === 'competitions' || key === 'national') setTab('COMPETITIONS');
+    else if (key === 'clubs') setTab('TEAMS');
     else if (key === 'stats') setTab('TRAINING');
     else if (key === 'settings') setTab('SETTINGS');
   };
