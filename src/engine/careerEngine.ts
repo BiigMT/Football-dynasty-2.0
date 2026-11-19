@@ -32,6 +32,7 @@ import {
 import { quickSimulateFullMatch } from './matchEngine';
 import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyramid } from './careerPyramid';
 import { findNation } from '../data/nationsDatabase';
+import { initializeWorldManagers, simulateWorldManagers } from './worldSimulation';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -294,6 +295,7 @@ export function createManagerCareer(params: {
       pressConferenceDone: false,
     },
     clubs: world.clubs,
+    worldManagers: initializeWorldManagers(world.clubs),
     players: world.players,
     leagues: world.leagues,
     nationalTeams: world.nationalTeams,
@@ -1339,13 +1341,14 @@ export function advanceWeek(save: CareerSave): CareerSave {
     });
   }
 
-  return {
+  const advancedSave: CareerSave = {
     ...nextSave,
     currentWeek: nextWeek,
     transferWindowOpen,
     weekTrained: false,
     news: nextSave.news.slice(0, 35),
   };
+  return simulateWorldManagers(advancedSave, nextWeek);
 }
 
 export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): CareerSave {
