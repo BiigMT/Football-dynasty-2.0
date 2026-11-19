@@ -1395,8 +1395,12 @@ export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): Caree
       const attrs = { ...p.attributes };
       let fitDelta = -4 + facilityBonus + fitnessCoachBonus;
       let sharpDelta = 6 + facilityBonus + assistantBonus;
-      const growthChance = Math.min(0.85, (p.age <= 22 ? 0.55 : 0.25) + facilityBonus * 0.035 + headCoachBonus * 0.025 + assistantBonus * 0.015);
-      const canGrow = p.overall < p.potential && Math.random() < growthChance;
+      const ageGrowthRate = p.age <= 21 ? 26 : p.age <= 24 ? 20 : p.age <= 28 ? 14 : p.age <= 32 ? 6 : 0;
+      const accumulatedDevelopment = focus === 'RECOVERY' || p.overall >= p.potential
+        ? (p.developmentProgress ?? 0)
+        : Math.min(100, (p.developmentProgress ?? 0) + ageGrowthRate + facilityBonus * 2 + headCoachBonus * 3 + assistantBonus * 2);
+      const canGrow = p.overall < p.potential && focus !== 'RECOVERY' && accumulatedDevelopment >= 100;
+      const developmentProgress = canGrow ? accumulatedDevelopment - 100 : accumulatedDevelopment;
 
       if (focus === 'RECOVERY') {
         fitDelta = 12 + facilityBonus * 2 + fitnessCoachBonus * 2;
@@ -1427,6 +1431,7 @@ export function applyTeamTraining(save: CareerSave, focus: TrainingFocus): Caree
         ...p,
         attributes: attrs,
         overall: ovr,
+        developmentProgress,
         fitness: Math.max(55, Math.min(100, p.fitness + fitDelta)),
         sharpness: Math.min(100, p.sharpness + sharpDelta),
         marketValue: calculateMarketValue(ovr, p.age, p.potential),
