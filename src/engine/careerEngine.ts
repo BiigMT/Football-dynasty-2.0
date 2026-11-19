@@ -35,6 +35,7 @@ import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyr
 import { findNation } from '../data/nationsDatabase';
 import { advanceLivingWorld, createInitialLivingWorld } from './livingWorld';
 import { selectAiMatchdaySquad, shouldRotateAiClub } from './squadRotation';
+import { applyMatchFixingConsequence } from './playerLife';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -789,7 +790,20 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     const uPlayer = nextPlayers[session.userPlayerId];
     if (userSt && uPlayer) {
       const completedObjs = session.userObjectives.filter((o) => o.completed).length;
-      const trustDelta = userSt.rating >= 7.5 ? 6 : userSt.rating >= 6.7 ? 2 : -4;
+      const fixingConsequence = nextLegend.matchFixing?.status === 'ACCEPTED'
+        ? applyMatchFixingConsequence(nextLegend, uPlayer, session.fixtureId)
+        : undefined;
+      if (fixingConsequence) {
+        nextLegend = fixingConsequence.legend;
+        nextPlayers[uPlayer.id] = fixingConsequence.player;
+        nextNews.unshift({
+          id: `news_fixing_${session.fixtureId}_${uPlayer.id}`,
+          week: save.currentWeek, season: save.season, category: 'BOARD',
+          headline: 'Club launches integrity investigation',
+          body: `Officials are reviewing an unusual performance by ${uPlayer.name}. The player has been placed under internal investigation.`,
+        });
+      }
+      const trustDelta = fixingConsequence ? -18 : userSt.rating >= 7.5 ? 6 : userSt.rating >= 6.7 ? 2 : -4;
       const nextTrust = Math.max(15, Math.min(100, nextLegend.managerTrust + trustDelta + completedObjs));
 
       // Attribute XP progression from match rating
@@ -886,6 +900,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
       nextLegend = {
         ...nextLegend,
         managerTrust: nextTrust,
+        matchFixing: fixingConsequence ? fixingConsequence.legend.matchFixing : nextLegend.matchFixing,
         squadRole,
         internationalCallUp: callUp,
         phoneNotifications: [{
