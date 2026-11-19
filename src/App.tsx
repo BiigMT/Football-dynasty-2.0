@@ -346,7 +346,7 @@ export default function App() {
   }
 
   if (!orientation) {
-    return <OrientationSelect initialValue="landscape" onConfirm={(next) => void chooseOrientation(next)} />;
+    return <OrientationSelect initialValue={(localStorage.getItem('fd-game-orientation') as GameOrientation | null) ?? 'landscape'} onConfirm={(next) => void chooseOrientation(next)} />;
   }
 
   if (screen === 'TITLE') {
