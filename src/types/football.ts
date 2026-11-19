@@ -252,6 +252,7 @@ export type MatchEventType =
   | 'RED_CARD'
   | 'INJURY'
   | 'SUBSTITUTION'
+  | 'TACTICAL_CHANGE'
   | 'CORNER'
   | 'OFFSIDE'
   | 'FOUL'
