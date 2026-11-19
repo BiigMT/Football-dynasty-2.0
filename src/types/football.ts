@@ -441,7 +441,7 @@ export interface WorldEvent {
   id: string;
   season: number;
   week: number;
-  type: 'MANAGER_APPOINTED' | 'MANAGER_DISMISSED' | 'BOARD_WARNING' | 'MANAGER_MOVED' | 'AI_TRANSFER' | 'PLAYER_UNREST' | 'FINANCIAL_PRESSURE';
+  type: 'MANAGER_APPOINTED' | 'MANAGER_DISMISSED' | 'BOARD_WARNING' | 'MANAGER_MOVED' | 'AI_TRANSFER' | 'PLAYER_UNREST' | 'FINANCIAL_PRESSURE' | 'MATCH_UPSET' | 'PLAYER_MILESTONE';
   clubId: string;
   managerId: string;
   playerId?: string;
