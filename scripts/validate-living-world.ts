@@ -155,6 +155,6 @@ const managerMarketWeek = advanceLivingWorld(extendedSave, 6);
 assert.notEqual(managerMarketWeek.worldState?.managersByClub.beta.id, playerCareerState.managersByClub.beta.id);
 assert.ok(managerMarketWeek.worldState?.history.some((event) => event.type === 'MANAGER_MOVED'));
 assert.ok(managerMarketWeek.clubs.alpha.finances.cashBalance !== worldClubs.alpha.finances.cashBalance);
-assert.ok(managerMarketWeek.worldState?.history.length > 0);
+assert.ok((managerMarketWeek.worldState?.history.length ?? 0) > 0);
 
 console.log('Living Football World validation passed: career setup, AI manager coverage, dismissal, appointment, tactics, AI transfers, player unrest, manager movement, finances, news and idempotent processing.');
