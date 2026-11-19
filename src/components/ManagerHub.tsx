@@ -48,6 +48,7 @@ import { ManagerPressConference } from './ManagerPressConference';
 import { ClubDevelopmentHub } from './ClubDevelopmentHub';
 import { TeamManagement } from './TeamManagement';
 import { MatchdayPreview } from './MatchdayPreview';
+import { ClubDirectory } from './ClubDirectory';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -58,7 +59,7 @@ interface ManagerHubProps {
   onExitToTitle: () => void;
 }
 
-type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'DEVELOPMENT' | 'SETTINGS';
+type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'TEAMS' | 'DEVELOPMENT' | 'SETTINGS';
 
 export const ManagerHub: React.FC<ManagerHubProps> = ({
   save,
@@ -431,6 +432,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   };
 
+  if (tab === 'TEAMS') return <ClubDirectory save={save} onClose={() => setTab('DASHBOARD')} />;
+
   if (previewFixture) {
     return <MatchdayPreview fixture={previewFixture} clubs={save.clubs} players={save.players} onBack={() => setPreviewFixture(null)} onKickoff={() => onLaunchMatch(previewFixture)} />;
   }
@@ -582,6 +585,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
             { id: 'TRAINING', label: 'Training & Academy', icon: Dumbbell },
             { id: 'COMPETITIONS', label: 'Competitions', icon: Trophy },
             { id: 'CLUB', label: 'Manager Office', icon: Building2 },
+            { id: 'TEAMS', label: 'Club Directory', icon: Users },
             { id: 'DEVELOPMENT', label: 'Development', icon: UserPlus },
           ].map((item) => {
             const Icon = item.icon;
