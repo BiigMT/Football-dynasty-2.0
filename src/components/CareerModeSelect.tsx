@@ -37,7 +37,7 @@ export const CareerModeSelect: React.FC<Props> = ({ slots, onStart, onLoad, onBa
           onClick={onBack}
           className="flex min-h-10 w-fit items-center gap-2 rounded border border-[#235BA8]/70 bg-[#10243A]/90 px-3 text-[11px] font-black tracking-wider text-[#E8EDF5] transition hover:border-[#F6C21C] hover:text-[#F6C21C] sm:px-4 sm:text-xs"
         >
-          <ArrowLeft size={15} /> <span className="hidden xs:inline">BACK TO TITLE</span><span className="xs:hidden">BACK</span>
+          <ArrowLeft size={15} /> <span className="hidden sm:inline">BACK TO TITLE</span><span className="sm:hidden">BACK</span>
         </button>
 
         <div className="text-center leading-none">
