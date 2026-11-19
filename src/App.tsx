@@ -82,7 +82,7 @@ export default function App() {
     } catch (error) {
       console.error('Career save failed:', error);
       window.alert(error instanceof Error ? error.message : 'Could not save your career. Please try again.');
-      setActiveSave(null);
+      // Keep the in-memory career intact so a failed write never discards live progress.
       return false;
     }
   };
