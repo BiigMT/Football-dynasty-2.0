@@ -131,7 +131,7 @@ const targetPlayer = {
 } as unknown as CareerSave['players'][string];
 const unhappyPlayer = {
   ...targetPlayer, id: 'ai_unhappy', name: 'Unhappy Prospect', clubId: 'alpha',
-  position: 'ST', morale: 27, transferRequestPending: false, squadRole: 'IMPORTANT',
+  position: 'ST', morale: 24, transferRequestPending: false, squadRole: 'IMPORTANT',
 } as unknown as CareerSave['players'][string];
 const extendedSave = {
   ...save,
