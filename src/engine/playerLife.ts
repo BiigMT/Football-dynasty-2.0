@@ -26,19 +26,19 @@ export function resolveMatchFixingChoice(
     ...legend,
     managerTrust: Math.min(100, legend.managerTrust + 2),
     matchFixing: { ...base, status: 'REJECTED', suspicion: 0 },
-    phoneNotifications: [{ id: `fixing_rejected_${base.offerId}`, title: 'You protected your career', body: 'You turned down an illegal approach. The offer has been closed.', kind: 'CLUB', week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
+    phoneNotifications: [{ id: `fixing_rejected_${base.offerId}`, title: 'You protected your career', body: 'You turned down an illegal approach. The offer has been closed.', kind: 'CLUB' as const, week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
   };
   if (choice === 'REPORT') return {
     ...legend,
     managerTrust: Math.min(100, legend.managerTrust + 8),
     matchFixing: { ...base, status: 'REPORTED', suspicion: 0 },
-    phoneNotifications: [{ id: `fixing_reported_${base.offerId}`, title: 'Approach reported', body: 'Your club has been alerted. The matter will be handled confidentially.', kind: 'CLUB', week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
+    phoneNotifications: [{ id: `fixing_reported_${base.offerId}`, title: 'Approach reported', body: 'Your club has been alerted. The matter will be handled confidentially.', kind: 'CLUB' as const, week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
   };
   return {
     ...legend,
     personalBalance: (legend.personalBalance ?? 0) + amount,
     matchFixing: { ...base, status: 'ACCEPTED', suspicion: 35 },
-    phoneNotifications: [{ id: `fixing_paid_${base.offerId}`, title: 'Unexplained payment received', body: `€${amount.toLocaleString()} has been added to your in-game personal balance. Your next performance may attract scrutiny.`, kind: 'CLUB', week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
+    phoneNotifications: [{ id: `fixing_paid_${base.offerId}`, title: 'Unexplained payment received', body: `€${amount.toLocaleString()} has been added to your in-game personal balance. Your next performance may attract scrutiny.`, kind: 'CLUB' as const, week, season }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
   };
 }
 
@@ -67,7 +67,7 @@ export function applyMatchFixingConsequence(
       id: `fixing_investigation_${fixtureId}`,
       title: 'Integrity investigation opened',
       body: 'Your last performance has raised concerns. Club officials are reviewing the circumstances.',
-      kind: 'CLUB',
+      kind: 'CLUB' as const,
       week: fixing.offeredWeek,
       season: fixing.offeredSeason,
     }, ...(legend.phoneNotifications ?? [])].slice(0, 20),
