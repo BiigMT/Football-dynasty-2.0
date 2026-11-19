@@ -999,7 +999,7 @@ export function simulateNextMinute(
   const homeStats = { ...session.homeStats };
   const awayStats = { ...session.awayStats };
   const nextStates = { ...session.playerStates };
-  const events = [...session.events];
+  const events = [...session.events, ...tacticalEvents];
   let soundCue: 'WHISTLE' | 'GOAL' | 'KICK' | undefined;
 
   // Stamina drain per minute
@@ -1007,7 +1007,7 @@ export function simulateNextMinute(
     const st = nextStates[pid];
     if (!st.onPitch || st.redCard) return;
     const p = players[pid];
-    const tactics = st.side === 'HOME' ? session.homeTactics : session.awayTactics;
+    const tactics = st.side === 'HOME' ? homeTactics : awayTactics;
     const pressDrain = tactics.pressing === 'GEGENPRESS' ? 0.58 : tactics.pressing === 'MID_PRESS' ? 0.42 : 0.3;
     const staminaResist = p ? 1.25 - (p.attributes.stamina / 100) * 0.55 : 0.9;
     const drain = (p?.position === 'GK' ? 0.08 : pressDrain) * staminaResist;
