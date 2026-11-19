@@ -516,6 +516,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
             )}
 
             {mode === 'MANAGER' ? (
+              <>
               <div className="flex flex-wrap items-center justify-between gap-2"><div className="text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Club directory</div><input value={clubSearch} onChange={(e) => setClubSearch(e.target.value)} placeholder="Search this league..." className="min-h-[36px] w-full max-w-[260px] rounded border border-white/15 bg-[#0B1725] px-3 text-xs text-white outline-none focus:border-[#F6C21C]" /></div>
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 max-h-[430px] overflow-y-auto pr-1">
                 {activeLeague.clubs.filter((c) => c.name.toLowerCase().includes(clubSearch.toLowerCase()) || c.shortName.toLowerCase().includes(clubSearch.toLowerCase())).map((c) => {
@@ -529,6 +530,7 @@ export const CareerSetupModal: React.FC<CareerSetupModalProps> = ({
                   );
                 })}
               </div>
+              </>
             ) : (
               <div className="flex flex-col gap-4">
                 <div className="fd-origin-pathways">
