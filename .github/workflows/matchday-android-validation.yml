@@ -40,6 +40,9 @@ jobs:
       - name: Validate Living Football World simulation
         run: npm run validate:living-world
 
+      - name: Validate football match engine
+        run: npm run validate:match-engine
+
       - name: Validate 3D player positioning
         run: npm run validate:positioning
 
