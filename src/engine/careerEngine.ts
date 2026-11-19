@@ -33,6 +33,7 @@ import { quickSimulateFullMatch } from './matchEngine';
 import { applyPromotionRelegation, getAcademyStartingClub, initializeFourTierPyramid } from './careerPyramid';
 import { findNation } from '../data/nationsDatabase';
 import { advanceLivingWorld, createInitialLivingWorld } from './livingWorld';
+import { selectAiMatchdaySquad, shouldRotateAiClub } from './squadRotation';
 
 export function sortStandings(rows: LeagueStandingRow[]): LeagueStandingRow[] {
   return [...rows].sort((a, b) => {
@@ -883,7 +884,13 @@ export function advanceWeek(save: CareerSave): CareerSave {
       const h = nextSave.clubs[f.homeClubId];
       const a = nextSave.clubs[f.awayClubId];
       if (h && a) {
-        const res = quickSimulateFullMatch(f, h, a, nextSave.players);
+        const matchHome = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, h.id)
+          ? selectAiMatchdaySquad(h, nextSave.players) : h;
+        const matchAway = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, a.id)
+          ? selectAiMatchdaySquad(a, nextSave.players) : a;
+        nextSave.clubs[h.id] = matchHome;
+        nextSave.clubs[a.id] = matchAway;
+        const res = quickSimulateFullMatch(f, matchHome, matchAway, nextSave.players);
         nextSave = applyMatchSessionToWorld(nextSave, res);
       }
     });
@@ -895,7 +902,13 @@ export function advanceWeek(save: CareerSave): CareerSave {
     const h = nextSave.clubs[f.homeClubId];
     const a = nextSave.clubs[f.awayClubId];
     if (h && a) {
-      const res = quickSimulateFullMatch(f, h, a, nextSave.players);
+      const matchHome = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, h.id)
+        ? selectAiMatchdaySquad(h, nextSave.players) : h;
+      const matchAway = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, a.id)
+        ? selectAiMatchdaySquad(a, nextSave.players) : a;
+      nextSave.clubs[h.id] = matchHome;
+      nextSave.clubs[a.id] = matchAway;
+      const res = quickSimulateFullMatch(f, matchHome, matchAway, nextSave.players);
       nextSave = applyMatchSessionToWorld(nextSave, res);
     }
   });
@@ -905,7 +918,13 @@ export function advanceWeek(save: CareerSave): CareerSave {
     const h = nextSave.clubs[f.homeClubId];
     const a = nextSave.clubs[f.awayClubId];
     if (h && a) {
-      const res = quickSimulateFullMatch(f, h, a, nextSave.players);
+      const matchHome = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, h.id)
+        ? selectAiMatchdaySquad(h, nextSave.players) : h;
+      const matchAway = shouldRotateAiClub(nextSave.mode, nextSave.userClubId, a.id)
+        ? selectAiMatchdaySquad(a, nextSave.players) : a;
+      nextSave.clubs[h.id] = matchHome;
+      nextSave.clubs[a.id] = matchAway;
+      const res = quickSimulateFullMatch(f, matchHome, matchAway, nextSave.players);
       nextSave = applyMatchSessionToWorld(nextSave, res);
     }
   });
