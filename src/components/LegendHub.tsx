@@ -30,6 +30,7 @@ import {
 import { soundEngine } from '../engine/audio';
 import { calculateMarketValue, calculateOverall } from '../engine/database';
 import { PlayerPortrait } from './PlayerPortrait';
+import { resolveMatchFixingChoice } from '../engine/playerLife';
 import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
@@ -114,6 +115,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
   const positionLeader = positionDepth[0];
   const phoneMessages = legend.phoneMessages ?? [];
   const socialPosts = legend.socialPosts ?? [];
+  const matchFixing = legend.matchFixing;
   const rivalClubId = nextFixture ? (nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId) : '';
   const rivalSquadIds = save.clubs[rivalClubId]?.tactics.startingXI ?? save.nationalTeams[rivalClubId]?.squadPlayerIds ?? [];
   const rivalPlayer = rivalSquadIds.map((id) => save.players[id]).filter(Boolean).sort((a, b) => b.overall - a.overall)[0];
@@ -376,11 +378,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         <nav className="fd-player-tabs" aria-label="Player career navigation">
           <button className={tab === 'DASHBOARD' ? 'is-active' : ''} aria-current={tab === 'DASHBOARD' ? 'page' : undefined} type="button" onClick={() => setTab('DASHBOARD')}><span>01</span> CENTRAL</button>
-          <button type="button" onClick={() => setTab('TRAINING')}><span>02</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>03</span> MY PROFILE</button>
-          <button type="button" onClick={() => setTab('AGENT')}><span>04</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('LEGACY')}><span>05</span> AWARDS & INTL</button>
-          <button type="button" onClick={() => setTab('SETTINGS')}><span>06</span> SYSTEM</button>
+          <button className={tab === 'PHONE' ? 'is-active' : ''} aria-current={tab === 'PHONE' ? 'page' : undefined} type="button" onClick={() => { setPhoneMode('SOCIAL'); setTab('PHONE'); }}><span>02</span> MY PHONE{(legend.phoneNotifications ?? []).length ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('TRAINING')}><span>03</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>04</span> MY PROFILE</button>
+          <button type="button" onClick={() => setTab('AGENT')}><span>05</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
+          <button type="button" onClick={() => setTab('LEGACY')}><span>06</span> AWARDS & INTL</button>
+          <button type="button" onClick={() => setTab('SETTINGS')}><span>07</span> SYSTEM</button>
         </nav>
 
         <main className="fd-player-layout">
@@ -619,6 +622,39 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 <div><div className="text-xs uppercase tracking-[.2em] text-amber-400 font-bold">Player phone</div><h2 className="text-lg font-black text-white">Your life off the pitch</h2><p className="text-[11px] text-slate-400">Messages, teammates and your public profile</p></div>
               </div>
               <div className="text-right"><div className="text-lg font-bold text-white font-mono-num">{(legend.phoneFollowers ?? 1250).toLocaleString()}</div><div className="text-[10px] text-slate-500">Followers</div></div>
+            </div>
+            <div className="rounded-xl border border-amber-400/25 bg-[#0b1118] p-3 flex flex-col gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div><div className="text-[10px] font-black uppercase tracking-[.18em] text-amber-300">Private message · Career decision</div><div className="text-sm font-bold text-white mt-1">An offer you should think twice about</div></div>
+                <div className="rounded-lg bg-[#172332] px-3 py-2 text-right"><div className="text-[9px] text-slate-400">PERSONAL BALANCE</div><div className="text-sm font-black text-emerald-300">€{(legend.personalBalance ?? 0).toLocaleString()}</div></div>
+              </div>
+              {!matchFixing && nextFixture ? (
+                <>
+                  <p className="text-xs leading-relaxed text-slate-300">A stranger claiming to have links to {save.clubs[rivalClubId]?.name ?? 'your next opponent'} has contacted you. They offer <strong className="text-emerald-300">€35,000 in-game</strong> if you deliberately underperform in the upcoming match. This is a fictional career storyline; accepting carries serious sporting and career risks.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REJECT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-white/15 px-3 text-[11px] font-bold text-slate-200">Reject offer</button>
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REPORT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-3 text-[11px] font-bold text-emerald-200">Report to club</button>
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'CONSULT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-cyan-400/40 bg-cyan-400/10 px-3 text-[11px] font-bold text-cyan-200">Ask my agent</button>
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'ACCEPT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-rose-400/40 bg-rose-400/10 px-3 text-[11px] font-bold text-rose-200">Accept €35,000</button>
+                  </div>
+                </>
+              ) : matchFixing?.status === 'CONSULTED' ? (
+                <>
+                  <p className="text-xs text-slate-300">Your agent is clear: the short-term money is not worth risking your career. You still make the final decision.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REJECT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-emerald-400/40 px-3 text-[11px] font-bold text-emerald-200">Walk away</button>
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'REPORT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-cyan-400/40 px-3 text-[11px] font-bold text-cyan-200">Report it</button>
+                    <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: resolveMatchFixingChoice(legend, 'ACCEPT', save.currentWeek, save.season, rivalClubId) }); }} className="min-h-[38px] rounded-lg border border-rose-400/40 px-3 text-[11px] font-bold text-rose-200">Take the money</button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-xs text-slate-300">
+                  {matchFixing?.status === 'ACCEPTED' ? <><strong className="text-rose-300">Offer accepted.</strong> The payment is in your balance. If you play the next fixture, your performance will be deliberately compromised and an investigation may follow.</> :
+                   matchFixing?.status === 'UNDER_INVESTIGATION' ? <><strong className="text-rose-300">Under investigation.</strong> Club officials are reviewing the suspicious performance. Suspicion: {matchFixing.suspicion}/100.</> :
+                   matchFixing?.status === 'REPORTED' ? <><strong className="text-emerald-300">Reported to the club.</strong> Your manager has been informed and the approach has been closed.</> :
+                   <><strong className="text-emerald-300">Offer rejected.</strong> You kept your career clear of the arrangement.</>}
+                </div>
+              )}
             </div>
             <div className="overflow-hidden rounded-xl border border-white/10 bg-[#080d13]">
               <img src={phoneMode === 'SOCIAL' ? "/media/game/phone-stadium.jpg" : "/media/game/phone-match.jpg"} alt="Football stadium and matchday atmosphere" loading="lazy" className="h-28 sm:h-36 w-full object-cover opacity-85" />
