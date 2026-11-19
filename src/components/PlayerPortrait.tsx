@@ -19,18 +19,54 @@ export const PlayerPortrait: React.FC<PlayerPortraitProps> = ({
   jerseySecondary = '#10243A', shirtNumber, size = 64, className = '',
 }) => {
   const remoteImage = useGameMediaImage('player', playerId, playerName);
-  return remoteImage ? (
-    <img
-      src={remoteImage}
-      alt={playerName ? `${playerName} portrait` : 'Player portrait'}
-      loading="lazy"
-      decoding="async"
-      width={size}
-      height={size}
-      className={`shrink-0 overflow-hidden rounded-md object-cover ${className}`}
-      style={{ width: size, height: size }}
-    />
-  ) : (
+
+  if (remoteImage) {
+    return (
+      <img
+        src={remoteImage}
+        alt={playerName ? `${playerName} portrait` : 'Player portrait'}
+        loading="lazy"
+        decoding="async"
+        width={size}
+        height={size}
+        className={`shrink-0 overflow-hidden rounded-md object-cover ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
+  // Never present a generated face as the likeness of a real, named player.
+  // Keep generated avatars only for user-created career players without a real player ID.
+  if (playerId) {
+    const initials = (playerName ?? '?')
+      .trim()
+      .split(/\\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase() || '?';
+
+    return (
+      <div
+        role="img"
+        aria-label={`${playerName ?? 'Player'} photo unavailable`}
+        className={`shrink-0 overflow-hidden rounded-md flex items-center justify-center font-black tracking-wide ${className}`}
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: jerseySecondary,
+          color: '#FFFFFF',
+          border: `2px solid ${jerseyPrimary}`,
+          fontSize: Math.max(12, Math.round(size * 0.3)),
+        }}
+      >
+        {initials}
+      </div>
+    );
+  }
+
+  return (
     <RealisticAvatar
       seed={appearance.skinTone + '-' + appearance.hairStyle + '-' + appearance.hairColor + '-' + appearance.faceStyle}
       name={playerName ?? 'Player portrait'}
