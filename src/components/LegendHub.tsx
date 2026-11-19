@@ -35,6 +35,7 @@ import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 import { PlayerPhone } from './PlayerPhone';
+import { getCareerRecords } from '../engine/careerRecords';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -453,6 +454,16 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               </div>
               {nextFixture && <div className="rounded-lg border border-cyan-400/20 bg-cyan-400/5 p-2"><div className="text-[9px] text-cyan-300 font-bold uppercase">Next opponent scouting</div><div className="text-[11px] text-white font-bold mt-1">{save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'}</div><div className="text-[10px] text-slate-400 mt-0.5">{save.clubs[rivalClubId]?.tactics.formation ?? 'Formation data'} · {save.clubs[rivalClubId]?.tactics.mentality ?? 'Tactical plan'} · {isStarter ? 'You are currently selected' : isBench ? 'You are currently on the bench' : 'You are outside the matchday XI'}</div></div>}
               <div className="text-[9px] text-slate-500">AI managers adapt to scorelines and match momentum. AI clubs rotate tired players; training and match performances shape your growth and future selection.</div>
+            </section>
+            <section className="fd-player-panel fd-player-records">
+              <div className="fd-player-panel-title"><div><small>THE CAREER SO FAR</small><h3>PLAYER RECORDS</h3></div><span>HISTORY</span></div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                {getCareerRecords(player).map((record) => <div key={record.label} className="rounded-lg border border-white/10 bg-[#0b1118] p-2">
+                  <small className="block text-[9px] font-bold uppercase tracking-wider text-slate-500">{record.label}</small>
+                  <strong className="mt-1 block text-lg tabular-nums text-white">{record.value}</strong>
+                  <span className="mt-1 block text-[9px] leading-snug text-slate-500">{record.detail}</span>
+                </div>)}
+              </div>
             </section>
             <section className="fd-player-panel fd-player-news-panel">
               <div className="fd-player-panel-title"><div><small>AROUND THE CLUB & THE FOOTBALL WORLD</small><h3>LATEST NEWS</h3></div><span>{save.news.length} STORIES</span></div>
