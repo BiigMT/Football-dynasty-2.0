@@ -88,7 +88,7 @@ export function simulateWorldManagers(save: CareerSave, week: number): CareerSav
   const headlines: CareerSave['news'] = [];
 
   Object.values(clubs).forEach((club, index) => {
-    if (club.id === save.userClubId) return;
+    if (club.id === save.userClubId && save.mode === 'MANAGER') return;
     const current = managers[club.id];
     if (!current) return;
 
