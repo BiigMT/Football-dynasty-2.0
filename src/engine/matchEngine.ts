@@ -121,14 +121,14 @@ function buildObjectivesForPlayer(player: Player): MatchObjective[] {
   if (pos === 'GK') {
     return [
       { id: 'obj_saves', label: 'Make 3+ saves', target: 3, current: 0, type: 'SAVES', completed: false },
-      { id: 'obj_cs', label: 'Keep a clean sheet', target: 1, current: 1, type: 'CLEAN_SHEET', completed: true },
+      { id: 'obj_cs', label: 'Keep a clean sheet', target: 1, current: 0, type: 'CLEAN_SHEET', completed: false },
       { id: 'obj_rat', label: 'Earn 7.0+ match rating', target: 7.0, current: 6.3, type: 'RATING', completed: false },
     ];
   }
   if (['CB', 'LB', 'RB', 'CDM'].includes(pos)) {
     return [
       { id: 'obj_tck', label: 'Win 3+ tackles', target: 3, current: 0, type: 'TACKLES', completed: false },
-      { id: 'obj_cs', label: 'Concede <= 1 goal', target: 1, current: 0, type: 'CLEAN_SHEET', completed: true },
+      { id: 'obj_cs', label: 'Concede <= 1 goal', target: 1, current: 0, type: 'CLEAN_SHEET', completed: false },
       { id: 'obj_rat', label: 'Earn 7.0+ match rating', target: 7.0, current: 6.3, type: 'RATING', completed: false },
     ];
   }
@@ -448,10 +448,12 @@ function updateUserObjectives(session: MatchSession): void {
         current = st.saves;
         completed = current >= obj.target;
         break;
-      case 'CLEAN_SHEET':
-        current = oppGoals === 0 ? 1 : 0;
-        completed = obj.label.includes('<= 1') ? oppGoals <= 1 : oppGoals === 0;
+      case 'CLEAN_SHEET': {
+        const achieved = obj.label.includes('<= 1') ? oppGoals <= 1 : oppGoals === 0;
+        current = session.phase === 'FULL_TIME' && achieved ? 1 : 0;
+        completed = session.phase === 'FULL_TIME' && achieved;
         break;
+      }
       case 'RATING':
         current = Number(st.rating.toFixed(1));
         completed = current >= obj.target;
@@ -557,6 +559,10 @@ export function makeMatchSubstitution(
   outPlayerId: string,
   inPlayerId: string
 ): MatchSession {
+  // Substitutions are only legal once the match has started and before full-time.
+  // Half-time changes are allowed; pre-match and completed matches are immutable.
+  if (!['FIRST_HALF', 'HALF_TIME', 'SECOND_HALF'].includes(session.phase)) return session;
+
   const subsUsed = side === 'HOME' ? session.homeSubsUsed : session.awaySubsUsed;
   if (subsUsed >= 5) return session;
 
@@ -565,7 +571,20 @@ export function makeMatchSubstitution(
   const benchIdx = tactics.bench.indexOf(inPlayerId);
   const outgoingState = session.playerStates[outPlayerId];
   const incomingState = session.playerStates[inPlayerId];
-  if (idx === -1 || benchIdx === -1 || !outgoingState?.onPitch || outgoingState.redCard || !incomingState || incomingState.injured || incomingState.redCard) return session;
+  if (
+    idx === -1 ||
+    benchIdx === -1 ||
+    !outgoingState?.onPitch ||
+    outgoingState.side !== side ||
+    outgoingState.redCard ||
+    !incomingState ||
+    incomingState.side !== side ||
+    incomingState.subbedOff ||
+    incomingState.onPitch ||
+    incomingState.injured ||
+    incomingState.redCard ||
+    outPlayerId === inPlayerId
+  ) return session;
 
   const nextXI = [...tactics.startingXI];
   nextXI[idx] = inPlayerId;
