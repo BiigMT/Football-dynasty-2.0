@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, Building2, Users, MapPin, Trophy } from 'lucide-react';
+import { ArrowLeft, Building2, Users, Trophy } from 'lucide-react';
 import type { CareerSave, Club } from '../types/football';
 import { ClubBadge, CountryFlag } from './ClubBadge';
 import { PlayerPortrait } from './PlayerPortrait';
@@ -41,6 +41,25 @@ export const ClubDirectory: React.FC<Props> = ({ save, onClose }) => {
               {squad.length === 0 && <div className="rounded-xl bg-[#0A1420] p-5 text-sm text-slate-400">No registered players are currently listed for this club.</div>}
             </div>
             <aside className="flex flex-col gap-3"><div className="rounded-xl bg-[#0A1420] p-4"><h3 className="text-sm font-black">Club Finances</h3><div className="mt-3 space-y-2 text-xs"><div className="flex justify-between gap-2"><span className="text-slate-400">Transfer budget</span><b>€{(selected.finances.transferBudget / 1e6).toFixed(2)}M</b></div><div className="flex justify-between gap-2"><span className="text-slate-400">Cash balance</span><b>€{(selected.finances.cashBalance / 1e6).toFixed(2)}M</b></div><div className="flex justify-between gap-2"><span className="text-slate-400">Weekly wage bill</span><b>€{selected.finances.weeklyWageBill.toLocaleString()}</b></div></div></div><div className="rounded-xl bg-[#0A1420] p-4"><h3 className="text-sm font-black">Tactical Identity</h3><div className="mt-3 space-y-2 text-xs text-slate-300"><div className="flex justify-between"><span className="text-slate-400">Formation</span><b>{selected.tactics.formation}</b></div><div className="flex justify-between"><span className="text-slate-400">Pressing</span><b>{selected.tactics.pressing.replace('_',' ')}</b></div><div className="flex justify-between"><span className="text-slate-400">Passing</span><b>{selected.tactics.passing.replace('_',' ')}</b></div><div className="flex justify-between"><span className="text-slate-400">Tempo</span><b>{selected.tactics.tempo}/100</b></div></div></div></aside>
+          </div>
+          <div className="border-t border-white/10 p-4 sm:p-5">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-black">Club History & Latest Events</h2>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Living World</span>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(save.worldState?.history ?? []).filter((event) => event.clubId === selected.id || event.relatedClubId === selected.id)
+                .slice(-6).reverse().map((event) => (
+                  <div key={event.id} className="rounded-lg border border-white/10 bg-[#0A1420] p-3">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-300">Season {event.season} · Week {event.week}</div>
+                    <div className="mt-1 text-sm font-bold">{event.headline}</div>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-400">{event.body}</p>
+                  </div>
+                ))}
+              {!(save.worldState?.history ?? []).some((event) => event.clubId === selected.id || event.relatedClubId === selected.id) && (
+                <div className="rounded-lg bg-[#0A1420] p-3 text-xs text-slate-400">This club's story is just beginning. Manager changes, transfers and board events will appear here as the world evolves.</div>
+              )}
+            </div>
           </div>
         </section>
       </div>
