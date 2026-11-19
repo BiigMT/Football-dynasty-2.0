@@ -59,6 +59,9 @@ async function readStoredSave(slotId: string): Promise<CareerSave | null> {
 }
 
 export async function saveCareer(save: CareerSave): Promise<void> {
+  if (!SAVE_SLOTS.includes(save.slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
   const payload = { ...save, updatedAt: Date.now() };
   try {
     const db = await openSaveDatabase();
@@ -129,6 +132,9 @@ export async function loadCareer(slotId: string): Promise<CareerSave | null> {
 }
 
 export async function deleteCareer(slotId: string): Promise<void> {
+  if (!SAVE_SLOTS.includes(slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
   try {
     const db = await openSaveDatabase();
     try {
