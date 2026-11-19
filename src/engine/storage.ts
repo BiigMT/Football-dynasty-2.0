@@ -84,28 +84,48 @@ export async function saveCareer(save: CareerSave): Promise<void> {
 }
 
 export async function loadCareer(slotId: string): Promise<CareerSave | null> {
+  if (!SAVE_SLOTS.includes(slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
+
+  let indexedSave: CareerSave | null = null;
   try {
-    const stored = await readStoredSave(slotId);
-    if (stored) return stored;
+    indexedSave = await readStoredSave(slotId);
   } catch (error) {
     console.warn('IndexedDB save read unavailable; checking legacy save.', error);
   }
 
+  let legacySave: CareerSave | null = null;
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${slotId}`);
-    if (!raw) return null;
-    const legacy = JSON.parse(raw) as CareerSave;
-    // Migrate without removing the original until the new copy is confirmed.
+    if (raw) legacySave = JSON.parse(raw) as CareerSave;
+  } catch (error) {
+    console.warn('Legacy career save could not be read.', error);
+  }
+
+  // A failed IndexedDB write may leave an older record beside a newer local
+  // fallback. Always return the newest valid timestamp instead of silently
+  // resurrecting the stale IndexedDB copy.
+  const newest = !indexedSave
+    ? legacySave
+    : !legacySave
+    ? indexedSave
+    : (legacySave.updatedAt ?? legacySave.createdAt ?? 0) > (indexedSave.updatedAt ?? indexedSave.createdAt ?? 0)
+    ? legacySave
+    : indexedSave;
+
+  if (!newest) return null;
+
+  if (newest === legacySave) {
+    // Keep the legacy copy until IndexedDB confirms the migration.
     try {
-      await saveCareer(legacy);
+      await saveCareer(newest);
       localStorage.removeItem(`${STORAGE_KEY_PREFIX}${slotId}`);
     } catch (error) {
-      console.warn('Legacy save migration deferred.', error);
+      console.warn('Legacy save migration deferred; original copy retained.', error);
     }
-    return legacy;
-  } catch {
-    return null;
   }
+  return newest;
 }
 
 export async function deleteCareer(slotId: string): Promise<void> {
