@@ -28,6 +28,28 @@ export interface SaveSlotSummary {
   leaguePosition?: number;
 }
 
+function isRecord(value: unknown): value is Record<string, any> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** Reject malformed or mismatched records before they reach the game UI. */
+function isCareerSave(value: unknown, expectedSlotId: string): value is CareerSave {
+  if (!isRecord(value)) return false;
+  if (value.slotId !== expectedSlotId || !SAVE_SLOTS.includes(value.slotId)) return false;
+  if (value.mode !== 'MANAGER' && value.mode !== 'PLAYER') return false;
+  if (!Number.isFinite(value.createdAt) || (value.updatedAt !== undefined && !Number.isFinite(value.updatedAt))) return false;
+  if (!Number.isInteger(value.season) || value.season < 1) return false;
+  if (!Number.isInteger(value.currentWeek) || value.currentWeek < 1) return false;
+  if (typeof value.userClubId !== 'string' || !value.userClubId) return false;
+  if (!isRecord(value.clubs) || !isRecord(value.players) || !isRecord(value.leagues) || !isRecord(value.nationalTeams)) return false;
+  if (!isRecord(value.clubs[value.userClubId])) return false;
+  if (!Array.isArray(value.cupFixtures) || !Array.isArray(value.continentalFixtures)) return false;
+  if (!Array.isArray(value.transferOffers) || !Array.isArray(value.news)) return false;
+  if (value.mode === 'MANAGER' && !isRecord(value.manager)) return false;
+  if (value.mode === 'PLAYER' && (!isRecord(value.legend) || typeof value.legend.playerId !== 'string' || !isRecord(value.players[value.legend.playerId]))) return false;
+  return true;
+}
+
 function openSaveDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') {
@@ -45,12 +67,12 @@ function openSaveDatabase(): Promise<IDBDatabase> {
   });
 }
 
-async function readStoredSave(slotId: string): Promise<CareerSave | null> {
+async function readStoredSave(slotId: string): Promise<unknown | null> {
   const db = await openSaveDatabase();
   try {
     return await new Promise((resolve, reject) => {
       const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(slotId);
-      request.onsuccess = () => resolve((request.result as CareerSave | undefined) ?? null);
+      request.onsuccess = () => resolve(request.result ?? null);
       request.onerror = () => reject(request.error ?? new Error('Could not read career save.'));
     });
   } finally {
@@ -59,6 +81,9 @@ async function readStoredSave(slotId: string): Promise<CareerSave | null> {
 }
 
 export async function saveCareer(save: CareerSave): Promise<void> {
+  if (!SAVE_SLOTS.includes(save.slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
   const payload = { ...save, updatedAt: Date.now() };
   try {
     const db = await openSaveDatabase();
@@ -84,45 +109,85 @@ export async function saveCareer(save: CareerSave): Promise<void> {
 }
 
 export async function loadCareer(slotId: string): Promise<CareerSave | null> {
+  if (!SAVE_SLOTS.includes(slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
+
+  let indexedSave: CareerSave | null = null;
   try {
     const stored = await readStoredSave(slotId);
-    if (stored) return stored;
+    if (stored !== null) {
+      if (isCareerSave(stored, slotId)) indexedSave = stored;
+      else console.warn(`Ignoring malformed IndexedDB career save in ${slotId}.`);
+    }
   } catch (error) {
     console.warn('IndexedDB save read unavailable; checking legacy save.', error);
   }
 
+  let legacySave: CareerSave | null = null;
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${slotId}`);
-    if (!raw) return null;
-    const legacy = JSON.parse(raw) as CareerSave;
-    // Migrate without removing the original until the new copy is confirmed.
+    if (raw) {
+      const parsed: unknown = JSON.parse(raw);
+      if (isCareerSave(parsed, slotId)) legacySave = parsed;
+      else console.warn(`Ignoring malformed legacy career save in ${slotId}.`);
+    }
+  } catch (error) {
+    console.warn('Legacy career save could not be read.', error);
+  }
+
+  // A failed IndexedDB write may leave an older record beside a newer local
+  // fallback. Always return the newest valid timestamp.
+  const newest = !indexedSave
+    ? legacySave
+    : !legacySave
+    ? indexedSave
+    : (legacySave.updatedAt ?? legacySave.createdAt ?? 0) > (indexedSave.updatedAt ?? indexedSave.createdAt ?? 0)
+    ? legacySave
+    : indexedSave;
+
+  if (!newest) return null;
+
+  if (newest === legacySave) {
+    // Keep the legacy copy until IndexedDB confirms the migration.
     try {
-      await saveCareer(legacy);
+      await saveCareer(newest);
       localStorage.removeItem(`${STORAGE_KEY_PREFIX}${slotId}`);
     } catch (error) {
-      console.warn('Legacy save migration deferred.', error);
+      console.warn('Legacy save migration deferred; original copy retained.', error);
     }
-    return legacy;
-  } catch {
-    return null;
   }
+  return newest;
 }
 
 export async function deleteCareer(slotId: string): Promise<void> {
-  try {
-    const db = await openSaveDatabase();
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        tx.objectStore(STORE_NAME).delete(slotId);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error ?? new Error('Could not delete save.'));
-      });
-    } finally {
-      db.close();
-    }
-  } finally {
+  if (!SAVE_SLOTS.includes(slotId as (typeof SAVE_SLOTS)[number])) {
+    throw new Error('Invalid career save slot.');
+  }
+
+  // On devices without IndexedDB, localStorage is the only supported save store.
+  if (typeof indexedDB === 'undefined') {
     localStorage.removeItem(`${STORAGE_KEY_PREFIX}${slotId}`);
+    return;
+  }
+
+  // Do not remove the fallback copy unless the primary store confirms deletion.
+  const db = await openSaveDatabase();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).delete(slotId);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error ?? new Error('Could not delete save.'));
+      tx.onabort = () => reject(tx.error ?? new Error('Save deletion was interrupted.'));
+    });
+  } finally {
+    db.close();
+  }
+  try {
+    localStorage.removeItem(`${STORAGE_KEY_PREFIX}${slotId}`);
+  } catch (error) {
+    console.warn('IndexedDB save deleted, but the legacy fallback could not be cleared.', error);
   }
 }
 
@@ -130,12 +195,13 @@ export async function listSaveSlots(): Promise<SaveSlotSummary[]> {
   return Promise.all(SAVE_SLOTS.map(async (slotId) => {
     const data = await loadCareer(slotId);
     if (!data) return { slotId, empty: true };
-    const club = data.clubs?.[data.userClubId];
-    const player = data.legend ? data.players?.[data.legend.playerId] : undefined;
-    const league = club ? data.leagues?.[club.leagueId] : undefined;
-    const sorted = league ? [...league.standings].sort((a, b) =>
+    const club = data.clubs[data.userClubId];
+    const player = data.legend ? data.players[data.legend.playerId] : undefined;
+    const league = club ? data.leagues[club.leagueId] : undefined;
+    const standings = Array.isArray(league?.standings) ? league.standings : [];
+    const sorted = [...standings].sort((a, b) =>
       b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst)
-    ) : [];
+    );
     const position = sorted.findIndex(row => row.clubId === data.userClubId);
     return {
       slotId, empty: false, mode: data.mode,
@@ -143,7 +209,7 @@ export async function listSaveSlots(): Promise<SaveSlotSummary[]> {
         ? `${data.manager?.name ?? 'Manager'} · ${club?.name ?? 'Club'}`
         : `${player?.name ?? 'Legend'} (${player?.overall ?? 70} OVR)`,
       subtitle: data.mode === 'MANAGER'
-        ? `Master League · ${data.manager?.trophies.length ?? 0} Trophies`
+        ? `Master League · ${data.manager?.trophies?.length ?? 0} Trophies`
         : `Become a Legend · ${club?.name ?? 'Club'}`,
       season: data.season, week: data.currentWeek, updatedAt: data.updatedAt,
       hasHalfTimeMatch: data.activeMatch?.phase === 'HALF_TIME',
@@ -151,7 +217,7 @@ export async function listSaveSlots(): Promise<SaveSlotSummary[]> {
       clubPrimaryColor: club?.primaryColor, clubSecondaryColor: club?.secondaryColor,
       managerName: data.manager?.name, playerName: player?.name,
       playerOverall: player?.overall, marketValue: player?.marketValue,
-      transferBudget: club?.finances.transferBudget,
+      transferBudget: club?.finances?.transferBudget,
       leaguePosition: position >= 0 ? position + 1 : undefined,
     };
   }));

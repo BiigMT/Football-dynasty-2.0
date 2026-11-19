@@ -64,7 +64,7 @@ assert.equal(AFRICAN_CLUB_SQUADS_2026.find(s=>s.clubId==='enyimba_elephants')?.p
 console.log('Validated '+africanIds.size+' African club rosters against manually checked official source counts.');
 
 import { EUROPEAN_CLUB_SQUADS_2026, EUROPEAN_SQUAD_SOURCES } from '../src/data/europeanClubSquads2026';
-import { LEAGUE_BLUEPRINTS } from '../src/engine/database';
+import { LEAGUE_BLUEPRINTS, buildWorldDatabase } from '../src/engine/database';
 
 assert.ok(EUROPEAN_SQUAD_SOURCES.snapshot.startsWith('2026-') && EUROPEAN_SQUAD_SOURCES.snapshot.length === 10,'European snapshot date must be explicit');
 for (const source of Object.values(EUROPEAN_SQUAD_SOURCES).filter(value => value !== EUROPEAN_SQUAD_SOURCES.snapshot)) {
@@ -135,3 +135,55 @@ assert.equal(updatedCareerPlayer.weeklyWage,12000,'Career player wage must be pr
 assert.deepEqual(updatedCareerPlayer.seasonStats,preservedPlayer.seasonStats,'Career season statistics must be preserved');
 assert.deepEqual(updatedCareerPlayer.careerHistory,preservedPlayer.careerHistory,'Career history must be preserved');
 console.log('Validated real-player identity import preserves career IDs, ratings, wages and progression.');
+
+// Generated-world relationship audit: every club, league, squad and fixture
+// must resolve to a matching record before a new career can be created.
+const world = buildWorldDatabase();
+const seenLeagueClubIds = new Set<string>();
+for (const [leagueId, league] of Object.entries(world.leagues)) {
+  assert.equal(league.id, leagueId, 'League key and ID must match: ' + leagueId);
+  assert.ok(league.clubIds.length >= 2, 'League needs at least two clubs: ' + leagueId);
+  assert.equal(new Set(league.clubIds).size, league.clubIds.length, 'Duplicate club membership in ' + leagueId);
+  const standingIds = new Set(league.standings.map(row => row.clubId));
+  assert.equal(standingIds.size, league.standings.length, 'Duplicate league standing row in ' + leagueId);
+  assert.equal(standingIds.size, league.clubIds.length, 'Every league club needs one standing row in ' + leagueId);
+  for (const clubId of league.clubIds) {
+    assert.ok(!seenLeagueClubIds.has(clubId), 'Club must belong to exactly one league: ' + clubId);
+    seenLeagueClubIds.add(clubId);
+    const club = world.clubs[clubId];
+    assert.ok(club, 'League references missing club: ' + clubId);
+    assert.equal(club.id, clubId, 'Club key and ID must match: ' + clubId);
+    assert.equal(club.leagueId, leagueId, 'Club league link must resolve: ' + clubId);
+    assert.ok(standingIds.has(clubId), 'Club is missing a league standing row: ' + clubId);
+    const squadIds = [...club.tactics.startingXI, ...club.tactics.bench];
+    assert.equal(new Set(squadIds).size, squadIds.length, 'Club lineup contains duplicate player IDs: ' + clubId);
+    assert.equal(club.tactics.startingXI.length, 11, 'Club must have an 11-player starting XI: ' + clubId);
+    assert.ok(club.tactics.bench.length <= 7, 'Club bench exceeds seven players: ' + clubId);
+    assert.ok(club.tactics.startingXI.includes(club.tactics.captainId), 'Club captain must be in the starting XI: ' + clubId);
+    for (const playerId of squadIds) {
+      assert.ok(world.players[playerId], 'Club lineup references missing player: ' + playerId);
+      assert.equal(world.players[playerId].clubId, clubId, 'Club lineup player has the wrong club ID: ' + playerId);
+    }
+  }
+  for (const fixture of league.fixtures) {
+    assert.ok(world.clubs[fixture.homeClubId], 'Fixture has missing home club: ' + fixture.id);
+    assert.ok(world.clubs[fixture.awayClubId], 'Fixture has missing away club: ' + fixture.id);
+    assert.notEqual(fixture.homeClubId, fixture.awayClubId, 'Fixture cannot play a club against itself: ' + fixture.id);
+    assert.equal(fixture.competitionId, leagueId, 'Fixture competition must match its league: ' + fixture.id);
+  }
+}
+assert.equal(seenLeagueClubIds.size, Object.keys(world.clubs).length, 'Every generated club must belong to exactly one league');
+for (const [playerId, player] of Object.entries(world.players)) {
+  assert.equal(player.id, playerId, 'Player key and ID must match: ' + playerId);
+  assert.ok(player.clubId === 'free_agent' || world.clubs[player.clubId], 'Player references an unknown club: ' + playerId);
+}
+for (const [teamId, team] of Object.entries(world.nationalTeams)) {
+  assert.equal(team.id, teamId, 'National-team key and ID must match: ' + teamId);
+  assert.ok(team.squadPlayerIds.length >= 16, 'National team needs at least 16 players: ' + teamId);
+  assert.equal(new Set(team.squadPlayerIds).size, team.squadPlayerIds.length, 'National team contains duplicate players: ' + teamId);
+  for (const playerId of team.squadPlayerIds) {
+    assert.ok(world.players[playerId], 'National team references missing player: ' + playerId);
+    assert.equal(world.players[playerId].nationality, team.name, 'National team player nationality mismatch: ' + playerId + ' / ' + team.name);
+  }
+}
+console.log('Validated ' + Object.keys(world.clubs).length + ' club links, ' + Object.keys(world.players).length + ' player records, ' + Object.keys(world.leagues).length + ' leagues and ' + Object.keys(world.nationalTeams).length + ' national teams.');

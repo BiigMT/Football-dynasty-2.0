@@ -67,9 +67,10 @@ export default function App() {
     setMuted(nextMuted);
   };
 
-  const updateAndPersistSave = (next: CareerSave) => {
+  const updateAndPersistSave = async (next: CareerSave): Promise<boolean> => {
     setActiveSave(next);
-    void saveCareer(next).then(async () => {
+    try {
+      await saveCareer(next);
       try {
         await saveCareerToCloud({ ...next, updatedAt: Date.now() });
       } catch (cloudError) {
@@ -77,10 +78,13 @@ export default function App() {
         console.warn('Cloud save deferred; the local career is safe.', cloudError);
       }
       await refreshSlots();
-    }).catch((error: unknown) => {
+      return true;
+    } catch (error) {
       console.error('Career save failed:', error);
       window.alert(error instanceof Error ? error.message : 'Could not save your career. Please try again.');
-    });
+      // Keep the in-memory career intact so a failed write never discards live progress.
+      return false;
+    }
   };
 
   const handleStartNewCareer = (mode: CareerMode, slotId: string) => {
@@ -98,32 +102,47 @@ export default function App() {
 
   const handleLoadCareer = async (slotId: string) => {
     soundEngine.playClick();
-    let loaded = await loadCareer(slotId);
-    if (!loaded) return;
-    // Upgrade older Player Career saves without disturbing a match already in progress.
-    const hasPyramid = Object.keys(loaded.leagues).some((id) => /_tier_[1-4]$/.test(id));
-    if (loaded.mode === 'PLAYER' && !hasPyramid && !loaded.activeMatch) {
-      const pyramid = initializeFourTierPyramid(loaded.clubs, loaded.leagues);
-      loaded = { ...loaded, clubs: pyramid.clubs, leagues: pyramid.leagues, updatedAt: Date.now() };
-      await saveCareer(loaded);
-      await refreshSlots();
-    }
-    setActiveSave(loaded);
-    if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
-      // Never drop a loaded career straight into the 3D match. Require an explicit resume action.
-      setScreen('MATCH_READY');
-    } else {
-      setScreen('CAREER');
+    try {
+      let loaded = await loadCareer(slotId);
+      if (!loaded) {
+        window.alert('This save slot is empty or its data could not be validated.');
+        await refreshSlots();
+        return;
+      }
+      // Upgrade older Player Career saves without disturbing a match already in progress.
+      const hasPyramid = Object.keys(loaded.leagues).some((id) => /_tier_[1-4]$/.test(id));
+      if (loaded.mode === 'PLAYER' && !hasPyramid && !loaded.activeMatch) {
+        const pyramid = initializeFourTierPyramid(loaded.clubs, loaded.leagues);
+        loaded = { ...loaded, clubs: pyramid.clubs, leagues: pyramid.leagues, updatedAt: Date.now() };
+        await saveCareer(loaded);
+        await refreshSlots();
+      }
+      setActiveSave(loaded);
+      if (loaded.activeMatch && loaded.activeMatch.phase !== 'FULL_TIME') {
+        // Never drop a loaded career straight into the 3D match. Require an explicit resume action.
+        setScreen('MATCH_READY');
+      } else {
+        setScreen('CAREER');
+      }
+    } catch (error) {
+      console.error('Career could not be loaded:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not load this career. Your save has not been deleted.');
+      await refreshSlots().catch((refreshError) => console.warn('Could not refresh save slots.', refreshError));
     }
   };
 
   const handleDeleteSlot = async (slotId: string) => {
     soundEngine.playClick();
-    await deleteCareer(slotId);
-    await refreshSlots();
+    try {
+      await deleteCareer(slotId);
+      await refreshSlots();
+    } catch (error) {
+      console.error('Career deletion failed:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not delete this save. It has been left intact.');
+    }
   };
 
-  const handleConfirmManager = (data: {
+  const handleConfirmManager = async (data: {
     slotId: string;
     managerName: string;
     nationality: string;
@@ -131,17 +150,25 @@ export default function App() {
     clubId: string;
     difficulty: GameDifficulty;
   }) => {
-    soundEngine.playWhistle('SHORT');
-    const created = createManagerCareer(data);
-    updateAndPersistSave(created);
-    setScreen('CAREER');
+    try {
+      const created = createManagerCareer(data);
+      soundEngine.playWhistle('SHORT');
+      if (await updateAndPersistSave(created)) setScreen('CAREER');
+    } catch (error) {
+      console.error('Manager career setup rejected:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not create this manager career. Check your setup and try again.');
+    }
   };
 
-  const handleConfirmLegend = (data: Parameters<typeof createLegendCareer>[0]) => {
-    soundEngine.playWhistle('SHORT');
-    const created = createLegendCareer(data);
-    updateAndPersistSave(created);
-    setScreen('CAREER');
+  const handleConfirmLegend = async (data: Parameters<typeof createLegendCareer>[0]) => {
+    try {
+      const created = createLegendCareer(data);
+      soundEngine.playWhistle('SHORT');
+      if (await updateAndPersistSave(created)) setScreen('CAREER');
+    } catch (error) {
+      console.error('Player career setup rejected:', error);
+      window.alert(error instanceof Error ? error.message : 'Could not create this player career. Check your setup and try again.');
+    }
   };
 
   const getMatchClubsMap = (save: CareerSave): Record<string, Club> => {
@@ -319,7 +346,7 @@ export default function App() {
   }
 
   if (!orientation) {
-    return <OrientationSelect initialValue="landscape" onConfirm={(next) => void chooseOrientation(next)} />;
+    return <OrientationSelect initialValue={(localStorage.getItem('fd-game-orientation') as GameOrientation | null) ?? 'landscape'} onConfirm={(next) => void chooseOrientation(next)} />;
   }
 
   if (screen === 'TITLE') {
