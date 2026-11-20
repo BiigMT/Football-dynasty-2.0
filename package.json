@@ -19,7 +19,8 @@
     "validate:player-development": "tsx scripts/validate-player-development.ts",
     "validate:match-consequences": "tsx scripts/validate-match-consequences.ts",
     "validate:player-life": "tsx scripts/validate-player-life.ts",
-    "validate:career-systems": "tsx scripts/validate-career-systems.ts"
+    "validate:career-systems": "tsx scripts/validate-career-systems.ts",
+    "validate:career-calendar": "tsx scripts/validate-career-calendar.ts"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",

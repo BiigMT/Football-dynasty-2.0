@@ -49,6 +49,7 @@ import { ClubDevelopmentHub } from './ClubDevelopmentHub';
 import { TeamManagement } from './TeamManagement';
 import { MatchdayPreview } from './MatchdayPreview';
 import { ClubDirectory } from './ClubDirectory';
+import { CareerCalendar } from './CareerCalendar';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -59,7 +60,7 @@ interface ManagerHubProps {
   onExitToTitle: () => void;
 }
 
-type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CLUB' | 'TEAMS' | 'DEVELOPMENT' | 'SETTINGS';
+type ManagerSection = 'DASHBOARD' | 'SQUAD' | 'TRANSFERS' | 'TRAINING' | 'COMPETITIONS' | 'CALENDAR' | 'CLUB' | 'TEAMS' | 'DEVELOPMENT' | 'SETTINGS';
 
 export const ManagerHub: React.FC<ManagerHubProps> = ({
   save,
@@ -131,6 +132,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     else if (key === 'transfers') setTab('TRANSFERS');
     else if (key === 'office' || key === 'news') setTab('CLUB');
     else if (key === 'competitions' || key === 'national') setTab('COMPETITIONS');
+    else if (key === 'calendar') setTab('CALENDAR');
     else if (key === 'clubs') setTab('TEAMS');
     else if (key === 'stats') setTab('TRAINING');
     else if (key === 'settings') setTab('SETTINGS');
@@ -434,6 +436,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   };
 
   if (tab === 'TEAMS') return <ClubDirectory save={save} onClose={() => setTab('DASHBOARD')} />;
+
+  if (tab === 'CALENDAR') return <CareerCalendar save={save} onBack={() => setTab('DASHBOARD')} onOpenFixture={setPreviewFixture} />;
 
   if (previewFixture) {
     return <MatchdayPreview fixture={previewFixture} clubs={save.clubs} players={save.players} onBack={() => setPreviewFixture(null)} onKickoff={() => onLaunchMatch(previewFixture)} />;

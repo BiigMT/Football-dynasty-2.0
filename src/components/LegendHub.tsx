@@ -33,6 +33,7 @@ import { PlayerPortrait } from './PlayerPortrait';
 import { resolveMatchFixingChoice } from '../engine/playerLife';
 import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
+import { CareerCalendar } from './CareerCalendar';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 import { PlayerPhone } from './PlayerPhone';
 import { getCareerRecords } from '../engine/careerRecords';
@@ -52,7 +53,7 @@ interface LegendHubProps {
   onExitToTitle: () => void;
 }
 
-type LegendSection = 'DASHBOARD' | 'PHONE' | 'MANAGER' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'LEGACY' | 'SETTINGS';
+type LegendSection = 'DASHBOARD' | 'PHONE' | 'MANAGER' | 'ATTRIBUTES' | 'TRAINING' | 'AGENT' | 'COMPETITIONS' | 'CALENDAR' | 'LEGACY' | 'SETTINGS';
 
 const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = [
   { key: 'speed', label: 'Speed' },
@@ -382,8 +383,9 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           <button type="button" onClick={() => setTab('TRAINING')}><span>03</span> TRAINING & SKILLS{!save.weekTrained ? <i /> : null}</button>
           <button type="button" onClick={() => setTab('ATTRIBUTES')}><span>04</span> MY PROFILE</button>
           <button type="button" onClick={() => setTab('AGENT')}><span>05</span> AGENT & TRANSFERS{legend.agentOffers.length ? <i /> : null}</button>
-          <button type="button" onClick={() => setTab('LEGACY')}><span>06</span> AWARDS & INTL</button>
-          <button type="button" onClick={() => setTab('SETTINGS')}><span>07</span> SYSTEM</button>
+          <button type="button" onClick={() => setTab('CALENDAR')}><span>06</span> SEASON CALENDAR</button>
+          <button type="button" onClick={() => setTab('LEGACY')}><span>07</span> AWARDS & INTL</button>
+          <button type="button" onClick={() => setTab('SETTINGS')}><span>08</span> SYSTEM</button>
         </nav>
 
         <div className="fd-player-matchbar">
@@ -853,6 +855,8 @@ export const LegendHub: React.FC<LegendHubProps> = ({
 
         {negotiatingOfferId && (() => { const offer = legend.agentOffers.find(o => o.id === negotiatingOfferId); const target = offer ? save.clubs[offer.fromClubId] : undefined; return offer && target ? <div className="fd-negotiation-overlay"><section className="fd-negotiation-room"><span className="fd-eyebrow">CONTRACT NEGOTIATION · ROUND {offer.round}</span><h2>{target.name} want to sign you</h2><p>Take a seat with the club representatives and review your proposed terms.</p><div className="fd-negotiation-terms"><div><span>WEEKLY WAGE</span><b>€{offer.proposedWage.toLocaleString()}</b></div><div><span>CONTRACT</span><b>{offer.contractYears} YEARS</b></div><div><span>SIGNING BONUS</span><b>€{offer.signingBonus.toLocaleString()}</b></div><div><span>TRANSFER FEE</span><b>€{offer.fee.toLocaleString()}</b></div></div><div className="fd-negotiation-actions"><button type="button" onClick={()=>{onUpdateSave(negotiateTransferOffer(save,offer.id,'REJECT'));setNegotiatingOfferId(null);}}>REJECT OFFER</button><button type="button" onClick={()=>{const nextWage=Math.round(offer.proposedWage*1.08/50)*50;onUpdateSave(negotiateTransferOffer(save,offer.id,'COUNTER',{proposedWage:nextWage}));setNegotiatingOfferId(null);}}>COUNTER +8%</button><button type="button" onClick={()=>{handleAcceptAgentOffer(offer.id);setNegotiatingOfferId(null);}}>ACCEPT & SIGN</button></div></section></div> : null; })()}
         {tab === 'COMPETITIONS' && <CompetitionsView save={save} />}
+
+        {tab === 'CALENDAR' && <CareerCalendar save={save} onBack={() => setTab('DASHBOARD')} onOpenFixture={onLaunchMatch} />}
 
         {tab === 'LEGACY' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
