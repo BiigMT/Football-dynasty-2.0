@@ -494,6 +494,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
         wageBudget={`€${Math.round(club.finances.wageBudgetWeekly / 1000)}K/wk`}
         news={homeNews}
+        newsFeed={save.news.slice(0, 18)}
         leagueName={league.name}
         table={tableRows}
         ticker={ticker}
