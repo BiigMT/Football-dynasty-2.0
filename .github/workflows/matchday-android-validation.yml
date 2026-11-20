@@ -54,6 +54,8 @@ jobs:
 
       - name: Validate Player Career phone and integrity storyline
         run: npm run validate:player-life
+      - name: Validate Player Career relationship and negotiation systems
+        run: npm run validate:career-systems
 
       - name: Validate 3D player positioning
         run: npm run validate:positioning
