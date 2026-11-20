@@ -39,6 +39,7 @@ import { getCareerRecords } from '../engine/careerRecords';
 import { resolveTeammateInteraction, getTeammateRelationship } from '../engine/careerRelationships';
 import { resolveManagerConversation } from '../engine/playerCareerDecisions';
 import { negotiateTransferOffer } from '../engine/transferNegotiations';
+import { declareCareerRivalry } from '../engine/careerRivalries';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -607,6 +608,12 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 ))}
               </div>
             </div>
+            {rivalPlayer && nextFixture && (
+              <div className="rounded-lg border border-rose-400/20 bg-rose-500/5 p-3">
+                <div className="flex items-center justify-between gap-3"><div><div className="text-[10px] font-black uppercase tracking-wider text-rose-300">Rival watch · Next match</div><b className="mt-1 block text-sm text-white">{rivalPlayer.name}</b><span className="text-[10px] text-slate-400">{rivalPlayer.position} · {rivalPlayer.overall} OVR · {save.clubs[rivalPlayer.clubId]?.name ?? 'Opposition'}</span></div><div className="text-right text-[10px] text-rose-200">W {legend.rivalryWins ?? 0} · L {legend.rivalryLosses ?? 0}</div></div>
+                <button type="button" disabled={Boolean(legend.rivalryPending)} onClick={() => { soundEngine.playClick(); onUpdateSave(declareCareerRivalry(save, rivalPlayer.id, nextFixture.id)); }} className="mt-2 min-h-9 w-full rounded-lg border border-rose-300/30 bg-rose-400/10 text-[10px] font-black uppercase tracking-wider text-rose-100 disabled:opacity-50">{legend.rivalryPending ? 'Rivalry duel set for next match' : 'Make this match personal'}</button>
+              </div>
+            )}
             <div className="rounded-lg border border-white/10 bg-[#0b1118] p-3">
               <div className="text-[10px] font-black uppercase tracking-wider text-amber-300">Private meeting · Manager</div>
               <div className="mt-2 grid grid-cols-2 gap-2">
