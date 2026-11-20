@@ -785,6 +785,34 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
     );
   }
 
+  if (nextLegend?.rivalryPending && nextLegend.rivalryFixtureId === session.fixtureId && nextLegend.rivalryPlayerId) {
+    const rivalryPlayer = nextPlayers[nextLegend.rivalryPlayerId];
+    const userRivalryState = session.playerStates[nextLegend.playerId];
+    const opponentRivalryState = session.playerStates[nextLegend.rivalryPlayerId];
+    if (rivalryPlayer && userRivalryState && opponentRivalryState &&
+        (userRivalryState.minutesPlayed ?? 0) > 0 && (opponentRivalryState.minutesPlayed ?? 0) > 0) {
+      const result = userRivalryState.rating > opponentRivalryState.rating ? 'won' :
+        userRivalryState.rating < opponentRivalryState.rating ? 'lost' : 'drew';
+      nextLegend = {
+        ...nextLegend,
+        rivalryPending: false,
+        rivalryWins: (nextLegend.rivalryWins ?? 0) + (result === 'won' ? 1 : 0),
+        rivalryLosses: (nextLegend.rivalryLosses ?? 0) + (result === 'lost' ? 1 : 0),
+      };
+      nextNews.unshift({
+        id: `rivalry_${session.fixtureId}_${nextLegend.playerId}`,
+        week: save.currentWeek,
+        season: save.season,
+        category: 'MATCH',
+        headline: result === 'won' ? `${save.players[nextLegend.playerId]?.name ?? 'You'} wins the individual duel` :
+          result === 'lost' ? `${rivalryPlayer.name} wins the individual duel` : 'The individual duel ends level',
+        body: `${save.players[nextLegend.playerId]?.name ?? 'Your player'} rated ${userRivalryState.rating.toFixed(1)} against ${rivalryPlayer.name} (${opponentRivalryState.rating.toFixed(1)}). Rivalry record: ${nextLegend.rivalryWins ?? 0} wins, ${nextLegend.rivalryLosses ?? 0} losses.`,
+      });
+    } else {
+      nextLegend = { ...nextLegend, rivalryPending: false };
+    }
+  }
+
   if (nextLegend && session.userPlayerId) {
     const userSt = session.playerStates[session.userPlayerId];
     const uPlayer = nextPlayers[session.userPlayerId];
