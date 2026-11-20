@@ -599,6 +599,8 @@ export interface CareerSave {
   updatedAt: number;
   season: number;
   currentWeek: number; // 1-38
+  /** Persisted in-game calendar date; absent on legacy saves. */
+  currentDate?: string;
   transferWindowOpen: boolean;
   userClubId: string;
   manager?: ManagerProfile;

@@ -28,7 +28,7 @@ import {
 } from '../types/football';
 import {
   advanceToNextSeason,
-  advanceWeek,
+  advanceCareerDay,
   applyTeamTraining,
   evaluateTransferBid,
   executeTransfer,
@@ -51,6 +51,7 @@ import { TeamManagement } from './TeamManagement';
 import { MatchdayPreview } from './MatchdayPreview';
 import { ClubDirectory } from './ClubDirectory';
 import { CareerCalendar } from './CareerCalendar';
+import { getCareerCalendarEvents } from '../engine/careerCalendar';
 
 interface ManagerHubProps {
   save: CareerSave;
@@ -100,6 +101,21 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const transferDeadlineWeek = save.currentWeek <= 4 ? 4 : save.currentWeek <= 11 ? 11 : null;
   const transferWeeksRemaining = transferDeadlineWeek === null ? null : Math.max(0, transferDeadlineWeek - save.currentWeek);
   const nextFixture = getNextUserFixture(save);
+  const careerDate = save.currentDate ? new Date(save.currentDate + 'T12:00:00Z') : new Date(Date.UTC(2026, 6, 6 + (save.currentWeek - 1) * 7));
+  const careerDayOffset = (careerDate.getUTCDay() + 6) % 7;
+  const currentDateKey = careerDate.toISOString().slice(0, 10);
+  const calendarEvents = getCareerCalendarEvents(save);
+  const nextMatchEvent = calendarEvents.find((event) => event.fixture && !event.fixture.played && event.date >= currentDateKey);
+  const todayFixture = careerDayOffset === 2
+    ? save.cupFixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 3
+    ? save.continentalFixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 5
+    ? league.fixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 6
+    ? save.internationalTournament?.fixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === (manager.nationalTeamId ?? '') || fixture.awayClubId === (manager.nationalTeamId ?? '')))
+    : undefined;
+  const isMatchday = Boolean(todayFixture);
   const leagueFinished = league.fixtures.every((f) => f.played);
   const leaguePos = getClubStandingsPosition(save, club.id);
 
@@ -115,15 +131,32 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const visibleMarketPlayers = marketPlayers.slice(marketPage * 6, marketPage * 6 + 6);
   const marketPageCount = Math.max(1, Math.ceil(marketPlayers.length / 6));
 
+  const handleNextMatch = () => {
+    if (!nextMatchEvent?.fixture) return;
+    soundEngine.playClick();
+    if (nextMatchEvent.date === currentDateKey) {
+      setPreviewFixture(nextMatchEvent.fixture);
+      return;
+    }
+    let progressed = save;
+    let guard = 0;
+    while ((progressed.currentDate ?? new Date(Date.UTC(2026, 6, 6 + (progressed.currentWeek - 1) * 7)).toISOString().slice(0, 10)) < nextMatchEvent.date && guard < 370) {
+      progressed = advanceCareerDay(progressed);
+      guard += 1;
+    }
+    onUpdateSave(progressed);
+    setPreviewFixture(nextMatchEvent.fixture);
+  };
+
   const handleForwardTime = () => {
     soundEngine.playClick();
-    if (nextFixture) {
-      setPreviewFixture(nextFixture);
+    if (todayFixture) {
+      setPreviewFixture(todayFixture);
     } else if (leagueFinished) {
       soundEngine.playWhistle('FULL_TIME');
       onUpdateSave(advanceToNextSeason(save));
     } else {
-      onUpdateSave(advanceWeek(save));
+      onUpdateSave(advanceCareerDay(save));
     }
   };
 
@@ -145,17 +178,21 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
       save.nationalTeams[nextFixture.homeClubId === club.id ? nextFixture.awayClubId : nextFixture.homeClubId]
     : undefined;
 
-  const days: DayItem[] = [
-    { label: `Week ${save.currentWeek}`, sub: '(Briefing)', icon: '📋', active: false },
-    { label: 'Training', sub: save.weekTrained ? '(Done)' : '(Ready)', icon: '🏋', active: !save.weekTrained && !nextFixture },
-    {
-      label: nextFixture ? `vs ${'shortName' in (oppClub ?? {}) ? (oppClub as { shortName: string }).shortName : (oppClub as { code?: string })?.code ?? 'OPP'}` : 'Rest Day',
-      sub: nextFixture ? '(Matchday)' : '(No Fixture)',
-      icon: '⚽',
-      active: Boolean(nextFixture),
-    },
-    { label: `Season ${save.season}`, sub: save.transferWindowOpen ? '(Window Open)' : '(Closed)', icon: '📅', active: false },
-  ];
+  const days: DayItem[] = Array.from({ length: 3 }, (_, index) => {
+    const date = new Date(careerDate);
+    date.setUTCDate(date.getUTCDate() + index);
+    const key = date.toISOString().slice(0, 10);
+    const dayEvents = calendarEvents.filter((event) => event.date === key);
+    const fixtureEvent = dayEvents.find((event) => event.fixture && !event.fixture.played);
+    const label = date.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' });
+    const sub = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    return {
+      label,
+      sub: fixtureEvent ? 'MATCHDAY' : index === 0 && save.weekTrained ? 'TRAINED' : dayEvents[0]?.type ?? 'SCHEDULE',
+      icon: fixtureEvent ? '⚽' : dayEvents.some((event) => event.type === 'TRAINING') ? '🏋' : '📅',
+      active: index === 0,
+    };
+  });
 
   const sortedStandings = sortStandings(league.standings);
   const tableRows: TableRow[] = sortedStandings.map((r, idx) => {
@@ -177,18 +214,23 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     .slice(0, 3)
     .map((player) => ({ name: player.name, club: save.clubs[player.clubId]?.shortName ?? '—', goals: player.seasonStats.goals }));
 
-  const calendarCells = Array.from({ length: 10 }, (_, index) => {
-    const week = save.currentWeek + index;
-    const fixture = league.fixtures.find((item) => !item.played && item.week === week &&
-      (item.homeClubId === club.id || item.awayClubId === club.id));
-    const opponentId = fixture ? (fixture.homeClubId === club.id ? fixture.awayClubId : fixture.homeClubId) : '';
-    const opponent = opponentId ? save.clubs[opponentId] : undefined;
+  const calendarCells = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(careerDate);
+    date.setUTCDate(date.getUTCDate() + index);
+    const key = date.toISOString().slice(0, 10);
+    const dayEvents = calendarEvents.filter((event) => event.date === key);
+    const fixtureEvent = dayEvents.find((event) => event.fixture && !event.fixture.played);
+    const opponentId = fixtureEvent?.fixture
+      ? (fixtureEvent.fixture.homeClubId === club.id ? fixtureEvent.fixture.awayClubId : fixtureEvent.fixture.homeClubId)
+      : '';
+    const opponent = opponentId ? save.clubs[opponentId] ?? save.nationalTeams[opponentId] : undefined;
+    const label = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', timeZone: 'UTC' });
     return {
-      label: `WK ${String(week).padStart(2, '0')}`,
-      detail: fixture ? `vs ${opponent?.shortName ?? 'TBC'}` : index === 0 && save.weekTrained ? 'Training done' : 'Training',
-      icon: fixture ? '⚽' : '🏋',
+      label,
+      detail: fixtureEvent ? `vs ${opponent?.shortName ?? 'TBC'}` : dayEvents[0]?.title ?? 'Training / recovery',
+      icon: fixtureEvent ? '⚽' : dayEvents.some((event) => event.type === 'TRAINING') ? '🏋' : '📅',
       active: index === 0,
-      match: Boolean(fixture),
+      match: Boolean(fixtureEvent),
     };
   });
 
@@ -500,7 +542,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         days={days}
         scorers={scorerRows}
         calendar={calendarCells}
-        seasonWeek={`SEASON ${save.season} · WEEK ${save.currentWeek}`}
+        seasonWeek={`${careerDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })} · SEASON ${save.season}`}
         pendingTransfers={save.transferOffers.some((offer) => offer.isIncomingToUser)}
         trainingPending={!save.weekTrained}
         transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
@@ -510,14 +552,16 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         leagueName={league.name}
         table={tableRows}
         ticker={ticker}
-        forwardTitle={nextFixture ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'FORWARD TIME'}
+        forwardTitle={isMatchday ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'CONTINUE'}
         forwardSub={
           nextFixture
             ? `${nextFixture.competitionName}`
             : leagueFinished
             ? 'Finalize awards & start next season'
-            : 'Advance to next matchweek'
+            : `Advance one day · ${careerDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', timeZone: 'UTC' })}`
         }
+        nextMatchTitle={nextMatchEvent?.title ?? 'No upcoming fixture'}
+        onNextMatch={handleNextMatch}
         onForward={handleForwardTime}
         onNavigate={handleHomeNavigate}
       />

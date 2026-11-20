@@ -3,6 +3,7 @@ import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { CareerMode, CareerSave, Club, Fixture, GameDifficulty, MatchSession } from './types/football';
 import {
   advanceWeek,
+  advanceCareerDay,
   applyMatchSessionToWorld,
   createLegendCareer,
   createManagerCareer,
@@ -318,7 +319,7 @@ export default function App() {
         resultSave = { ...withResult, legend: { ...careerLegend, rivalryPending: false } };
       }
     }
-    const nextWorld = advanceWeek(resultSave);
+    const nextWorld = resultSave.mode === 'MANAGER' ? advanceCareerDay(resultSave) : advanceWeek(resultSave);
     updateAndPersistSave(nextWorld);
     setScreen('CAREER');
   };

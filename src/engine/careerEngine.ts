@@ -977,7 +977,7 @@ export function applyMatchSessionToWorld(save: CareerSave, session: MatchSession
   };
 }
 
-export function advanceWeek(save: CareerSave): CareerSave {
+export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): CareerSave {
   let nextSave: CareerSave = {
     ...save,
     clubs: { ...save.clubs },
@@ -991,7 +991,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
   // Simulate all unplayed fixtures for currentWeek across all leagues
   Object.keys(nextSave.leagues).forEach((lid) => {
     const league = nextSave.leagues[lid];
-    const weekFixtures = league.fixtures.filter((f) => !f.played && f.week === save.currentWeek);
+    const weekFixtures = league.fixtures.filter((f) => !f.played && f.week === save.currentWeek && matchDayOffset === 5);
     weekFixtures.forEach((f) => {
       const h = nextSave.clubs[f.homeClubId];
       const a = nextSave.clubs[f.awayClubId];
@@ -1009,7 +1009,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
   });
 
   // Simulate unplayed cup & continental fixtures for currentWeek
-  const cupWeek = nextSave.cupFixtures.filter((f) => !f.played && f.week === save.currentWeek);
+  const cupWeek = nextSave.cupFixtures.filter((f) => !f.played && f.week === save.currentWeek && matchDayOffset === 2);
   cupWeek.forEach((f) => {
     const h = nextSave.clubs[f.homeClubId];
     const a = nextSave.clubs[f.awayClubId];
@@ -1025,7 +1025,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
     }
   });
 
-  const contWeek = nextSave.continentalFixtures.filter((f) => !f.played && f.week === save.currentWeek);
+  const contWeek = nextSave.continentalFixtures.filter((f) => !f.played && f.week === save.currentWeek && matchDayOffset === 3);
   contWeek.forEach((f) => {
     const h = nextSave.clubs[f.homeClubId];
     const a = nextSave.clubs[f.awayClubId];
@@ -1044,7 +1044,7 @@ export function advanceWeek(save: CareerSave): CareerSave {
   // Simulate unplayed international tournament fixtures for currentWeek
   if (nextSave.internationalTournament) {
     const intlWeek = nextSave.internationalTournament.fixtures.filter(
-      (f) => !f.played && f.week === save.currentWeek
+      (f) => !f.played && f.week === save.currentWeek && matchDayOffset === 6
     );
     intlWeek.forEach((f) => {
       const hNat = nextSave.nationalTeams[f.homeClubId];
@@ -1056,6 +1056,16 @@ export function advanceWeek(save: CareerSave): CareerSave {
         nextSave = applyMatchSessionToWorld(nextSave, res);
       }
     });
+  }
+
+  const nextWeek = save.currentWeek + 1;
+  const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
+
+  if (matchDayOffset === 6) {
+  // Deduct weekly wages for user club
+  const userClub = nextSave.clubs[nextSave.userClubId];
+  if (userClub) {
+    userClub.finances.cashBalance -= userClub.finances.weeklyWageBill;
   }
 
   // Advance Cup / Continental / International knockout rounds when current round completes
@@ -1243,14 +1253,6 @@ export function advanceWeek(save: CareerSave): CareerSave {
     }
   }
 
-  // Deduct weekly wages for user club
-  const userClub = nextSave.clubs[nextSave.userClubId];
-  if (userClub) {
-    userClub.finances.cashBalance -= userClub.finances.weeklyWageBill;
-  }
-
-  const nextWeek = save.currentWeek + 1;
-  const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
 
   // Generate Transfer Interest for Become a Legend if performing well
   if (nextSave.legend && transferWindowOpen) {
@@ -1474,13 +1476,15 @@ export function advanceWeek(save: CareerSave): CareerSave {
     });
   }
 
+  }
+
   const progressedSave: CareerSave = {
     ...nextSave,
-    currentWeek: nextWeek,
-    transferWindowOpen,
-    weekTrained: false,
+    currentWeek: matchDayOffset === 6 ? nextWeek : save.currentWeek,
+    transferWindowOpen: matchDayOffset === 6 ? transferWindowOpen : save.transferWindowOpen,
+    weekTrained: matchDayOffset === 6 ? false : save.weekTrained,
   };
-  const worldProgressedSave = advanceLivingWorld(progressedSave, nextWeek);
+  const worldProgressedSave = matchDayOffset === 6 ? advanceLivingWorld(progressedSave, nextWeek) : progressedSave;
   return {
     ...worldProgressedSave,
     news: worldProgressedSave.news.slice(0, 35),
@@ -2084,4 +2088,15 @@ export function advanceToNextSeason(save: CareerSave): CareerSave {
     weekTrained: false,
     news: nextNews.slice(0, 35),
   };
+}
+
+
+/** Advances one in-game day. League matches are Saturday, cup Wednesday, continental Thursday and internationals Sunday. */
+export function advanceCareerDay(save: CareerSave): CareerSave {
+  const date = save.currentDate ? new Date(save.currentDate + 'T12:00:00Z') : new Date(Date.UTC(2026, 6, 6 + (save.currentWeek - 1) * 7));
+  const dayOffset = (date.getUTCDay() + 6) % 7;
+  const next = advanceWeek(save, dayOffset);
+  date.setUTCDate(date.getUTCDate() + 1);
+  const currentDate = date.toISOString().slice(0, 10);
+  return { ...next, currentDate };
 }

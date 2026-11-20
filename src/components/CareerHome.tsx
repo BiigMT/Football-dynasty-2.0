@@ -160,6 +160,8 @@ export type ManagerHomeProps = {
   ticker: string[];
   forwardTitle?: string;
   forwardSub: string;
+  nextMatchTitle: string;
+  onNextMatch: () => void;
   onForward: () => void;
   onNavigate: (key: string) => void;
 };
@@ -231,6 +233,7 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
           </div>
           <div className="fd-money"><span>€</span><div><b>{p.transferBudget}</b><small>TRANSFER BUDGET</small></div></div>
           <div className="fd-money"><span>€</span><div><b>{p.wageBudget}</b><small>WAGE / WEEK</small></div></div>
+          <button type="button" className="fd-next-match" onClick={p.onNextMatch} title={p.nextMatchTitle} aria-label={`Next match: ${p.nextMatchTitle}`}>NEXT MATCH <b>↗</b></button>
           <button type="button" className="fd-gear" onClick={() => p.onNavigate('settings')} aria-label="System settings">⚙</button>
         </>
       }
