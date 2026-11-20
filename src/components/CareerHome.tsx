@@ -1,11 +1,14 @@
 import React from 'react';
 import './careerHome.css';
+import { CareerNewsFeed } from './CareerNewsFeed';
+import type { NewsItem } from '../types/football';
 
 /* ---------- Types mapped from football.ts models ---------- */
 export type DayItem = { label: string; sub: string; icon: string; active?: boolean };
 export type MenuItem = { key: string; title: string; sub: string; icon: string; notify?: boolean };
 export type TableRow = { pos: number; club: string; p: number; gd: number; pts: number; color?: string; me?: boolean };
 export type CareerHomeNewsItem = { tag: string; headline: string; body: string };
+
 /* ---------- Small shared pieces ---------- */
 export const Badge: React.FC<{ name: string; color?: string; size?: number }> = ({
   name,
@@ -146,6 +149,7 @@ export type ManagerHomeProps = {
   transferBudget: string;
   wageBudget: string;
   news: CareerHomeNewsItem[];
+  newsFeed: NewsItem[];
   leagueName: string;
   table: TableRow[];
   scorers: ScorerRow[];
@@ -231,6 +235,7 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
         </>
       }
     >
+      <div className="fd-home-left">
       <section className="fd-showcase">
         {n && (
           <article className="fd-panel fd-hero" style={{ backgroundImage: "linear-gradient(0deg, rgba(5,16,34,.98) 0%, rgba(5,16,34,.78) 38%, rgba(5,16,34,.08) 100%), url('/media/game/team-talk.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -254,6 +259,8 @@ export const ManagerHome: React.FC<ManagerHomeProps> = (p) => {
           </article>
         )}
       </section>
+      <CareerNewsFeed items={p.newsFeed} title="WORLD FOOTBALL NEWS" />
+      </div>
       <aside className="fd-sidebar">
         <section className="fd-panel fd-standings">
           <div className="fd-panelHead"><h3>{p.leagueName.toUpperCase()} · TOP 5</h3><button type="button" onClick={() => p.onNavigate('competitions')}>FULL TABLE →</button></div>
