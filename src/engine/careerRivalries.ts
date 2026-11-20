@@ -25,7 +25,7 @@ export function declareCareerRivalry(save: CareerSave, rivalPlayerId: string, fi
     category: 'MATCH' as const,
     headline: `${player.name} targets an individual duel with ${rival.name}`,
     body: `The upcoming fixture has a personal edge. Both players will be judged on their match performances.`,
-  }, ...save.news].slice(0, 35);
+  }, ...(save.news ?? [])].slice(0, 35);
   return {
     ...save,
     legend: { ...save.legend, rivalryPlayerId: rivalPlayerId, rivalryFixtureId: fixture.id, rivalryPending: true },
