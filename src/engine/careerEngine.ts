@@ -1476,13 +1476,11 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
     });
   }
 
-  }
-
   const progressedSave: CareerSave = {
     ...nextSave,
     currentWeek: matchDayOffset === 6 ? nextWeek : save.currentWeek,
     transferWindowOpen: matchDayOffset === 6 ? transferWindowOpen : save.transferWindowOpen,
-    weekTrained: false,
+    weekTrained: matchDayOffset === 6 ? false : save.weekTrained,
   };
   const worldProgressedSave = matchDayOffset === 6 ? advanceLivingWorld(progressedSave, nextWeek) : progressedSave;
   return {
