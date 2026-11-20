@@ -101,7 +101,17 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const transferWeeksRemaining = transferDeadlineWeek === null ? null : Math.max(0, transferDeadlineWeek - save.currentWeek);
   const nextFixture = getNextUserFixture(save);
   const careerDate = save.currentDate ? new Date(save.currentDate + 'T12:00:00Z') : new Date(Date.UTC(2026, 6, 6 + (save.currentWeek - 1) * 7));
-  const isMatchday = careerDate.getUTCDay() === 6 && Boolean(nextFixture);
+  const careerDayOffset = (careerDate.getUTCDay() + 6) % 7;
+  const todayFixture = careerDayOffset === 2
+    ? save.cupFixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 3
+    ? save.continentalFixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 5
+    ? league.fixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === club.id || fixture.awayClubId === club.id))
+    : careerDayOffset === 6
+    ? save.internationalTournament?.fixtures.find((fixture) => !fixture.played && fixture.week === save.currentWeek && (fixture.homeClubId === (manager.nationalTeamId ?? '') || fixture.awayClubId === (manager.nationalTeamId ?? '')))
+    : undefined;
+  const isMatchday = Boolean(todayFixture);
   const leagueFinished = league.fixtures.every((f) => f.played);
   const leaguePos = getClubStandingsPosition(save, club.id);
 
@@ -119,8 +129,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
   const handleForwardTime = () => {
     soundEngine.playClick();
-    if (nextFixture && (save.currentDate ? new Date(save.currentDate + 'T12:00:00Z').getUTCDay() === 6 : false)) {
-      setPreviewFixture(nextFixture);
+    if (todayFixture) {
+      setPreviewFixture(todayFixture);
     } else if (leagueFinished) {
       soundEngine.playWhistle('FULL_TIME');
       onUpdateSave(advanceToNextSeason(save));
