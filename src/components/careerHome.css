@@ -2111,3 +2111,46 @@
   .fd-news-feed-filters button { min-height:18px; padding:2px 6px; }
   .fd-news-feed-item { min-height:19px; padding:2px 4px; }
 }
+
+
+/* Daily manager calendar and quick jump to the next scheduled fixture. */
+.fd-next-match {
+  flex:none;
+  min-height:38px;
+  padding:0 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#10233d !important;
+  background:#F6C21C;
+  border:1px solid #ffe17a !important;
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.7px;
+  white-space:nowrap;
+}
+.fd-next-match b { font-size:17px; }
+.fd-calendarGrid {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:5px;
+}
+.fd-calendarCell { min-width:0; }
+.fd-calendarCell b { font-size:9px; }
+.fd-calendarCell small {
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.fd-calendarCell.today {
+  border-color:#F6C21C !important;
+  background:#F6C21C18 !important;
+}
+@media (orientation:landscape) and (max-height:700px) {
+  .fd-next-match { min-height:30px; padding:0 7px; font-size:8px; }
+  .fd-calendarGrid { gap:3px; }
+  .fd-calendarCell { padding:4px 2px !important; }
+  .fd-calendarCell b { font-size:8px; }
+  .fd-calendarCell small { font-size:7px; }
+}
