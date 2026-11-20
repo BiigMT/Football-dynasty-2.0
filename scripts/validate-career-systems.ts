@@ -35,7 +35,7 @@ const mediaSave = publishCareerMediaResponse(save, 'THANK_FANS');
 assert.equal(mediaSave.legend?.phoneFollowers, 12);
 assert.equal(mediaSave.legend?.socialPosts?.[0]?.caption.includes('support'), true);
 
-const agentSave = { ...save, legend: { ...save.legend!, agentOffers: [offer] } };
+const agentSave = { ...save, transferOffers: [], legend: { ...save.legend!, agentOffers: [offer] } };
 const agentCounter = negotiateTransferOffer(agentSave, 'offer-1', 'COUNTER', { proposedWage: 7000 });
 assert.equal(agentCounter.legend?.agentOffers[0].status, 'COUNTERED');
 assert.equal(agentCounter.legend?.agentOffers[0].proposedWage, 7000);
