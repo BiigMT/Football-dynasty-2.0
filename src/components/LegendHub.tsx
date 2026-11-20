@@ -36,6 +36,8 @@ import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 import { PlayerPhone } from './PlayerPhone';
 import { getCareerRecords } from '../engine/careerRecords';
+import { resolveTeammateInteraction, getTeammateRelationship } from '../engine/careerRelationships';
+import { resolveManagerConversation } from '../engine/playerCareerDecisions';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -588,6 +590,29 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button type="button" onClick={() => { soundEngine.playClick(); const trust = Math.min(100, legend.managerTrust + (player.seasonStats.averageRating >= 7 ? 5 : 2)); onUpdateSave({ ...save, legend: { ...legend, managerTrust: trust }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 3) } }, news: [{ id: 'manager_minutes_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' asks the manager for more minutes', body: trust >= 65 ? 'The manager praised the player’s attitude and promised to consider more starts if performances continue.' : 'The manager asked the player to prove their quality in training before earning more minutes.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 text-xs font-bold text-amber-200">Ask for more playing time</button>
               <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 4) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 4), confidence: Math.min(100, player.confidence + 2) } }, news: [{ id: 'manager_promise_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' commits to earning a place', body: 'The player has promised to work hard in training and fight for a starting position.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 text-xs font-bold text-emerald-200">Promise to fight for my place</button>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-[#0b1118] p-3">
+              <div className="text-[10px] font-black uppercase tracking-wider text-cyan-300">Dressing room · Teammate relationships</div>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {teammates.slice(0, 3).map((mate) => (
+                  <div key={mate.id} className="rounded-md border border-white/10 bg-[#111a24] p-2">
+                    <div className="flex items-center justify-between gap-2"><b className="text-xs text-white">{mate.name}</b><span className="text-[10px] text-cyan-200">REL {getTeammateRelationship(save, mate.id)}</span></div>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {(['PRAISE', 'ENCOURAGE', 'CHALLENGE', 'RECONCILE'] as const).map((action) => (
+                        <button key={action} type="button" onClick={() => { soundEngine.playClick(); onUpdateSave(resolveTeammateInteraction(save, mate.id, action)); }} className="min-h-8 rounded border border-white/10 bg-white/5 px-2 text-[9px] font-bold text-slate-200 hover:border-cyan-300/50">{action}</button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-[#0b1118] p-3">
+              <div className="text-[10px] font-black uppercase tracking-wider text-amber-300">Private meeting · Manager</div>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {([{key:'ASK_FOR_MINUTES',label:'Ask for minutes'},{key:'PROMISE_LOYALTY',label:'Promise loyalty'},{key:'REQUEST_TRANSFER',label:'Request transfer'},{key:'APOLOGISE',label:'Apologise'}] as const).map((item) => (
+                  <button key={item.key} type="button" onClick={() => { soundEngine.playClick(); onUpdateSave(resolveManagerConversation(save, item.key)); }} className="min-h-10 rounded-lg border border-amber-400/20 bg-amber-400/5 px-2 text-[10px] font-bold text-amber-100 hover:bg-amber-400/10">{item.label}</button>
+                ))}
+              </div>
             </div>
             <p className="text-[10px] text-slate-500">Your form, fitness, sharpness and positional rivals affect selection each week. Injuries reduce training recovery and can cost you your place.</p>
           </section>
