@@ -317,7 +317,7 @@ export function createManagerCareer(params: {
       },
     ],
     trainingFocus: 'BALANCED',
-    weekTrained: matchDayOffset === 6 ? false : save.weekTrained,
+    weekTrained: false,
   };
 }
 
