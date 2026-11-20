@@ -40,3 +40,13 @@ const agentCounter = negotiateTransferOffer(agentSave, 'offer-1', 'COUNTER', { p
 assert.equal(agentCounter.legend?.agentOffers[0].status, 'COUNTERED');
 assert.equal(agentCounter.legend?.agentOffers[0].proposedWage, 7000);
 console.log('Manager conversation, media response and agent negotiation validations passed.');
+
+import { declareCareerRivalry } from '../src/engine/careerRivalries';
+const rivalryFixture = { id: 'fixture-rival', competitionId: 'league', competitionName: 'League', competitionType: 'LEAGUE' as const, round: 1, week: 4, homeClubId: 'c1', awayClubId: 'c2', played: false, homeGoals: 0, awayGoals: 0 };
+const rival = { ...teammate, id: 'rival', clubId: 'c2', overall: 80 };
+const rivalryBase = { ...save, clubs: { c1: { id: 'c1' }, c2: { id: 'c2', tactics: { startingXI: ['rival'] } } }, players: { ...save.players, rival }, leagues: { league: { fixtures: [rivalryFixture] } }, cupFixtures: [], continentalFixtures: [] } as unknown as CareerSave;
+const declared = declareCareerRivalry(rivalryBase, 'rival', 'fixture-rival');
+assert.equal(declared.legend?.rivalryPending, true);
+assert.equal(declared.legend?.rivalryPlayerId, 'rival');
+assert.equal(rivalryBase.legend?.rivalryPending, undefined, 'rivalry declaration must not mutate input');
+console.log('Career rivalry declaration validation passed.');
