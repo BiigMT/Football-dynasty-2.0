@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { resolveTeammateInteraction, getTeammateRelationship } from '../src/engine/careerRelationships';
 import { negotiateTransferOffer } from '../src/engine/transferNegotiations';
+import { resolveManagerConversation, publishCareerMediaResponse } from '../src/engine/playerCareerDecisions';
 import type { CareerSave, Player, TransferOffer } from '../src/types/football';
 
 const player = { id: 'p1', clubId: 'c1', form: 70, morale: 70, confidence: 70, name: 'Player One' } as Player;
@@ -26,3 +27,16 @@ assert.equal(save.transferOffers[0].status, 'PENDING', 'input offer must not be 
 assert.equal(negotiateTransferOffer(save, 'offer-1', 'ACCEPT').transferOffers[0].status, 'ACCEPTED');
 assert.equal(negotiateTransferOffer(save, 'offer-1', 'REJECT').transferOffers[0].status, 'REJECTED');
 console.log('Career relationship and transfer negotiation validations passed.');
+
+const managerSave = resolveManagerConversation(save, 'PROMISE_LOYALTY');
+assert.equal(managerSave.legend?.managerTrust, 52);
+assert.equal(save.legend?.managerTrust, 50, 'manager conversation must not mutate input');
+const mediaSave = publishCareerMediaResponse(save, 'THANK_FANS');
+assert.equal(mediaSave.legend?.phoneFollowers, 12);
+assert.equal(mediaSave.legend?.socialPosts?.[0]?.caption.includes('support'), true);
+
+const agentSave = { ...save, legend: { ...save.legend!, agentOffers: [offer] } };
+const agentCounter = negotiateTransferOffer(agentSave, 'offer-1', 'COUNTER', { proposedWage: 7000 });
+assert.equal(agentCounter.legend?.agentOffers[0].status, 'COUNTERED');
+assert.equal(agentCounter.legend?.agentOffers[0].proposedWage, 7000);
+console.log('Manager conversation, media response and agent negotiation validations passed.');
