@@ -28,6 +28,7 @@ import {
 } from '../types/football';
 import {
   advanceToNextSeason,
+  advanceCareerDay,
   advanceWeek,
   applyTeamTraining,
   evaluateTransferBid,
@@ -117,13 +118,13 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
 
   const handleForwardTime = () => {
     soundEngine.playClick();
-    if (nextFixture) {
+    if (nextFixture && (save.currentDate ? new Date(save.currentDate + 'T12:00:00Z').getUTCDay() === 6 : false)) {
       setPreviewFixture(nextFixture);
     } else if (leagueFinished) {
       soundEngine.playWhistle('FULL_TIME');
       onUpdateSave(advanceToNextSeason(save));
     } else {
-      onUpdateSave(advanceWeek(save));
+      onUpdateSave(advanceCareerDay(save));
     }
   };
 
