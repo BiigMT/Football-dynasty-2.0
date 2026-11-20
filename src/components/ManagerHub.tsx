@@ -101,6 +101,8 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
   const transferDeadlineWeek = save.currentWeek <= 4 ? 4 : save.currentWeek <= 11 ? 11 : null;
   const transferWeeksRemaining = transferDeadlineWeek === null ? null : Math.max(0, transferDeadlineWeek - save.currentWeek);
   const nextFixture = getNextUserFixture(save);
+  const careerDate = save.currentDate ? new Date(save.currentDate + 'T12:00:00Z') : new Date(Date.UTC(2026, 6, 6 + (save.currentWeek - 1) * 7));
+  const isMatchday = careerDate.getUTCDay() === 6 && Boolean(nextFixture);
   const leagueFinished = league.fixtures.every((f) => f.played);
   const leaguePos = getClubStandingsPosition(save, club.id);
 
@@ -511,13 +513,13 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         leagueName={league.name}
         table={tableRows}
         ticker={ticker}
-        forwardTitle={nextFixture ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'FORWARD TIME'}
+        forwardTitle={isMatchday ? 'PLAY MATCHDAY' : leagueFinished ? `SEASON ${save.season + 1}` : 'CONTINUE'}
         forwardSub={
           nextFixture
             ? `${nextFixture.competitionName}`
             : leagueFinished
             ? 'Finalize awards & start next season'
-            : 'Advance to next matchweek'
+            : `Advance one day · ${careerDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', timeZone: 'UTC' })}`
         }
         onForward={handleForwardTime}
         onNavigate={handleHomeNavigate}
