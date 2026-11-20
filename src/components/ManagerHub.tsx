@@ -24,6 +24,7 @@ import {
   PressingStyle,
   TrainingFocus,
   TransferDealType,
+  NewsItem,
 } from '../types/football';
 import {
   advanceToNextSeason,
@@ -204,7 +205,18 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     });
   }
 
-  // Dashboard stories are generated from this offline career save; no social feed is simulated.
+  // The home feed is sourced from saved career events, with the next real fixture preview pinned first.
+  const homeFeedItems: NewsItem[] = [
+    ...(nextFixture && oppClub ? [{
+      id: 'home_match_preview_' + nextFixture.id,
+      week: save.currentWeek,
+      season: save.season,
+      category: 'MATCH' as const,
+      headline: `${club.name} prepare for ${oppClub.name} showdown`,
+      body: `${nextFixture.competitionName} · ${club.name} are currently #${leaguePos} in ${league.name}. The next match is scheduled for in-game week ${nextFixture.week}.`,
+    }] : []),
+    ...save.news,
+  ].slice(0, 18);
 
   const ticker = [
     ...save.news.slice(0, 5).map((n) => n.headline),
@@ -494,6 +506,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
         transferBudget={`€${(club.finances.transferBudget / 1000000).toFixed(1)}M`}
         wageBudget={`€${Math.round(club.finances.wageBudgetWeekly / 1000)}K/wk`}
         news={homeNews}
+        newsFeed={homeFeedItems}
         leagueName={league.name}
         table={tableRows}
         ticker={ticker}

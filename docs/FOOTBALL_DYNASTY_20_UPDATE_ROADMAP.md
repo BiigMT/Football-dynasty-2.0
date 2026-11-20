@@ -77,3 +77,14 @@ A dedicated in-game calendar is now implemented on the stacked calendar feature 
 - A focused calendar validator is included in Android CI. Web/Android CI and preview deployment remain the next acceptance gate; physical-device testing is still required.
 
 The separately requested FM25-inspired home-screen news feed has not been changed and remains awaiting the user's approval.
+
+
+## FM-inspired home news feed implementation · 20 November 2026
+
+A separate stacked feature branch now adds an interactive career news desk:
+- Manager Career home: a multi-story feed beneath the lead club story, with All, Matches, Transfers, Club and World filters.
+- Player Career central dashboard: the existing latest-news panel now uses the same interactive feed and category filters.
+- Selecting a headline opens its full saved story; users can return to the headline list without leaving the career dashboard.
+- The feed is sourced from career-save news, with the next real fixture preview pinned to the Manager Career feed. No fabricated live external news is presented.
+- Existing navy, royal-blue, cyan and gold visual identity is preserved, with compact landscape sizing and scrollable headlines.
+- The change is isolated in a separate PR stacked on the calendar PR. Automated build/preview and Android validation are the next gate; device testing remains required.
