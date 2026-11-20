@@ -1476,6 +1476,8 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
     });
   }
 
+  }
+
   const progressedSave: CareerSave = {
     ...nextSave,
     currentWeek: matchDayOffset === 6 ? nextWeek : save.currentWeek,
