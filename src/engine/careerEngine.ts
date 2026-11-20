@@ -1062,6 +1062,12 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
   const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
 
   if (matchDayOffset === 6) {
+  // Deduct weekly wages for user club
+  const userClub = nextSave.clubs[nextSave.userClubId];
+  if (userClub) {
+    userClub.finances.cashBalance -= userClub.finances.weeklyWageBill;
+  }
+
   // Advance Cup / Continental / International knockout rounds when current round completes
   const advanceKnockoutIfReady = (
     fixtures: Fixture[],
@@ -1247,11 +1253,6 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
     }
   }
 
-  // Deduct weekly wages for user club
-  const userClub = nextSave.clubs[nextSave.userClubId];
-  if (userClub) {
-    userClub.finances.cashBalance -= userClub.finances.weeklyWageBill;
-  }
 
   // Generate Transfer Interest for Become a Legend if performing well
   if (nextSave.legend && transferWindowOpen) {
