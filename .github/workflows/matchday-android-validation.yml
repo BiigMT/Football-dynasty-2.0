@@ -56,6 +56,8 @@ jobs:
         run: npm run validate:player-life
       - name: Validate Player Career relationship and negotiation systems
         run: npm run validate:career-systems
+      - name: Validate full-season career calendar
+        run: npm run validate:career-calendar
 
       - name: Validate 3D player positioning
         run: npm run validate:positioning
