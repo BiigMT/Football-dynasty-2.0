@@ -2163,7 +2163,6 @@
 @media (orientation: landscape) {
   .fd-manager-skin {
     position: relative;
-    padding-left: 76px;
     background: #11111d !important;
   }
   .fd-manager-skin > header {
@@ -2264,7 +2263,7 @@
   .fd-root[data-mode="manager"] .fd-item { min-height: 54px; flex-basis: 54px; }
   .fd-root[data-mode="manager"] .fd-main { gap: 6px; padding: 6px; }
   .fd-root[data-mode="manager"] .fd-sidebar { gap: 6px; }
-  .fd-manager-skin { padding-left: 68px; }
+  .fd-manager-skin { padding-left: 0; }
   .fd-manager-skin > header { width: calc(100% - 68px); margin-left: 68px; min-height: 54px; }
   .fd-manager-skin > nav { top: 54px; width: 68px; padding: 5px 4px; }
   .fd-manager-skin > main { width: calc(100% - 68px); margin-left: 68px; }
