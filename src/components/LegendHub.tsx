@@ -34,6 +34,7 @@ import { resolveMatchFixingChoice } from '../engine/playerLife';
 import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { CareerCalendar } from './CareerCalendar';
+import { CareerNewsFeed } from './CareerNewsFeed';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 import { PlayerPhone } from './PlayerPhone';
 import { getCareerRecords } from '../engine/careerRecords';
@@ -471,17 +472,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
                 </div>)}
               </div>
             </section>
-            <section className="fd-player-panel fd-player-news-panel">
-              <div className="fd-player-panel-title"><div><small>AROUND THE CLUB & THE FOOTBALL WORLD</small><h3>LATEST NEWS</h3></div><span>{save.news.length} STORIES</span></div>
-              <div className="space-y-2">
-                {save.news.slice(0, 4).map((item) => <article key={item.id} className="rounded-lg border border-white/10 bg-[#0b1118] px-3 py-2">
-                  <div className="flex items-center justify-between gap-2"><span className="text-[9px] font-black uppercase tracking-wider text-cyan-300">{String(item.category).replace(/_/g, ' ')}</span><span className="text-[9px] text-slate-500">S{item.season} · W{item.week}</span></div>
-                  <h4 className="mt-1 text-xs font-bold leading-snug text-white">{item.headline}</h4>
-                  <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{item.body}</p>
-                </article>)}
-                {!save.news.length && <p className="fd-player-empty">Your career news will appear here as matches, transfers and club events unfold.</p>}
-              </div>
-            </section>
+            <CareerNewsFeed items={save.news.slice(0, 18)} compact className="fd-player-panel fd-player-news-panel" title="LATEST NEWS" />
             <section className="fd-player-panel fd-player-table">
               <div className="fd-player-panel-title"><div><small>{league.name.toUpperCase()}</small><h3>LEAGUE TABLE</h3></div><span>TOP 5</span></div>
               <div className="fd-player-table-head"><span>#</span><span>CLUB</span><span>P</span><span>GD</span><span>PTS</span></div>
