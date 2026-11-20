@@ -227,7 +227,7 @@ export const ManagerHub: React.FC<ManagerHubProps> = ({
     const label = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', timeZone: 'UTC' });
     return {
       label,
-      detail: fixtureEvent ? `vs ${(opponent && 'shortName' in opponent ? opponent.shortName : opponent?.name) ?? 'TBC'}` : dayEvents[0]?.title ?? 'Training / recovery',
+      detail: fixtureEvent ? `vs ${opponent?.shortName ?? 'TBC'}` : dayEvents[0]?.title ?? 'Training / recovery',
       icon: fixtureEvent ? '⚽' : dayEvents.some((event) => event.type === 'TRAINING') ? '🏋' : '📅',
       active: index === 0,
       match: Boolean(fixtureEvent),
