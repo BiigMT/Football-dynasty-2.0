@@ -35,6 +35,11 @@ import { findNation } from '../data/nationsDatabase';
 import { CompetitionsView } from './CompetitionsView';
 import { DayItem, PlayerHome, TableRow } from './CareerHome';
 import { PlayerPhone } from './PlayerPhone';
+import { getCareerRecords } from '../engine/careerRecords';
+import { resolveTeammateInteraction, getTeammateRelationship } from '../engine/careerRelationships';
+import { resolveManagerConversation } from '../engine/playerCareerDecisions';
+import { negotiateTransferOffer } from '../engine/transferNegotiations';
+import { declareCareerRivalry } from '../engine/careerRivalries';
 
 interface LegendHubProps {
   save: CareerSave;
@@ -454,6 +459,16 @@ export const LegendHub: React.FC<LegendHubProps> = ({
               {nextFixture && <div className="rounded-lg border border-cyan-400/20 bg-cyan-400/5 p-2"><div className="text-[9px] text-cyan-300 font-bold uppercase">Next opponent scouting</div><div className="text-[11px] text-white font-bold mt-1">{save.clubs[rivalClubId]?.name ?? save.nationalTeams[rivalClubId]?.name ?? 'Opposition'}</div><div className="text-[10px] text-slate-400 mt-0.5">{save.clubs[rivalClubId]?.tactics.formation ?? 'Formation data'} · {save.clubs[rivalClubId]?.tactics.mentality ?? 'Tactical plan'} · {isStarter ? 'You are currently selected' : isBench ? 'You are currently on the bench' : 'You are outside the matchday XI'}</div></div>}
               <div className="text-[9px] text-slate-500">AI managers adapt to scorelines and match momentum. AI clubs rotate tired players; training and match performances shape your growth and future selection.</div>
             </section>
+            <section className="fd-player-panel fd-player-records">
+              <div className="fd-player-panel-title"><div><small>THE CAREER SO FAR</small><h3>PLAYER RECORDS</h3></div><span>HISTORY</span></div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                {getCareerRecords(player).map((record) => <div key={record.label} className="rounded-lg border border-white/10 bg-[#0b1118] p-2">
+                  <small className="block text-[9px] font-bold uppercase tracking-wider text-slate-500">{record.label}</small>
+                  <strong className="mt-1 block text-lg tabular-nums text-white">{record.value}</strong>
+                  <span className="mt-1 block text-[9px] leading-snug text-slate-500">{record.detail}</span>
+                </div>)}
+              </div>
+            </section>
             <section className="fd-player-panel fd-player-news-panel">
               <div className="fd-player-panel-title"><div><small>AROUND THE CLUB & THE FOOTBALL WORLD</small><h3>LATEST NEWS</h3></div><span>{save.news.length} STORIES</span></div>
               <div className="space-y-2">
@@ -577,6 +592,35 @@ export const LegendHub: React.FC<LegendHubProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button type="button" onClick={() => { soundEngine.playClick(); const trust = Math.min(100, legend.managerTrust + (player.seasonStats.averageRating >= 7 ? 5 : 2)); onUpdateSave({ ...save, legend: { ...legend, managerTrust: trust }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 3) } }, news: [{ id: 'manager_minutes_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' asks the manager for more minutes', body: trust >= 65 ? 'The manager praised the player’s attitude and promised to consider more starts if performances continue.' : 'The manager asked the player to prove their quality in training before earning more minutes.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 text-xs font-bold text-amber-200">Ask for more playing time</button>
               <button type="button" onClick={() => { soundEngine.playClick(); onUpdateSave({ ...save, legend: { ...legend, managerTrust: Math.min(100, legend.managerTrust + 4) }, players: { ...save.players, [player.id]: { ...player, morale: Math.min(100, player.morale + 4), confidence: Math.min(100, player.confidence + 2) } }, news: [{ id: 'manager_promise_' + Date.now(), week: save.currentWeek, season: save.season, category: 'MATCH' as const, headline: player.name + ' commits to earning a place', body: 'The player has promised to work hard in training and fight for a starting position.' }, ...save.news].slice(0, 35) }); }} className="min-h-[46px] rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 text-xs font-bold text-emerald-200">Promise to fight for my place</button>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-[#0b1118] p-3">
+              <div className="text-[10px] font-black uppercase tracking-wider text-cyan-300">Dressing room · Teammate relationships</div>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {teammates.slice(0, 3).map((mate) => (
+                  <div key={mate.id} className="rounded-md border border-white/10 bg-[#111a24] p-2">
+                    <div className="flex items-center justify-between gap-2"><b className="text-xs text-white">{mate.name}</b><span className="text-[10px] text-cyan-200">REL {getTeammateRelationship(save, mate.id)}</span></div>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {(['PRAISE', 'ENCOURAGE', 'CHALLENGE', 'RECONCILE'] as const).map((action) => (
+                        <button key={action} type="button" onClick={() => { soundEngine.playClick(); onUpdateSave(resolveTeammateInteraction(save, mate.id, action)); }} className="min-h-8 rounded border border-white/10 bg-white/5 px-2 text-[9px] font-bold text-slate-200 hover:border-cyan-300/50">{action}</button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {rivalPlayer && nextFixture && (
+              <div className="rounded-lg border border-rose-400/20 bg-rose-500/5 p-3">
+                <div className="flex items-center justify-between gap-3"><div><div className="text-[10px] font-black uppercase tracking-wider text-rose-300">Rival watch · Next match</div><b className="mt-1 block text-sm text-white">{rivalPlayer.name}</b><span className="text-[10px] text-slate-400">{rivalPlayer.position} · {rivalPlayer.overall} OVR · {save.clubs[rivalPlayer.clubId]?.name ?? 'Opposition'}</span></div><div className="text-right text-[10px] text-rose-200">W {legend.rivalryWins ?? 0} · L {legend.rivalryLosses ?? 0}</div></div>
+                <button type="button" disabled={Boolean(legend.rivalryPending)} onClick={() => { soundEngine.playClick(); onUpdateSave(declareCareerRivalry(save, rivalPlayer.id, nextFixture.id)); }} className="mt-2 min-h-9 w-full rounded-lg border border-rose-300/30 bg-rose-400/10 text-[10px] font-black uppercase tracking-wider text-rose-100 disabled:opacity-50">{legend.rivalryPending ? 'Rivalry duel set for next match' : 'Make this match personal'}</button>
+              </div>
+            )}
+            <div className="rounded-lg border border-white/10 bg-[#0b1118] p-3">
+              <div className="text-[10px] font-black uppercase tracking-wider text-amber-300">Private meeting · Manager</div>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {([{key:'ASK_FOR_MINUTES',label:'Ask for minutes'},{key:'PROMISE_LOYALTY',label:'Promise loyalty'},{key:'REQUEST_TRANSFER',label:'Request transfer'},{key:'APOLOGISE',label:'Apologise'}] as const).map((item) => (
+                  <button key={item.key} type="button" onClick={() => { soundEngine.playClick(); onUpdateSave(resolveManagerConversation(save, item.key)); }} className="min-h-10 rounded-lg border border-amber-400/20 bg-amber-400/5 px-2 text-[10px] font-bold text-amber-100 hover:bg-amber-400/10">{item.label}</button>
+                ))}
+              </div>
             </div>
             <p className="text-[10px] text-slate-500">Your form, fitness, sharpness and positional rivals affect selection each week. Injuries reduce training recovery and can cost you your place.</p>
           </section>
@@ -807,7 +851,7 @@ export const LegendHub: React.FC<LegendHubProps> = ({
           </div>
         )}
 
-        {negotiatingOfferId && (() => { const offer = legend.agentOffers.find(o => o.id === negotiatingOfferId); const target = offer ? save.clubs[offer.fromClubId] : undefined; return offer && target ? <div className="fd-negotiation-overlay"><section className="fd-negotiation-room"><span className="fd-eyebrow">CONTRACT NEGOTIATION · ROUND {offer.round}</span><h2>{target.name} want to sign you</h2><p>Take a seat with the club representatives and review your proposed terms.</p><div className="fd-negotiation-terms"><div><span>WEEKLY WAGE</span><b>€{offer.proposedWage.toLocaleString()}</b></div><div><span>CONTRACT</span><b>{offer.contractYears} YEARS</b></div><div><span>SIGNING BONUS</span><b>€{offer.signingBonus.toLocaleString()}</b></div><div><span>TRANSFER FEE</span><b>€{offer.fee.toLocaleString()}</b></div></div><div className="fd-negotiation-actions"><button type="button" onClick={()=>setNegotiatingOfferId(null)}>DECLINE MEETING</button><button type="button" onClick={()=>{const nextWage=Math.round(offer.proposedWage*1.08/50)*50;onUpdateSave({...save,legend:{...legend,agentOffers:legend.agentOffers.map(o=>o.id===offer.id?{...o,proposedWage:nextWage,round:o.round+1,message:'Your agent countered the opening offer. The club has improved its wage proposal.'}:o)}});}}>COUNTER +8%</button><button type="button" onClick={()=>{handleAcceptAgentOffer(offer.id);setNegotiatingOfferId(null);}}>ACCEPT & SIGN</button></div></section></div> : null; })()}
+        {negotiatingOfferId && (() => { const offer = legend.agentOffers.find(o => o.id === negotiatingOfferId); const target = offer ? save.clubs[offer.fromClubId] : undefined; return offer && target ? <div className="fd-negotiation-overlay"><section className="fd-negotiation-room"><span className="fd-eyebrow">CONTRACT NEGOTIATION · ROUND {offer.round}</span><h2>{target.name} want to sign you</h2><p>Take a seat with the club representatives and review your proposed terms.</p><div className="fd-negotiation-terms"><div><span>WEEKLY WAGE</span><b>€{offer.proposedWage.toLocaleString()}</b></div><div><span>CONTRACT</span><b>{offer.contractYears} YEARS</b></div><div><span>SIGNING BONUS</span><b>€{offer.signingBonus.toLocaleString()}</b></div><div><span>TRANSFER FEE</span><b>€{offer.fee.toLocaleString()}</b></div></div><div className="fd-negotiation-actions"><button type="button" onClick={()=>{onUpdateSave(negotiateTransferOffer(save,offer.id,'REJECT'));setNegotiatingOfferId(null);}}>REJECT OFFER</button><button type="button" onClick={()=>{const nextWage=Math.round(offer.proposedWage*1.08/50)*50;onUpdateSave(negotiateTransferOffer(save,offer.id,'COUNTER',{proposedWage:nextWage}));setNegotiatingOfferId(null);}}>COUNTER +8%</button><button type="button" onClick={()=>{handleAcceptAgentOffer(offer.id);setNegotiatingOfferId(null);}}>ACCEPT & SIGN</button></div></section></div> : null; })()}
         {tab === 'COMPETITIONS' && <CompetitionsView save={save} />}
 
         {tab === 'LEGACY' && (

@@ -555,6 +555,7 @@ export interface LegendProfile {
   loanRequestPending?: boolean;
   rivalryPlayerId?: string;
   rivalryPending?: boolean;
+  rivalryFixtureId?: string;
   rivalryWins?: number;
   rivalryLosses?: number;
 }

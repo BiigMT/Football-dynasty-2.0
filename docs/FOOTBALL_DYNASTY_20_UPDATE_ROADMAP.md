@@ -48,3 +48,20 @@ The requested phrase “add new fixtures every 30 minutes” needs a product dec
 - New simulation logic is deterministic/idempotent where applicable and has focused validators.
 - Web build and Android APK checks pass before preview handoff.
 - Actual Android gameplay remains a separate device test; CI does not claim to have tested a physical phone.
+
+## Implementation progress · 20 November 2026
+
+The following systems have now been added or connected on the stacked Player Career feature branch (not production):
+- Matchday landscape briefing viewport and fixed PLAY MATCH action area (PR #31).
+- Player Career dashboard records, news, league table and upcoming schedule.
+- Teammate relationship actions and manager conversations with save-backed effects.
+- Agent/career transfer offer counter and rejection handling.
+- Instagram-style fan responses connected to follower count and social posts.
+- Individual opponent rivalry declarations, match-rating duel resolution and rivalry news/record.
+- Dedicated career-systems validation added to the Android CI workflow.
+
+Still required before considering the programme complete:
+- Finish CI for the latest commit and resolve any failures.
+- Verify phone, Player Career, transfers and matchday together in the actual Android landscape app.
+- Complete remaining UI integration and gameplay balancing for the broader career roadmap.
+- Keep all changes on development/feature branches until explicitly approved; never deploy these changes to main without approval.
