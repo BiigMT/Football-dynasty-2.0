@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { CareerSave, Fixture } from '../types/football';
 import { getCareerCalendarEvents, getCareerWeekDate } from '../engine/careerCalendar';
 
@@ -30,10 +30,14 @@ const TYPE_STYLE: Record<string, string> = {
 
 export const CareerCalendar: React.FC<CareerCalendarProps> = ({ save, onBack, onOpenFixture, compact = false }) => {
   const events = useMemo(() => getCareerCalendarEvents(save), [save]);
-  const currentDate = getCareerWeekDate(save.season, save.currentWeek, 0);
+  const currentDate = save.currentDate ? new Date(save.currentDate + 'T12:00:00Z') : getCareerWeekDate(save.season, save.currentWeek, 0);
   const currentKey = dateKey(currentDate);
   const [month, setMonth] = useState(() => new Date(Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), 1)));
   const [selectedDate, setSelectedDate] = useState(currentKey);
+  useEffect(() => {
+    setSelectedDate(currentKey);
+    setMonth(new Date(Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), 1)));
+  }, [currentKey]);
   const monthStart = new Date(Date.UTC(month.getUTCFullYear(), month.getUTCMonth(), 1));
   const offset = (monthStart.getUTCDay() + 6) % 7;
   const daysInMonth = new Date(Date.UTC(month.getUTCFullYear(), month.getUTCMonth() + 1, 0)).getUTCDate();
