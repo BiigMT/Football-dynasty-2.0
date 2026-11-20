@@ -29,7 +29,6 @@ import {
 import {
   advanceToNextSeason,
   advanceCareerDay,
-  advanceWeek,
   applyTeamTraining,
   evaluateTransferBid,
   executeTransfer,
