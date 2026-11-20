@@ -65,3 +65,15 @@ Still required before considering the programme complete:
 - Verify phone, Player Career, transfers and matchday together in the actual Android landscape app.
 - Complete remaining UI integration and gameplay balancing for the broader career roadmap.
 - Keep all changes on development/feature branches until explicitly approved; never deploy these changes to main without approval.
+
+
+## Full-season calendar implementation · 20 November 2026
+
+A dedicated in-game calendar is now implemented on the stacked calendar feature branch:
+- A deterministic season date system maps each in-game week to calendar dates, with fixtures placed on competition-specific matchdays.
+- The calendar includes the user's league, domestic cup, continental and eligible international fixtures, plus weekly training, recovery, squad briefings and transfer-window milestones.
+- Player Career has a full season-calendar screen; the Player Phone Calendar app opens the same schedule; Manager Career has a dedicated Season Calendar entry and matchday preview handoff.
+- Dates follow the in-game season and week, not the device clock. Existing saves require no destructive migration because dates are derived from their existing season/week/fixture data.
+- A focused calendar validator is included in Android CI. Web/Android CI and preview deployment remain the next acceptance gate; physical-device testing is still required.
+
+The separately requested FM25-inspired home-screen news feed has not been changed and remains awaiting the user's approval.
