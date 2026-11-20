@@ -1058,6 +1058,9 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
     });
   }
 
+  const nextWeek = save.currentWeek + 1;
+  const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
+
   if (matchDayOffset === 6) {
   // Advance Cup / Continental / International knockout rounds when current round completes
   const advanceKnockoutIfReady = (
@@ -1249,9 +1252,6 @@ export function advanceWeek(save: CareerSave, matchDayOffset: number = 6): Caree
   if (userClub) {
     userClub.finances.cashBalance -= userClub.finances.weeklyWageBill;
   }
-
-  const nextWeek = save.currentWeek + 1;
-  const transferWindowOpen = (nextWeek >= 1 && nextWeek <= 4) || (nextWeek >= 9 && nextWeek <= 11);
 
   // Generate Transfer Interest for Become a Legend if performing well
   if (nextSave.legend && transferWindowOpen) {
